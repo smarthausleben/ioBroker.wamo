@@ -38,13 +38,13 @@ class Leackagedect extends utils.Adapter {
 	 * Is called when databases are connected and adapter received configuration.
 	 */
 	async onReady() {
-        
+        /*
         this.getDeviceSettings(
             async (err, states) => {
             this.log.info("getDeviceSettingsHit");
             }
         );
-
+        */
 
 		// Initialize your adapter here
 
