@@ -1,0 +1,79 @@
+{
+	"common": {
+		"name": "leackagedect",
+		"version": "0.0.1",
+		"news": {
+			"0.0.1": {
+				"en": "initial release",
+				"de": "Erstveröffentlichung",
+				"ru": "Начальная версия",
+				"pt": "lançamento inicial",
+				"nl": "Eerste uitgave",
+				"fr": "Première version",
+				"it": "Versione iniziale",
+				"es": "Versión inicial",
+				"pl": "Pierwsze wydanie",
+				"zh-cn": "首次出版"
+			}
+		},
+		"title": "LeackageDect",
+		"titleLang": {
+			"en": "LeackageDect",
+			"de": "LeckageDekt",
+			"ru": "LeackageDect",
+			"pt": "Detecção de vazamento",
+			"nl": "LekkageDect",
+			"fr": "LeackageDect",
+			"it": "PerditaDect",
+			"es": "Detección de fugas",
+			"pl": "LeackageDect",
+			"zh-cn": "泄漏检测"
+		},
+		"desc": {
+			"en": "leackagedect",
+			"de": "Leckagen",
+			"ru": "утечка",
+			"pt": "vazamento",
+			"nl": "lekdetectie",
+			"fr": "détection de fuite",
+			"it": "leakedect",
+			"es": "fugadecto",
+			"pl": "wyciek wycieku",
+			"zh-cn": "泄漏检测"
+		},
+		"authors": [
+			"smarthausleben <info@smarthausleben.de>"
+		],
+		"keywords": [
+			"ioBroker",
+			"template",
+			"Smart Home",
+			"home automation"
+		],
+		"license": "MIT",
+		"platform": "Javascript/Node.js",
+		"main": "main.js",
+		"icon": "leackagedect.png",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/smarthausleben/ioBroker.leackagedect/main/admin/leackagedect.png",
+		"readme": "https://github.com/smarthausleben/ioBroker.leackagedect/blob/main/README.md",
+		"loglevel": "info",
+		"mode": "daemon",
+		"type": "iot-systems",
+		"compact": true,
+		"connectionType": "local",
+		"dataSource": "poll",
+		"materialize": true,
+		"dependencies": [
+			{
+				"js-controller": ">=2.0.0"
+			}
+		]
+	},
+	"native": {
+		"option1": true,
+		"option2": "42"
+	},
+	"objects": [],
+	"instanceObjects": []
+}
