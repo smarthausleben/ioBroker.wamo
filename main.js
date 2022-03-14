@@ -55,16 +55,16 @@ class Leackagedect extends utils.Adapter {
 	 */
 	async onReady() {
 
-		this.log.info('vor test aufruf');
+		// Testfunktion
+		this.log.debug('vor test aufruf');
 		try{
 			const responseTime = await this.testfunktionAs('','');
-			this.log.debug(`[onReady] testfunktionAs() Antwortzeit: ${responseTime} s`);
+			this.log.debug(`[onReady] testfunktionAs() Antwortzeit: ${responseTime} ms`);
 		}
 		catch(err){
 			this.log.debug(`[onReady] testfunktionAs() error: ${err}`);
 		}
-
-		this.log.info('nach test aufruf');
+		this.log.debug('nach test aufruf');
 
 
 		// The adapters config (in the instance object everything under the attribute "native") is accessible via
@@ -195,15 +195,15 @@ class Leackagedect extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 
 
-			this.log.info('testfunktionAs erreicht');
+			this.log.debug('testfunktionAs erreicht');
 
 
 			axios({
-				method: 'get', url: 'Http://192.168.70.26:5333/safe-tec/get/VER', timeout: 10000, responseType: 'json'
+				method: 'get', url: 'Http:/192.168.70.26:5333/safe-tec/get/VER', timeout: 10000, responseType: 'json'
 			}
 			).then(async (response) => {
 				const content = response.data;
-				this.log.info(`[getSensorData] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
+				this.log.debug(`[getSensorData] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
 
 				resolve(response.responseTime);
 			}
