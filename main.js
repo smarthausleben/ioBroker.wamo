@@ -12,6 +12,18 @@ const axios = require('axios');
 const adapterName = require('./package.json').name.split('.').pop();
 
 
+axios.interceptors.request.use(x => {
+	x.meta = x.meta || {};
+	x.meta.requestStartedAt = new Date().getTime();
+	return x;
+});
+
+axios.interceptors.response.use(x => {
+	x.responseTime = new Date().getTime() - x.config.meta.requestStartedAt;
+	return x;
+});
+
+
 // Load your modules here, e.g.:
 // const fs = require("fs");
 
