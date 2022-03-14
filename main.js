@@ -177,13 +177,11 @@ class Leackagedect extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 
 
-			this.log.debug('fill sensordaten erreicht');
+			this.log.info('testfunktionAs erreicht');
 
-
-			this.log.debug(`Sensor Local`);
 
 			axios({
-				method: 'get', url: '192.168.70.26:5333/safe-tec/get/VER', timeout: 10000, responseType: 'json'
+				method: 'get', url: 'Http://192.168.70.26:5333/safe-tec/get/VER', timeout: 10000, responseType: 'json'
 			}
 			).then(async (response) => {
 				const content = response.data;
