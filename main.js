@@ -7,9 +7,14 @@
 // The adapter-core module gives you access to the core ioBroker functions
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
+const axios = require("axios");
+
+const adapterName = require('./package.json').name.split('.').pop();
 
 // Load your modules here, e.g.:
 // const fs = require("fs");
+
+// ein Kommentar von mir
 
 class Leackagedect extends utils.Adapter {
 
@@ -19,8 +24,9 @@ class Leackagedect extends utils.Adapter {
 	constructor(options) {
 		super({
 			...options,
-			name: 'leackagedect',
+			name: adapterName,
 		});
+        
 		this.on('ready', this.onReady.bind(this));
 		this.on('stateChange', this.onStateChange.bind(this));
 		// this.on('objectChange', this.onObjectChange.bind(this));
@@ -32,6 +38,14 @@ class Leackagedect extends utils.Adapter {
 	 * Is called when databases are connected and adapter received configuration.
 	 */
 	async onReady() {
+        /*
+        this.getDeviceSettings(
+            async (err, states) => {
+            this.log.info("getDeviceSettingsHit");
+            }
+        );
+        */
+
 		// Initialize your adapter here
 
 		// The adapters config (in the instance object everything under the attribute "native") is accessible via
@@ -83,7 +97,8 @@ class Leackagedect extends utils.Adapter {
 
 		result = await this.checkGroupAsync('admin', 'admin');
 		this.log.info('check group user admin group admin: ' + result);
-	}
+	
+    }
 
 	/**
 	 * Is called when adapter shuts down - callback has to be called under any circumstances!
@@ -165,3 +180,4 @@ if (require.main !== module) {
 	// otherwise start the instance directly
 	new Leackagedect();
 }
+
