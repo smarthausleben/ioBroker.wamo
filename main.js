@@ -11,7 +11,9 @@ const axios = require('axios');
 
 const adapterName = require('./package.json').name.split('.').pop();
 
-
+//============================================================================
+//=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
+//============================================================================
 axios.interceptors.request.use(x => {
 	x.meta = x.meta || {};
 	x.meta.requestStartedAt = new Date().getTime();
@@ -22,6 +24,7 @@ axios.interceptors.response.use(x => {
 	x.responseTime = new Date().getTime() - x.config.meta.requestStartedAt;
 	return x;
 });
+//============================================================================
 
 
 // Load your modules here, e.g.:
@@ -54,9 +57,12 @@ class Leackagedect extends utils.Adapter {
 
 		this.log.info('vor test aufruf');
 		try{
-			await this.testfunktionAs('','');}
-		catch(e){
-			this.log.error(e);}
+			const responseTime = await this.testfunktionAs('','');
+			this.log.debug(`[onReady] testfunktionAs() Antwortzeit: ${responseTime} s`);
+		}
+		catch(err){
+			this.log.debug(`[onReady] testfunktionAs() error: ${err}`);
+		}
 
 		this.log.info('nach test aufruf');
 
@@ -215,7 +221,6 @@ class Leackagedect extends utils.Adapter {
 					// Something happened in setting up the request that triggered an Error
 					this.log.info(error.message);
 				}
-
 				reject('http error');
 			});
 		});
