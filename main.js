@@ -55,10 +55,16 @@ class Leackagedect extends utils.Adapter {
 	 */
 	async onReady() {
 
-		// Testfunktion
+
+		// The adapters config (in the instance object everything under the attribute "native") is accessible via
+		// this.config:
+		this.log.info('config option1: ' + this.config.device_ip);
+		this.log.info('config option2: ' + this.config.device_port);
+
+		// Device Initialisation
 		this.log.debug('vor initDevice()');
 		try{
-			const response = await this.initDevice();
+			const response = await this.initDevice(this.config.device_ip, this.config.device_port);
 			this.log.debug(`[initDevice] testfunktionAs() Response:  ${response}`);
 		}
 		catch(err){
@@ -66,11 +72,6 @@ class Leackagedect extends utils.Adapter {
 		}
 		this.log.debug('nach initDevice()');
 
-
-		// The adapters config (in the instance object everything under the attribute "native") is accessible via
-		// this.config:
-		this.log.info('config option1: ' + this.config.option1);
-		this.log.info('config option2: ' + this.config.option2);
 
 		/*
 		For every state in the system there has to be also an object of type state
@@ -189,14 +190,14 @@ class Leackagedect extends utils.Adapter {
 	// 	}
 	// }
 
-	async initDevice(){
+	async initDevice(DeviceIP, DevicePort){
 		return new Promise(async (resolve, reject) => {
 
 			this.log.debug(`[initDevice()]`);
 
 			try{
-				await this.get_DevieParameter('VER','192.168.70.26','5333');
-				await this.get_DevieParameter('AB','192.168.70.26','5333');
+				await this.get_DevieParameter('VER', DeviceIP, DevicePort);
+				await this.get_DevieParameter('AB', DeviceIP, DevicePort);
 				resolve('Ok');
 			}catch(err)
 			{

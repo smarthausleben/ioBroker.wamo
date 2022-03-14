@@ -71,8 +71,8 @@
 		]
 	},
 	"native": {
-		"option1": true,
-		"option2": "42"
+		"device_ip": "0.0.0.0",
+		"device_port": "5333"
 	},
 	"objects": [],
 	"instanceObjects": []
