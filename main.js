@@ -41,7 +41,11 @@ class Leackagedect extends utils.Adapter {
 	async onReady() {
 
 		this.log.info('vor test aufruf');
-		await this.testfunktionAs('','');
+		try{
+			await this.testfunktionAs('','');}
+		catch(e){
+			this.log.error(e);}
+
 		this.log.info('nach test aufruf');
 
 
@@ -179,16 +183,15 @@ class Leackagedect extends utils.Adapter {
 			this.log.debug(`Sensor Local`);
 
 			axios({
-				method: 'get',
-				url: '192.168.70.26:5333/safe-tec/get/VER',
-				timeout: 10000,
-				responseType: 'json'
-			}).then(async (response) => {
+				method: 'get', url: '192.168.70.26:5333/safe-tec/get/VER', timeout: 10000, responseType: 'json'
+			}
+			).then(async (response) => {
 				const content = response.data;
 				this.log.info(`[getSensorData] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
 
 				resolve(response.responseTime);
-			}).catch(async (error) => {
+			}
+			).catch(async (error) => {
 				if (error.response) {
 					// The request was made and the server responded with a status code
 
