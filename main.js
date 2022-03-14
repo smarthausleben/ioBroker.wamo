@@ -196,8 +196,8 @@ class Leackagedect extends utils.Adapter {
 			this.log.debug(`[initDevice()]`);
 
 			try{
-				await this.get_DevieParameter('VER', DeviceIP, DevicePort);
-				await this.get_DevieParameter('AB', DeviceIP, DevicePort);
+				this.log.info('[VER] Firmware Version: ' + await this.get_DevieParameter('VER', DeviceIP, DevicePort));
+				this.log.info('[AB] Valfe Status: ' + await this.get_DevieParameter('AB', DeviceIP, DevicePort));
 				resolve('Ok');
 			}catch(err)
 			{
@@ -219,7 +219,7 @@ class Leackagedect extends utils.Adapter {
 				const content = response.data;
 				this.log.debug(`[getSensorData] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
 
-				resolve(response.responseTime);
+				resolve(response.data);
 			}
 			).catch(async (error) => {
 				if (error.response) {
@@ -240,43 +240,6 @@ class Leackagedect extends utils.Adapter {
 
 		});
 	}
-
-
-	async testfunktionAs(Parameter1, Parameter2) {
-		return new Promise(async (resolve, reject) => {
-
-
-			this.log.debug('testfunktionAs erreicht');
-
-
-			axios({
-				method: 'get', url: 'Http://192.168.70.26:5333/safe-tec/get/VER', timeout: 10000, responseType: 'json'
-			}
-			).then(async (response) => {
-				const content = response.data;
-				this.log.debug(`[getSensorData] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
-
-				resolve(response.responseTime);
-			}
-			).catch(async (error) => {
-				if (error.response) {
-					// The request was made and the server responded with a status code
-
-					this.log.warn(`Warnmeldung`);
-				} else if (error.request) {
-					// The request was made but no response was received
-					// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-					// http.ClientRequest in node.js<div></div>
-					this.log.info(error.message);
-				} else {
-					// Something happened in setting up the request that triggered an Error
-					this.log.info(error.message);
-				}
-				reject('http error');
-			});
-		});
-	}
-
 
 	async fillSensorData(deviceId, sensor) {
 		return new Promise(async (resolve, reject) => {
