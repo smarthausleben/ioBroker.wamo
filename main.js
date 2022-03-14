@@ -219,7 +219,7 @@ class Leackagedect extends utils.Adapter {
 				const content = response.data;
 				this.log.debug(`[getSensorData] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
 
-				resolve(response.data);
+				resolve(JSON.stringify(response.data));
 			}
 			).catch(async (error) => {
 				if (error.response) {
