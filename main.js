@@ -196,6 +196,7 @@ class Leackagedect extends utils.Adapter {
 
 			try{
 				await this.get_DevieParameter('VER','192.168.70.26','5333');
+				await this.get_DevieParameter('AB','192.168.70.26','5333');
 				resolve('Ok');
 			}catch(err)
 			{
