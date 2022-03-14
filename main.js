@@ -56,15 +56,15 @@ class Leackagedect extends utils.Adapter {
 	async onReady() {
 
 		// Testfunktion
-		this.log.debug('vor test aufruf');
+		this.log.debug('vor initDevice()');
 		try{
-			const responseTime = await this.testfunktionAs('','');
-			this.log.debug(`[onReady] testfunktionAs() Antwortzeit: ${responseTime} ms`);
+			const response = await this.initDevice();
+			this.log.debug(`[initDevice] testfunktionAs() Response:  ${response}`);
 		}
 		catch(err){
-			this.log.debug(`[onReady] testfunktionAs() error: ${err}`);
+			this.log.debug(`[initDevice] error: ${err}`);
 		}
-		this.log.debug('nach test aufruf');
+		this.log.debug('nach initDevice()');
 
 
 		// The adapters config (in the instance object everything under the attribute "native") is accessible via
@@ -189,6 +189,55 @@ class Leackagedect extends utils.Adapter {
 	// 	}
 	// }
 
+	async initDevice(){
+		return new Promise(async (resolve, reject) => {
+
+			this.log.debug(`[initDevice()]`);
+
+			try{
+				await this.get_DevieParameter('VER','192.168.70.26','5333');
+				resolve('Ok');
+			}catch(err)
+			{
+				reject(err);
+			}
+		});
+	}
+
+	async get_DevieParameter(ParameterID, IPadress, Port)
+	{
+		return new Promise(async (resolve, reject) => {
+
+			this.log.debug(`[getDevieParameter(ParameterID)] ${ParameterID}`);
+
+			axios({
+				method: 'get', url: 'Http://'+ String(IPadress) +':'+ String(Port) + '/safe-tec/get/' + String(ParameterID), timeout: 10000, responseType: 'json'
+			}
+			).then(async (response) => {
+				const content = response.data;
+				this.log.debug(`[getSensorData] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
+
+				resolve(response.responseTime);
+			}
+			).catch(async (error) => {
+				if (error.response) {
+					// The request was made and the server responded with a status code
+
+					this.log.warn(`Warnmeldung`);
+				} else if (error.request) {
+					// The request was made but no response was received
+					// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+					// http.ClientRequest in node.js<div></div>
+					this.log.info(error.message);
+				} else {
+					// Something happened in setting up the request that triggered an Error
+					this.log.info(error.message);
+				}
+				reject('http error');
+			});
+
+		});
+	}
 
 
 	async testfunktionAs(Parameter1, Parameter2) {
@@ -199,7 +248,7 @@ class Leackagedect extends utils.Adapter {
 
 
 			axios({
-				method: 'get', url: 'Http:/192.168.70.26:5333/safe-tec/get/VER', timeout: 10000, responseType: 'json'
+				method: 'get', url: 'Http://192.168.70.26:5333/safe-tec/get/VER', timeout: 10000, responseType: 'json'
 			}
 			).then(async (response) => {
 				const content = response.data;
