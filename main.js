@@ -196,8 +196,8 @@ class Leackagedect extends utils.Adapter {
 			this.log.debug(`[initDevice()]`);
 
 			try{
-				this.log.info('[VER] Firmware Version: ' + await this.get_DevieParameter('VER', DeviceIP, DevicePort));
-				this.log.info('[AB] Valfe Status: ' + await this.get_DevieParameter('AB', DeviceIP, DevicePort));
+				this.log.debug('[VER] Firmware Version: ' + String(await this.get_DevieParameter('VER', DeviceIP, DevicePort)));
+				this.log.debug('[AB] Valfe Status: ' + String(await this.get_DevieParameter('AB', DeviceIP, DevicePort)));
 				resolve('Ok');
 			}catch(err)
 			{
