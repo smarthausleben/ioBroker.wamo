@@ -159,6 +159,7 @@ class Leackagedect extends utils.Adapter {
 			// clearTimeout(timeout1);
 			// clearTimeout(timeout2);
 			// ...
+			clearInterval(alarm_Intervall_ID);
 			clearInterval(short_Intervall_ID);
 			clearInterval(long_Intervall_ID);
 
@@ -224,18 +225,7 @@ class Leackagedect extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 
 			this.log.debug('Alarm Timer tick');
-			try {
-				resolve('Ok');
-			} catch (err) {
-				reject(err);
-			}
-		});
-	}
-
-	async long_TimerTick() {
-		return new Promise(async (resolve, reject) => {
-
-			this.log.debug('Long Timer tick');
+			await this.get_AlarmTimerValues(this.config.device_ip, this.config.device_port);
 			try {
 				resolve('Ok');
 			} catch (err) {
@@ -249,6 +239,18 @@ class Leackagedect extends utils.Adapter {
 
 			this.log.debug('Short Timer tick');
 			await this.get_ShortTimerValues(this.config.device_ip, this.config.device_port);
+			try {
+				resolve('Ok');
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async long_TimerTick() {
+		return new Promise(async (resolve, reject) => {
+
+			this.log.debug('Long Timer tick');
 			try {
 				resolve('Ok');
 			} catch (err) {
