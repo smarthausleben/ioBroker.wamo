@@ -235,7 +235,7 @@ class Leackagedect extends utils.Adapter {
 							},
 							native: {}
 						});
-						// this.setStateAsync(String(actState), { val: value.getVER, ack: true });
+						this.setStateAsync(String(actState), { val: value.getVER, ack: true });
 						break;
 
 					case 'WIP':
@@ -254,10 +254,9 @@ class Leackagedect extends utils.Adapter {
 							},
 							native: {}
 						});
-						// this.setStateAsync(String(actState), { val: value.getWIP, ack: true });
+						this.setStateAsync(String(actState), { val: value.getWIP, ack: true });
 						break;
 				}
-				this.setStateAsync(String(actState), { val: value.get+ID, ack: true });
 				resolve('Ok');
 			} catch (err) {
 				reject(err);
