@@ -216,16 +216,50 @@ class Leackagedect extends utils.Adapter {
 
 	async UpdateState(ID, value){
 		return new Promise(async (resolve, reject) => {
+			try {
+				let actState;
+				switch (String(ID)) {
+					case 'VER':
+						actState = 'Device.Info.' + String(ID);
+						await this.setObjectNotExistsAsync(actState, {
+							type: 'state',
+							common: {
+								name: {
+									en: 'Device Firmware Version',
+									de: 'Gerät Firmwareversion'
+								},
+								type: 'string',
+								role: 'info.firmware',
+								read: true,
+								write: false
+							},
+							native: {}
+						});
+						break;
 
-			const VER = {
-				role: 'info.firmware'
-			};
-			const WIP = {
-				role: 'role info.ip'
-			};
-
-			//role info.ip
-
+					case 'WIP':
+						actState = 'Device.Info.' + String(ID);
+						await this.setObjectNotExistsAsync(actState, {
+							type: 'state',
+							common: {
+								name: {
+									en: 'Device IP Address',
+									de: 'Gerät IP-Adresse'
+								},
+								type: 'string',
+								role: 'info.ip',
+								read: true,
+								write: false
+							},
+							native: {}
+						});
+						break;
+				}
+				this.setStateAsync(String(actState), { val: value, ack: true });
+				resolve('Ok');
+			} catch (err) {
+				reject(err);
+			}
 		});
 	}
 
