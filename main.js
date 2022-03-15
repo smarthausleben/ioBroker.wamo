@@ -193,7 +193,7 @@ class Leackagedect extends utils.Adapter {
 	async initDevice(DeviceIP, DevicePort){
 		return new Promise(async (resolve, reject) => {
 
-			const listOfParameter = ['VER','WIP', 'MAC', 'WGW', 'SRN', 'CNO'];
+			const listOfParameter = ['VER','WIP', 'MAC', 'WGW', 'SRN', 'CNO', 'WFR'];
 
 			this.log.debug(`[initDevice()]`);
 			let result;
@@ -217,7 +217,7 @@ class Leackagedect extends utils.Adapter {
 			try {
 				let actState;
 				switch (String(ID)) {
-					case 'VER':
+					case 'VER':	// Firmware
 						actState = 'Device.Info.' + String(ID);
 						await this.setObjectNotExistsAsync(actState, {
 							type: 'state',
@@ -236,7 +236,7 @@ class Leackagedect extends utils.Adapter {
 						this.setStateAsync(String(actState), { val: value.getVER, ack: true });
 						break;
 
-					case 'WIP':
+					case 'WIP': // IP Address
 						actState = 'Device.Info.' + String(ID);
 						await this.setObjectNotExistsAsync(actState, {
 							type: 'state',
@@ -255,7 +255,7 @@ class Leackagedect extends utils.Adapter {
 						this.setStateAsync(String(actState), { val: value.getWIP, ack: true });
 						break;
 
-					case 'MAC':
+					case 'MAC': // MAC Address
 						actState = 'Device.Info.' + String(ID);
 						await this.setObjectNotExistsAsync(actState, {
 							type: 'state',
@@ -274,7 +274,7 @@ class Leackagedect extends utils.Adapter {
 						this.setStateAsync(String(actState), { val: value.getMAC, ack: true });
 						break;
 
-					case 'WGW':
+					case 'WGW':	// Default Gateway
 						actState = 'Device.Info.' + String(ID);
 						await this.setObjectNotExistsAsync(actState, {
 							type: 'state',
@@ -293,7 +293,7 @@ class Leackagedect extends utils.Adapter {
 						this.setStateAsync(String(actState), { val: value.getWGW, ack: true });
 						break;
 
-					case 'SRN':
+					case 'SRN':	// Serial Number
 						actState = 'Device.Info.' + String(ID);
 						await this.setObjectNotExistsAsync(actState, {
 							type: 'state',
@@ -312,7 +312,7 @@ class Leackagedect extends utils.Adapter {
 						this.setStateAsync(String(actState), { val: value.getSRN, ack: true });
 						break;
 
-					case 'CNO':
+					case 'CNO': // Code Number
 						actState = 'Device.Info.' + String(ID);
 						await this.setObjectNotExistsAsync(actState, {
 							type: 'state',
@@ -329,6 +329,26 @@ class Leackagedect extends utils.Adapter {
 							native: {}
 						});
 						this.setStateAsync(String(actState), { val: value.getCNO, ack: true });
+						break;
+
+					case 'WFR': // Code Number
+						actState = 'Device.Info.' + String(ID);
+						await this.setObjectNotExistsAsync(actState, {
+							type: 'state',
+							common: {
+								name: {
+									en: 'Device Code Number',
+									de: 'Gerät Code Nummer'
+								},
+								type: 'string',
+								role: 'info.rssi',
+								unit: '%',
+								read: true,
+								write: false
+							},
+							native: {}
+						});
+						this.setStateAsync(String(actState), { val: value.getWFR, ack: true });
 						break;
 				}
 				resolve('Ok');
