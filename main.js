@@ -261,24 +261,20 @@ class Leackagedect extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 				const state_ID = 'Device.Info.VER';
-				if (!existsState(state_ID)) {
-					this.log.debug('creating State : ' + String(state_ID));
-					await this.setObjectNotExistsAsync(state_ID, {
-						type: 'state',
-						common: {
-							name: {
-								en: 'Device Firmware Version',
-								de: 'Gerät Firmware Version'
-							},
-							type: 'string',
-							role: 'info.firmware',
-							read: true,
-							write: false
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Device Firmware Version',
+							de: 'Gerät Firmware Version'
 						},
-						native: {}
-					});
-
-				}
+						type: 'string',
+						role: 'info.firmware',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
 				this.setStateAsync(state_ID, { val: value.getVER, ack: true });
 				resolve(true);
 			} catch (err) {
@@ -291,24 +287,20 @@ class Leackagedect extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 				const state_ID = 'Device.Info.WIP';
-				if (!existsState(state_ID)) {
-					this.log.debug('creating State : ' + String(state_ID));
-					await this.setObjectNotExistsAsync(state_ID, {
-						type: 'state',
-						common: {
-							name: {
-								en: 'Device IP Address',
-								de: 'Gerät IP-Adresse'
-							},
-							type: 'string',
-							role: 'info.ip',
-							read: true,
-							write: false
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Device IP Address',
+							de: 'Gerät IP-Adresse'
 						},
-						native: {}
-					});
-
-				}
+						type: 'string',
+						role: 'info.ip',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
 				this.setStateAsync(state_ID, { val: value.getWIP, ack: true });
 				resolve(true);
 			} catch (err) {
@@ -321,24 +313,20 @@ class Leackagedect extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 				const state_ID = 'Device.Info.MAC';
-				if (!existsState(state_ID)) {
-					this.log.debug('creating State : ' + String(state_ID));
-					await this.setObjectNotExistsAsync(state_ID, {
-						type: 'state',
-						common: {
-							name: {
-								en: 'Device MAC Address',
-								de: 'Gerät MAC-Adresse'
-							},
-							type: 'string',
-							role: 'info.mac',
-							read: true,
-							write: false
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Device MAC Address',
+							de: 'Gerät MAC-Adresse'
 						},
-						native: {}
-					});
-
-				}
+						type: 'string',
+						role: 'info.mac',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
 				this.setStateAsync(state_ID, { val: value.getMAC, ack: true });
 				resolve(true);
 			} catch (err) {
@@ -351,24 +339,20 @@ class Leackagedect extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 				const state_ID = 'Device.Info.WGW';
-				if (!existsState(state_ID)) {
-					this.log.debug('creating State : ' + String(state_ID));
-					await this.setObjectNotExistsAsync(state_ID, {
-						type: 'state',
-						common: {
-							name: {
-								en: 'Device Default Gateway',
-								de: 'Gerät Standard Gateway'
-							},
-							type: 'string',
-							role: 'info.gateway',
-							read: true,
-							write: false
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Device Default Gateway',
+							de: 'Gerät Standard Gateway'
 						},
-						native: {}
-					});
-
-				}
+						type: 'string',
+						role: 'info.gateway',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
 				this.setStateAsync(state_ID, { val: value.getWGW, ack: true });
 				resolve(true);
 			} catch (err) {
@@ -381,24 +365,20 @@ class Leackagedect extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 				const state_ID = 'Device.Info.SRN';
-				if (!existsState(state_ID)) {
-					this.log.debug('creating State : ' + String(state_ID));
-					await this.setObjectNotExistsAsync(state_ID, {
-						type: 'state',
-						common: {
-							name: {
-								en: 'Device Serial Number',
-								de: 'Gerät Seriennummer'
-							},
-							type: 'string',
-							role: 'info.serial',
-							read: true,
-							write: false
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Device Serial Number',
+							de: 'Gerät Seriennummer'
 						},
-						native: {}
-					});
-
-				}
+						type: 'string',
+						role: 'info.serial',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
 				this.setStateAsync(state_ID, { val: value.getSRN, ack: true });
 				resolve(true);
 			} catch (err) {
@@ -411,24 +391,20 @@ class Leackagedect extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 				const state_ID = 'Device.Info.CNO';
-				if (!existsState(state_ID)) {
-					this.log.debug('creating State : ' + String(state_ID));
-					await this.setObjectNotExistsAsync(state_ID, {
-						type: 'state',
-						common: {
-							name: {
-								en: 'Device Code Number',
-								de: 'Gerät Code Nummer'
-							},
-							type: 'string',
-							role: 'info.code',
-							read: true,
-							write: false
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Device Code Number',
+							de: 'Gerät Code Nummer'
 						},
-						native: {}
-					});
-
-				}
+						type: 'string',
+						role: 'info.code',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
 				this.setStateAsync(state_ID, { val: value.getCNO, ack: true });
 				resolve(true);
 			} catch (err) {
@@ -441,25 +417,21 @@ class Leackagedect extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 				const state_ID = 'Device.Info.WFR';
-				if (!existsState(state_ID)) {
-					this.log.debug('creating State : ' + String(state_ID));
-					await this.setObjectNotExistsAsync(state_ID, {
-						type: 'state',
-						common: {
-							name: {
-								en: 'WiFi RSSI',
-								de: 'WLAN RSSI'
-							},
-							type: 'string',
-							role: 'info.rssi',
-							unit: '%',
-							read: true,
-							write: false
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'WiFi RSSI',
+							de: 'WLAN RSSI'
 						},
-						native: {}
-					});
-
-				}
+						type: 'string',
+						role: 'info.rssi',
+						unit: '%',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
 				this.setStateAsync(state_ID, { val: value.getWFR, ack: true });
 				resolve(true);
 			} catch (err) {
@@ -472,24 +444,20 @@ class Leackagedect extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 				const state_ID = 'Device.Info.WFC';
-				if (!existsState(state_ID)) {
-					this.log.debug('creating State : ' + String(state_ID));
-					await this.setObjectNotExistsAsync(state_ID, {
-						type: 'state',
-						common: {
-							name: {
-								en: 'WiFi SSID',
-								de: 'WLAN SSID'
-							},
-							type: 'string',
-							role: 'info.ssid',
-							read: true,
-							write: false
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'WiFi SSID',
+							de: 'WLAN SSID'
 						},
-						native: {}
-					});
-
-				}
+						type: 'string',
+						role: 'info.ssid',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
 				this.setStateAsync(state_ID, { val: value.getWFC, ack: true });
 				resolve(true);
 			} catch (err) {
