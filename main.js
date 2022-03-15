@@ -222,6 +222,7 @@ class Leackagedect extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 
 			this.log.debug('Trigger SHORT polling');
+			this.setInterval(this.Test_long, 10000);
 			try {
 				resolve('Ok');
 			} catch (err) {
