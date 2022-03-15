@@ -194,15 +194,38 @@ class Leackagedect extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 
 			this.log.debug(`[initDevice()]`);
-
+			let result;
 			try{
-				this.log.debug('[VER] Firmware Version: ' + String(await this.get_DevieParameter('VER', DeviceIP, DevicePort)));
-				this.log.debug('[AB] Valfe Status: ' + String(await this.get_DevieParameter('AB', DeviceIP, DevicePort)));
+				// Firmware Version
+				result = await this.get_DevieParameter('VER', DeviceIP, DevicePort);
+				this.log.debug('[VER] Firmware Version: ' + String(result));
+				await this.UpdateState('VER', result);
+
+				// Device IP Address
+				result = await this.get_DevieParameter('WIP', DeviceIP, DevicePort);
+				this.log.debug('[WIP] IP Address: ' + String(result));
+				await this.UpdateState('WIP', result);
+
 				resolve('Ok');
 			}catch(err)
 			{
 				reject(err);
 			}
+		});
+	}
+
+	async UpdateState(ID, value){
+		return new Promise(async (resolve, reject) => {
+
+			const VER = {
+				role: 'info.firmware'
+			};
+			const WIP = {
+				role: 'role info.ip'
+			};
+
+			//role info.ip
+
 		});
 	}
 
