@@ -14,8 +14,9 @@ const adapterName = require('./package.json').name.split('.').pop();
 //Reference to my own adapter
 let myAdapter;
 
+// Variable for Timer IDs
+let alarm_Intervall_ID;
 let short_Intervall_ID;
-
 let long_Intervall_ID;
 
 
@@ -131,16 +132,20 @@ class Leackagedect extends utils.Adapter {
 
 		this.log.info('Adapter wurde gestartet');
 
-		this.log.debug('vor init Timer');
+		this.log.debug('Alarm Timer init');
 		// Die Timer für das Polling starten
+		alarm_Intervall_ID = this.setInterval(alarm_poll, 5000);
+
+		// Start des Short Timers um 3 Sekunden verzögern
+		await sleep(3000);
+		this.log.debug('Short Timer init');
 		short_Intervall_ID = this.setInterval(short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
-		this.log.debug('short_Intervall_ID: ' + String(short_Intervall_ID));
-		// Start des Long Timers um 15 Sekunden verzögern
+
+		// Start des Long Timers um 9 Sekunden verzögern
 		// da die Anwender die Tendenz ein Vielfaches des Short Timer al Zeit zu verwend ;-)
-		await sleep(15000);
+		await sleep(9000);
+		this.log.debug('Long Timer init');
 		long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
-		this.log.debug('long_Intervall_ID: ' + String(long_Intervall_ID));
-		this.log.debug('nach init Timer');
 	}
 
 	/**
@@ -213,6 +218,18 @@ class Leackagedect extends utils.Adapter {
 	// }
 
 
+
+	async alarm_TimerTick() {
+		return new Promise(async (resolve, reject) => {
+
+			this.log.debug('Alarm Timer tick');
+			try {
+				resolve('Ok');
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
 
 	async long_TimerTick() {
 		return new Promise(async (resolve, reject) => {
@@ -1216,6 +1233,15 @@ function sleep(ms) {
 		setTimeout(resolve, ms);
 	});
 }
+
+async function alarm_poll() {
+	try {
+		await myAdapter.alarm_TimerTick();
+	} catch (err) {
+		// text
+	}
+}
+
 
 async function short_poll() {
 	try {
