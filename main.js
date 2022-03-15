@@ -128,10 +128,7 @@ class Leackagedect extends utils.Adapter {
 
 		this.log.debug('vor init Timer');
 		// Die Timer für das Polling starten
-		short_Intervall_ID = this.setInterval(this.short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
-		this.log.debug('short_Intervall_ID: ' + String(short_Intervall_ID));
-		long_Intervall_ID = this.setInterval(this.long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
-		this.log.debug('long_Intervall_ID: ' + String(long_Intervall_ID));
+		await this.start_fast_timer();
 		this.log.debug('nach init Timer');
 	}
 
@@ -146,7 +143,7 @@ class Leackagedect extends utils.Adapter {
 			// clearTimeout(timeout2);
 			// ...
 			clearInterval(short_Intervall_ID);
-			clearInterval(long_Intervall_ID);
+			//clearInterval(long_Intervall_ID);
 
 			callback();
 		} catch (e) {
@@ -204,33 +201,15 @@ class Leackagedect extends utils.Adapter {
 	// 	}
 	// }
 
-	async short_poll() {
-		await this.short_poll_do();
-	}
-
-	async long_poll() {
-		await this.long_poll_do();
-	}
-
-	async short_poll_do() {
-		return new Promise(async (resolve, reject) => {
-			try {
-				this.log.debug('Trigger SHORT polling');
-				resolve('Ok');
-			} catch (err) {
-				reject(err);
-			}
-		});
-	}
-
-	async long_poll_do(){
-		return new Promise(async (resolve, reject) => {
-			try {
-				this.log.debug('Trigger LONG polling');
-				resolve('Ok');
-			} catch (err) {
-				reject(err);
-			}
+	async start_fast_timer() {
+		return await new Promise(resolve => {
+			short_Intervall_ID = setInterval(() => {
+				this.log.debug('timer tick');
+				if (false) {
+					resolve('foo');
+					clearInterval(short_Intervall_ID);
+				}
+			}, 30000);
 		});
 	}
 
