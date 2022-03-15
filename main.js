@@ -11,6 +11,17 @@ const axios = require('axios');
 
 const adapterName = require('./package.json').name.split('.').pop();
 
+
+const listOfParameter = [
+	'Device.Info.VER',
+	'Device.Info.WIP',
+	'Device.Info.MAC',
+	'Device.Info.WGW',
+	'Device.Info.SRN',
+	'Device.Info.CNO',
+	'Device.Info.WFR',
+	'Device.Info.WFC'];
+
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
 //============================================================================
@@ -63,11 +74,11 @@ class Leackagedect extends utils.Adapter {
 
 		// Device Initialisation
 		this.log.debug('vor initDevice()');
-		try{
+		try {
 			const response = await this.initDevice(this.config.device_ip, this.config.device_port);
 			this.log.debug(`[initDevice] testfunktionAs() Response:  ${response}`);
 		}
-		catch(err){
+		catch (err) {
 			this.log.debug(`[initDevice] error: ${err}`);
 		}
 		this.log.debug('nach initDevice()');
@@ -190,185 +201,16 @@ class Leackagedect extends utils.Adapter {
 	// 	}
 	// }
 
-	async initDevice(DeviceIP, DevicePort){
+	async initDevice(DeviceIP, DevicePort) {
 		return new Promise(async (resolve, reject) => {
-
-			const listOfParameter = ['VER','WIP', 'MAC', 'WGW', 'SRN', 'CNO', 'WFR', 'WFC'];
 
 			this.log.debug(`[initDevice()]`);
 			let result;
-			try{
-				for (const par of listOfParameter)
-				{
-					result = await this.get_DevieParameter(par, DeviceIP, DevicePort);
-					this.log.debug('[' + par + '] : ' + String(JSON.stringify(result)));
-					await this.UpdateState(par, result);
-				}
-				resolve('Ok');
-			}catch(err)
-			{
-				reject(err);
-			}
-		});
-	}
-
-	async UpdateState(ID, value){
-		return new Promise(async (resolve, reject) => {
 			try {
-				let actState;
-				switch (String(ID)) {
-					case 'VER':	// Firmware
-						actState = 'Device.Info.' + String(ID);
-						await this.setObjectNotExistsAsync(actState, {
-							type: 'state',
-							common: {
-								name: {
-									en: 'Device Firmware Version',
-									de: 'Gerät Firmwareversion'
-								},
-								type: 'string',
-								role: 'info.firmware',
-								read: true,
-								write: false
-							},
-							native: {}
-						});
-						this.setStateAsync(String(actState), { val: value.getVER, ack: true });
-						break;
-
-					case 'WIP': // IP Address
-						actState = 'Device.Info.' + String(ID);
-						await this.setObjectNotExistsAsync(actState, {
-							type: 'state',
-							common: {
-								name: {
-									en: 'Device IP Address',
-									de: 'Gerät IP-Adresse'
-								},
-								type: 'string',
-								role: 'info.ip',
-								read: true,
-								write: false
-							},
-							native: {}
-						});
-						this.setStateAsync(String(actState), { val: value.getWIP, ack: true });
-						break;
-
-					case 'MAC': // MAC Address
-						actState = 'Device.Info.' + String(ID);
-						await this.setObjectNotExistsAsync(actState, {
-							type: 'state',
-							common: {
-								name: {
-									en: 'Device MAC Address',
-									de: 'Gerät MAC-Adresse'
-								},
-								type: 'string',
-								role: 'info.mac',
-								read: true,
-								write: false
-							},
-							native: {}
-						});
-						this.setStateAsync(String(actState), { val: value.getMAC, ack: true });
-						break;
-
-					case 'WGW':	// Default Gateway
-						actState = 'Device.Info.' + String(ID);
-						await this.setObjectNotExistsAsync(actState, {
-							type: 'state',
-							common: {
-								name: {
-									en: 'Device Default Gateway',
-									de: 'Gerät Standard Gateway'
-								},
-								type: 'string',
-								role: 'info.gateway',
-								read: true,
-								write: false
-							},
-							native: {}
-						});
-						this.setStateAsync(String(actState), { val: value.getWGW, ack: true });
-						break;
-
-					case 'SRN':	// Serial Number
-						actState = 'Device.Info.' + String(ID);
-						await this.setObjectNotExistsAsync(actState, {
-							type: 'state',
-							common: {
-								name: {
-									en: 'Device Serial Number',
-									de: 'Gerät Seriennummer'
-								},
-								type: 'string',
-								role: 'info.serial',
-								read: true,
-								write: false
-							},
-							native: {}
-						});
-						this.setStateAsync(String(actState), { val: value.getSRN, ack: true });
-						break;
-
-					case 'CNO': // Code Number
-						actState = 'Device.Info.' + String(ID);
-						await this.setObjectNotExistsAsync(actState, {
-							type: 'state',
-							common: {
-								name: {
-									en: 'Device Code Number',
-									de: 'Gerät Code Nummer'
-								},
-								type: 'string',
-								role: 'info.code',
-								read: true,
-								write: false
-							},
-							native: {}
-						});
-						this.setStateAsync(String(actState), { val: value.getCNO, ack: true });
-						break;
-
-					case 'WFR': // WiFi RSSI
-						actState = 'Device.Info.' + String(ID);
-						await this.setObjectNotExistsAsync(actState, {
-							type: 'state',
-							common: {
-								name: {
-									en: 'WiFi RSSI',
-									de: 'WLAN RSSI'
-								},
-								type: 'string',
-								role: 'info.rssi',
-								unit: '%',
-								read: true,
-								write: false
-							},
-							native: {}
-						});
-						this.setStateAsync(String(actState), { val: value.getWFR, ack: true });
-						break;
-
-					case 'WFC': // WiFi SSID
-						actState = 'Device.Info.' + String(ID);
-						await this.setObjectNotExistsAsync(actState, {
-							type: 'state',
-							common: {
-								name: {
-									en: 'WiFi SSID',
-									de: 'WLAN SSID'
-								},
-								type: 'string',
-								role: 'info.ssid',
-								read: true,
-								write: false
-							},
-							native: {}
-						});
-						this.setStateAsync(String(actState), { val: value.getWFC, ack: true });
-						break;
+				for (const parameterID of listOfParameter) {
+					result = await this.get_DevieParameter(parameterID, DeviceIP, DevicePort);
+					this.log.debug('[' + parameterID + '] : ' + String(JSON.stringify(result)));
+					await this.UpdateState(parameterID, result);
 				}
 				resolve('Ok');
 			} catch (err) {
@@ -377,14 +219,292 @@ class Leackagedect extends utils.Adapter {
 		});
 	}
 
-	async get_DevieParameter(ParameterID, IPadress, Port)
-	{
+	async UpdateState(stateID, value) {
+		return new Promise(async (resolve, reject) => {
+
+			try {
+				switch (stateID) {
+					case 'Device.Info.VER':
+						await this.state_VER(value);
+						break;
+					case 'Device.Info.WIP':
+						await this.state_WIP(value);
+						break;
+					case 'Device.Info.MAC':
+						await this.state_MAC(value);
+						break;
+					case 'Device.Info.WGW':
+						await this.state_WGW(value);
+						break;
+					case 'Device.Info.SRN':
+						await this.state_SRN(value);
+						break;
+					case 'Device.Info.CNO':
+						await this.state_CNO(value);
+						break;
+					case 'Device.Info.WFR':
+						await this.state_WFR(value);
+						break;
+					case 'Device.Info.WFC':
+						await this.state_WFC(value);
+						break;
+				}
+
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async state_VER(value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Device.Info.VER';
+				if (!existsState(state_ID)) {
+					this.log.debug('creating State : ' + String(state_ID));
+					await this.setObjectNotExistsAsync(state_ID, {
+						type: 'state',
+						common: {
+							name: {
+								en: 'Device Firmware Version',
+								de: 'Gerät Firmware Version'
+							},
+							type: 'string',
+							role: 'info.firmware',
+							read: true,
+							write: false
+						},
+						native: {}
+					});
+
+				}
+				this.setStateAsync(state_ID, { val: value.getVER, ack: true });
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async state_WIP(value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Device.Info.WIP';
+				if (!existsState(state_ID)) {
+					this.log.debug('creating State : ' + String(state_ID));
+					await this.setObjectNotExistsAsync(state_ID, {
+						type: 'state',
+						common: {
+							name: {
+								en: 'Device IP Address',
+								de: 'Gerät IP-Adresse'
+							},
+							type: 'string',
+							role: 'info.ip',
+							read: true,
+							write: false
+						},
+						native: {}
+					});
+
+				}
+				this.setStateAsync(state_ID, { val: value.getWIP, ack: true });
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async state_MAC(value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Device.Info.MAC';
+				if (!existsState(state_ID)) {
+					this.log.debug('creating State : ' + String(state_ID));
+					await this.setObjectNotExistsAsync(state_ID, {
+						type: 'state',
+						common: {
+							name: {
+								en: 'Device MAC Address',
+								de: 'Gerät MAC-Adresse'
+							},
+							type: 'string',
+							role: 'info.mac',
+							read: true,
+							write: false
+						},
+						native: {}
+					});
+
+				}
+				this.setStateAsync(state_ID, { val: value.getMAC, ack: true });
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async state_WGW(value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Device.Info.WGW';
+				if (!existsState(state_ID)) {
+					this.log.debug('creating State : ' + String(state_ID));
+					await this.setObjectNotExistsAsync(state_ID, {
+						type: 'state',
+						common: {
+							name: {
+								en: 'Device Default Gateway',
+								de: 'Gerät Standard Gateway'
+							},
+							type: 'string',
+							role: 'info.gateway',
+							read: true,
+							write: false
+						},
+						native: {}
+					});
+
+				}
+				this.setStateAsync(state_ID, { val: value.getWGW, ack: true });
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async state_SRN(value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Device.Info.SRN';
+				if (!existsState(state_ID)) {
+					this.log.debug('creating State : ' + String(state_ID));
+					await this.setObjectNotExistsAsync(state_ID, {
+						type: 'state',
+						common: {
+							name: {
+								en: 'Device Serial Number',
+								de: 'Gerät Seriennummer'
+							},
+							type: 'string',
+							role: 'info.serial',
+							read: true,
+							write: false
+						},
+						native: {}
+					});
+
+				}
+				this.setStateAsync(state_ID, { val: value.getSRN, ack: true });
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async state_CNO(value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Device.Info.CNO';
+				if (!existsState(state_ID)) {
+					this.log.debug('creating State : ' + String(state_ID));
+					await this.setObjectNotExistsAsync(state_ID, {
+						type: 'state',
+						common: {
+							name: {
+								en: 'Device Code Number',
+								de: 'Gerät Code Nummer'
+							},
+							type: 'string',
+							role: 'info.code',
+							read: true,
+							write: false
+						},
+						native: {}
+					});
+
+				}
+				this.setStateAsync(state_ID, { val: value.getCNO, ack: true });
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async state_WFR(value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Device.Info.WFR';
+				if (!existsState(state_ID)) {
+					this.log.debug('creating State : ' + String(state_ID));
+					await this.setObjectNotExistsAsync(state_ID, {
+						type: 'state',
+						common: {
+							name: {
+								en: 'WiFi RSSI',
+								de: 'WLAN RSSI'
+							},
+							type: 'string',
+							role: 'info.rssi',
+							unit: '%',
+							read: true,
+							write: false
+						},
+						native: {}
+					});
+
+				}
+				this.setStateAsync(state_ID, { val: value.getWFR, ack: true });
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async state_WFC(value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Device.Info.WFC';
+				if (!existsState(state_ID)) {
+					this.log.debug('creating State : ' + String(state_ID));
+					await this.setObjectNotExistsAsync(state_ID, {
+						type: 'state',
+						common: {
+							name: {
+								en: 'WiFi SSID',
+								de: 'WLAN SSID'
+							},
+							type: 'string',
+							role: 'info.ssid',
+							read: true,
+							write: false
+						},
+						native: {}
+					});
+
+				}
+				this.setStateAsync(state_ID, { val: value.getWFC, ack: true });
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async get_DevieParameter(ParameterID, IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
 
 			this.log.debug(`[getDevieParameter(ParameterID)] ${ParameterID}`);
 
 			axios({
-				method: 'get', url: 'Http://'+ String(IPadress) +':'+ String(Port) + '/safe-tec/get/' + String(ParameterID), timeout: 10000, responseType: 'json'
+				method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/' + String(ParameterID), timeout: 10000, responseType: 'json'
 			}
 			).then(async (response) => {
 				const content = response.data;
