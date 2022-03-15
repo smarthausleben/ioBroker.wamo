@@ -198,12 +198,12 @@ class Leackagedect extends utils.Adapter {
 			try{
 				// Firmware Version
 				result = await this.get_DevieParameter('VER', DeviceIP, DevicePort);
-				this.log.debug('[VER] Firmware Version: ' + String(result));
+				this.log.debug('[VER] Firmware Version: ' + String(JSON.stringify(result)));
 				await this.UpdateState('VER', result);
 
 				// Device IP Address
 				result = await this.get_DevieParameter('WIP', DeviceIP, DevicePort);
-				this.log.debug('[WIP] IP Address: ' + String(result));
+				this.log.debug('[WIP] IP Address: ' + String(JSON.stringify(result)));
 				await this.UpdateState('WIP', result);
 
 				resolve('Ok');
@@ -235,6 +235,7 @@ class Leackagedect extends utils.Adapter {
 							},
 							native: {}
 						});
+						// this.setStateAsync(String(actState), { val: value.getVER, ack: true });
 						break;
 
 					case 'WIP':
@@ -253,9 +254,10 @@ class Leackagedect extends utils.Adapter {
 							},
 							native: {}
 						});
+						// this.setStateAsync(String(actState), { val: value.getWIP, ack: true });
 						break;
 				}
-				this.setStateAsync(String(actState), { val: value, ack: true });
+				this.setStateAsync(String(actState), { val: value.get+ID, ack: true });
 				resolve('Ok');
 			} catch (err) {
 				reject(err);
@@ -276,7 +278,7 @@ class Leackagedect extends utils.Adapter {
 				const content = response.data;
 				this.log.debug(`[getSensorData] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
 
-				resolve(JSON.stringify(response.data));
+				resolve(response.data);
 			}
 			).catch(async (error) => {
 				if (error.response) {
