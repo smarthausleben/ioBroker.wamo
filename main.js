@@ -193,24 +193,17 @@ class Leackagedect extends utils.Adapter {
 	async initDevice(DeviceIP, DevicePort){
 		return new Promise(async (resolve, reject) => {
 
+			const listOfParameter = ['VER','WIP', 'MAC'];
+
 			this.log.debug(`[initDevice()]`);
 			let result;
 			try{
-				// Firmware Version
-				result = await this.get_DevieParameter('VER', DeviceIP, DevicePort);
-				this.log.debug('[VER] Firmware Version: ' + String(JSON.stringify(result)));
-				await this.UpdateState('VER', result);
-
-				// Device IP Address
-				result = await this.get_DevieParameter('WIP', DeviceIP, DevicePort);
-				this.log.debug('[WIP] IP Address: ' + String(JSON.stringify(result)));
-				await this.UpdateState('WIP', result);
-
-				// Device MAC Address
-				result = await this.get_DevieParameter('MAC', DeviceIP, DevicePort);
-				this.log.debug('[WIP] MAC Address: ' + String(JSON.stringify(result)));
-				await this.UpdateState('MAC', result);
-
+				for (const par of listOfParameter)
+				{
+					result = await this.get_DevieParameter(par, DeviceIP, DevicePort);
+					this.log.debug('[' + par + '] : ' + String(JSON.stringify(result)));
+					await this.UpdateState(par, result);
+				}
 				resolve('Ok');
 			}catch(err)
 			{
