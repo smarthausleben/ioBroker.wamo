@@ -58,8 +58,8 @@ class Leackagedect extends utils.Adapter {
 
 		// The adapters config (in the instance object everything under the attribute "native") is accessible via
 		// this.config:
-		this.log.info('config option1: ' + this.config.device_ip);
-		this.log.info('config option2: ' + this.config.device_port);
+		this.log.info('config Device IP: ' + this.config.device_ip);
+		this.log.info('config Device Port: ' + this.config.device_port);
 
 		// Device Initialisation
 		this.log.debug('vor initDevice()');
@@ -206,6 +206,11 @@ class Leackagedect extends utils.Adapter {
 				this.log.debug('[WIP] IP Address: ' + String(JSON.stringify(result)));
 				await this.UpdateState('WIP', result);
 
+				// Device MAC Address
+				result = await this.get_DevieParameter('MAC', DeviceIP, DevicePort);
+				this.log.debug('[WIP] MAC Address: ' + String(JSON.stringify(result)));
+				await this.UpdateState('MAC', result);
+
 				resolve('Ok');
 			}catch(err)
 			{
@@ -255,6 +260,25 @@ class Leackagedect extends utils.Adapter {
 							native: {}
 						});
 						this.setStateAsync(String(actState), { val: value.getWIP, ack: true });
+						break;
+
+					case 'MAC':
+						actState = 'Device.Info.' + String(ID);
+						await this.setObjectNotExistsAsync(actState, {
+							type: 'state',
+							common: {
+								name: {
+									en: 'Device MAC Address',
+									de: 'Gerät MAC-Adresse'
+								},
+								type: 'string',
+								role: 'info.mac',
+								read: true,
+								write: false
+							},
+							native: {}
+						});
+						this.setStateAsync(String(actState), { val: value.getMAC, ack: true });
 						break;
 				}
 				resolve('Ok');
