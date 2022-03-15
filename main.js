@@ -193,7 +193,7 @@ class Leackagedect extends utils.Adapter {
 	async initDevice(DeviceIP, DevicePort){
 		return new Promise(async (resolve, reject) => {
 
-			const listOfParameter = ['VER','WIP', 'MAC', 'WGW', 'SRN'];
+			const listOfParameter = ['VER','WIP', 'MAC', 'WGW', 'SRN', 'CNO'];
 
 			this.log.debug(`[initDevice()]`);
 			let result;
@@ -300,7 +300,7 @@ class Leackagedect extends utils.Adapter {
 							common: {
 								name: {
 									en: 'Device Serial Number',
-									de: 'Gerät Seriennumer'
+									de: 'Gerät Seriennummer'
 								},
 								type: 'string',
 								role: 'info.serial',
@@ -310,6 +310,25 @@ class Leackagedect extends utils.Adapter {
 							native: {}
 						});
 						this.setStateAsync(String(actState), { val: value.getSRN, ack: true });
+						break;
+
+					case 'CNO':
+						actState = 'Device.Info.' + String(ID);
+						await this.setObjectNotExistsAsync(actState, {
+							type: 'state',
+							common: {
+								name: {
+									en: 'Device Code Number',
+									de: 'Gerät Code Nummer'
+								},
+								type: 'string',
+								role: 'info.code',
+								read: true,
+								write: false
+							},
+							native: {}
+						});
+						this.setStateAsync(String(actState), { val: value.getCNO, ack: true });
 						break;
 				}
 				resolve('Ok');
