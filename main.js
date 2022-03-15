@@ -513,7 +513,7 @@ class Leackagedect extends utils.Adapter {
 							en: 'WiFi AP hidden',
 							de: 'WLAN AP versteckt'
 						},
-						type: 'string',
+						type: 'boolean',
 						role: 'info.wifihidden',
 						read: true,
 						write: false
@@ -521,10 +521,10 @@ class Leackagedect extends utils.Adapter {
 					native: {}
 				});
 				if (value.getWAH === 0) {
-					this.setStateAsync(state_ID, { val: 'No', ack: true });
+					this.setStateAsync(state_ID, { val: false, ack: true });
 				}
 				else {
-					this.setStateAsync(state_ID, { val: 'Yes', ack: true });
+					this.setStateAsync(state_ID, { val: true, ack: true });
 				}
 				resolve(true);
 			} catch (err) {
