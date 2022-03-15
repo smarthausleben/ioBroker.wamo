@@ -217,11 +217,11 @@ class Leackagedect extends utils.Adapter {
 	// }
 
 	async short_pollData() {
-		this.log.debug('Trigger SHORT polling');
+		// this.log.debug('Trigger SHORT polling');
 	}
 
 	async long_pollData() {
-		this.log.debug('Trigger LONG polling');
+		//this.log.debug('Trigger LONG polling');
 	}
 
 
