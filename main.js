@@ -206,7 +206,8 @@ class Leackagedect extends utils.Adapter {
 				'Device.Info.SRV',
 				'Device.Info.WAH',
 				'Device.Info.WAD',
-				'Device.Info.APT'];
+				'Device.Info.APT',
+				'Device.Info.DWL'];
 
 			this.log.debug(`[initDevice()]`);
 			let result;
@@ -265,6 +266,9 @@ class Leackagedect extends utils.Adapter {
 						break;
 					case 'Device.Info.APT':
 						await this.state_APT(value);
+						break;
+					case 'Device.Info.DWL':
+						await this.state_DWL(value);
 						break;
 				}
 
@@ -585,6 +589,7 @@ class Leackagedect extends utils.Adapter {
 						},
 						type: 'string',
 						role: 'info.wifitimeout',
+						unit: 's',
 						read: true,
 						write: false
 					},
@@ -595,6 +600,37 @@ class Leackagedect extends utils.Adapter {
 				}
 				else {
 					this.setStateAsync(state_ID, { val: 'disabled', ack: true });
+				}
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async state_DWL(value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Device.Info.DWL';
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'WiFi deactivate',
+							de: 'WLAN deaktivieren'
+						},
+						type: 'boolean',
+						role: 'info.wifideaktivate',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				if (value.getDWL === 0) {
+					this.setStateAsync(state_ID, { val: false, ack: true });
+				}
+				else {
+					this.setStateAsync(state_ID, { val: true, ack: true });
 				}
 				resolve(true);
 			} catch (err) {
