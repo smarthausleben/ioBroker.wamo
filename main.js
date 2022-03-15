@@ -11,6 +11,8 @@ const axios = require('axios');
 
 const adapterName = require('./package.json').name.split('.').pop();
 
+//Reference to my own adapter
+let myAdapter;
 
 let short_Intervall_ID;
 
@@ -124,20 +126,18 @@ class Leackagedect extends utils.Adapter {
 		result = await this.checkGroupAsync('admin', 'admin');
 		this.log.info('check group user admin group admin: ' + result);
 
+		// reference to Adapter
+		myAdapter = this;
+
 		this.log.info('Adapter wurde gestartet');
 
-		if (false) {
-			this.log.debug('vor init Timer');
-			// Die Timer für das Polling starten
-			short_Intervall_ID = this.setInterval(this.short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
-			this.log.debug('short_Intervall_ID: ' + String(short_Intervall_ID));
-			long_Intervall_ID = this.setInterval(this.long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
-			this.log.debug('long_Intervall_ID: ' + String(long_Intervall_ID));
-			this.log.debug('nach init Timer');
-		} else {
-			await this.Test_short();
-			await this.Test_long();
-		}
+		this.log.debug('vor init Timer');
+		// Die Timer für das Polling starten
+		short_Intervall_ID = this.setInterval(short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
+		this.log.debug('short_Intervall_ID: ' + String(short_Intervall_ID));
+		long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
+		this.log.debug('long_Intervall_ID: ' + String(long_Intervall_ID));
+		this.log.debug('nach init Timer');
 	}
 
 	/**
@@ -210,41 +210,29 @@ class Leackagedect extends utils.Adapter {
 	// }
 
 
-	async short_poll() {
-		await this.Test_short();
-	}
 
-	async long_poll() {
-		await this.Test_long();
-	}
-
-	async Test_short() {
+	async long_TimerTick() {
 		return new Promise(async (resolve, reject) => {
 
-			this.log.debug('Trigger SHORT polling');
-			this.setInterval(()=> {
-				this.log.debug('Time tick');
-			}, 10000);
+			this.log.debug('Long Timer tick');
 			try {
 				resolve('Ok');
 			} catch (err) {
 				reject(err);
 			}
 		});
-
 	}
 
-	async Test_long() {
+	async short_TimerTick() {
 		return new Promise(async (resolve, reject) => {
 
-			this.log.debug('Trigger LONG polling');
+			this.log.debug('Short Timer tick');
 			try {
 				resolve('Ok');
 			} catch (err) {
 				reject(err);
 			}
 		});
-
 	}
 
 	async initDevice(DeviceIP, DevicePort) {
@@ -1218,9 +1206,24 @@ class Leackagedect extends utils.Adapter {
 			}
 		});
 	}
-
-
 }
+
+async function short_poll() {
+	try {
+		await myAdapter.short_TimerTick();
+	} catch (err) {
+		// text
+	}
+}
+
+async function long_poll() {
+	try {
+		await myAdapter.long_TimerTick();
+	} catch (err) {
+		// text
+	}
+}
+
 if (require.main !== module) {
 	// Export the constructor in compact mode
 	/**
