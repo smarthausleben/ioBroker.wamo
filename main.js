@@ -79,25 +79,6 @@ class Leackagedect extends utils.Adapter {
 		this.log.debug('nach initDevice()');
 
 
-
-		this.log.debug('vor init Timer');
-		// Die Timer für das Polling starten
-		try {
-			short_Intervall_ID = setInterval(this.short_pollData, parseInt(this.config.device_short_poll_interval) * 1000);
-		}
-		catch (err) {
-			this.log.debug(`[setInterval(this.short_pollData, parseInt(this.config.device_short_poll_interval) * 1000)] error: ${err}`);
-		}
-
-		try {
-			long_Intervall_ID = setInterval(this.long_pollData, parseInt(this.config.device_long_poll_interval) * 1000);
-		}
-		catch (err) {
-			this.log.debug(`[setInterval(this.long_pollData, parseInt(this.config.device_long_poll_interval) * 1000)] error: ${err}`);
-		}
-		this.log.debug('nach init Timer');
-
-
 		/*
 		For every state in the system there has to be also an object of type state
 		Here a simple template for a boolean variable named "testVariable"
@@ -144,6 +125,14 @@ class Leackagedect extends utils.Adapter {
 		this.log.info('check group user admin group admin: ' + result);
 
 		this.log.info('Adapter wurde gestartet');
+
+		this.log.debug('vor init Timer');
+		// Die Timer für das Polling starten
+		short_Intervall_ID = setInterval(this.short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
+		long_Intervall_ID = setInterval(this.long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
+		this.log.debug('nach init Timer');
+
+
 
 	}
 
@@ -216,7 +205,7 @@ class Leackagedect extends utils.Adapter {
 	// 	}
 	// }
 
-	async short_pollData() {
+	async short_poll() {
 		return new Promise(async (resolve, reject) => {
 			try {
 				this.log.debug(`Trigger SHORT polling`);
@@ -227,7 +216,7 @@ class Leackagedect extends utils.Adapter {
 		});
 	}
 
-	async long_pollData() {
+	async long_poll() {
 		return new Promise(async (resolve, reject) => {
 			try {
 				this.log.debug(`Trigger LONG polling`);
