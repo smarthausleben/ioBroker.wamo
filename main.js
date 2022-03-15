@@ -12,16 +12,6 @@ const axios = require('axios');
 const adapterName = require('./package.json').name.split('.').pop();
 
 
-const listOfParameter = [
-	'Device.Info.VER',
-	'Device.Info.WIP',
-	'Device.Info.MAC',
-	'Device.Info.WGW',
-	'Device.Info.SRN',
-	'Device.Info.CNO',
-	'Device.Info.WFR',
-	'Device.Info.WFC'];
-
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
 //============================================================================
@@ -204,14 +194,25 @@ class Leackagedect extends utils.Adapter {
 	async initDevice(DeviceIP, DevicePort) {
 		return new Promise(async (resolve, reject) => {
 
+			const listOfParameter = [
+				'Device.Info.VER',
+				'Device.Info.WIP',
+				'Device.Info.MAC',
+				'Device.Info.WGW',
+				'Device.Info.SRN',
+				'Device.Info.CNO',
+				'Device.Info.WFR',
+				'Device.Info.WFC',
+				'Device.Info.SRV'];
+
 			this.log.debug(`[initDevice()]`);
 			let result;
 			try {
 				for (const stateID of listOfParameter) {
 					const parameterIDs = stateID.split('.');
-					this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length -1]);
-					result = await this.get_DevieParameter(parameterIDs[parameterIDs.length -1], DeviceIP, DevicePort);
-					this.log.debug('[' + parameterIDs[parameterIDs.length -1] + '] : ' + String(JSON.stringify(result)));
+					this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
+					result = await this.get_DevieParameter(parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
+					this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
 					await this.UpdateState(stateID, result);
 				}
 				resolve('Ok');
@@ -249,6 +250,9 @@ class Leackagedect extends utils.Adapter {
 						break;
 					case 'Device.Info.WFC':
 						await this.state_WFC(value);
+						break;
+					case 'Device.Info.SRV':
+						await this.state_SRV(value);
 						break;
 				}
 
@@ -461,6 +465,32 @@ class Leackagedect extends utils.Adapter {
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: value.getWFC, ack: true });
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async state_SRV(value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Device.Info.SRV';
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Next Maintenance',
+							de: 'Nächster Service'
+						},
+						type: 'string',
+						role: 'info.service',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				this.setStateAsync(state_ID, { val: value.getSRV, ack: true });
 				resolve(true);
 			} catch (err) {
 				reject(err);
