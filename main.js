@@ -128,9 +128,9 @@ class Leackagedect extends utils.Adapter {
 
 		this.log.debug('vor init Timer');
 		// Die Timer für das Polling starten
-		short_Intervall_ID = this.setInterval(short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
+		short_Intervall_ID = this.setInterval(await this.short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
 		this.log.debug('short_Intervall_ID: ' + String(short_Intervall_ID));
-		long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
+		long_Intervall_ID = this.setInterval(await this.long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
 		this.log.debug('long_Intervall_ID: ' + String(long_Intervall_ID));
 		this.log.debug('nach init Timer');
 	}
@@ -203,6 +203,28 @@ class Leackagedect extends utils.Adapter {
 	// 		}
 	// 	}
 	// }
+
+	async short_poll() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				console.log(`Trigger SHORT polling`);
+				resolve('Ok');
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async long_poll() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				console.log(`Trigger LONG polling`);
+				resolve('Ok');
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
 
 	async initDevice(DeviceIP, DevicePort) {
 		return new Promise(async (resolve, reject) => {
@@ -1190,24 +1212,3 @@ if (require.main !== module) {
 }
 
 
-async function short_poll() {
-	return new Promise(async (resolve, reject) => {
-		try {
-			console.log(`Trigger SHORT polling`);
-			resolve('Ok');
-		} catch (err) {
-			reject(err);
-		}
-	});
-}
-
-async function long_poll() {
-	return new Promise(async (resolve, reject) => {
-		try {
-			console.log(`Trigger LONG polling`);
-			resolve('Ok');
-		} catch (err) {
-			reject(err);
-		}
-	});
-}
