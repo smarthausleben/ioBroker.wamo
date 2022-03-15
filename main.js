@@ -126,13 +126,18 @@ class Leackagedect extends utils.Adapter {
 
 		this.log.info('Adapter wurde gestartet');
 
-		this.log.debug('vor init Timer');
-		// Die Timer für das Polling starten
-		short_Intervall_ID = this.setInterval(this.short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
-		this.log.debug('short_Intervall_ID: ' + String(short_Intervall_ID));
-		long_Intervall_ID = this.setInterval(this.long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
-		this.log.debug('long_Intervall_ID: ' + String(long_Intervall_ID));
-		this.log.debug('nach init Timer');
+		if (false) {
+			this.log.debug('vor init Timer');
+			// Die Timer für das Polling starten
+			short_Intervall_ID = this.setInterval(this.short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
+			this.log.debug('short_Intervall_ID: ' + String(short_Intervall_ID));
+			long_Intervall_ID = this.setInterval(this.long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
+			this.log.debug('long_Intervall_ID: ' + String(long_Intervall_ID));
+			this.log.debug('nach init Timer');
+		} else {
+			await this.Test_short();
+			await this.Test_long();
+		}
 	}
 
 	/**
@@ -213,7 +218,7 @@ class Leackagedect extends utils.Adapter {
 		await this.Test_long();
 	}
 
-	async Test_short(){
+	async Test_short() {
 		return new Promise(async (resolve, reject) => {
 
 			this.log.debug('Trigger SHORT polling');
@@ -226,7 +231,7 @@ class Leackagedect extends utils.Adapter {
 
 	}
 
-	async Test_long(){
+	async Test_long() {
 		return new Promise(async (resolve, reject) => {
 
 			this.log.debug('Trigger LONG polling');
