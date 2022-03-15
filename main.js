@@ -12,6 +12,11 @@ const axios = require('axios');
 const adapterName = require('./package.json').name.split('.').pop();
 
 
+let short_Intervall_ID;
+
+let long_Intervall_ID;
+
+
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
 //============================================================================
@@ -74,6 +79,12 @@ class Leackagedect extends utils.Adapter {
 		this.log.debug('nach initDevice()');
 
 
+		this.log.debug('vor init Timer');
+		// Die Timer für das Polling starten
+		short_Intervall_ID = setInterval(this.short_pollData, parseInt(this.config.device_short_poll_interval) * 1000);
+		long_Intervall_ID = setInterval(this.long_pollData, parseInt(this.config.device_long_poll_interval) * 1000);
+		this.log.debug('nach init Timer');
+
 		/*
 		For every state in the system there has to be also an object of type state
 		Here a simple template for a boolean variable named "testVariable"
@@ -133,7 +144,8 @@ class Leackagedect extends utils.Adapter {
 			// clearTimeout(timeout1);
 			// clearTimeout(timeout2);
 			// ...
-			// clearInterval(interval1);
+			clearInterval(short_Intervall_ID);
+			clearInterval(long_Intervall_ID);
 
 			callback();
 		} catch (e) {
@@ -190,6 +202,30 @@ class Leackagedect extends utils.Adapter {
 	// 		}
 	// 	}
 	// }
+
+	async short_pollData() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				this.log.debug('Trigger SHORT polling');
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async long_pollData() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				this.log.debug('Trigger LONG polling');
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+
 
 	async initDevice(DeviceIP, DevicePort) {
 		return new Promise(async (resolve, reject) => {
