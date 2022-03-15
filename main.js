@@ -247,7 +247,31 @@ class Leackagedect extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 
 			this.log.debug('Short Timer tick');
+			await this.get_ShortTimerValues(this.config.device_ip, this.config.device_port);
 			try {
+				resolve('Ok');
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async get_ShortTimerValues(DeviceIP, DevicePort) {
+		return new Promise(async (resolve, reject) => {
+
+			const listOfParameter = [
+				'Device.Info.BAT'];
+
+			this.log.debug(`[get_ShortTimerValues(DeviceIP, DevicePort)]`);
+			let result;
+			try {
+				for (const stateID of listOfParameter) {
+					const parameterIDs = stateID.split('.');
+					this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
+					result = await this.get_DevieParameter(parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
+					this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
+					await this.UpdateState(stateID, result);
+				}
 				resolve('Ok');
 			} catch (err) {
 				reject(err);
