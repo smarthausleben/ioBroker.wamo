@@ -207,7 +207,8 @@ class Leackagedect extends utils.Adapter {
 				'Device.Info.WAH',
 				'Device.Info.WAD',
 				'Device.Info.APT',
-				'Device.Info.DWL'];
+				'Device.Info.DWL',
+				'Device.Info.WFS'];
 
 			this.log.debug(`[initDevice()]`);
 			let result;
@@ -269,6 +270,9 @@ class Leackagedect extends utils.Adapter {
 						break;
 					case 'Device.Info.DWL':
 						await this.state_DWL(value);
+						break;
+					case 'Device.Info.WFS':
+						await this.state_WFS(value);
 						break;
 				}
 
@@ -488,6 +492,40 @@ class Leackagedect extends utils.Adapter {
 		});
 	}
 
+	async state_WFS(value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Device.Info.WFS';
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'WiFi State',
+							de: 'WLAN Status'
+						},
+						type: 'string',
+						role: 'info.wifistate',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				if (String(value.getWFS) == '0') {
+					this.setStateAsync(state_ID, { val: 'disconected', ack: true });
+				} else if (String(value.getWFS) == '1') {
+					this.setStateAsync(state_ID, { val: 'connecting', ack: true });
+				} else if (String(value.getWFS) == '2') {
+					this.setStateAsync(state_ID, { val: 'connected', ack: true });
+				} else {
+					this.setStateAsync(state_ID, { val: 'undefined', ack: true });
+				}
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
 	async state_SRV(value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -532,7 +570,7 @@ class Leackagedect extends utils.Adapter {
 					},
 					native: {}
 				});
-				if (value.getWAH === 0) {
+				if (value.getWAH == '0') {
 					this.setStateAsync(state_ID, { val: false, ack: true });
 				}
 				else {
@@ -563,7 +601,7 @@ class Leackagedect extends utils.Adapter {
 					},
 					native: {}
 				});
-				if (value.getWAD === 0) {
+				if (String(value.getWAD) == '0') {
 					this.setStateAsync(state_ID, { val: false, ack: true });
 				}
 				else {
@@ -595,7 +633,7 @@ class Leackagedect extends utils.Adapter {
 					},
 					native: {}
 				});
-				if (value.getAPT > 0) {
+				if (parseFloat(value.getAPT) > 0) {
 					this.setStateAsync(state_ID, { val: value.getAPT, ack: true });
 				}
 				else {
@@ -626,7 +664,7 @@ class Leackagedect extends utils.Adapter {
 					},
 					native: {}
 				});
-				if (value.getDWL === 0) {
+				if (String(value.getDWL) == '0') {
 					this.setStateAsync(state_ID, { val: false, ack: true });
 				}
 				else {
@@ -638,6 +676,7 @@ class Leackagedect extends utils.Adapter {
 			}
 		});
 	}
+
 	async get_DevieParameter(ParameterID, IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
 
