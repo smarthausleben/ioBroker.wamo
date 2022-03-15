@@ -208,7 +208,8 @@ class Leackagedect extends utils.Adapter {
 				'Device.Info.WAD',
 				'Device.Info.APT',
 				'Device.Info.DWL',
-				'Device.Info.WFS'];
+				'Device.Info.WFS',
+				'Device.Info.BAT'];
 
 			this.log.debug(`[initDevice()]`);
 			let result;
@@ -273,6 +274,9 @@ class Leackagedect extends utils.Adapter {
 						break;
 					case 'Device.Info.WFS':
 						await this.state_WFS(value);
+						break;
+					case 'Device.Info.BAT':
+						await this.state_BAT(value);
 						break;
 				}
 
@@ -670,6 +674,33 @@ class Leackagedect extends utils.Adapter {
 				else {
 					this.setStateAsync(state_ID, { val: true, ack: true });
 				}
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async state_BAT(value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Device.Info.BAT';
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Battery Voltage',
+							de: 'Batteriespannung'
+						},
+						type: 'number',
+						role: 'info.batteryvoltage',
+						unit: 'V',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				this.setStateAsync(state_ID, { val: parseFloat(value.getBAT), ack: true });
 				resolve(true);
 			} catch (err) {
 				reject(err);
