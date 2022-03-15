@@ -209,7 +209,8 @@ class Leackagedect extends utils.Adapter {
 				'Device.Info.APT',
 				'Device.Info.DWL',
 				'Device.Info.WFS',
-				'Device.Info.BAT'];
+				'Device.Info.BAT',
+				'Device.Info.IDS'];
 
 			this.log.debug(`[initDevice()]`);
 			let result;
@@ -277,6 +278,9 @@ class Leackagedect extends utils.Adapter {
 						break;
 					case 'Device.Info.BAT':
 						await this.state_BAT(value);
+						break;
+					case 'Device.Info.IDS':
+						await this.state_IDS(value);
 						break;
 				}
 
@@ -692,7 +696,7 @@ class Leackagedect extends utils.Adapter {
 							en: 'Battery Voltage',
 							de: 'Batteriespannung'
 						},
-						type: 'number',
+						type: 'string',
 						role: 'info.batteryvoltage',
 						unit: 'V',
 						read: true,
@@ -700,7 +704,38 @@ class Leackagedect extends utils.Adapter {
 					},
 					native: {}
 				});
-				this.setStateAsync(state_ID, { val: parseFloat(value.getBAT), ack: true });
+				this.setStateAsync(state_ID, { val: value.getBAT, ack: true });
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async state_IDS(value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Device.Info.IDS';
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Daylight saving Time enabled',
+							de: 'Sommerzeitumschaltung aktieviert'
+						},
+						type: 'boolean',
+						role: 'info.daylightsavingenabled',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				if (String(value.getIDS) == '0') {
+					this.setStateAsync(state_ID, { val: false, ack: true });
+				}
+				else {
+					this.setStateAsync(state_ID, { val: true, ack: true });
+				}
 				resolve(true);
 			} catch (err) {
 				reject(err);
