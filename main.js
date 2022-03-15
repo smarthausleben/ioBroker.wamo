@@ -193,7 +193,7 @@ class Leackagedect extends utils.Adapter {
 	async initDevice(DeviceIP, DevicePort){
 		return new Promise(async (resolve, reject) => {
 
-			const listOfParameter = ['VER','WIP', 'MAC'];
+			const listOfParameter = ['VER','WIP', 'MAC', 'WGW', 'SRN'];
 
 			this.log.debug(`[initDevice()]`);
 			let result;
@@ -272,6 +272,44 @@ class Leackagedect extends utils.Adapter {
 							native: {}
 						});
 						this.setStateAsync(String(actState), { val: value.getMAC, ack: true });
+						break;
+
+					case 'WGW':
+						actState = 'Device.Info.' + String(ID);
+						await this.setObjectNotExistsAsync(actState, {
+							type: 'state',
+							common: {
+								name: {
+									en: 'Device Default Gateway',
+									de: 'Gerät Standard Gateway'
+								},
+								type: 'string',
+								role: 'info.gateway',
+								read: true,
+								write: false
+							},
+							native: {}
+						});
+						this.setStateAsync(String(actState), { val: value.getWGW, ack: true });
+						break;
+
+					case 'SRN':
+						actState = 'Device.Info.' + String(ID);
+						await this.setObjectNotExistsAsync(actState, {
+							type: 'state',
+							common: {
+								name: {
+									en: 'Device Serial Number',
+									de: 'Gerät Seriennumer'
+								},
+								type: 'string',
+								role: 'info.serial',
+								read: true,
+								write: false
+							},
+							native: {}
+						});
+						this.setStateAsync(String(actState), { val: value.getSRN, ack: true });
 						break;
 				}
 				resolve('Ok');
