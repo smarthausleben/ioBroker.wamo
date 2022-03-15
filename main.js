@@ -38,7 +38,6 @@ axios.interceptors.response.use(x => {
 
 // ein Kommentar von mir
 
-
 class Leackagedect extends utils.Adapter {
 
 	/**
@@ -55,11 +54,6 @@ class Leackagedect extends utils.Adapter {
 		// this.on('objectChange', this.onObjectChange.bind(this));
 		// this.on('message', this.onMessage.bind(this));
 		this.on('unload', this.onUnload.bind(this));
-	}
-
-	short_poll() {
-		this.log.debug('Trigger SHORT polling');
-		//this.log.debug('Trigger SHORT polling');
 	}
 
 	/**
@@ -211,9 +205,38 @@ class Leackagedect extends utils.Adapter {
 	// }
 
 
-	long_poll() {
-		console.log('Trigger LONG polling');
-		//this.log.debug('Trigger LONG polling');
+	async short_poll() {
+		await this.Test_short();
+	}
+
+	async long_poll() {
+		await this.Test_long();
+	}
+
+	async Test_short(){
+		return new Promise(async (resolve, reject) => {
+
+			this.log.debug('Trigger SHORT polling');
+			try {
+				resolve('Ok');
+			} catch (err) {
+				reject(err);
+			}
+		});
+
+	}
+
+	async Test_long(){
+		return new Promise(async (resolve, reject) => {
+
+			this.log.debug('Trigger LONG polling');
+			try {
+				resolve('Ok');
+			} catch (err) {
+				reject(err);
+			}
+		});
+
 	}
 
 	async initDevice(DeviceIP, DevicePort) {
