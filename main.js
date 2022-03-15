@@ -38,6 +38,7 @@ axios.interceptors.response.use(x => {
 
 // ein Kommentar von mir
 
+
 class Leackagedect extends utils.Adapter {
 
 	/**
@@ -54,6 +55,11 @@ class Leackagedect extends utils.Adapter {
 		// this.on('objectChange', this.onObjectChange.bind(this));
 		// this.on('message', this.onMessage.bind(this));
 		this.on('unload', this.onUnload.bind(this));
+	}
+
+	short_poll() {
+		this.log.debug('Trigger SHORT polling');
+		//this.log.debug('Trigger SHORT polling');
 	}
 
 	/**
@@ -204,11 +210,6 @@ class Leackagedect extends utils.Adapter {
 	// 	}
 	// }
 
-
-	short_poll() {
-		console.log('Trigger SHORT polling');
-		//this.log.debug('Trigger SHORT polling');
-	}
 
 	long_poll() {
 		console.log('Trigger LONG polling');
