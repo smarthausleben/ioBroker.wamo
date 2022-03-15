@@ -79,13 +79,24 @@ class Leackagedect extends utils.Adapter {
 		this.log.debug('nach initDevice()');
 
 
-		/*
+
 		this.log.debug('vor init Timer');
 		// Die Timer für das Polling starten
-		short_Intervall_ID = setInterval(this.short_pollData, parseInt(this.config.device_short_poll_interval) * 1000);
-		long_Intervall_ID = setInterval(this.long_pollData, parseInt(this.config.device_long_poll_interval) * 1000);
+		try {
+			short_Intervall_ID = setInterval(this.short_pollData, parseInt(this.config.device_short_poll_interval) * 1000);
+		}
+		catch (err) {
+			this.log.debug(`[setInterval(this.short_pollData, parseInt(this.config.device_short_poll_interval) * 1000)] error: ${err}`);
+		}
+
+		try {
+			long_Intervall_ID = setInterval(this.long_pollData, parseInt(this.config.device_long_poll_interval) * 1000);
+		}
+		catch (err) {
+			this.log.debug(`[setInterval(this.long_pollData, parseInt(this.config.device_long_poll_interval) * 1000)] error: ${err}`);
+		}
 		this.log.debug('nach init Timer');
-		*/
+
 
 		/*
 		For every state in the system there has to be also an object of type state
