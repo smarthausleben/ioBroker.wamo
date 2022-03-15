@@ -204,7 +204,8 @@ class Leackagedect extends utils.Adapter {
 				'Device.Info.WFR',
 				'Device.Info.WFC',
 				'Device.Info.SRV',
-				'Device.Info.WAH'];
+				'Device.Info.WAH',
+				'Device.Info.WAD'];
 
 			this.log.debug(`[initDevice()]`);
 			let result;
@@ -257,6 +258,9 @@ class Leackagedect extends utils.Adapter {
 						break;
 					case 'Device.Info.WAH':
 						await this.state_WAH(value);
+						break;
+					case 'Device.Info.WAD':
+						await this.state_WAD(value);
 						break;
 				}
 
@@ -533,6 +537,36 @@ class Leackagedect extends utils.Adapter {
 		});
 	}
 
+	async state_WAD(value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Device.Info.WAD';
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'WiFi AP disabled',
+							de: 'WLAN AP deaktiviert'
+						},
+						type: 'boolean',
+						role: 'info.wifidisabled',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				if (value.getWAD === 0) {
+					this.setStateAsync(state_ID, { val: false, ack: true });
+				}
+				else {
+					this.setStateAsync(state_ID, { val: true, ack: true });
+				}
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
 	async get_DevieParameter(ParameterID, IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
 
