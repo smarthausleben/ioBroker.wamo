@@ -207,10 +207,12 @@ class Leackagedect extends utils.Adapter {
 			this.log.debug(`[initDevice()]`);
 			let result;
 			try {
-				for (const parameterID of listOfParameter) {
-					result = await this.get_DevieParameter(parameterID, DeviceIP, DevicePort);
-					this.log.debug('[' + parameterID + '] : ' + String(JSON.stringify(result)));
-					await this.UpdateState(parameterID, result);
+				for (const stateID of listOfParameter) {
+					const parameterIDs = stateID.split('.');
+					this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length -1]);
+					result = await this.get_DevieParameter(parameterIDs[parameterIDs.length -1], DeviceIP, DevicePort);
+					this.log.debug('[' + parameterIDs[parameterIDs.length -1] + '] : ' + String(JSON.stringify(result)));
+					await this.UpdateState(stateID, result);
 				}
 				resolve('Ok');
 			} catch (err) {
