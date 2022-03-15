@@ -135,6 +135,9 @@ class Leackagedect extends utils.Adapter {
 		// Die Timer für das Polling starten
 		short_Intervall_ID = this.setInterval(short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
 		this.log.debug('short_Intervall_ID: ' + String(short_Intervall_ID));
+		// Start des Long Timers um 15 Sekunden verzögern
+		// da die Anwender die Tendenz ein Vielfaches des Short Timer al Zeit zu verwend ;-)
+		await sleep(15000);
 		long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
 		this.log.debug('long_Intervall_ID: ' + String(long_Intervall_ID));
 		this.log.debug('nach init Timer');
@@ -1206,6 +1209,12 @@ class Leackagedect extends utils.Adapter {
 			}
 		});
 	}
+}
+
+function sleep(ms) {
+	return new Promise((resolve) => {
+		setTimeout(resolve, ms);
+	});
 }
 
 async function short_poll() {
