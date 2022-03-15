@@ -193,7 +193,7 @@ class Leackagedect extends utils.Adapter {
 	async initDevice(DeviceIP, DevicePort){
 		return new Promise(async (resolve, reject) => {
 
-			const listOfParameter = ['VER','WIP', 'MAC', 'WGW', 'SRN', 'CNO', 'WFR'];
+			const listOfParameter = ['VER','WIP', 'MAC', 'WGW', 'SRN', 'CNO', 'WFR', 'WFC'];
 
 			this.log.debug(`[initDevice()]`);
 			let result;
@@ -331,14 +331,14 @@ class Leackagedect extends utils.Adapter {
 						this.setStateAsync(String(actState), { val: value.getCNO, ack: true });
 						break;
 
-					case 'WFR': // Code Number
+					case 'WFR': // WiFi RSSI
 						actState = 'Device.Info.' + String(ID);
 						await this.setObjectNotExistsAsync(actState, {
 							type: 'state',
 							common: {
 								name: {
-									en: 'Device Code Number',
-									de: 'Gerät Code Nummer'
+									en: 'WiFi RSSI',
+									de: 'WLAN RSSI'
 								},
 								type: 'string',
 								role: 'info.rssi',
@@ -349,6 +349,25 @@ class Leackagedect extends utils.Adapter {
 							native: {}
 						});
 						this.setStateAsync(String(actState), { val: value.getWFR, ack: true });
+						break;
+
+					case 'WFC': // WiFi SSID
+						actState = 'Device.Info.' + String(ID);
+						await this.setObjectNotExistsAsync(actState, {
+							type: 'state',
+							common: {
+								name: {
+									en: 'WiFi SSID',
+									de: 'WLAN SSID'
+								},
+								type: 'string',
+								role: 'info.ssid',
+								read: true,
+								write: false
+							},
+							native: {}
+						});
+						this.setStateAsync(String(actState), { val: value.getWFC, ack: true });
 						break;
 				}
 				resolve('Ok');
