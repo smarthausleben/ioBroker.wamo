@@ -86,7 +86,7 @@ class Leackagedect extends utils.Adapter {
 		For every state in the system there has to be also an object of type state
 		Here a simple template for a boolean variable named "testVariable"
 		Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
-		*/
+		*//*
 		await this.setObjectNotExistsAsync('testVariable', {
 			type: 'state',
 			common: {
@@ -98,9 +98,10 @@ class Leackagedect extends utils.Adapter {
 			},
 			native: {},
 		});
+		*/
 
 		// In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
-		this.subscribeStates('testVariable');
+		// this.subscribeStates('testVariable');
 		// You can also add a subscription for multiple states. The following line watches all states starting with "lights."
 		// this.subscribeStates('lights.*');
 		// Or, if you really must, you can also watch all states. Don't do this if you don't need to. Otherwise this will cause a lot of unnecessary load on the system:
@@ -111,14 +112,14 @@ class Leackagedect extends utils.Adapter {
 			you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
 		*/
 		// the variable testVariable is set to true as command (ack=false)
-		await this.setStateAsync('testVariable', true);
+		//await this.setStateAsync('testVariable', true);
 
 		// same thing, but the value is flagged "ack"
 		// ack should be always set to true if the value is received from or acknowledged from the target system
-		await this.setStateAsync('testVariable', { val: true, ack: true });
+		//await this.setStateAsync('testVariable', { val: true, ack: true });
 
 		// same thing, but the state is deleted after 30s (getState will return null afterwards)
-		await this.setStateAsync('testVariable', { val: true, ack: true, expire: 30 });
+		//await this.setStateAsync('testVariable', { val: true, ack: true, expire: 30 });
 
 		// examples for the checkPassword/checkGroup functions
 		let result = await this.checkPasswordAsync('admin', 'iobroker');
@@ -256,6 +257,29 @@ class Leackagedect extends utils.Adapter {
 		});
 	}
 
+	async get_AlarmTimerValues(DeviceIP, DevicePort) {
+		return new Promise(async (resolve, reject) => {
+
+			const listOfParameter = [
+				'Conditions.ALA'];
+
+			this.log.debug(`[get_AlarmTimerValues(DeviceIP, DevicePort)]`);
+			let result;
+			try {
+				for (const stateID of listOfParameter) {
+					const parameterIDs = stateID.split('.');
+					this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
+					result = await this.get_DevieParameter(parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
+					this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
+					await this.UpdateState(stateID, result);
+				}
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
 	async get_ShortTimerValues(DeviceIP, DevicePort) {
 		return new Promise(async (resolve, reject) => {
 
@@ -272,7 +296,7 @@ class Leackagedect extends utils.Adapter {
 					this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
 					await this.UpdateState(stateID, result);
 				}
-				resolve('Ok');
+				resolve(true);
 			} catch (err) {
 				reject(err);
 			}
@@ -310,7 +334,7 @@ class Leackagedect extends utils.Adapter {
 					this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
 					await this.UpdateState(stateID, result);
 				}
-				resolve('Ok');
+				resolve(true);
 			} catch (err) {
 				reject(err);
 			}
@@ -370,8 +394,90 @@ class Leackagedect extends utils.Adapter {
 					case 'Device.Info.IDS':
 						await this.state_IDS(value);
 						break;
+					case 'Conditions.ALA':
+						await this.state_ALA(value);
+						break;
 				}
 
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async state_ALA(value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Conditions.ALA';
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Alarm Status',
+							de: 'Alarm Status'
+						},
+						type: 'string',
+						role: 'conditions.alarm',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				let AlarmText;
+				switch (String(value.getALA)) {
+					case 'FF':
+						AlarmText = 'NO ALARM';
+						break;
+					case 'A1':
+						AlarmText = 'ALARM END SWITCH';
+						break;
+					case 'A2':
+						AlarmText = 'NO NETWORK';
+						break;
+					case 'A3':
+						AlarmText = 'ALARM VOLUME LEAKAGE';
+						break;
+					case 'A4':
+						AlarmText = 'ALARM TIME LEAKAGE';
+						break;
+					case 'A5':
+						AlarmText = 'ALARM MAX FLOW LEAKAGE';
+						break;
+					case 'A6':
+						AlarmText = 'ALARM MICRO LEAKAGE';
+						break;
+					case 'A7':
+						AlarmText = 'ALARM EXT. SENSOR LEAKAGE';
+						break;
+					case 'A8':
+						AlarmText = 'ALARM TURBINE BLOCKED';
+						break;
+					case 'A9':
+						AlarmText = 'ALARM PRESSURE SENSOR ERROR';
+						break;
+					case 'AA':
+						AlarmText = 'ALARM TEMPERATURE SENSOR ERROR';
+						break;
+					case 'AB':
+						AlarmText = 'ALARM CONDUCTIVITY SENSOR ERROR';
+						break;
+					case 'AC':
+						AlarmText = 'ALARM TO HIGH CONDUCTIVITY';
+						break;
+					case 'AD':
+						AlarmText = 'LOW BATTERY';
+						break;
+					case 'AE':
+						AlarmText = 'WARNING VOLUME LEAKAGE';
+						break;
+					case 'AF':
+						AlarmText = 'ALARM NO POWER SUPPLY';
+						break;
+					default:
+						AlarmText = 'undefined';
+				}
+				this.setStateAsync(state_ID, { val: AlarmText, ack: true });
 				resolve(true);
 			} catch (err) {
 				reject(err);
