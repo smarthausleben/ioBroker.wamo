@@ -203,7 +203,8 @@ class Leackagedect extends utils.Adapter {
 				'Device.Info.CNO',
 				'Device.Info.WFR',
 				'Device.Info.WFC',
-				'Device.Info.SRV'];
+				'Device.Info.SRV',
+				'Device.Info.WAH'];
 
 			this.log.debug(`[initDevice()]`);
 			let result;
@@ -253,6 +254,9 @@ class Leackagedect extends utils.Adapter {
 						break;
 					case 'Device.Info.SRV':
 						await this.state_SRV(value);
+						break;
+					case 'Device.Info.WAH':
+						await this.state_WAH(value);
 						break;
 				}
 
@@ -491,6 +495,37 @@ class Leackagedect extends utils.Adapter {
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: value.getSRV, ack: true });
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async state_WAH(value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Device.Info.WAH';
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'WiFi AP hidden',
+							de: 'WLAN AP versteckt'
+						},
+						type: 'string',
+						role: 'info.wifihidden',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				if (value.getWAH === 0) {
+					this.setStateAsync(state_ID, { val: 'No', ack: true });
+				}
+				else {
+					this.setStateAsync(state_ID, { val: 'Yes', ack: true });
+				}
 				resolve(true);
 			} catch (err) {
 				reject(err);
