@@ -205,7 +205,8 @@ class Leackagedect extends utils.Adapter {
 				'Device.Info.WFC',
 				'Device.Info.SRV',
 				'Device.Info.WAH',
-				'Device.Info.WAD'];
+				'Device.Info.WAD',
+				'Device.Info.APT'];
 
 			this.log.debug(`[initDevice()]`);
 			let result;
@@ -261,6 +262,9 @@ class Leackagedect extends utils.Adapter {
 						break;
 					case 'Device.Info.WAD':
 						await this.state_WAD(value);
+						break;
+					case 'Device.Info.APT':
+						await this.state_APT(value);
 						break;
 				}
 
@@ -560,6 +564,37 @@ class Leackagedect extends utils.Adapter {
 				}
 				else {
 					this.setStateAsync(state_ID, { val: true, ack: true });
+				}
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async state_APT(value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Device.Info.APT';
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'WiFi AP timeout',
+							de: 'WLAN AP timeout'
+						},
+						type: 'string',
+						role: 'info.wifitimeout',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				if (value.getAPT > 0) {
+					this.setStateAsync(state_ID, { val: value.getAPT, ack: true });
+				}
+				else {
+					this.setStateAsync(state_ID, { val: 'disabled', ack: true });
 				}
 				resolve(true);
 			} catch (err) {
