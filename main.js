@@ -272,7 +272,7 @@ class Leackagedect extends utils.Adapter {
 					const parameterIDs = stateID.split('.');
 					this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
 					result = await this.get_DevieParameter(parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
-					this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
+					this.log.info('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
 					await this.UpdateState(stateID, result);
 				}
 				resolve(true);
@@ -295,7 +295,7 @@ class Leackagedect extends utils.Adapter {
 					const parameterIDs = stateID.split('.');
 					this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
 					result = await this.get_DevieParameter(parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
-					this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
+					this.log.info('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
 					await this.UpdateState(stateID, result);
 				}
 				resolve(true);
@@ -333,7 +333,7 @@ class Leackagedect extends utils.Adapter {
 					const parameterIDs = stateID.split('.');
 					this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
 					result = await this.get_DevieParameter(parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
-					this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
+					this.log.info('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
 					await this.UpdateState(stateID, result);
 				}
 				resolve(true);
