@@ -319,28 +319,24 @@ class Leackagedect extends utils.Adapter {
 			for (let ProfileNumber = 1; ProfileNumber < 9; ProfileNumber++) {
 
 				const listOfParameter = [
-					'Profiles.'+ String(ProfileNumber) + '.PA'+ String(ProfileNumber),
-					'Profiles.'+ String(ProfileNumber) + '.PN'+ String(ProfileNumber),
-					'Profiles.'+ String(ProfileNumber) + '.PV'+ String(ProfileNumber),
-					'Profiles.'+ String(ProfileNumber) + '.PT'+ String(ProfileNumber),
-					'Profiles.'+ String(ProfileNumber) + '.PF'+ String(ProfileNumber),
-					'Profiles.'+ String(ProfileNumber) + '.PM'+ String(ProfileNumber),
-					'Profiles.'+ String(ProfileNumber) + '.PR'+ String(ProfileNumber),
-					'Profiles.'+ String(ProfileNumber) + '.PB'+ String(ProfileNumber),
-					'Profiles.'+ String(ProfileNumber) + '.PW'+ String(ProfileNumber)];
+					'Profiles.' + String(ProfileNumber) + '.PA' + String(ProfileNumber),
+					'Profiles.' + String(ProfileNumber) + '.PN' + String(ProfileNumber),
+					'Profiles.' + String(ProfileNumber) + '.PV' + String(ProfileNumber),
+					'Profiles.' + String(ProfileNumber) + '.PT' + String(ProfileNumber),
+					'Profiles.' + String(ProfileNumber) + '.PF' + String(ProfileNumber),
+					'Profiles.' + String(ProfileNumber) + '.PM' + String(ProfileNumber),
+					'Profiles.' + String(ProfileNumber) + '.PR' + String(ProfileNumber),
+					'Profiles.' + String(ProfileNumber) + '.PB' + String(ProfileNumber),
+					'Profiles.' + String(ProfileNumber) + '.PW' + String(ProfileNumber)];
 
 				this.log.debug(`[initDeviceProfiles()]`);
 				try {
 					for (const stateID of listOfParameter) {
 						const parameterIDs = stateID.split('.');
-						this.log.info('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
-						const result = await this.get_DevieProfileParameter(ProfileNumber ,parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
+						this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
+						const result = await this.get_DevieProfileParameter(ProfileNumber, parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
 						this.log.info('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
-						//===================================================================================================================
-						this.log.info(String(JSON.stringify(result)) + ' / ' + String(result['get' + parameterIDs[parameterIDs.length - 1]]));
-						//===================================================================================================================
-
-						//await this.UpdateProfileState(ProfileNumber ,stateID, result);
+						await this.UpdateProfileState(ProfileNumber, stateID, result);
 					}
 					resolve(true);
 				} catch (err) {
@@ -489,74 +485,42 @@ class Leackagedect extends utils.Adapter {
 			}
 		});
 	}
+
 	async UpdateProfileState(ProfileNumber, stateID, value) {
 		return new Promise(async (resolve, reject) => {
 
+			const parameterIDs = stateID.split('.');
+
 			try {
-				switch (stateID) {
-					case 'Device.Info.VER':
-						await this.state_VER(value);
+				switch (parameterIDs[parameterIDs.length - 2]) {
+					case 'PA':
+						await this.state_profile_PA(ProfileNumber, value);
 						break;
-					case 'Device.Info.WIP':
-						await this.state_WIP(value);
+					case 'PN':
+						//await this.state_profile_PN(ProfileNumber, value);
 						break;
-					case 'Device.Info.MAC':
-						await this.state_MAC(value);
+					case 'PV':
+						//await this.state_profile_PV(ProfileNumber, value);
 						break;
-					case 'Device.Info.WGW':
-						await this.state_WGW(value);
+					case 'PT':
+						//await this.state_profile_PT(ProfileNumber, value);
 						break;
-					case 'Device.Info.SRN':
-						await this.state_SRN(value);
+					case 'PF':
+						//await this.state_profile_PF(ProfileNumber, value);
 						break;
-					case 'Device.Info.CNO':
-						await this.state_CNO(value);
+					case 'PM':
+						//await this.state_profile_PM(ProfileNumber, value);
 						break;
-					case 'Device.Info.WFR':
-						await this.state_WFR(value);
+					case 'PR':
+						//await this.state_profile_PR(ProfileNumber, value);
 						break;
-					case 'Device.Info.WFC':
-						await this.state_WFC(value);
+					case 'PB':
+						//await this.state_profile_PB(ProfileNumber, value);
 						break;
-					case 'Device.Info.SRV':
-						await this.state_SRV(value);
+					case 'PW':
+						//await this.state_profile_PW(ProfileNumber, value);
 						break;
-					case 'Device.Info.WAH':
-						await this.state_WAH(value);
-						break;
-					case 'Device.Info.WAD':
-						await this.state_WAD(value);
-						break;
-					case 'Device.Info.APT':
-						await this.state_APT(value);
-						break;
-					case 'Device.Info.DWL':
-						await this.state_DWL(value);
-						break;
-					case 'Device.Info.WFS':
-						await this.state_WFS(value);
-						break;
-					case 'Device.Info.BAT':
-						await this.state_BAT(value);
-						break;
-					case 'Device.Info.IDS':
-						await this.state_IDS(value);
-						break;
-					case 'Conditions.ALA':
-						await this.state_ALA(value);
-						break;
-					case 'Consumptions.AVO':
-						await this.state_AVO(value);
-						break;
-					case 'Consumptions.LTV':
-						await this.state_LTV(value);
-						break;
-					case 'Consumptions.VOL':
-						await this.state_VOL(value);
-						break;
-					case 'Device.Info.NET':
-						await this.state_NET(value);
-						break;
+					default:
 				}
 
 				resolve(true);
@@ -642,6 +606,38 @@ class Leackagedect extends utils.Adapter {
 	}
 	//===================================================
 
+	async state_profile_PA(ProfileNumber, value)
+	{
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Profiles.' + String(ProfileNumber) + '.PA' + String(ProfileNumber);
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Profile ' + String(ProfileNumber) + ' available',
+							de: 'Profil ' + String(ProfileNumber) + ' verfügbar'
+						},
+						type: 'boolean',
+						role: 'profile.' + String(ProfileNumber) + '.available',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				if (parseFloat(value['getPA' + String(ProfileNumber)]) == 0) {
+					this.setStateAsync(state_ID, { val: false, ack: true });
+				}
+				else {
+					this.setStateAsync(state_ID, { val: true, ack: true });
+				}
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+
+	}
 
 	async state_ALA(value) {
 		return new Promise(async (resolve, reject) => {
