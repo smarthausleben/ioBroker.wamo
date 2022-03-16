@@ -287,7 +287,8 @@ class Leackagedect extends utils.Adapter {
 
 			const listOfParameter = [
 				'Device.Info.BAT',
-				'Consumptions.AVO'];
+				'Consumptions.AVO',
+				'Consumption.LTV'];
 
 			this.log.debug(`[get_ShortTimerValues(DeviceIP, DevicePort)]`);
 			let result;
@@ -402,6 +403,9 @@ class Leackagedect extends utils.Adapter {
 						break;
 					case 'Consumptions.AVO':
 						await this.state_AVO(value);
+						break;
+					case 'Consumptions.LTV':
+						await this.state_LTV(value);
 						break;
 				}
 
@@ -1382,6 +1386,32 @@ class Leackagedect extends utils.Adapter {
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: value.getAVO, ack: true });
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async state_LTV(value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Consumptions.LTV';
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Last Taped Water',
+							de: 'Letzte Wasserentnahme'
+						},
+						type: 'string',
+						role: 'consumptions.lasttapedvolume',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				this.setStateAsync(state_ID, { val: value.getLTV, ack: true });
 				resolve(true);
 			} catch (err) {
 				reject(err);
