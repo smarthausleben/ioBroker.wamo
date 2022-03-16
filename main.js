@@ -290,7 +290,7 @@ class Leackagedect extends utils.Adapter {
 				'Consumptions.AVO',
 				'Consumptions.LTV',
 				'Consumptions.VOL',
-				'Device.Info.VOL'];
+				'Device.Info.NET'];
 
 			this.log.debug(`[get_ShortTimerValues(DeviceIP, DevicePort)]`);
 			let result;
