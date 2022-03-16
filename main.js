@@ -74,12 +74,23 @@ class Leackagedect extends utils.Adapter {
 		this.log.debug('vor initDevice()');
 		try {
 			const response = await this.initDevice(this.config.device_ip, this.config.device_port);
-			this.log.debug(`[initDevice] testfunktionAs() Response:  ${response}`);
+			this.log.debug(`[initDevice]Response:  ${response}`);
 		}
 		catch (err) {
 			this.log.debug(`[initDevice] error: ${err}`);
 		}
 		this.log.debug('nach initDevice()');
+
+		// Device Profiles Initialisation
+		this.log.debug('vor initDeviceProfiles()');
+		try {
+			const response = await this.initDeviceProfiles(this.config.device_ip, this.config.device_port);
+			this.log.debug(`[initDeviceProfiles] Response:  ${response}`);
+		}
+		catch (err) {
+			this.log.debug(`[initDeviceProfiles] error: ${err}`);
+		}
+		this.log.debug('nach initDeviceProfiles()');
 
 
 		/*
@@ -220,7 +231,8 @@ class Leackagedect extends utils.Adapter {
 	// }
 
 
-
+	//===================================================
+	// Timer EVENTS
 	async alarm_TimerTick() {
 		return new Promise(async (resolve, reject) => {
 
@@ -258,57 +270,10 @@ class Leackagedect extends utils.Adapter {
 			}
 		});
 	}
+	//===================================================
 
-	async get_AlarmTimerValues(DeviceIP, DevicePort) {
-		return new Promise(async (resolve, reject) => {
-
-			const listOfParameter = [
-				'Conditions.ALA'];
-
-			this.log.debug(`[get_AlarmTimerValues(DeviceIP, DevicePort)]`);
-			let result;
-			try {
-				for (const stateID of listOfParameter) {
-					const parameterIDs = stateID.split('.');
-					this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
-					result = await this.get_DevieParameter(parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
-					this.log.info('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
-					await this.UpdateState(stateID, result);
-				}
-				resolve(true);
-			} catch (err) {
-				reject(err);
-			}
-		});
-	}
-
-	async get_ShortTimerValues(DeviceIP, DevicePort) {
-		return new Promise(async (resolve, reject) => {
-
-			const listOfParameter = [
-				'Device.Info.BAT',
-				'Consumptions.AVO',
-				'Consumptions.LTV',
-				'Consumptions.VOL',
-				'Device.Info.NET'];
-
-			this.log.debug(`[get_ShortTimerValues(DeviceIP, DevicePort)]`);
-			let result;
-			try {
-				for (const stateID of listOfParameter) {
-					const parameterIDs = stateID.split('.');
-					this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
-					result = await this.get_DevieParameter(parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
-					this.log.info('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
-					await this.UpdateState(stateID, result);
-				}
-				resolve(true);
-			} catch (err) {
-				reject(err);
-			}
-		});
-	}
-
+	//===================================================
+	// Divice Initialisation (called on Adapter Start)
 	async initDevice(DeviceIP, DevicePort) {
 		return new Promise(async (resolve, reject) => {
 
@@ -347,6 +312,104 @@ class Leackagedect extends utils.Adapter {
 		});
 	}
 
+	async initDeviceProfiles(DeviceIP, DevicePort) {
+		return new Promise(async (resolve, reject) => {
+
+			// alle 8 möglichen Profile durchlaufen
+			for (let ProfileNumber = 1; ProfileNumber < 9; ProfileNumber++) {
+
+				const listOfParameter = [
+					'Profiles.'+ String(ProfileNumber) + '.AP'+ String(ProfileNumber),
+					'Profiles.'+ String(ProfileNumber) + '.PN'+ String(ProfileNumber),
+					'Profiles.'+ String(ProfileNumber) + '.PV'+ String(ProfileNumber),
+					'Profiles.'+ String(ProfileNumber) + '.PT'+ String(ProfileNumber),
+					'Profiles.'+ String(ProfileNumber) + '.PF'+ String(ProfileNumber),
+					'Profiles.'+ String(ProfileNumber) + '.PM'+ String(ProfileNumber),
+					'Profiles.'+ String(ProfileNumber) + '.PR'+ String(ProfileNumber),
+					'Profiles.'+ String(ProfileNumber) + '.PB'+ String(ProfileNumber),
+					'Profiles.'+ String(ProfileNumber) + '.PW'+ String(ProfileNumber)];
+
+				this.log.debug(`[initDevice()]`);
+				let result;
+				try {
+					for (const stateID of listOfParameter) {
+						const parameterIDs = stateID.split('.');
+						this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
+						result = await this.get_DevieProfileParameter(ProfileNumber ,parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
+						this.log.info('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
+						this.log.debug(String(result.get[parameterIDs[parameterIDs.length - 1]]));
+						//await this.UpdateProfileState(ProfileNumber ,stateID, result);
+					}
+					resolve(true);
+				} catch (err) {
+					reject(err);
+				}
+			}
+		});
+	}
+	//===================================================
+
+	//===================================================
+	// Alarm Timer: Get Values  (called on each Alarm Timer Tick)
+
+	async get_AlarmTimerValues(DeviceIP, DevicePort) {
+		return new Promise(async (resolve, reject) => {
+
+			const listOfParameter = [
+				'Conditions.ALA'];
+
+			this.log.debug(`[get_AlarmTimerValues(DeviceIP, DevicePort)]`);
+			let result;
+			try {
+				for (const stateID of listOfParameter) {
+					const parameterIDs = stateID.split('.');
+					this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
+					result = await this.get_DevieParameter(parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
+					this.log.info('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
+					await this.UpdateState(stateID, result);
+				}
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+	//===================================================
+
+	//===================================================
+	// Short Timer: Get Values  (called on each short Timer Tick)
+	async get_ShortTimerValues(DeviceIP, DevicePort) {
+		return new Promise(async (resolve, reject) => {
+
+			const listOfParameter = [
+				'Device.Info.BAT',
+				'Consumptions.AVO',
+				'Consumptions.LTV',
+				'Consumptions.VOL',
+				'Device.Info.NET'];
+
+			this.log.debug(`[get_ShortTimerValues(DeviceIP, DevicePort)]`);
+			let result;
+			try {
+				for (const stateID of listOfParameter) {
+					const parameterIDs = stateID.split('.');
+					this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
+					result = await this.get_DevieParameter(parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
+					this.log.info('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
+					await this.UpdateState(stateID, result);
+				}
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+	//===================================================
+
+	//===================================================
+	// Sets the Adapter State Objects
+	// stateID: object path
+	// value:	Value for Object
 	async UpdateState(stateID, value) {
 		return new Promise(async (resolve, reject) => {
 
@@ -423,6 +486,159 @@ class Leackagedect extends utils.Adapter {
 			}
 		});
 	}
+	async UpdateProfileState(ProfileNumber, stateID, value) {
+		return new Promise(async (resolve, reject) => {
+
+			try {
+				switch (stateID) {
+					case 'Device.Info.VER':
+						await this.state_VER(value);
+						break;
+					case 'Device.Info.WIP':
+						await this.state_WIP(value);
+						break;
+					case 'Device.Info.MAC':
+						await this.state_MAC(value);
+						break;
+					case 'Device.Info.WGW':
+						await this.state_WGW(value);
+						break;
+					case 'Device.Info.SRN':
+						await this.state_SRN(value);
+						break;
+					case 'Device.Info.CNO':
+						await this.state_CNO(value);
+						break;
+					case 'Device.Info.WFR':
+						await this.state_WFR(value);
+						break;
+					case 'Device.Info.WFC':
+						await this.state_WFC(value);
+						break;
+					case 'Device.Info.SRV':
+						await this.state_SRV(value);
+						break;
+					case 'Device.Info.WAH':
+						await this.state_WAH(value);
+						break;
+					case 'Device.Info.WAD':
+						await this.state_WAD(value);
+						break;
+					case 'Device.Info.APT':
+						await this.state_APT(value);
+						break;
+					case 'Device.Info.DWL':
+						await this.state_DWL(value);
+						break;
+					case 'Device.Info.WFS':
+						await this.state_WFS(value);
+						break;
+					case 'Device.Info.BAT':
+						await this.state_BAT(value);
+						break;
+					case 'Device.Info.IDS':
+						await this.state_IDS(value);
+						break;
+					case 'Conditions.ALA':
+						await this.state_ALA(value);
+						break;
+					case 'Consumptions.AVO':
+						await this.state_AVO(value);
+						break;
+					case 'Consumptions.LTV':
+						await this.state_LTV(value);
+						break;
+					case 'Consumptions.VOL':
+						await this.state_VOL(value);
+						break;
+					case 'Device.Info.NET':
+						await this.state_NET(value);
+						break;
+				}
+
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	//===================================================
+	// Pulls the Information from the Device
+	// ParameterID: API command Parameter (last instance of the State path)
+	// IPadress: Device IP Adress
+	// Port: Device Port
+	//===================================================
+	// Return: Readed Value from Device (JSON Format)
+	async get_DevieParameter(ParameterID, IPadress, Port) {
+		return new Promise(async (resolve, reject) => {
+
+			this.log.debug(`[getDevieParameter(ParameterID)] ${ParameterID}`);
+
+			axios({
+				method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/' + String(ParameterID), timeout: 10000, responseType: 'json'
+			}
+			).then(async (response) => {
+				const content = response.data;
+				this.log.debug(`[getSensorData] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
+
+				resolve(response.data);
+			}
+			).catch(async (error) => {
+				if (error.response) {
+					// The request was made and the server responded with a status code
+
+					this.log.warn(`Warnmeldung`);
+				} else if (error.request) {
+					// The request was made but no response was received
+					// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+					// http.ClientRequest in node.js<div></div>
+					this.log.info(error.message);
+				} else {
+					// Something happened in setting up the request that triggered an Error
+					this.log.info(error.message);
+				}
+				reject('http error');
+			});
+
+		});
+	}
+
+	async get_DevieProfileParameter(Profile, ParameterID, IPadress, Port) {
+		return new Promise(async (resolve, reject) => {
+
+			this.log.debug(`[getDevieParameter(ParameterID)] ${ParameterID}${Profile}`);
+
+			axios({
+				method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/' + String(ParameterID) + String(Profile), timeout: 10000, responseType: 'json'
+			}
+			).then(async (response) => {
+				const content = response.data;
+				this.log.debug(`[getSensorData] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
+
+				resolve(response.data);
+			}
+			).catch(async (error) => {
+				if (error.response) {
+					// The request was made and the server responded with a status code
+
+					this.log.warn(`Warnmeldung`);
+				} else if (error.request) {
+					// The request was made but no response was received
+					// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+					// http.ClientRequest in node.js<div></div>
+					this.log.info(error.message);
+				} else {
+					// Something happened in setting up the request that triggered an Error
+					this.log.info(error.message);
+				}
+				reject('http error');
+			});
+
+		});
+	}
+	//===================================================
+
 
 	async state_ALA(value) {
 		return new Promise(async (resolve, reject) => {
@@ -982,426 +1198,6 @@ class Leackagedect extends utils.Adapter {
 		});
 	}
 
-	async get_DevieParameter(ParameterID, IPadress, Port) {
-		return new Promise(async (resolve, reject) => {
-
-			this.log.debug(`[getDevieParameter(ParameterID)] ${ParameterID}`);
-
-			axios({
-				method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/' + String(ParameterID), timeout: 10000, responseType: 'json'
-			}
-			).then(async (response) => {
-				const content = response.data;
-				this.log.debug(`[getSensorData] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
-
-				resolve(response.data);
-			}
-			).catch(async (error) => {
-				if (error.response) {
-					// The request was made and the server responded with a status code
-
-					this.log.warn(`Warnmeldung`);
-				} else if (error.request) {
-					// The request was made but no response was received
-					// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-					// http.ClientRequest in node.js<div></div>
-					this.log.info(error.message);
-				} else {
-					// Something happened in setting up the request that triggered an Error
-					this.log.info(error.message);
-				}
-				reject('http error');
-			});
-
-		});
-	}
-
-	async fillSensorData(deviceId, sensor) {
-		return new Promise(async (resolve, reject) => {
-
-			if (!sensor.identifier) {
-				reject('sensor type and/or sensor identifier not defined');
-			}
-
-			if (!deviceId) {
-				reject('DeviceId is empty. Check configuration.');
-			}
-
-			const sensorType = sensor.type;
-			const sensorName = (sensor.name === '') ? sensor.identifier : sensor.name;
-			const path = deviceId + '.';
-
-			this.log.debug(`[getSensorData] sensor "${sensorName}" with type: "${sensorType}", identifier: "${sensor.identifier}", deviceId: "${deviceId}"`);
-
-			const unitList = {
-				P1: 'µg/m³',
-				P2: 'µg/m³',
-				temperature: '°C',
-				humidity: '%',
-				pressure: 'Pa',
-				pressure_at_sealevel: 'Pa',
-				noise: 'dB(A)',
-				signal: 'dB(A)',
-				min_micro: 'µs',
-				max_micro: 'µs'
-			};
-
-			const roleList = {
-				P1: 'value.ppm',
-				P2: 'value.ppm',
-				temperature: 'value.temperature',
-				humidity: 'value.humidity',
-				pressure: 'value.pressure',
-				pressure_at_sealevel: 'value.pressure',
-				noise: 'value',
-				signal: 'value',
-				min_micro: 'value',
-				max_micro: 'value'
-			};
-
-			await this.setObjectNotExistsAsync(deviceId, {
-				type: 'device',
-				common: {
-					name: sensorName
-				},
-				native: {}
-			});
-
-			await this.extendObjectAsync(deviceId, {
-				common: {
-					name: sensorName
-				}
-			});
-
-			await this.setObjectNotExistsAsync(path + 'name', {
-				type: 'state',
-				common: {
-					name: {
-						en: 'Sensor name',
-						de: 'Sensorname',
-						ru: 'Имя датчика',
-						pt: 'Nome do sensor',
-						nl: 'Sensornaam',
-						fr: 'Nom du capteur',
-						it: 'Nome del sensore',
-						es: 'Nombre del sensor',
-						pl: 'Nazwa czujnika',
-						'zh-cn': '传感器名称'
-					},
-					type: 'string',
-					role: 'text',
-					read: true,
-					write: false
-				},
-				native: {}
-			});
-			await this.setStateAsync(path + 'name', { val: sensorName, ack: true });
-
-			await this.setObjectNotExistsAsync(path + 'responseCode', {
-				type: 'state',
-				common: {
-					name: {
-						en: 'Response Code',
-						de: 'Antwortcode',
-						ru: 'Код ответа',
-						pt: 'Código de resposta',
-						nl: 'Reactiecode',
-						fr: 'Code de réponse',
-						it: 'Codice di risposta',
-						es: 'Código de respuesta',
-						pl: 'Kod odpowiedzi',
-						'zh-cn': '响应代码'
-					},
-					type: 'number',
-					role: 'value',
-					read: true,
-					write: false
-				},
-				native: {}
-			});
-
-			if (sensorType == 'local') {
-				const sensorUrl = `https://${sensor.identifier}/data.json`;
-
-				this.log.debug(`[getSensorData] local request started (timeout ${this.config.requestTimeout}s): ${sensorUrl}`);
-
-				axios({
-					method: 'get',
-					url: sensorUrl,
-					timeout: this.config.requestTimeout * 1000,
-					responseType: 'json'
-				}).then(async (response) => {
-					const content = response.data;
-
-					this.log.debug(`[getSensorData] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
-
-					await this.setStateAsync(path + 'responseCode', { val: response.status, ack: true });
-
-					if (content && Object.prototype.hasOwnProperty.call(content, 'sensordatavalues')) {
-						for (const key in content.sensordatavalues) {
-							const obj = content.sensordatavalues[key];
-
-							let unit = null;
-							let role = 'value';
-
-							if (obj.value_type.indexOf('SDS_') == 0) {
-								unit = 'µg/m³';
-								role = 'value.ppm';
-							} else if (obj.value_type.indexOf('temperature') >= 0) {
-								unit = '°C';
-								role = 'value.temperature';
-							} else if (obj.value_type.indexOf('humidity') >= 0) {
-								unit = '%';
-								role = 'value.humidity';
-							} else if (obj.value_type.indexOf('pressure') >= 0) {
-								unit = 'Pa';
-								role = 'value.pressure';
-							} else if (obj.value_type.indexOf('noise') >= 0) {
-								unit = 'dB(A)';
-								role = 'value';
-							} else if (Object.prototype.hasOwnProperty.call(unitList, obj.value_type)) {
-								unit = unitList[obj.value_type];
-								role = roleList[obj.value_type];
-							}
-
-							await this.setObjectNotExistsAsync(path + obj.value_type, {
-								type: 'state',
-								common: {
-									name: obj.value_type,
-									type: 'number',
-									role: role,
-									unit: unit,
-									read: true,
-									write: false
-								},
-								native: {}
-							});
-							await this.setStateAsync(path + obj.value_type, { val: parseFloat(obj.value), ack: true });
-						}
-					}
-
-					resolve(response.responseTime);
-				}).catch(async (error) => {
-					if (error.response) {
-						// The request was made and the server responded with a status code
-
-						this.log.warn(`[getSensorData] received error ${error.response.status} response from local sensor ${sensor.identifier} with content: ${JSON.stringify(error.response.data)}`);
-						await this.setStateAsync(path + 'responseCode', { val: error.response.status, ack: true });
-					} else if (error.request) {
-						// The request was made but no response was received
-						// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-						// http.ClientRequest in node.js<div></div>
-						this.log.info(error.message);
-						await this.setStateAsync(path + 'responseCode', -1, true);
-					} else {
-						// Something happened in setting up the request that triggered an Error
-						this.log.info(error.message);
-						await this.setStateAsync(path + 'responseCode', -99, true);
-					}
-
-					reject('http error');
-				});
-
-			} else if (sensorType == 'remote') {
-				const sensorUrl = `https://data.sensor.community/airrohr/v1/sensor/${sensor.identifier.replace(/\D/g, '')}/`;
-
-				this.log.debug(`[getSensorData] remote request started (timeout ${this.config.requestTimeout}s): ${sensorUrl}`);
-
-				axios({
-					method: 'get',
-					url: sensorUrl,
-					timeout: this.config.requestTimeout * 1000,
-					responseType: 'json'
-				}).then(async (response) => {
-					const content = response.data;
-
-					this.log.debug(`[getSensorData] remote request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
-
-					await this.setStateAsync(path + 'responseCode', { val: response.status, ack: true });
-
-					if (content && Array.isArray(content) && content.length > 0) {
-						const sensorData = content[0];
-
-						if (sensorData && Object.prototype.hasOwnProperty.call(sensorData, 'sensordatavalues')) {
-							for (const key in sensorData.sensordatavalues) {
-								const obj = sensorData.sensordatavalues[key];
-
-								let unit = null;
-								let role = 'value';
-
-								if (obj.value_type.indexOf('noise') >= 0) {
-									unit = 'dB(A)';
-									role = 'value';
-								} else if (Object.prototype.hasOwnProperty.call(unitList, obj.value_type)) {
-									unit = unitList[obj.value_type];
-									role = roleList[obj.value_type];
-								}
-
-								await this.setObjectNotExistsAsync(path + 'SDS_' + obj.value_type, {
-									type: 'state',
-									common: {
-										name: obj.value_type,
-										type: 'number',
-										role: role,
-										unit: unit,
-										read: true,
-										write: false
-									},
-									native: {}
-								});
-								await this.setStateAsync(path + 'SDS_' + obj.value_type, { val: parseFloat(obj.value), ack: true });
-							}
-						}
-
-						if (Object.prototype.hasOwnProperty.call(sensorData, 'location')) {
-							await this.setObjectNotExistsAsync(path + 'location', {
-								type: 'channel',
-								common: {
-									name: {
-										en: 'Location',
-										de: 'Standort',
-										ru: 'Место нахождения',
-										pt: 'Localização',
-										nl: 'Plaats',
-										fr: 'Emplacement',
-										it: 'Posizione',
-										es: 'Localización',
-										pl: 'Lokalizacja',
-										'zh-cn': '地点'
-									},
-									role: 'value.gps'
-								},
-								native: {}
-							});
-
-							await this.setObjectNotExistsAsync(path + 'location.longitude', {
-								type: 'state',
-								common: {
-									name: {
-										en: 'Longtitude',
-										de: 'Längengrad',
-										ru: 'Долгота',
-										pt: 'Longitude',
-										nl: 'lengtegraad',
-										fr: 'Longitude',
-										it: 'longitudine',
-										es: 'Longitud',
-										pl: 'Długość geograficzna',
-										'zh-cn': '经度'
-									},
-									type: 'number',
-									role: 'value.gps.longitude',
-									unit: '°',
-									read: true,
-									write: false
-								},
-								native: {}
-							});
-							await this.setStateAsync(path + 'location.longitude', { val: parseFloat(sensorData.location.longitude), ack: true });
-
-							await this.setObjectNotExistsAsync(path + 'location.latitude', {
-								type: 'state',
-								common: {
-									name: {
-										en: 'Latitude',
-										de: 'Breite',
-										ru: 'Широта',
-										pt: 'Latitude',
-										nl: 'Breedtegraad',
-										fr: 'Latitude',
-										it: 'Latitudine',
-										es: 'Latitud',
-										pl: 'Szerokość',
-										'zh-cn': '纬度'
-									},
-									type: 'number',
-									role: 'value.gps.latitude',
-									unit: '°',
-									read: true,
-									write: false
-								},
-								native: {}
-							});
-							await this.setStateAsync(path + 'location.latitude', { val: parseFloat(sensorData.location.latitude), ack: true });
-
-							await this.setObjectNotExistsAsync(path + 'location.altitude', {
-								type: 'state',
-								common: {
-									name: {
-										en: 'Altitude',
-										de: 'Höhe',
-										ru: 'Высота',
-										pt: 'Altitude',
-										nl: 'Hoogte',
-										fr: 'Altitude',
-										it: 'Altitudine',
-										es: 'Altitud',
-										pl: 'Wysokość',
-										'zh-cn': '高度'
-									},
-									type: 'number',
-									role: 'value.gps.elevation',
-									unit: 'm',
-									read: true,
-									write: false
-								},
-								native: {}
-							});
-							await this.setStateAsync(path + 'location.altitude', { val: parseFloat(sensorData.location.altitude), ack: true });
-
-							await this.setObjectNotExistsAsync(path + 'timestamp', {
-								type: 'state',
-								common: {
-									name: {
-										en: 'Last Update',
-										de: 'Letztes Update',
-										ru: 'Последнее обновление',
-										pt: 'Última atualização',
-										nl: 'Laatste update',
-										fr: 'Dernière mise à jour',
-										it: 'Ultimo aggiornamento',
-										es: 'Última actualización',
-										pl: 'Ostatnia aktualizacja',
-										'zh-cn': '最后更新'
-									},
-									type: 'number',
-									role: 'date',
-									read: true,
-									write: false
-								},
-								native: {}
-							});
-							await this.setStateAsync(path + 'timestamp', { val: new Date(sensorData.timestamp).getTime(), ack: true });
-						}
-					}
-
-					resolve(response.responseTime);
-				}).catch(async (error) => {
-					if (error.response) {
-						// The request was made and the server responded with a status code
-
-						this.log.warn(`[getSensorData] received error ${error.response.status} response from remote sensor ${sensor.identifier} with content: ${JSON.stringify(error.response.data)}`);
-						await this.setStateAsync(path + 'responseCode', { val: error.response.status, ack: true });
-					} else if (error.request) {
-						// The request was made but no response was received
-						// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-						// http.ClientRequest in node.js
-						this.log.info(error.message);
-						await this.setStateAsync(path + 'responseCode', -1, true);
-					} else {
-						// Something happened in setting up the request that triggered an Error
-						this.log.info(error.message);
-						await this.setStateAsync(path + 'responseCode', -99, true);
-					}
-
-					reject('http error');
-				});
-			} else {
-				reject('unknown sensor type');
-			}
-		});
-	}
-
 	async state_AVO(value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -1485,12 +1281,16 @@ class Leackagedect extends utils.Adapter {
 	}
 }
 
+//===================================================
+// Async Delay Funktion (you can await for delay)
 function sleep(ms) {
 	return new Promise((resolve) => {
 		setTimeout(resolve, ms);
 	});
 }
 
+//===================================================
+// Timer Event Handler
 async function alarm_poll() {
 	try {
 		await myAdapter.alarm_TimerTick();
@@ -1498,7 +1298,6 @@ async function alarm_poll() {
 		// text
 	}
 }
-
 
 async function short_poll() {
 	try {
@@ -1515,6 +1314,7 @@ async function long_poll() {
 		// text
 	}
 }
+//===================================================
 
 if (require.main !== module) {
 	// Export the constructor in compact mode
