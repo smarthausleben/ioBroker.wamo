@@ -288,7 +288,8 @@ class Leackagedect extends utils.Adapter {
 			const listOfParameter = [
 				'Device.Info.BAT',
 				'Consumptions.AVO',
-				'Consumption.LTV'];
+				'Consumption.LTV',
+				'Consumptions.VOL'];
 
 			this.log.debug(`[get_ShortTimerValues(DeviceIP, DevicePort)]`);
 			let result;
@@ -406,6 +407,9 @@ class Leackagedect extends utils.Adapter {
 						break;
 					case 'Consumptions.LTV':
 						await this.state_LTV(value);
+						break;
+					case 'Consumptions.VOL':
+						await this.state_VOL(value);
 						break;
 				}
 
@@ -1380,12 +1384,14 @@ class Leackagedect extends utils.Adapter {
 						},
 						type: 'string',
 						role: 'consumptions.currentvolume',
+						unit: 'mL',
 						read: true,
 						write: false
 					},
 					native: {}
 				});
-				this.setStateAsync(state_ID, { val: value.getAVO, ack: true });
+
+				this.setStateAsync(state_ID, { val: String(parseFloat(String(value.getAVO).replace('mL', ''))), ack: true });
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -1406,12 +1412,40 @@ class Leackagedect extends utils.Adapter {
 						},
 						type: 'string',
 						role: 'consumptions.lasttapedvolume',
+						unit: 'L',
 						read: true,
 						write: false
 					},
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: value.getLTV, ack: true });
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async state_VOL(value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Consumptions.VOL';
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Total Water Volume',
+							de: 'Gesamte Wasserentnahme'
+						},
+						type: 'string',
+						role: 'consumptions.totalvolume',
+						unit: 'm3',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				this.setStateAsync(state_ID, { val: String(parseFloat(String(value.getVOL).replace('Vol[L]', '')) / 1000), ack: true });
 				resolve(true);
 			} catch (err) {
 				reject(err);
