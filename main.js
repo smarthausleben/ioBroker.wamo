@@ -329,22 +329,22 @@ class Leackagedect extends utils.Adapter {
 					'Profiles.'+ String(ProfileNumber) + '.PB'+ String(ProfileNumber),
 					'Profiles.'+ String(ProfileNumber) + '.PW'+ String(ProfileNumber)];
 
-				this.log.debug(`[initDevice()]`);
-				let result;
+				this.log.debug(`[initDeviceProfiles()]`);
 				try {
 					for (const stateID of listOfParameter) {
 						const parameterIDs = stateID.split('.');
-						this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
-						result = await this.get_DevieProfileParameter(ProfileNumber ,parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
+						this.log.info('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
+						const result = await this.get_DevieProfileParameter(ProfileNumber ,parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
 						this.log.info('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
 						//===================================================================================================================
-						this.log.info(String(JSON.stringify(result)) + ' / ' + String(result.get[parameterIDs[parameterIDs.length - 1]]));
+						//this.log.info(String(JSON.stringify(result)) + ' / ' + String(result.get[parameterIDs[parameterIDs.length - 1]]));
 						//===================================================================================================================
 
 						//await this.UpdateProfileState(ProfileNumber ,stateID, result);
 					}
 					resolve(true);
 				} catch (err) {
+					this.log.error(err.message);
 					reject(err);
 				}
 			}
