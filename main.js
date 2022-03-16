@@ -500,7 +500,7 @@ class Leackagedect extends utils.Adapter {
 						await this.state_profile_PN(ProfileNumber, value);
 						break;
 					case 'PV':
-						//await this.state_profile_PV(ProfileNumber, value);
+						await this.state_profile_PV(ProfileNumber, value);
 						break;
 					case 'PT':
 						//await this.state_profile_PT(ProfileNumber, value);
@@ -658,6 +658,40 @@ class Leackagedect extends utils.Adapter {
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: value['getPN' + String(ProfileNumber)], ack: true });
+				resolve(true);
+			} catch (err) {
+				this.log.error(err.message);
+				reject(err);
+			}
+		});
+
+	}
+
+	async state_profile_PV(ProfileNumber, value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Profiles.' + String(ProfileNumber) + '.PV' + String(ProfileNumber);
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Profile ' + String(ProfileNumber) + ' Volume Level',
+							de: 'Profil ' + String(ProfileNumber) + ' Volumen Grenze'
+						},
+						type: 'string',
+						role: 'profile.' + String(ProfileNumber) + '.volumelevel',
+						unit: 'L',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				if (parseFloat(value['getPV' + String(ProfileNumber)]) > 0) {
+					this.setStateAsync(state_ID, { val: value['getPV' + String(ProfileNumber)], ack: true });
+				}
+				else {
+					this.setStateAsync(state_ID, { val: 'disabled', ack: true });
+				}
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
