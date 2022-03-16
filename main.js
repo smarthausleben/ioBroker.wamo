@@ -337,7 +337,7 @@ class Leackagedect extends utils.Adapter {
 						const result = await this.get_DevieProfileParameter(ProfileNumber ,parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
 						this.log.info('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
 						//===================================================================================================================
-						//this.log.info(String(JSON.stringify(result)) + ' / ' + String(result.get[parameterIDs[parameterIDs.length - 1]]));
+						this.log.info(String(JSON.stringify(result)) + ' / ' + String(result['get' + parameterIDs[parameterIDs.length - 1]]));
 						//===================================================================================================================
 
 						//await this.UpdateProfileState(ProfileNumber ,stateID, result);
