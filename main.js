@@ -286,7 +286,8 @@ class Leackagedect extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 
 			const listOfParameter = [
-				'Device.Info.BAT'];
+				'Device.Info.BAT',
+				'Consumptions.AVO'];
 
 			this.log.debug(`[get_ShortTimerValues(DeviceIP, DevicePort)]`);
 			let result;
@@ -398,6 +399,9 @@ class Leackagedect extends utils.Adapter {
 						break;
 					case 'Conditions.ALA':
 						await this.state_ALA(value);
+						break;
+					case 'Consumptions.AVO':
+						await this.state_AVO(value);
 						break;
 				}
 
@@ -1355,6 +1359,32 @@ class Leackagedect extends utils.Adapter {
 				});
 			} else {
 				reject('unknown sensor type');
+			}
+		});
+	}
+
+	async state_AVO(value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Consumptions.AVO';
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Currend Water Consumption',
+							de: 'Aktuelle Wasserentnahme'
+						},
+						type: 'string',
+						role: 'consumptions.currentvolume',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				this.setStateAsync(state_ID, { val: value.getAVO, ack: true });
+				resolve(true);
+			} catch (err) {
+				reject(err);
 			}
 		});
 	}
