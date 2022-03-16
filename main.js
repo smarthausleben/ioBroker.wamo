@@ -490,9 +490,9 @@ class Leackagedect extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 
 			const parameterIDs = stateID.split('.');
-
+			this.log.info((parameterIDs[parameterIDs.length - 1]).substr(1, parameterIDs[parameterIDs.length -1].length -1));
 			try {
-				switch (parameterIDs[parameterIDs.length - 2]) {
+				switch ((parameterIDs[parameterIDs.length - 1]).substr(1, parameterIDs[parameterIDs.length -1].length -1)) {
 					case 'PA':
 						await this.state_profile_PA(ProfileNumber, value);
 						break;
@@ -633,6 +633,7 @@ class Leackagedect extends utils.Adapter {
 				}
 				resolve(true);
 			} catch (err) {
+				this.log.error(err.message);
 				reject(err);
 			}
 		});
