@@ -490,14 +490,14 @@ class Leackagedect extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 
 			const parameterIDs = stateID.split('.');
-			this.log.info((parameterIDs[parameterIDs.length - 1]).substr(0, parameterIDs[parameterIDs.length -1].length -1));
+			this.log.debug('Profilparameter ' + (parameterIDs[parameterIDs.length - 1]).substr(0, parameterIDs[parameterIDs.length - 1].length - 1)) + 'for Profile ' + String(ProfileNumber);
 			try {
-				switch ((parameterIDs[parameterIDs.length - 1]).substr(0, parameterIDs[parameterIDs.length -1].length -1)) {
+				switch ((parameterIDs[parameterIDs.length - 1]).substr(0, parameterIDs[parameterIDs.length - 1].length - 1)) {
 					case 'PA':
 						await this.state_profile_PA(ProfileNumber, value);
 						break;
 					case 'PN':
-						//await this.state_profile_PN(ProfileNumber, value);
+						await this.state_profile_PN(ProfileNumber, value);
 						break;
 					case 'PV':
 						//await this.state_profile_PV(ProfileNumber, value);
@@ -606,8 +606,7 @@ class Leackagedect extends utils.Adapter {
 	}
 	//===================================================
 
-	async state_profile_PA(ProfileNumber, value)
-	{
+	async state_profile_PA(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
 				const state_ID = 'Profiles.' + String(ProfileNumber) + '.PA' + String(ProfileNumber);
@@ -631,6 +630,34 @@ class Leackagedect extends utils.Adapter {
 				else {
 					this.setStateAsync(state_ID, { val: true, ack: true });
 				}
+				resolve(true);
+			} catch (err) {
+				this.log.error(err.message);
+				reject(err);
+			}
+		});
+
+	}
+
+	async state_profile_PN(ProfileNumber, value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Profiles.' + String(ProfileNumber) + '.PN' + String(ProfileNumber);
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Profile ' + String(ProfileNumber) + ' name',
+							de: 'Profil ' + String(ProfileNumber) + ' Name'
+						},
+						type: 'string',
+						role: 'profile.' + String(ProfileNumber) + '.name',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				this.setStateAsync(state_ID, { val: value['getPN' + String(ProfileNumber)], ack: true });
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
