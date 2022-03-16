@@ -288,8 +288,9 @@ class Leackagedect extends utils.Adapter {
 			const listOfParameter = [
 				'Device.Info.BAT',
 				'Consumptions.AVO',
-				'Consumption.LTV',
-				'Consumptions.VOL'];
+				'Consumptions.LTV',
+				'Consumptions.VOL',
+				'Device.Info.VOL'];
 
 			this.log.debug(`[get_ShortTimerValues(DeviceIP, DevicePort)]`);
 			let result;
@@ -410,6 +411,9 @@ class Leackagedect extends utils.Adapter {
 						break;
 					case 'Consumptions.VOL':
 						await this.state_VOL(value);
+						break;
+					case 'Device.Info.NET':
+						await this.state_NET(value);
 						break;
 				}
 
@@ -913,6 +917,33 @@ class Leackagedect extends utils.Adapter {
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: value.getBAT, ack: true });
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async state_NET(value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Device.Info.NET';
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'DC Power Adapter Voltage',
+							de: 'DC Netzteil Spannung'
+						},
+						type: 'string',
+						role: 'info.powersupplyvoltage',
+						unit: 'V',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				this.setStateAsync(state_ID, { val: value.getNET, ack: true });
 				resolve(true);
 			} catch (err) {
 				reject(err);
