@@ -19,6 +19,950 @@ let alarm_Intervall_ID;
 let short_Intervall_ID;
 let long_Intervall_ID;
 
+// Object all possible device commands
+const allParameters = {
+	empty: {
+		id: '',
+		statePath: '',
+		description: { en: '', de: '' },
+		default: {
+			value: '',
+			description: { en: '', de: '' }
+		},
+		range: {
+			description: { en: '', de: '' },
+			cmd: '',
+			min: null,
+			max: null
+		},
+		unit: null,
+		levelRead: null,
+		levelWrite: null,
+		readCommand: null,
+		writeCommand: null
+	},
+	Shutoff: {
+		id: 'AB',
+		statePath: 'Device.Info',
+		description: { en: 'Shutoff Valve', de: 'Absperrventiel' },
+		default: {
+			value: '1',
+			description: { en: 'opened', de: 'offen' }
+		},
+		range: {
+			description: { en: '1 openend 2 closed', de: '1 offen 2 geschlossen' },
+			cmd: '1,2',
+			min: 1,
+			max: 2
+		},
+		unit: '',
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	SelectedProfile: {
+		id: 'PRF',
+		statePath: 'Settings',
+		description: { en: 'Aktive Profile', de: 'Aktives Profil' },
+		default: {
+			value: '1',
+			description: { en: '1 (Standard Profile)', de: '1 (Standardprofil)' }
+		},
+		range: {
+			description: { en: '1,2,3,4,5,6,7,8 (1 Standard Profile)', de: '1,2,3,4,5,6,7,8 (1 Standardprofil)' },
+			cmd: '1-8',
+			min: 1,
+			max: 8
+		},
+		unit: '',
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	NumAvailableProfiles: {
+		id: 'PRN',
+		statePath: 'Device.Info',
+		description: { en: 'Number of available Profiles', de: 'Anzahl verfügbarer Profile' },
+		default: {
+			value: '1',
+			description: { en: '1', de: '1' }
+		},
+		range: {
+			description: { en: '1,2,3,4,5,6,7,8', de: '1,2,3,4,5,6,7,8' },
+			cmd: '1-8',
+			min: 1,
+			max: 8
+		},
+		unit: '',
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	ProfileAvailable: {
+		id: 'PA',
+		statePath: 'Profile',
+		description: { en: 'Profile available', de: 'Profil verfügbarer' },
+		default: {
+			value: '1',
+			description: { en: '1', de: '1' }
+		},
+		range: {
+			description: { en: '0 disabled, 1 enabled ', de: '0 deaktiviert, 1 aktiviert' },
+			cmd: '0,1',
+			min: 0,
+			max: 1
+		},
+		unit: '',
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	ProfileName: {
+		id: 'PN',
+		statePath: 'Profile',
+		description: { en: 'Profile Name', de: 'Profil Name' },
+		default: {
+			value: 'ANWESEND',
+			description: { en: 'AT HOME', de: 'ANWESEND' }
+		},
+		range: {
+			description: { en: '0...31 Characters ', de: '0...31 Zeichen' },
+			cmd: '0-31',
+			min: 0,
+			max: 31
+		},
+		unit: '',
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	ProfileVolumeLevel: {
+		id: 'PV',
+		statePath: 'Profile',
+		description: { en: 'Profile Volume Level', de: 'Profil Volumen Limit' },
+		default: {
+			value: '300',
+			description: { en: '300l', de: '300l' }
+		},
+		range: {
+			description: { en: '0 disabled 1...9000l', de: '0 deaktiviert 1...9000l' },
+			cmd: '0-9000',
+			min: 0,
+			max: 9000
+		},
+		unit: 'l',
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	ProfileTimeLevel: {
+		id: 'PT',
+		statePath: 'Profile',
+		description: { en: 'Profile Time Level', de: 'Profil Zeit Limit' },
+		default: {
+			value: '60',
+			description: { en: '60min', de: '60min' }
+		},
+		range: {
+			description: { en: '0 disabled 1...1500min (25h)', de: '0 deaktiviert 1...1500min (25h)' },
+			cmd: '0-1500',
+			min: 0,
+			max: 1500
+		},
+		unit: 'min',
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	ProfileMaxFlow: {
+		id: 'PF',
+		statePath: 'Profile',
+		description: { en: 'Profile Max Flow', de: 'Profil Maximaler Durchfluss' },
+		default: {
+			value: '3500',
+			description: { en: '3500l/h', de: '3500l/h' }
+		},
+		range: {
+			description: { en: '0 disabled 1...5000l/h', de: '0 deaktiviert 1...5000l/h' },
+			cmd: '0-5000',
+			min: 0,
+			max: 5000
+		},
+		unit: 'l/h',
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	ProfileMicroLeakageDetection: {
+		id: 'PM',
+		statePath: 'Profile',
+		description: { en: 'Micro Leakage Detection', de: 'Microleckage Prüfung' },
+		default: {
+			value: '1',
+			description: { en: '1', de: '1' }
+		},
+		range: {
+			description: { en: '0 disabled, 1 enabled ', de: '0 deaktiviert, 1 aktiviert' },
+			cmd: '0,1',
+			min: 0,
+			max: 1
+		},
+		unit: '',
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	ProfileReturnTimeToStandardProfile: {
+		id: 'PR',
+		statePath: 'Profile',
+		description: { en: 'Returne Time to Standard Profile', de: 'Zeit bis zum zurückschalten auf das Standardprofil' },
+		default: {
+			value: '24',
+			description: { en: '24h', de: '24h' }
+		},
+		range: {
+			description: { en: '0 disabled 1...720h (30 Days)', de: '0 deaktiviert 1...720h (30 Tage)' },
+			cmd: '0-720',
+			min: 0,
+			max: 720
+		},
+		unit: 'h',
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	ProfileBuzzerOn: {
+		id: 'PB',
+		statePath: 'Profile',
+		description: { en: 'Buzzer ON', de: 'Warnton EIN' },
+		default: {
+			value: '1',
+			description: { en: '1', de: '1' }
+		},
+		range: {
+			description: { en: '0 disabled, 1 enabled ', de: '0 deaktiviert, 1 aktiviert' },
+			cmd: '0,1',
+			min: 0,
+			max: 1
+		},
+		unit: '',
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	ProfileLeakageWarningOn: {
+		id: 'PW',
+		statePath: 'Profile',
+		description: { en: 'Leackage Warning ON', de: 'Leckage Warnung EIN' },
+		default: {
+			value: '1',
+			description: { en: '1', de: '1' }
+		},
+		range: {
+			description: { en: '0 disabled, 1 enabled ', de: '0 deaktiviert, 1 aktiviert' },
+			cmd: '0,1',
+			min: 0,
+			max: 1
+		},
+		unit: '',
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	LeakageProtectionTemoraryDisanled: {
+		id: 'TMP',
+		statePath: 'Device.Settings',
+		description: { en: 'Leakage Protection Temorary disabled', de: 'Leckageschutz vorrübergehend deaktiviert' },
+		default: {
+			value: '0',
+			description: { en: 'Leake Protection Aktive', de: 'Leckageschutz ist aktiv' }
+		},
+		range: {
+			description: { en: '0 Leake Protection Aktive / Leake Protectio deactivated for 1...4294967295 Seconds', de: '0 Leckageschutz ist aktiv /  Leckageschutz für 1...4294967295 Sekunden deaktiviert' },
+			cmd: '0-4294967295',
+			min: 0,
+			max: 4294967295
+		},
+		unit: 's',
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Language: {
+		id: 'LNG',
+		statePath: 'Device.Settings',
+		description: { en: 'Language', de: 'Sprache' },
+		default: {
+			value: '0',
+			description: { en: 'German', de: 'Deutsch' }
+		},
+		range: {
+			description: { en: '0 German 1 English 2 Spanish 3 Italian 4 Polish', de: '0 Deutsch 1 Englisch 2 Spanisch 3 Italienisch 4 Polnisch' },
+			cmd: '0-4294967295',
+			min: 0,
+			max: 4
+		},
+		unit: '',
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Units: {
+		id: 'UNI',
+		statePath: 'Device.Settings',
+		description: { en: 'Units', de: 'Einheiten' },
+		default: {
+			value: '0',
+			description: { en: '°C/bar/Liter', de: '°C/bar/Liter' }
+		},
+		range: {
+			description: { en: '0 °C/bar/Liter 1 °F/psi/US.liq.gal', de: '0 °C/bar/Liter 1 °F/psi/US.liq.gal' },
+			cmd: '0,1',
+			min: 0,
+			max: 1
+		},
+		unit: '',
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	MaxFlowLeakageTime: {
+		id: 'T2',
+		statePath: 'Device.Settings',
+		description: { en: 'Max Flow Leakage Time', de: 'Maximale L7h Leckage Zeit' },
+		default: {
+			value: '1',
+			description: { en: '1min', de: '1min' }
+		},
+		range: {
+			description: { en: '0...99 Minutes', de: '0...99 Minuten' },
+			cmd: '0-99',
+			min: 0,
+			max: 99
+		},
+		unit: 'min',
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	FloorSensor: {
+		id: 'BSA',
+		statePath: 'Device.Settings',
+		description: { en: 'Floor Sensor', de: 'Boden Sensor' },
+		default: {
+			value: '1',
+			description: { en: 'enabled', de: 'aktiviert' }
+		},
+		range: {
+			description: { en: '0 disabled 1 Enabled', de: '0 deaktiviert 1 aktiviert' },
+			cmd: '0,1',
+			min: 0,
+			max: 1
+		},
+		unit: '',
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	MicroLeakageTest: {
+		id: 'DMA',
+		statePath: 'Device.Settings',
+		description: { en: 'Micro Leakage Test', de: 'Microleckagetest' },
+		default: {
+			value: '1',
+			description: { en: 'Warning', de: 'Warnung' }
+		},
+		range: {
+			description: { en: '0 disabled 1 Warning 2 enabled', de: '0 deaktiviert 1 Warnung 2 aktiviert' },
+			cmd: '0,1,2',
+			min: 0,
+			max: 2
+		},
+		unit: '',
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	BuzzerOnAlarm: {
+		id: 'BUZ',
+		statePath: 'Device.Settings',
+		description: { en: 'Buzzer on Alarm', de: 'Warnton bei Alarm' },
+		default: {
+			value: '1',
+			description: { en: 'enabled', de: 'aktiviert' }
+		},
+		range: {
+			description: { en: '0 disabled 1 Warning 2 enabled', de: '0 deaktiviert 1 Warnung 2 aktiviert' },
+			cmd: '0,1',
+			min: 0,
+			max: 1
+		},
+		unit: '',
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	ConductivityLimit: {
+		id: 'CNL',
+		statePath: 'Device.Settings',
+		description: { en: 'Conductivity Limit', de: 'Limit Leitfähigkeit' },
+		default: {
+			value: '0',
+			description: { en: 'disabled', de: 'deaktiviert' }
+		},
+		range: {
+			description: { en: '0 disabled 1...5000µS/cm', de: '0 deaktiviert 1...5000µS/cm' },
+			cmd: '0-5000',
+			min: 0,
+			max: 5000
+		},
+		unit: 'µS/cm',
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	ConductivityFactor: {
+		id: 'CNF',
+		statePath: 'Device.Settings',
+		description: { en: 'Conductivity Factor', de: 'Multiplikator Leitfähigkeit' },
+		default: {
+			value: '1',
+			description: { en: '1', de: '1' }
+		},
+		range: {
+			description: { en: '0.5...5', de: '0,5...5' },
+			cmd: '5-50',
+			min: 5,
+			max: 50
+		},
+		unit: '',
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	LeakageWarningThreshold: {
+		id: 'LWT',
+		statePath: 'Device.Settings',
+		description: { en: 'Leakage Notification (Warning) Threshold', de: 'Schwelle für Leckage Warnung' },
+		default: {
+			value: '90',
+			description: { en: '90%', de: '90%' }
+		},
+		range: {
+			description: { en: '80...99%', de: '80...99%' },
+			cmd: '80-99',
+			min: 80,
+			max: 99
+		},
+		unit: '%',
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	FirmwareVersion: {
+		id: 'VER',
+		statePath: 'Device.Info',
+		description: { en: 'Firmware Version', de: 'Firmwareversion' },
+		default: {
+			value: '',
+			description: { en: 'Version', de: 'Version' }
+		},
+		range: {
+			description: { en: null, de: null },
+			cmd: null,
+			min: null,
+			max: null
+		},
+		unit: null,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	SerialNumber: {
+		id: 'SRN',
+		statePath: 'Device.Info',
+		description: { en: 'Device Serial Number', de: 'Gerät Seriennummer' },
+		default: {
+			value: '',
+			description: { en: 'Serial Number', de: 'Seriennummer' }
+		},
+		range: {
+			description: { en: '9 digits', de: '9 Zahlen' },
+			cmd: null,
+			min: null,
+			max: null
+		},
+		unit: null,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	CodeNumber: {
+		id: 'CNO',
+		statePath: 'Device.Info',
+		description: { en: 'Device Code Number', de: 'Gerät Codennummer' },
+		default: {
+			value: '',
+			description: { en: 'Code Number', de: 'Codennummer' }
+		},
+		range: {
+			description: { en: '16 characters', de: '16 Zeichen' },
+			cmd: null,
+			min: null,
+			max: null
+		},
+		unit: null,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	MacAddress: {
+		id: 'MAC',
+		statePath: 'Device.Info',
+		description: { en: 'Device MAC Address', de: 'Gerät MAC Adresse' },
+		default: {
+			value: '',
+			description: { en: 'MAC Address', de: 'MAC Adresse' }
+		},
+		range: {
+			description: { en: 'xx.xx.xx.xx.xx.xx', de: 'xx.xx.xx.xx.xx.xx' },
+			cmd: null,
+			min: null,
+			max: null
+		},
+		unit: null,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	NextMaintenance: {
+		id: 'SRV',
+		statePath: 'Device.Info',
+		description: { en: 'Next Maintenace Date', de: 'Nächster Service' },
+		default: {
+			value: '',
+			description: { en: 'Date next Maintenance Service', de: 'Datum nächster Service' }
+		},
+		range: {
+			description: { en: 'dd.mm.yyyyy', de: 'tt.mm.jjjj' },
+			cmd: null,
+			min: null,
+			max: null
+		},
+		unit: null,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	BatteryVoltage: {
+		id: 'BAT',
+		statePath: 'Device.Info',
+		description: { en: 'Battery Voltage', de: 'Batteriespannung' },
+		default: {
+			value: '',
+			description: { en: 'in 1/100V, format x.xx', de: 'in 1/100V, Format x,xx' }
+		},
+		range: {
+			description: { en: 'x.xx', de: 'x,xx' },
+			cmd: null,
+			min: null,
+			max: null
+		},
+		unit: 'V',
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	DcPowerAdapterVoltage: {
+		id: 'NET',
+		statePath: 'Device.Info',
+		description: { en: 'DC Power Adapter Voltage', de: 'DC Netztei Spannung' },
+		default: {
+			value: '',
+			description: { en: 'in 1/100V, format xx.xx', de: 'in 1/100V, Format xx,xx' }
+		},
+		range: {
+			description: { en: 'xx.xx', de: 'xx,xx' },
+			cmd: null,
+			min: null,
+			max: null
+		},
+		unit: 'V',
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	Temperature: {
+		id: 'CEL',
+		statePath: 'Consumption',
+		description: { en: 'Water Temperature', de: 'Wassertemperatur' },
+		default: {
+			value: '',
+			description: { en: 'in °F', de: 'in °C' }
+		},
+		range: {
+			description: { en: '0.0 - 212 °F', de: '0,0 - 100°C' },
+			cmd: null,
+			min: null,
+			max: null
+		},
+		unit: '°',
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	Pressure: {
+		id: 'BAR',
+		statePath: 'Consumption',
+		description: { en: 'Water Pressure', de: 'Wasserdruck' },
+		default: {
+			value: '',
+			description: { en: 'in psi', de: 'in mbar' }
+		},
+		range: {
+			description: { en: 'psi', de: 'mbar' },
+			cmd: null,
+			min: null,
+			max: null
+		},
+		unit: null,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	Conductivity: {
+		id: 'CND',
+		statePath: 'Consumption',
+		description: { en: 'Water Conductivity', de: 'Wasserleitfähigkeit' },
+		default: {
+			value: '',
+			description: { en: 'in µS/cm', de: 'in µS/cm' }
+		},
+		range: {
+			description: { en: '0.0 - 5000 µS/cm', de: '0,0 - 5000µS/cm' },
+			cmd: null,
+			min: 0,
+			max: 5000
+		},
+		unit: 'µS/cm',
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	WaterFlow: {
+		id: 'FLO',
+		statePath: 'Consumption',
+		description: { en: 'Water Flow', de: 'Wasserdurchfluss' },
+		default: {
+			value: '',
+			description: { en: 'in l/h', de: 'in l/h' }
+		},
+		range: {
+			description: { en: '0 - 6000 l/h', de: '0 - 6000 l/h' },
+			cmd: null,
+			min: 0,
+			max: 6000
+		},
+		unit: 'l/h',
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	LastTappedVolume: {
+		id: 'LTV',
+		statePath: 'Consumption',
+		description: { en: 'Last Tapped Volume', de: 'letzte Wasserentnahme' },
+		default: {
+			value: '',
+			description: { en: 'in l', de: 'in l' }
+		},
+		range: {
+			description: { en: null, de: null },
+			cmd: null,
+			min: null,
+			max: null
+		},
+		unit: 'l',
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	DeaktivateTemperatureSensor: {
+		id: 'TSD',
+		statePath: 'Settings',
+		description: { en: 'Temperatur Sensor ist deaktivated', de: 'Temperatursensor ist deaktiviert' },
+		default: {
+			value: '0',
+			description: { en: 'Temperature Sensor is active', de: 'Temperatursensor ist aktiv' }
+		},
+		range: {
+			description: { en: '0 = activated 1 = deaktivated', de: '0 = aktiviert 1 = deaktiviert' },
+			cmd: '0,1',
+			min: 0,
+			max: 1
+		},
+		unit: null,
+		levelRead: 'USER',
+		levelWrite: 'FACTORY',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	DeaktivatePressureSensor: {
+		id: 'PSD',
+		statePath: 'Settings',
+		description: { en: 'Pressure Sensor ist deaktivated', de: 'Drucksensor ist deaktiviert' },
+		default: {
+			value: '0',
+			description: { en: 'Pressure Sensor is active', de: 'Drucksensor ist aktiv' }
+		},
+		range: {
+			description: { en: '0 = activated 1 = deaktivated', de: '0 = aktiviert 1 = deaktiviert' },
+			cmd: '0,1',
+			min: 0,
+			max: 1
+		},
+		unit: null,
+		levelRead: 'USER',
+		levelWrite: 'FACTORY',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	DeaktivateConductivitySensor: {
+		id: 'CSD',
+		statePath: 'Settings',
+		description: { en: 'Conductivity Sensor ist deaktivated', de: 'Leitfähigkeitssensor ist deaktiviert' },
+		default: {
+			value: '0',
+			description: { en: 'Conductivity Sensor is active', de: 'Leitfähigkeitssensor ist aktiv' }
+		},
+		range: {
+			description: { en: '0 = activated 1 = deaktivated', de: '0 = aktiviert 1 = deaktiviert' },
+			cmd: '0,1',
+			min: 0,
+			max: 1
+		},
+		unit: null,
+		levelRead: 'USER',
+		levelWrite: 'FACTORY',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	WifiKey: {
+		id: 'WFK',
+		statePath: 'Settings',
+		description: { en: 'WiFi Key', de: 'WLAN Passwort' },
+		default: {
+			value: '',
+			description: { en: 'Password', de: 'Passwort' }
+		},
+		range: {
+			description: { en: '8...64 Characters', de: '8-64 Zeichen' },
+			cmd: '8-64',
+			min: 8,
+			max: 64
+		},
+		unit: null,
+		levelRead: null,
+		levelWrite: 'USER',
+		readCommand: null,
+		writeCommand: 'set'
+	},
+	WifiConnectSsid: {
+		id: 'WFC',
+		statePath: 'Settings',
+		description: {
+			en: 'Set WiFi SSID (1-32 characters) and connects to network / Get command returns current saved SSID',
+			de: 'Wählt die SSID (1-32 Zeichen) aus und verbindet sich mit dem Netz / Lesekommando gibt die SSID des derzeit verbunden Netzes zurück'
+		},
+		default: {
+			value: '',
+			description: { en: 'SSID', de: 'SSID' }
+		},
+		range: {
+			description: { en: '1...32 Characters', de: '1-32 Zeichen' },
+			cmd: '1-32',
+			min: 1,
+			max: 32
+		},
+		unit: null,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	WifiDisconnect: {
+		id: 'WFD',
+		statePath: 'Settings',
+		description: {
+			en: 'Disconnects and forgets current network',
+			de: 'Trennt und vergisst das aktuelle Netz'
+		},
+		default: {
+			value: '',
+			description: { en: null, de: null }
+		},
+		range: {
+			description: { en: null, de: null },
+			cmd: null,
+			min: null,
+			max: null
+		},
+		unit: null,
+		levelRead: null,
+		levelWrite: 'USER',
+		readCommand: null,
+		writeCommand: 'set'
+	},
+	WifiState: {
+		id: 'WFS',
+		statePath: 'Device.Info',
+		description: {
+			en: 'WiFi state',
+			de: 'WLAN Status'
+		},
+		default: {
+			value: '0',
+			description: { en: 'disconnected', de: 'getrennt' }
+		},
+		range: {
+			description: { en: '0 = disconnected 1 = connecting 2 = connected', de: '0 = getrennt 1 = am verbinden 2 = verbunden' },
+			cmd: '0,1,2',
+			min: 0,
+			max: 2
+		},
+		unit: null,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	WifiRssi: {
+		id: 'WFR',
+		statePath: 'Device.Info',
+		description: {
+			en: 'WiFi RSSI',
+			de: 'WLAN RSSI'
+		},
+		default: {
+			value: '',
+			description: { en: 'RSSI strenght in %', de: 'RSSI Stärke in %' }
+		},
+		range: {
+			description: { en: '0...100%', de: '0...100%' },
+			cmd: '0-100',
+			min: 0,
+			max: 100
+		},
+		unit: null,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	WifiScan: {
+		id: 'WFL',
+		statePath: 'Device.Info',
+		description: {
+			en: 'WiFi scann',
+			de: 'WLAN Scan'
+		},
+		default: {
+			value: '',
+			description: { en: 'JSON List of available WiFis', de: 'JSON Liste der verfügbaren WLANs' }
+		},
+		range: {
+			description: { en: 'JSON list', de: 'JSON Liste' },
+			cmd: null,
+			min: null,
+			max: null
+		},
+		unit: null,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	IpAddress: {
+		id: 'WIP',
+		statePath: 'Device.Info',
+		description: {
+			en: 'IP address',
+			de: 'IP Adresse'
+		},
+		default: {
+			value: '',
+			description: { en: 'IP4 address 0.0.0.0', de: 'IP4 Adresse 0.0.0.0' }
+		},
+		range: {
+			description: { en: 'IP4 address range', de: 'IP4 Adressbereich' },
+			cmd: null,
+			min: null,
+			max: null
+		},
+		unit: null,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	DefaultGateway: {
+		id: 'WGW',
+		statePath: 'Device.Info',
+		description: {
+			en: 'IP address of the default gateway',
+			de: 'IP Adresse des Default-Gateways'
+		},
+		default: {
+			value: '',
+			description: { en: 'IP4 address 0.0.0.0', de: 'IP4 Adresse 0.0.0.0' }
+		},
+		range: {
+			description: { en: 'IP4 address range', de: 'IP4 Adressbereich' },
+			cmd: null,
+			min: null,
+			max: null
+		},
+		unit: null,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+};
 
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
@@ -278,22 +1222,22 @@ class Leackagedect extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 
 			const listOfParameter = [
-				'Device.Info.VER',
-				'Device.Info.WIP',
-				'Device.Info.MAC',
-				'Device.Info.WGW',
-				'Device.Info.SRN',
-				'Device.Info.CNO',
-				'Device.Info.WFR',
-				'Device.Info.WFC',
-				'Device.Info.SRV',
-				'Device.Info.WAH',
-				'Device.Info.WAD',
-				'Device.Info.APT',
-				'Device.Info.DWL',
-				'Device.Info.WFS',
-				'Device.Info.BAT',
-				'Device.Info.IDS'];
+				'Device.Info.VER', 	// Firmware Version
+				'Device.Info.WIP',	// IP Address
+				'Device.Info.MAC',	// MAC Address
+				'Device.Info.WGW',	// Default Gatewa
+				'Device.Info.SRN',	// Serial Number
+				'Device.Info.CNO',	// Code Number
+				'Device.Info.WFR',	// WiFi RSSI
+				'Device.Info.WFC',	// WiFi SSID
+				'Device.Info.SRV',	// Next Maintenance
+				'Device.Info.WAH',	// WiFi AP Hidden
+				'Device.Info.WAD',	// WiFi AP Disabled
+				'Device.Info.APT',	// WiFi AP Timeout
+				'Device.Info.DWL',	// WiFi Deactivated
+				'Device.Info.WFS',	// WiFi State
+				'Device.Info.BAT',	// Batterie voltage
+				'Device.Info.IDS'];	// Daylight Saving Time
 
 			this.log.debug(`[initDevice()]`);
 			let result;
