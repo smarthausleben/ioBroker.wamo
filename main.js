@@ -515,7 +515,7 @@ class Leackagedect extends utils.Adapter {
 						await this.state_profile_PR(ProfileNumber, value);
 						break;
 					case 'PB':
-						//await this.state_profile_PB(ProfileNumber, value);
+						await this.state_profile_PB(ProfileNumber, value);
 						break;
 					case 'PW':
 						//await this.state_profile_PW(ProfileNumber, value);
@@ -822,6 +822,42 @@ class Leackagedect extends utils.Adapter {
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: value['getPR' + String(ProfileNumber)], ack: true });
+				this.log.info('Profile ' + String(ProfileNumber) + ' return time ' + String(value['getPR' + String(ProfileNumber)]));
+				resolve(true);
+			} catch (err) {
+				this.log.error(err.message);
+				reject(err);
+			}
+		});
+
+	}
+
+	async state_profile_PB(ProfileNumber, value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Profiles.' + String(ProfileNumber) + '.PB' + String(ProfileNumber);
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Profile ' + String(ProfileNumber) + ' Buzzer',
+							de: 'Profil ' + String(ProfileNumber) + ' Warnton'
+						},
+						type: 'string',
+						role: 'profile.' + String(ProfileNumber) + '.buzzeron',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				if (parseFloat(value['getPB' + String(ProfileNumber)]) == 0) {
+					this.setStateAsync(state_ID, { val: 'disabled', ack: true });
+					this.log.info('Profile ' + String(ProfileNumber) + ' Busser is disabled');
+				}
+				else {
+					this.setStateAsync(state_ID, { val: 'enabled', ack: true });
+					this.log.info('Profile ' + String(ProfileNumber) + ' Busser is enabled');
+				}
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
