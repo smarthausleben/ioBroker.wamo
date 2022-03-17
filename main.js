@@ -503,7 +503,7 @@ class Leackagedect extends utils.Adapter {
 						await this.state_profile_PV(ProfileNumber, value);
 						break;
 					case 'PT':
-						//await this.state_profile_PT(ProfileNumber, value);
+						await this.state_profile_PT(ProfileNumber, value);
 						break;
 					case 'PF':
 						//await this.state_profile_PF(ProfileNumber, value);
@@ -675,8 +675,8 @@ class Leackagedect extends utils.Adapter {
 					type: 'state',
 					common: {
 						name: {
-							en: 'Profile ' + String(ProfileNumber) + ' Volume Level',
-							de: 'Profil ' + String(ProfileNumber) + ' Volumen Grenze'
+							en: 'Profile ' + String(ProfileNumber) + ' Volume Level (0 = disabled 1...1900L)',
+							de: 'Profil ' + String(ProfileNumber) + ' Volumen Grenze (0 = disabled 1...1900L)'
 						},
 						type: 'string',
 						role: 'profile.' + String(ProfileNumber) + '.volumelevel',
@@ -688,6 +688,40 @@ class Leackagedect extends utils.Adapter {
 				});
 				if (parseFloat(value['getPV' + String(ProfileNumber)]) > 0) {
 					this.setStateAsync(state_ID, { val: value['getPV' + String(ProfileNumber)], ack: true });
+				}
+				else {
+					this.setStateAsync(state_ID, { val: 'disabled', ack: true });
+				}
+				resolve(true);
+			} catch (err) {
+				this.log.error(err.message);
+				reject(err);
+			}
+		});
+
+	}
+
+	async state_profile_PT(ProfileNumber, value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Profiles.' + String(ProfileNumber) + '.PT' + String(ProfileNumber);
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Profile ' + String(ProfileNumber) + ' Time Level (0 = disabled 1...1500min (25h)',
+							de: 'Profil ' + String(ProfileNumber) + ' Zeit Grenze (0 = disabled 1...1500min (25h)'
+						},
+						type: 'string',
+						role: 'profile.' + String(ProfileNumber) + '.timelevel',
+						unit: 'min',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				if (parseFloat(value['getPV' + String(ProfileNumber)]) > 0) {
+					this.setStateAsync(state_ID, { val: value['getPT' + String(ProfileNumber)], ack: true });
 				}
 				else {
 					this.setStateAsync(state_ID, { val: 'disabled', ack: true });
