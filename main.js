@@ -395,7 +395,7 @@ class Leackagedect extends utils.Adapter {
 					const parameterIDs = stateID.split('.');
 					this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
 					result = await this.get_DevieParameter(parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
-					this.log.info('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
+					this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
 					await this.UpdateState(stateID, result);
 				}
 				resolve(true);
@@ -415,7 +415,7 @@ class Leackagedect extends utils.Adapter {
 
 			// Parameter ID aus stateID ermitteln
 			const parameterIDs = stateID.split('.');
-			const parameter = (parameterIDs[parameterIDs.length - 1]).substr(0, parameterIDs[parameterIDs.length - 1].length - 1);
+			const parameter = (parameterIDs[parameterIDs.length - 1]).substr(0, parameterIDs[parameterIDs.length - 1].length);
 			this.log.debug('[UpdateState(stateID, value)] Parameter = ' + String(parameter));
 			try {
 				switch (parameter) {
