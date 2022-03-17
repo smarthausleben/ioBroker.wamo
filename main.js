@@ -512,7 +512,7 @@ class Leackagedect extends utils.Adapter {
 						await this.state_profile_PM(ProfileNumber, value);
 						break;
 					case 'PR':
-						//await this.state_profile_PR(ProfileNumber, value);
+						await this.state_profile_PR(ProfileNumber, value);
 						break;
 					case 'PB':
 						//await this.state_profile_PB(ProfileNumber, value);
@@ -793,6 +793,35 @@ class Leackagedect extends utils.Adapter {
 				else {
 					this.setStateAsync(state_ID, { val: 'enabled', ack: true });
 				}
+				resolve(true);
+			} catch (err) {
+				this.log.error(err.message);
+				reject(err);
+			}
+		});
+
+	}
+
+	async state_profile_PR(ProfileNumber, value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Profiles.' + String(ProfileNumber) + '.PR' + String(ProfileNumber);
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Profile ' + String(ProfileNumber) + ' Return Time to standard Profile (1...720h (30 Days))',
+							de: 'Profil ' + String(ProfileNumber) + ' Zeit bis zur Rückkehr zum Standardprofil (1...720h (30 Tage))'
+						},
+						type: 'string',
+						role: 'profile.' + String(ProfileNumber) + '.returntime',
+						unit: 'h',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				this.setStateAsync(state_ID, { val: value['getPR' + String(ProfileNumber)], ack: true });
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
