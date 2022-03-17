@@ -365,7 +365,7 @@ class Leackagedect extends utils.Adapter {
 					const parameterIDs = stateID.split('.');
 					this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
 					result = await this.get_DevieParameter(parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
-					this.log.info('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
+					this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
 					await this.UpdateState(stateID, result);
 				}
 				resolve(true);
@@ -413,69 +413,73 @@ class Leackagedect extends utils.Adapter {
 	async UpdateState(stateID, value) {
 		return new Promise(async (resolve, reject) => {
 
+			// Parameter ID aus stateID ermitteln
+			const parameterIDs = stateID.split('.');
+			const parameter = (parameterIDs[parameterIDs.length - 1]).substr(0, parameterIDs[parameterIDs.length - 1].length - 1);
+			this.log.debug('[UpdateState(stateID, value)] Parameter = ' + String(parameter));
 			try {
-				switch (stateID) {
-					case 'Device.Info.VER':
+				switch (parameter) {
+					case 'VER':
 						await this.state_VER(value);
 						break;
-					case 'Device.Info.WIP':
+					case 'WIP':
 						await this.state_WIP(value);
 						break;
-					case 'Device.Info.MAC':
+					case 'MAC':
 						await this.state_MAC(value);
 						break;
-					case 'Device.Info.WGW':
+					case 'WGW':
 						await this.state_WGW(value);
 						break;
-					case 'Device.Info.SRN':
+					case 'SRN':
 						await this.state_SRN(value);
 						break;
-					case 'Device.Info.CNO':
+					case 'CNO':
 						await this.state_CNO(value);
 						break;
-					case 'Device.Info.WFR':
+					case 'WFR':
 						await this.state_WFR(value);
 						break;
-					case 'Device.Info.WFC':
+					case 'WFC':
 						await this.state_WFC(value);
 						break;
-					case 'Device.Info.SRV':
+					case 'SRV':
 						await this.state_SRV(value);
 						break;
-					case 'Device.Info.WAH':
+					case 'WAH':
 						await this.state_WAH(value);
 						break;
-					case 'Device.Info.WAD':
+					case 'WAD':
 						await this.state_WAD(value);
 						break;
-					case 'Device.Info.APT':
+					case 'APT':
 						await this.state_APT(value);
 						break;
-					case 'Device.Info.DWL':
+					case 'DWL':
 						await this.state_DWL(value);
 						break;
-					case 'Device.Info.WFS':
+					case 'WFS':
 						await this.state_WFS(value);
 						break;
-					case 'Device.Info.BAT':
+					case 'BAT':
 						await this.state_BAT(value);
 						break;
-					case 'Device.Info.IDS':
+					case 'IDS':
 						await this.state_IDS(value);
 						break;
-					case 'Conditions.ALA':
+					case 'ALA':
 						await this.state_ALA(value);
 						break;
-					case 'Consumptions.AVO':
+					case 'AVO':
 						await this.state_AVO(value);
 						break;
-					case 'Consumptions.LTV':
+					case 'LTV':
 						await this.state_LTV(value);
 						break;
-					case 'Consumptions.VOL':
+					case 'VOL':
 						await this.state_VOL(value);
 						break;
-					case 'Device.Info.NET':
+					case 'NET':
 						await this.state_NET(value);
 						break;
 				}
@@ -491,9 +495,10 @@ class Leackagedect extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 
 			const parameterIDs = stateID.split('.');
-			this.log.debug('Profilparameter ' + (parameterIDs[parameterIDs.length - 1]).substr(0, parameterIDs[parameterIDs.length - 1].length - 1)) + 'for Profile ' + String(ProfileNumber);
+			const parameter = (parameterIDs[parameterIDs.length - 1]).substr(0, parameterIDs[parameterIDs.length - 1].length - 1);
+			this.log.debug('[UpdateProfileState(ProfileNumber, stateID, value)] Profilparameter =' + parameter);
 			try {
-				switch ((parameterIDs[parameterIDs.length - 1]).substr(0, parameterIDs[parameterIDs.length - 1].length - 1)) {
+				switch (parameter) {
 					case 'PA':
 						await this.state_profile_PA(ProfileNumber, value);
 						break;
