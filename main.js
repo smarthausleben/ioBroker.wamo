@@ -509,7 +509,7 @@ class Leackagedect extends utils.Adapter {
 						await this.state_profile_PF(ProfileNumber, value);
 						break;
 					case 'PM':
-						//await this.state_profile_PM(ProfileNumber, value);
+						await this.state_profile_PM(ProfileNumber, value);
 						break;
 					case 'PR':
 						//await this.state_profile_PR(ProfileNumber, value);
@@ -676,7 +676,7 @@ class Leackagedect extends utils.Adapter {
 					common: {
 						name: {
 							en: 'Profile ' + String(ProfileNumber) + ' Volume Level (0 = disabled 1...1900L)',
-							de: 'Profil ' + String(ProfileNumber) + ' Volumen Grenze (0 = disabled 1...1900L)'
+							de: 'Profil ' + String(ProfileNumber) + ' Volumen Grenze (0 = deaktiviert 1...1900L)'
 						},
 						type: 'string',
 						role: 'profile.' + String(ProfileNumber) + '.volumelevel',
@@ -710,7 +710,7 @@ class Leackagedect extends utils.Adapter {
 					common: {
 						name: {
 							en: 'Profile ' + String(ProfileNumber) + ' Time Level (0 = disabled 1...1500min (25h)',
-							de: 'Profil ' + String(ProfileNumber) + ' Zeit Grenze (0 = disabled 1...1500min (25h)'
+							de: 'Profil ' + String(ProfileNumber) + ' Zeit Grenze (0 = deaktiviert 1...1500min (25h)'
 						},
 						type: 'string',
 						role: 'profile.' + String(ProfileNumber) + '.timelevel',
@@ -744,7 +744,7 @@ class Leackagedect extends utils.Adapter {
 					common: {
 						name: {
 							en: 'Profile ' + String(ProfileNumber) + ' Max Flow (0 = disabled 1...5000L/h)',
-							de: 'Profil ' + String(ProfileNumber) + ' Maximaler Durchfluss (0 = disabled 1...5000L/h)'
+							de: 'Profil ' + String(ProfileNumber) + ' Maximaler Durchfluss (0 = deaktiviert 1...5000L/h)'
 						},
 						type: 'string',
 						role: 'profile.' + String(ProfileNumber) + '.maxflow',
@@ -759,6 +759,39 @@ class Leackagedect extends utils.Adapter {
 				}
 				else {
 					this.setStateAsync(state_ID, { val: 'disabled', ack: true });
+				}
+				resolve(true);
+			} catch (err) {
+				this.log.error(err.message);
+				reject(err);
+			}
+		});
+
+	}
+
+	async state_profile_PM(ProfileNumber, value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Profiles.' + String(ProfileNumber) + '.PM' + String(ProfileNumber);
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Profile ' + String(ProfileNumber) + ' Microleak Detektion',
+							de: 'Profil ' + String(ProfileNumber) + ' Microleckageüberwachung'
+						},
+						type: 'string',
+						role: 'profile.' + String(ProfileNumber) + '.microleakagedetection',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				if (parseFloat(value['getPM' + String(ProfileNumber)]) == 0) {
+					this.setStateAsync(state_ID, { val: 'disabled', ack: true });
+				}
+				else {
+					this.setStateAsync(state_ID, { val: 'enabled', ack: true });
 				}
 				resolve(true);
 			} catch (err) {
