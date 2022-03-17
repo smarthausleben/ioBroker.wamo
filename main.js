@@ -335,7 +335,7 @@ class Leackagedect extends utils.Adapter {
 						const parameterIDs = stateID.split('.');
 						this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
 						const result = await this.get_DevieProfileParameter(ProfileNumber, parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
-						this.log.info('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
+						this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
 						await this.UpdateProfileState(ProfileNumber, stateID, result);
 					}
 					resolve(true);
@@ -647,7 +647,7 @@ class Leackagedect extends utils.Adapter {
 					type: 'state',
 					common: {
 						name: {
-							en: 'Profile ' + String(ProfileNumber) + ' name',
+							en: 'Profile ' + String(ProfileNumber) + ' Name',
 							de: 'Profil ' + String(ProfileNumber) + ' Name'
 						},
 						type: 'string',
@@ -658,6 +658,7 @@ class Leackagedect extends utils.Adapter {
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: value['getPN' + String(ProfileNumber)], ack: true });
+				this.log.info('Profile ' + String(ProfileNumber) + ' Name is ' + value['getPN' + String(ProfileNumber)]);
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
@@ -688,9 +689,11 @@ class Leackagedect extends utils.Adapter {
 				});
 				if (parseFloat(value['getPV' + String(ProfileNumber)]) > 0) {
 					this.setStateAsync(state_ID, { val: value['getPV' + String(ProfileNumber)], ack: true });
+					this.log.info('Profile ' + String(ProfileNumber) + ' Volume Level is ' + value['getPV' + String(ProfileNumber)] + ' min');
 				}
 				else {
 					this.setStateAsync(state_ID, { val: 'disabled', ack: true });
+					this.log.info('Profile ' + String(ProfileNumber) + ' Volume Level is disabled');
 				}
 				resolve(true);
 			} catch (err) {
@@ -722,9 +725,11 @@ class Leackagedect extends utils.Adapter {
 				});
 				if (parseFloat(value['getPV' + String(ProfileNumber)]) > 0) {
 					this.setStateAsync(state_ID, { val: value['getPT' + String(ProfileNumber)], ack: true });
+					this.log.info('Profile ' + String(ProfileNumber) + ' Time Level is ' + value['getPT' + String(ProfileNumber)] + ' min');
 				}
 				else {
 					this.setStateAsync(state_ID, { val: 'disabled', ack: true });
+					this.log.info('Profile ' + String(ProfileNumber) + ' Time Level is disabled');
 				}
 				resolve(true);
 			} catch (err) {
@@ -748,7 +753,7 @@ class Leackagedect extends utils.Adapter {
 						},
 						type: 'string',
 						role: 'profile.' + String(ProfileNumber) + '.maxflow',
-						unit: 'min',
+						unit: 'L/h',
 						read: true,
 						write: false
 					},
@@ -756,9 +761,11 @@ class Leackagedect extends utils.Adapter {
 				});
 				if (parseFloat(value['getPV' + String(ProfileNumber)]) > 0) {
 					this.setStateAsync(state_ID, { val: value['getPF' + String(ProfileNumber)], ack: true });
+					this.log.info('Profile ' + String(ProfileNumber) + ' Max Flow is ' + value['getPF' + String(ProfileNumber)] + ' L/h');
 				}
 				else {
 					this.setStateAsync(state_ID, { val: 'disabled', ack: true });
+					this.log.info('Profile ' + String(ProfileNumber) + ' Max Flow is disabled');
 				}
 				resolve(true);
 			} catch (err) {
@@ -789,9 +796,11 @@ class Leackagedect extends utils.Adapter {
 				});
 				if (parseFloat(value['getPM' + String(ProfileNumber)]) == 0) {
 					this.setStateAsync(state_ID, { val: 'disabled', ack: true });
+					this.log.info('Profile ' + String(ProfileNumber) + ' Microleak Detektion is disabled');
 				}
 				else {
 					this.setStateAsync(state_ID, { val: 'enabled', ack: true });
+					this.log.info('Profile ' + String(ProfileNumber) + ' Microleak Detektion is enabled');
 				}
 				resolve(true);
 			} catch (err) {
