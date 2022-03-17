@@ -518,7 +518,7 @@ class Leackagedect extends utils.Adapter {
 						await this.state_profile_PB(ProfileNumber, value);
 						break;
 					case 'PW':
-						//await this.state_profile_PW(ProfileNumber, value);
+						await this.state_profile_PW(ProfileNumber, value);
 						break;
 					default:
 				}
@@ -857,6 +857,41 @@ class Leackagedect extends utils.Adapter {
 				else {
 					this.setStateAsync(state_ID, { val: 'enabled', ack: true });
 					this.log.info('Profile ' + String(ProfileNumber) + ' Busser is enabled');
+				}
+				resolve(true);
+			} catch (err) {
+				this.log.error(err.message);
+				reject(err);
+			}
+		});
+
+	}
+
+	async state_profile_PW(ProfileNumber, value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Profiles.' + String(ProfileNumber) + '.PW' + String(ProfileNumber);
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Profile ' + String(ProfileNumber) + ' Leakage Warning',
+							de: 'Profil ' + String(ProfileNumber) + ' Leckage Warnung'
+						},
+						type: 'string',
+						role: 'profile.' + String(ProfileNumber) + '.leakagewarning',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				if (parseFloat(value['getPW' + String(ProfileNumber)]) == 0) {
+					this.setStateAsync(state_ID, { val: 'disabled', ack: true });
+					this.log.info('Profile ' + String(ProfileNumber) + ' Leakage Warning disabled');
+				}
+				else {
+					this.setStateAsync(state_ID, { val: 'enabled', ack: true });
+					this.log.info('Profile ' + String(ProfileNumber) + ' Leakage Warning is enabled');
 				}
 				resolve(true);
 			} catch (err) {
