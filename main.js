@@ -506,7 +506,7 @@ class Leackagedect extends utils.Adapter {
 						await this.state_profile_PT(ProfileNumber, value);
 						break;
 					case 'PF':
-						//await this.state_profile_PF(ProfileNumber, value);
+						await this.state_profile_PF(ProfileNumber, value);
 						break;
 					case 'PM':
 						//await this.state_profile_PM(ProfileNumber, value);
@@ -722,6 +722,40 @@ class Leackagedect extends utils.Adapter {
 				});
 				if (parseFloat(value['getPV' + String(ProfileNumber)]) > 0) {
 					this.setStateAsync(state_ID, { val: value['getPT' + String(ProfileNumber)], ack: true });
+				}
+				else {
+					this.setStateAsync(state_ID, { val: 'disabled', ack: true });
+				}
+				resolve(true);
+			} catch (err) {
+				this.log.error(err.message);
+				reject(err);
+			}
+		});
+
+	}
+
+	async state_profile_PF(ProfileNumber, value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Profiles.' + String(ProfileNumber) + '.PF' + String(ProfileNumber);
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Profile ' + String(ProfileNumber) + ' Max Flow (0 = disabled 1...5000L/h)',
+							de: 'Profil ' + String(ProfileNumber) + ' Maximaler Durchfluss (0 = disabled 1...5000L/h)'
+						},
+						type: 'string',
+						role: 'profile.' + String(ProfileNumber) + '.maxflow',
+						unit: 'min',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				if (parseFloat(value['getPV' + String(ProfileNumber)]) > 0) {
+					this.setStateAsync(state_ID, { val: value['getPF' + String(ProfileNumber)], ack: true });
 				}
 				else {
 					this.setStateAsync(state_ID, { val: 'disabled', ack: true });
