@@ -302,7 +302,7 @@ class Leackagedect extends utils.Adapter {
 					const parameterIDs = stateID.split('.');
 					this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
 					result = await this.get_DevieParameter(parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
-					this.log.info('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
+					this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
 					await this.UpdateState(stateID, result);
 				}
 				resolve(true);
@@ -338,6 +338,7 @@ class Leackagedect extends utils.Adapter {
 						this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
 						await this.UpdateProfileState(ProfileNumber, stateID, result);
 					}
+
 					resolve(true);
 				} catch (err) {
 					this.log.error(err.message);
@@ -983,6 +984,7 @@ class Leackagedect extends utils.Adapter {
 						AlarmText = 'undefined';
 				}
 				this.setStateAsync(state_ID, { val: AlarmText, ack: true });
+				this.log.info('Alarm Status: ' + AlarmText);
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -1009,6 +1011,7 @@ class Leackagedect extends utils.Adapter {
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: value.getVER, ack: true });
+				this.log.info('Device Firmware Version: ' + String(value.getVER));
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -1035,6 +1038,7 @@ class Leackagedect extends utils.Adapter {
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: value.getWIP, ack: true });
+				this.log.info('Device IP: ' + String(value.getWIP));
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -1061,6 +1065,7 @@ class Leackagedect extends utils.Adapter {
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: value.getMAC, ack: true });
+				this.log.info('Device MAC Address: ' + String(value.getMAC));
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -1087,6 +1092,7 @@ class Leackagedect extends utils.Adapter {
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: value.getWGW, ack: true });
+				this.log.info('Device Default Gateway: ' + String(value.getWGW));
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -1113,6 +1119,7 @@ class Leackagedect extends utils.Adapter {
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: value.getSRN, ack: true });
+				this.log.info('Device Serial Number: ' + String(value.getSRN));
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -1139,6 +1146,7 @@ class Leackagedect extends utils.Adapter {
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: value.getCNO, ack: true });
+				this.log.info('Device Code Number: ' + String(value.getCND));
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -1166,6 +1174,7 @@ class Leackagedect extends utils.Adapter {
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: value.getWFR, ack: true });
+				this.log.info('WiFi RSSI is ' + String(value.getWFR) + ' %');
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -1192,6 +1201,7 @@ class Leackagedect extends utils.Adapter {
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: value.getWFC, ack: true });
+				this.log.info('WiFi SSID is ' + String(value.getWFC));
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -1219,12 +1229,16 @@ class Leackagedect extends utils.Adapter {
 				});
 				if (String(value.getWFS) == '0') {
 					this.setStateAsync(state_ID, { val: 'disconected', ack: true });
+					this.log.info('WiFi is disconected');
 				} else if (String(value.getWFS) == '1') {
 					this.setStateAsync(state_ID, { val: 'connecting', ack: true });
+					this.log.info('WiFi is connecting');
 				} else if (String(value.getWFS) == '2') {
 					this.setStateAsync(state_ID, { val: 'connected', ack: true });
+					this.log.info('WiFi is connected');
 				} else {
 					this.setStateAsync(state_ID, { val: 'undefined', ack: true });
+					this.log.info('WiFi is undefined');
 				}
 				resolve(true);
 			} catch (err) {
@@ -1252,6 +1266,7 @@ class Leackagedect extends utils.Adapter {
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: value.getSRV, ack: true });
+				this.log.info('Next Maintenance: ' + String(value.getSRV));
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -1279,9 +1294,11 @@ class Leackagedect extends utils.Adapter {
 				});
 				if (value.getWAH == '0') {
 					this.setStateAsync(state_ID, { val: false, ack: true });
+					this.log.info('WiFi AP is not hidden');
 				}
 				else {
 					this.setStateAsync(state_ID, { val: true, ack: true });
+					this.log.info('WiFi AP is hidden');
 				}
 				resolve(true);
 			} catch (err) {
@@ -1310,9 +1327,11 @@ class Leackagedect extends utils.Adapter {
 				});
 				if (String(value.getWAD) == '0') {
 					this.setStateAsync(state_ID, { val: false, ack: true });
+					this.log.info('WiFi AP is enabled');
 				}
 				else {
 					this.setStateAsync(state_ID, { val: true, ack: true });
+					this.log.info('WiFi AP is disabled');
 				}
 				resolve(true);
 			} catch (err) {
@@ -1329,8 +1348,8 @@ class Leackagedect extends utils.Adapter {
 					type: 'state',
 					common: {
 						name: {
-							en: 'WiFi AP timeout',
-							de: 'WLAN AP timeout'
+							en: 'WiFi AP Timeout',
+							de: 'WLAN AP Timeout'
 						},
 						type: 'string',
 						role: 'info.wifitimeout',
@@ -1342,9 +1361,11 @@ class Leackagedect extends utils.Adapter {
 				});
 				if (parseFloat(value.getAPT) > 0) {
 					this.setStateAsync(state_ID, { val: value.getAPT, ack: true });
+					this.log.info('WiFi AP Timeout: ' + String(value.getAPT) + ' s');
 				}
 				else {
 					this.setStateAsync(state_ID, { val: 'disabled', ack: true });
+					this.log.info('WiFi AP Timeout is Disabled');
 				}
 				resolve(true);
 			} catch (err) {
@@ -1373,9 +1394,11 @@ class Leackagedect extends utils.Adapter {
 				});
 				if (String(value.getDWL) == '0') {
 					this.setStateAsync(state_ID, { val: false, ack: true });
+					this.log.info('WiFi is deactivated');
 				}
 				else {
 					this.setStateAsync(state_ID, { val: true, ack: true });
+					this.log.info('WiFi is activated');
 				}
 				resolve(true);
 			} catch (err) {
@@ -1404,6 +1427,7 @@ class Leackagedect extends utils.Adapter {
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: value.getBAT, ack: true });
+				this.log.info('Battery Voltage: ' + String(value.getBAT) + ' V');
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -1431,6 +1455,7 @@ class Leackagedect extends utils.Adapter {
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: value.getNET, ack: true });
+				this.log.info('DC Power Adapter Voltage: ' + String(value.getNET) + ' V');
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -1458,9 +1483,11 @@ class Leackagedect extends utils.Adapter {
 				});
 				if (String(value.getIDS) == '0') {
 					this.setStateAsync(state_ID, { val: false, ack: true });
+					this.log.info('Daylight saving Time is disabled');
 				}
 				else {
 					this.setStateAsync(state_ID, { val: true, ack: true });
+					this.log.info('Daylight saving Time is enabled');
 				}
 				resolve(true);
 			} catch (err) {
@@ -1490,6 +1517,7 @@ class Leackagedect extends utils.Adapter {
 				});
 
 				this.setStateAsync(state_ID, { val: String(parseFloat(String(value.getAVO).replace('mL', ''))), ack: true });
+				this.log.info('Currend Water Consumption: ' + String(parseFloat(String(value.getAVO).replace('mL', ''))) + ' mL');
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -1517,6 +1545,7 @@ class Leackagedect extends utils.Adapter {
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: value.getLTV, ack: true });
+				this.log.info('Last Taped Water: ' + String(value.getLTV) + ' L');
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -1544,6 +1573,7 @@ class Leackagedect extends utils.Adapter {
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: String(parseFloat(String(value.getVOL).replace('Vol[L]', '')) / 1000), ack: true });
+				this.log.info('Total Water Volume: ' + String(parseFloat(String(value.getVOL).replace('Vol[L]', '')) / 1000) + ' m3');
 				resolve(true);
 			} catch (err) {
 				reject(err);
