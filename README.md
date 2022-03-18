@@ -1,17 +1,17 @@
-![Logo](admin/leackagedect.png)
-# ioBroker.leackagedect
+![Logo](admin/wamo.png)
+# ioBroker.wamo
 
-[![NPM version](https://img.shields.io/npm/v/iobroker.leackagedect.svg)](https://www.npmjs.com/package/iobroker.leackagedect)
-[![Downloads](https://img.shields.io/npm/dm/iobroker.leackagedect.svg)](https://www.npmjs.com/package/iobroker.leackagedect)
-![Number of Installations](https://iobroker.live/badges/leackagedect-installed.svg)
-![Current version in stable repository](https://iobroker.live/badges/leackagedect-stable.svg)
-[![Dependency Status](https://img.shields.io/david/smarthausleben/iobroker.leackagedect.svg)](https://david-dm.org/smarthausleben/iobroker.leackagedect)
+[![NPM version](https://img.shields.io/npm/v/iobroker.wamo.svg)](https://www.npmjs.com/package/iobroker.wamo)
+[![Downloads](https://img.shields.io/npm/dm/iobroker.wamo.svg)](https://www.npmjs.com/package/iobroker.wamo)
+![Number of Installations](https://iobroker.live/badges/wamo-installed.svg)
+![Current version in stable repository](https://iobroker.live/badges/wamo-stable.svg)
+[![Dependency Status](https://img.shields.io/david/smarthausleben/iobroker.wamo.svg)](https://david-dm.org/smarthausleben/iobroker.wamo)
 
-[![NPM](https://nodei.co/npm/iobroker.leackagedect.png?downloads=true)](https://nodei.co/npm/iobroker.leackagedect/)
+[![NPM](https://nodei.co/npm/iobroker.wamo.png?downloads=true)](https://nodei.co/npm/iobroker.wamo/)
 
-**Tests:** ![Test and Release](https://github.com/smarthausleben/ioBroker.leackagedect/workflows/Test%20and%20Release/badge.svg)
+**Tests:** ![Test and Release](https://github.com/smarthausleben/ioBroker.wamo/workflows/Test%20and%20Release/badge.svg)
 
-## leackagedect adapter for ioBroker
+## wamo adapter for ioBroker
 
 Describe your project here
 
@@ -21,7 +21,7 @@ This section is intended for the developer. It can be deleted later
 ### Getting started
 
 You are almost done, only a few steps left:
-1. Create a new repository on GitHub with the name `ioBroker.leackagedect`
+1. Create a new repository on GitHub with the name `ioBroker.wamo`
 1. Initialize the current folder as a new git repository:  
 	```bash
 	git init -b main
@@ -30,7 +30,7 @@ You are almost done, only a few steps left:
 	```
 1. Link your local repository with the one on GitHub:  
 	```bash
-	git remote add origin https://github.com/smarthausleben/ioBroker.leackagedect
+	git remote add origin https://github.com/smarthausleben/ioBroker.wamo
 	```
 
 1. Push all files to the GitHub repo:  

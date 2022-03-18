@@ -1,6 +1,6 @@
 {
 	"common": {
-		"name": "leackagedect",
+		"name": "wamo",
 		"version": "0.0.2",
 		"news": {
 			"0.0.1": {
@@ -16,21 +16,21 @@
 				"zh-cn": "首次出版"
 			}
 		},
-		"title": "LeackageDect",
+		"title": "wamo",
 		"titleLang": {
-			"en": "LeackageDect",
+			"en": "wamo",
 			"de": "LeckageDekt",
-			"ru": "LeackageDect",
+			"ru": "wamo",
 			"pt": "Detecção de vazamento",
 			"nl": "LekkageDect",
-			"fr": "LeackageDect",
+			"fr": "wamo",
 			"it": "PerditaDect",
 			"es": "Detección de fugas",
-			"pl": "LeackageDect",
+			"pl": "wamo",
 			"zh-cn": "泄漏检测"
 		},
 		"desc": {
-			"en": "leackagedect",
+			"en": "wamo",
 			"de": "Leckagen",
 			"ru": "утечка",
 			"pt": "vazamento",
@@ -53,10 +53,10 @@
 		"license": "MIT",
 		"platform": "Javascript/Node.js",
 		"main": "main.js",
-		"icon": "leackagedect.png",
+		"icon": "wamo.png",
 		"enabled": true,
-		"extIcon": "https://raw.githubusercontent.com/smarthausleben/ioBroker.leackagedect/main/admin/leackagedect.png",
-		"readme": "https://github.com/smarthausleben/ioBroker.leackagedect/blob/main/README.md",
+		"extIcon": "https://raw.githubusercontent.com/smarthausleben/ioBroker.wamo/main/admin/wamo.png",
+		"readme": "https://github.com/smarthausleben/ioBroker.wamo/blob/main/README.md",
 		"loglevel": "info",
 		"mode": "daemon",
 		"type": "iot-systems",

@@ -2,17 +2,17 @@
 'use strict';
 
 systemDictionary = {
-	'leackagedect adapter settings': {
-		'en': 'Adapter settings for leackagedect',
-		'de': 'Adaptereinstellungen für leackagedect',
-		'ru': 'Настройки адаптера для leackagedect',
-		'pt': 'Configurações do adaptador para leackagedect',
-		'nl': 'Adapterinstellingen voor leackagedect',
-		'fr': "Paramètres d'adaptateur pour leackagedect",
-		'it': "Impostazioni dell'adattatore per leackagedect",
-		'es': 'Ajustes del adaptador para leackagedect',
-		'pl': 'Ustawienia adaptera dla leackagedect',
-		'zh-cn': 'leackagedect的适配器设置'
+	'wamo adapter settings': {
+		'en': 'Adapter settings for wamo',
+		'de': 'Adaptereinstellungen für wamo',
+		'ru': 'Настройки адаптера для wamo',
+		'pt': 'Configurações do adaptador para wamo',
+		'nl': 'Adapterinstellingen voor wamo',
+		'fr': "Paramètres d'adaptateur pour wamo",
+		'it': "Impostazioni dell'adattatore per wamo",
+		'es': 'Ajustes del adaptador para wamo',
+		'pl': 'Ustawienia adaptera dla wamo',
+		'zh-cn': 'wamo的适配器设置'
 	},
 	'option1': {
 		'en': 'option1',
