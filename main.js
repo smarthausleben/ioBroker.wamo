@@ -962,7 +962,46 @@ const allParameters = {
 		readCommand: 'get',
 		writeCommand: null
 	},
-};
+	WifiDisableScan: {
+		id: 'WNS',
+		statePath: 'Device.Settings',
+		description: { en: 'Scan for AP before connection', de: 'Vor der Verbindung nach APs suchen' },
+		default: {
+			value: '0',
+			description: { en: 'scan for AP before connection', de: 'Vor der Verbindung nach APs suchen' }
+		},
+		range: {
+			description: { en: '0 = Scan for AP before connection 1 = scan disabled befor connection', de: '0 = Vor der Verbindung nach APs suchen 1 = Vor der Verbindung nicht nach APs suchen' },
+			cmd: '0,1',
+			min: 0,
+			max: 1
+		},
+		unit: '',
+		levelRead: 'SERVICE',
+		levelWrite: 'SERVICE',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	WifiAPhidden: {
+		id: 'WAH',
+		statePath: 'Device.Settings',
+		description: { en: 'Device WiFi AP hidden', de: 'Gerät AP versteckt' },
+		default: {
+			value: '0',
+			description: { en: 'AP not hidden (visible)', de: 'AP nicht versteckt (sichtbar)' }
+		},
+		range: {
+			description: { en: '0 = AP not hidden (visible) 1 = AP hidden (invisible)', de: '0 = AP nicht versteckt (sichtbar) 1 = AP versteckt (unsichtbar)' },
+			cmd: '0,1',
+			min: 0,
+			max: 1
+		},
+		unit: '',
+		levelRead: 'SERVICE',
+		levelWrite: 'SERVICE',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},};
 
 
 //============================================================================

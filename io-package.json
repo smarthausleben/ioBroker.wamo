@@ -19,10 +19,10 @@
 		"title": "wamo",
 		"titleLang": {
 			"en": "wamo",
-			"de": "LeckageDekt",
+			"de": "wamo",
 			"ru": "wamo",
 			"pt": "Detecção de vazamento",
-			"nl": "LekkageDect",
+			"nl": "wamo",
 			"fr": "wamo",
 			"it": "PerditaDect",
 			"es": "Detección de fugas",
@@ -31,7 +31,7 @@
 		},
 		"desc": {
 			"en": "wamo",
-			"de": "Leckagen",
+			"de": "wamo",
 			"ru": "утечка",
 			"pt": "vazamento",
 			"nl": "lekdetectie",
@@ -46,7 +46,6 @@
 		],
 		"keywords": [
 			"ioBroker",
-			"template",
 			"Smart Home",
 			"home automation"
 		],
