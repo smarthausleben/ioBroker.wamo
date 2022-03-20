@@ -2629,8 +2629,8 @@ class Leackagedect extends utils.Adapter {
 					},
 					native: {}
 				});
-				this.setStateAsync(state_ID, { val: String((parseFloat(String(value.getCND)) / 10)), ack: true });
-				this.log.info('Water conductivity: ' + String(parseFloat(String(value.getCND)) + ' uS/cm');
+				this.setStateAsync(state_ID, { val: String(value.getCND), ack: true });
+				this.log.info('Water conductivity: ' + String(value.getCND) + ' uS/cm');
 				resolve(true);
 			} catch (err) {
 				reject(err);
