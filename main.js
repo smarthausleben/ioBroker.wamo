@@ -1279,6 +1279,7 @@ class Leackagedect extends utils.Adapter {
 				'Device.Info.WFS',	// WiFi State
 				'Device.Info.BAT',	// Batterie voltage
 				'Conditions.CEL',	// Water temperatur
+				'Conditions.CND',	// Water conductivity
 				'Device.Info.IDS'];	// Daylight Saving Time
 
 
@@ -1471,6 +1472,9 @@ class Leackagedect extends utils.Adapter {
 						break;
 					case 'CEL':
 						await this.state_CEL(value);
+						break;
+					case 'CND':
+						await this.state_CND(value);
 						break;
 				}
 
@@ -2575,6 +2579,7 @@ class Leackagedect extends utils.Adapter {
 			}
 		});
 	}
+
 	async state_CEL(value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -2594,8 +2599,36 @@ class Leackagedect extends utils.Adapter {
 					},
 					native: {}
 				});
-				this.setStateAsync(state_ID, { val: String((parseFloat(String(value.getCEL)) / 10)) , ack: true });
-				this.log.info( 'Water Vtemperature: ' + String((parseFloat(String(value.getCEL)) / 10)) + ' °C');
+				this.setStateAsync(state_ID, { val: String((parseFloat(String(value.getCEL)) / 10)), ack: true });
+				this.log.info('Water temperature: ' + String((parseFloat(String(value.getCEL)) / 10)) + ' °C');
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async state_CND(value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Conditions.CND';
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Water conductivitye',
+							de: 'Leitfähigkeit'
+						},
+						type: 'string',
+						role: 'conditions.waterconductivity',
+						unit: 'uS/cm',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				this.setStateAsync(state_ID, { val: String((parseFloat(String(value.getCND)) / 10)), ack: true });
+				this.log.info('Water conductivity: ' + String((parseFloat(String(value.getCND)) / 10)) + ' uS/cm');
 				resolve(true);
 			} catch (err) {
 				reject(err);
