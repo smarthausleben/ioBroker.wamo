@@ -1370,6 +1370,8 @@ class Leackagedect extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 
 			const listOfParameter = [
+				'Conditions.CEL',	// Water temperatur
+				'Conditions.CND',	// Water conductivity
 				'Device.Info.BAT',
 				'Consumptions.AVO',
 				'Consumptions.LTV',
@@ -2628,7 +2630,7 @@ class Leackagedect extends utils.Adapter {
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: String((parseFloat(String(value.getCND)) / 10)), ack: true });
-				this.log.info('Water conductivity: ' + String((parseFloat(String(value.getCND)) / 10)) + ' uS/cm');
+				this.log.info('Water conductivity: ' + String(parseFloat(String(value.getCND)) + ' uS/cm');
 				resolve(true);
 			} catch (err) {
 				reject(err);
