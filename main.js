@@ -41,6 +41,26 @@ const DeviceParameters = {
 		readCommand: null,
 		writeCommand: null
 	},
+	TestDefinition: {
+		id: 'XXX',
+		statePath: 'Testing',
+		description: { en: 'Test Discription', de: 'Testbeschreibung' },
+		default: {
+			value: null,
+			description: { en: 'in µS/cm', de: 'in µS/cm' }
+		},
+		range: {
+			description: { en: '0.0 - 5000 µS/cm', de: '0,0 - 5000µS/cm' },
+			cmd: null,
+			min: 0,
+			max: 5000
+		},
+		unit: 'ttt',
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
 	Shutoff: {
 		id: 'AB',
 		statePath: 'Device.Info',
@@ -1055,7 +1075,7 @@ class Leackagedect extends utils.Adapter {
 		this.log.info('config Device IP: ' + this.config.device_ip);
 		this.log.info('config Device Port: ' + this.config.device_port);
 
-		this.updateState(DeviceParameters.Conductivity, '224');
+		this.updateState(DeviceParameters.TestDefinition, '224');
 
 		// Device Initialisation
 		this.log.debug('vor initDevice()');
@@ -1490,12 +1510,71 @@ class Leackagedect extends utils.Adapter {
 	}
 
 	async updateState(stateID, value) {
+		return new Promise(async (resolve, reject) => {
+			try {
 
-		if ('id' in stateID) {
-			this.log.info('id key Value is: ' + stateID.id);
-		} else {
-			this.log.info(String(stateID) + 'has no id key');
-		}
+				let cur_ParameterID;	// Parameter ID
+				let cur_StatePath;		// State Path
+				let cur_Description_en;
+				let cur_Description_de;
+				let cur_Unit;
+
+				if ('id' in stateID) {
+					cur_ParameterID = stateID.id;
+					this.log.info('id key Value is: ' + cur_ParameterID);
+				} else {
+					this.log.info(String(stateID) + 'has no id key');
+				}
+
+				if ('statePath' in stateID) {
+					cur_StatePath = stateID.statePath;
+					this.log.info('id key Value is: ' + cur_StatePath);
+				} else {
+					this.log.info(String(stateID) + 'has no id statePath');
+				}
+
+				if ('description' in stateID) {
+					if('en' in stateID.description)
+					{
+						cur_Description_en = stateID.description.en;
+					}
+					if('de' in stateID.description)
+					{
+						cur_Description_de = stateID.description.de;
+					}
+				}
+
+				if('unit' in stateID){
+					cur_Unit = stateID.unit;
+				}
+
+				const state_ID = cur_StatePath + '.' + cur_ParameterID;
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: cur_Description_en,
+							de: cur_Description_de
+						},
+						type: 'string',
+						role: String(cur_StatePath).toLowerCase() + '.' + String(cur_ParameterID).toLowerCase(),
+						unit: 'uS/cm',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				this.setStateAsync(state_ID, { val: value, ack: true });
+				this.log.info('Water conductivity: ' + value + ' ' + cur_Unit);
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+
+
+
+
 	}
 
 	async UpdateProfileState(ProfileNumber, stateID, value) {
