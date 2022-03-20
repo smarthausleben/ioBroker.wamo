@@ -20,7 +20,7 @@ let short_Intervall_ID;
 let long_Intervall_ID;
 
 // Object all possible device commands
-const allParameters = {
+const DeviceParameters = {
 	empty: {
 		id: '',
 		statePath: '',
@@ -623,7 +623,7 @@ const allParameters = {
 	},
 	Temperature: {
 		id: 'CEL',
-		statePath: 'Consumption',
+		statePath: 'Conditions',
 		description: { en: 'Water Temperature', de: 'Wassertemperatur' },
 		default: {
 			value: '',
@@ -643,7 +643,7 @@ const allParameters = {
 	},
 	Pressure: {
 		id: 'BAR',
-		statePath: 'Consumption',
+		statePath: 'Conditions',
 		description: { en: 'Water Pressure', de: 'Wasserdruck' },
 		default: {
 			value: '',
@@ -663,7 +663,7 @@ const allParameters = {
 	},
 	Conductivity: {
 		id: 'CND',
-		statePath: 'Consumption',
+		statePath: 'Conditions',
 		description: { en: 'Water Conductivity', de: 'Wasserleitfähigkeit' },
 		default: {
 			value: '',
@@ -1054,6 +1054,8 @@ class Leackagedect extends utils.Adapter {
 		// this.config:
 		this.log.info('config Device IP: ' + this.config.device_ip);
 		this.log.info('config Device Port: ' + this.config.device_port);
+
+		this.updateState('','');
 
 		// Device Initialisation
 		this.log.debug('vor initDevice()');
@@ -1485,6 +1487,14 @@ class Leackagedect extends utils.Adapter {
 				reject(err);
 			}
 		});
+	}
+
+	async updateState(stateID, value) {
+
+		for (const [key, value] of Object.entries(DeviceParameters)) {
+			this.log.info(`${key}: ${value}`);
+		}
+
 	}
 
 	async UpdateProfileState(ProfileNumber, stateID, value) {
