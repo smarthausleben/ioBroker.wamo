@@ -1055,7 +1055,7 @@ class Leackagedect extends utils.Adapter {
 		this.log.info('config Device IP: ' + this.config.device_ip);
 		this.log.info('config Device Port: ' + this.config.device_port);
 
-		this.updateState('','');
+		this.updateState(DeviceParameters.Conductivity, '224');
 
 		// Device Initialisation
 		this.log.debug('vor initDevice()');
@@ -1491,10 +1491,11 @@ class Leackagedect extends utils.Adapter {
 
 	async updateState(stateID, value) {
 
-		for (const [key, value] of Object.entries(DeviceParameters)) {
-			this.log.info(`${key}: ${value}`);
+		if ('id' in stateID) {
+			this.log.info('id key Value is: ' + stateID.id);
+		} else {
+			this.log.info(String(stateID) + 'has no id key');
 		}
-
 	}
 
 	async UpdateProfileState(ProfileNumber, stateID, value) {
