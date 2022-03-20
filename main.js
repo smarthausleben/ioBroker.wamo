@@ -1549,10 +1549,12 @@ class Leackagedect extends utils.Adapter {
 				if ('description' in stateID) {
 					if ('en' in stateID.description) {
 						cur_Description_en = stateID.description.en;
+					}else{
 						throw String(stateID) + 'has no english description';
 					}
 					if ('de' in stateID.description) {
 						cur_Description_de = stateID.description.de;
+					}else{
 						throw String(stateID) + 'has no german description';
 					}
 				}
