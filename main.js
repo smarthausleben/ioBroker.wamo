@@ -1001,7 +1001,8 @@ const allParameters = {
 		levelWrite: 'SERVICE',
 		readCommand: 'get',
 		writeCommand: 'set'
-	},};
+	},
+};
 
 
 //============================================================================
@@ -1277,7 +1278,9 @@ class Leackagedect extends utils.Adapter {
 				'Device.Info.DWL',	// WiFi Deactivated
 				'Device.Info.WFS',	// WiFi State
 				'Device.Info.BAT',	// Batterie voltage
+				'Conditions.CEL',	// Water temperatur
 				'Device.Info.IDS'];	// Daylight Saving Time
+
 
 			this.log.debug(`[initDevice()]`);
 			let result;
@@ -1465,6 +1468,9 @@ class Leackagedect extends utils.Adapter {
 						break;
 					case 'NET':
 						await this.state_NET(value);
+						break;
+					case 'CEL':
+						await this.state_CEL(value);
 						break;
 				}
 
@@ -2563,6 +2569,33 @@ class Leackagedect extends utils.Adapter {
 				});
 				this.setStateAsync(state_ID, { val: String(parseFloat(String(value.getVOL).replace('Vol[L]', '')) / 1000), ack: true });
 				this.log.info('Total Water Volume: ' + String(parseFloat(String(value.getVOL).replace('Vol[L]', '')) / 1000) + ' m3');
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+	async state_CEL(value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const state_ID = 'Conditions.CEL';
+				await this.setObjectNotExistsAsync(state_ID, {
+					type: 'state',
+					common: {
+						name: {
+							en: 'Water temperature',
+							de: 'Wassertemperatur'
+						},
+						type: 'string',
+						role: 'conditions.watertemp',
+						unit: '°C',
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+				this.setStateAsync(state_ID, { val: String((parseFloat(String(value.getCEL)) / 10)) , ack: true });
+				this.log.info( 'Water Vtemperature: ' + String((parseFloat(String(value.getCEL)) / 10)) + ' °C');
 				resolve(true);
 			} catch (err) {
 				reject(err);
