@@ -1075,7 +1075,13 @@ class Leackagedect extends utils.Adapter {
 		this.log.info('config Device IP: ' + this.config.device_ip);
 		this.log.info('config Device Port: ' + this.config.device_port);
 
-		await this.updateState(DeviceParameters.TestDefinition, '224');
+		this.log.debug('Neue update Funktion Testen');
+		try {
+			await this.updateState(DeviceParameters.TestDefinition, '224');
+		}
+		catch (err) {
+			this.log.debug(`[updateState(DeviceParameters.TestDefinition, '224')] error: ${err}`);
+		}
 
 		// Device Initialisation
 		this.log.debug('vor initDevice()');
