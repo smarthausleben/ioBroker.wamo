@@ -44,7 +44,7 @@ const DeviceParameters = {
 	TestDefinition: {
 		id: 'XXX',
 		statePath: 'Testing',
-		description: null,
+		description: '',
 		default: {
 			value: null,
 			description: { en: 'in µS/cm', de: 'in µS/cm' }
@@ -1554,6 +1554,9 @@ class Leackagedect extends utils.Adapter {
 				// Deutsche und Englische Beschreibung des States ermitteln ->
 				// wenn eine Beschreibung fehlt, Error auslösen und abbrechen
 				if ('description' in stateID) {
+					if(stateID.description == null || stateID.description == ''){
+						throw String(stateID) + 'has no description at all (description == null or empty)';
+					}
 					if ('en' in stateID.description) {
 						cur_Description_en = stateID.description.en;
 					} else if (// en key nicht vorhanden. Steht die description direkt im description key?
