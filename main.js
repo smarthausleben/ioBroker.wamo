@@ -44,7 +44,7 @@ const DeviceParameters = {
 	TestDefinition: {
 		id: 'XXX',
 		statePath: 'Testing',
-		description: 'Testing',
+		description: 'Testing description',
 		default: {
 			value: null,
 			description: { en: 'in µS/cm', de: 'in µS/cm' }
@@ -1536,41 +1536,46 @@ class Leackagedect extends utils.Adapter {
 				let cur_Type;			// data type
 
 				// Parameter ID ermitteln, wenn nciht vorhanden, Error auslösen und abbrechen
+				if (stateID == null) { throw '[async updateState(stateID, value)] stateID is null'; }
+
 				if ('id' in stateID) {
-					if (stateID.id == null || stateID.id == '') { throw String(stateID) + 'has no valid (id) key'; }
+					if (stateID.id == null || stateID.id == '') { throw String(stateID) + ' [async updateState(stateID, value)] has no valid [id] key (null or empty)'; }
 					cur_ParameterID = stateID.id;
 					this.log.debug('id key Value is: ' + cur_ParameterID);
 				} else {
-					throw String(stateID) + 'has no id key';
+					throw String(stateID) + ' [async updateState(stateID, value)] has no [id] key';
 				}
+
 				// Den Pafad des States ermittlen -> wenn nicht vorhanden, Error auslösen und abbrechen
 				if ('statePath' in stateID) {
-					if (stateID.statePath == null || stateID.statePath == '') { throw String(stateID) + 'has no valid (statePath) key'; }
+					if (stateID.statePath == null || stateID.statePath == '') { throw String(stateID) + ' [async updateState(stateID, value)] has no valid (statePath) key'; }
 					cur_StatePath = stateID.statePath;
 					this.log.debug('(statePath) key Value is: ' + cur_StatePath);
 				} else {
-					throw String(stateID) + 'has no id statePath';
+					throw String(stateID) + ' [async updateState(stateID, value)] has no id statePath';
 				}
+
 				// Deutsche und Englische Beschreibung des States ermitteln ->
-				// wenn eine Beschreibung fehlt, Error auslösen und abbrechen
+				// wenn eine Beschreibung bzw. die en Beschreibung fehlt, Error auslösen und abbrechen
 				if ('description' in stateID) {
-					if(stateID.description == null || stateID.description == ''){
-						throw String(stateID) + 'has no description at all (description == null or empty)';
+					if (stateID.description == null || stateID.description == '') {
+						throw String(stateID) + ' [async updateState(stateID, value)] has no description content (description == null or empty)';
 					}
 					if ('en' in stateID.description) {
 						cur_Description_en = stateID.description.en;
-					} else if (// en key nicht vorhanden. Steht die description direkt im description key?
-						stateID.description == null || stateID.description == '') {
-						// auch keine verwendbare Beschreibung im description key
-						throw String(stateID) + 'has no description at all';
 					}
-					else { cur_Description_en = stateID.description; }
+					else { // en description is a must if description is not direct under description
+						throw String(stateID) + ' [async updateState(stateID, value)] has no description at all';
+					}
+
+					// prüfen ob auch eine deutsche Beschreibung vorhanden ist
 					if ('de' in stateID.description) {
 						cur_Description_de = stateID.description.de;
 					} else {
 						cur_Description_de = '';
 					}
-				}
+				} else {throw String(stateID) + ' [async updateState(stateID, value)] has no description at all';}
+
 				// Einheit des States ermitteln -> wenn nicht vorhanden dan standard leerer string ''
 				if ('unit' in stateID) {
 					if (cur_Unit != '' && cur_Unit != null) { cur_Unit = stateID.unit; } else { cur_Unit = ''; }
