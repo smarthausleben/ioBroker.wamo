@@ -44,7 +44,7 @@ const DeviceParameters = {
 	TestDefinition: {
 		id: 'XXX',
 		statePath: 'Testing',
-		description: { en: 'Test Discription', de: 'Testbeschreibung' },
+		description: null,
 		default: {
 			value: null,
 			description: { en: 'in µS/cm', de: 'in µS/cm' }
@@ -55,6 +55,7 @@ const DeviceParameters = {
 			min: 0,
 			max: 5000
 		},
+		type: 'number',
 		unit: 'ttt',
 		levelRead: 'USER',
 		levelWrite: null,
@@ -1075,13 +1076,17 @@ class Leackagedect extends utils.Adapter {
 		this.log.info('config Device IP: ' + this.config.device_ip);
 		this.log.info('config Device Port: ' + this.config.device_port);
 
-		this.log.info('Neue update Funktion Testen');
+		// ==================================================================================================================
+		// =======                                 TESTING															  =======
+		// ==================================================================================================================
+		this.log.debug('Neue update Funktion Testen');
 		try {
 			await this.updateState(DeviceParameters.TestDefinition, '224');
 		}
 		catch (err) {
-			this.log.info(`[updateState(DeviceParameters.TestDefinition, '224')] error: ${err}`);
+			this.log.error(`[updateState(DeviceParameters.TestDefinition, '224')] error: ${err}`);
 		}
+		// ==================================================================================================================
 
 		// Device Initialisation
 		this.log.debug('vor initDevice()');
@@ -1090,7 +1095,7 @@ class Leackagedect extends utils.Adapter {
 			this.log.debug(`[initDevice]Response:  ${response}`);
 		}
 		catch (err) {
-			this.log.debug(`[initDevice] error: ${err}`);
+			this.log.error(`[initDevice] error: ${err}`);
 		}
 		this.log.debug('nach initDevice()');
 
@@ -1101,7 +1106,7 @@ class Leackagedect extends utils.Adapter {
 			this.log.debug(`[initDeviceProfiles] Response:  ${response}`);
 		}
 		catch (err) {
-			this.log.debug(`[initDeviceProfiles] error: ${err}`);
+			this.log.error(`[initDeviceProfiles] error: ${err}`);
 		}
 		this.log.debug('nach initDeviceProfiles()');
 
@@ -1527,20 +1532,22 @@ class Leackagedect extends utils.Adapter {
 				let cur_StatePath;		// State Path
 				let cur_Description_en;	// english description
 				let cur_Description_de;	// german description
-				let cur_Unit;
-				let cur_Type;
+				let cur_Unit;			// unit
+				let cur_Type;			// data type
 
 				// Parameter ID ermitteln, wenn nciht vorhanden, Error auslösen und abbrechen
 				if ('id' in stateID) {
+					if (stateID.id == null || stateID.id == '') { throw String(stateID) + 'has no valid (id) key'; }
 					cur_ParameterID = stateID.id;
-					this.log.info('id key Value is: ' + cur_ParameterID);
+					this.log.debug('id key Value is: ' + cur_ParameterID);
 				} else {
 					throw String(stateID) + 'has no id key';
 				}
 				// Den Pafad des States ermittlen -> wenn nicht vorhanden, Error auslösen und abbrechen
 				if ('statePath' in stateID) {
+					if (stateID.statePath == null || stateID.statePath == '') { throw String(stateID) + 'has no valid (statePath) key'; }
 					cur_StatePath = stateID.statePath;
-					this.log.info('id key Value is: ' + cur_StatePath);
+					this.log.debug('(statePath) key Value is: ' + cur_StatePath);
 				} else {
 					throw String(stateID) + 'has no id statePath';
 				}
@@ -1549,27 +1556,26 @@ class Leackagedect extends utils.Adapter {
 				if ('description' in stateID) {
 					if ('en' in stateID.description) {
 						cur_Description_en = stateID.description.en;
-					}else{
-						throw String(stateID) + 'has no english description';
+					} else if (// en key nicht vorhanden. Steht die description direkt im description key?
+						stateID.description == null || stateID.description == '') {
+						// auch keine verwendbare Beschreibung im description key
+						throw String(stateID) + 'has no description at all';
 					}
+					else { cur_Description_en = stateID.description; }
 					if ('de' in stateID.description) {
 						cur_Description_de = stateID.description.de;
-					}else{
-						throw String(stateID) + 'has no german description';
+					} else {
+						cur_Description_de = '';
 					}
 				}
 				// Einheit des States ermitteln -> wenn nicht vorhanden dan standard leerer string ''
 				if ('unit' in stateID) {
-					cur_Unit = stateID.unit;
-				} else {
-					cur_Unit = '';
-				}
+					if (cur_Unit != '' && cur_Unit != null) { cur_Unit = stateID.unit; } else { cur_Unit = ''; }
+				} else { cur_Unit = ''; }
 				// Typ des States ermitteln -> wenn nicht vorhanden dan standard Typ 'string'
-				if ('utypenit' in stateID) {
-					cur_Type = stateID.type;
-				} else {
-					cur_Type = 'string';
-				}
+				if ('type' in stateID) {
+					if (stateID.type != '' && stateID.type != null) { cur_Type = stateID.type; } else { cur_Type = 'string'; }
+				} else { cur_Type = 'string'; }
 
 				const state_ID = cur_StatePath + '.' + cur_ParameterID;
 				await this.setObjectNotExistsAsync(state_ID, {
@@ -1594,10 +1600,6 @@ class Leackagedect extends utils.Adapter {
 				reject(err);
 			}
 		});
-
-
-
-
 	}
 
 	async UpdateProfileState(ProfileNumber, stateID, value) {
