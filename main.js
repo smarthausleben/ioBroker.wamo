@@ -1538,6 +1538,9 @@ class Leackagedect extends utils.Adapter {
 				// Parameter ID ermitteln, wenn nciht vorhanden, Error auslösen und abbrechen
 				if (stateID == null) { throw '[async updateState(stateID, value)] stateID is null'; }
 
+				if (isObject(stateID)) { this.log.info('StateID ist ein object'); }
+
+
 				if ('id' in stateID) {
 					if (stateID.id == null || stateID.id == '') { throw String(stateID) + ' [async updateState(stateID, value)] has no valid [id] key (null or empty)'; }
 					cur_ParameterID = stateID.id;
@@ -1561,20 +1564,27 @@ class Leackagedect extends utils.Adapter {
 					if (stateID.description == null || stateID.description == '') {
 						throw String(stateID) + ' [async updateState(stateID, value)] has no description content (description == null or empty)';
 					}
-					if ('en' in stateID.description) {
-						cur_Description_en = stateID.description.en;
-					}
-					else { // en description is a must if description is not direct under description
-						throw String(stateID) + ' [async updateState(stateID, value)] has no description at all';
-					}
+					// haben wir ein object?
+					if (isObject(stateID.description)) {
+						if ('en' in stateID.description) {
+							cur_Description_en = stateID.description.en;
+						}
+						else { // en description is a must if description is not direct under description
+							throw String(stateID) + ' [async updateState(stateID, value)] has no description at all';
+						}
 
-					// prüfen ob auch eine deutsche Beschreibung vorhanden ist
-					if ('de' in stateID.description) {
-						cur_Description_de = stateID.description.de;
-					} else {
-						cur_Description_de = '';
+						// prüfen ob auch eine deutsche Beschreibung vorhanden ist
+						if ('de' in stateID.description) {
+							cur_Description_de = stateID.description.de;
+						} else {
+							cur_Description_de = '';
+						}
 					}
-				} else {throw String(stateID) + ' [async updateState(stateID, value)] has no description at all';}
+					else { // wir haben die Beschreibung ohne Sprachversionen
+						this.log.warn('State descripten is not globalised');
+						cur_Description_en = stateID.description;
+					}
+				} else {throw String(stateID) + ' [async updateState(stateID, value)] has no description at all'; }
 
 				// Einheit des States ermitteln -> wenn nicht vorhanden dan standard leerer string ''
 				if ('unit' in stateID) {
@@ -1609,6 +1619,7 @@ class Leackagedect extends utils.Adapter {
 			}
 		});
 	}
+
 
 	async UpdateProfileState(ProfileNumber, stateID, value) {
 		return new Promise(async (resolve, reject) => {
@@ -2769,6 +2780,11 @@ function sleep(ms) {
 		setTimeout(resolve, ms);
 	});
 }
+
+const isObject = function (val) {
+	if (val === null) { return false; }
+	return (typeof val === 'object');
+};
 
 //===================================================
 // Timer Event Handler
