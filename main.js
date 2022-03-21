@@ -44,7 +44,7 @@ const DeviceParameters = {
 	TestDefinition: {
 		id: 'XXX',
 		statePath: 'Testing',
-		description: '',
+		description: 'Testing',
 		default: {
 			value: null,
 			description: { en: 'in µS/cm', de: 'in µS/cm' }
