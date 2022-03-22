@@ -678,6 +678,7 @@ class Leackagedect extends utils.Adapter {
 		long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
 
 		await this.setStateAsync('info.connection',{ val: true, ack: true });
+		this.log.debug('info.connection gesetzt');
 	}
 
 	/**
