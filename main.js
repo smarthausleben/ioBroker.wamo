@@ -2283,7 +2283,7 @@ async function alarm_poll() {
 	try {
 		await myAdapter.alarm_TimerTick();
 	} catch (err) {
-		// text
+		myAdapter.log.error('[async function alarm_poll()] ERROR: ' + err);
 	}
 }
 
@@ -2291,7 +2291,7 @@ async function short_poll() {
 	try {
 		await myAdapter.short_TimerTick();
 	} catch (err) {
-		// text
+		myAdapter.log.error('[async function short_poll()] ERROR: ' + err);
 	}
 }
 
@@ -2299,7 +2299,7 @@ async function long_poll() {
 	try {
 		await myAdapter.long_TimerTick();
 	} catch (err) {
-		// text
+		myAdapter.log.error('[async function long_poll()] ERROR: ' + err);
 	}
 }
 //===================================================
