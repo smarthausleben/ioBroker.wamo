@@ -525,7 +525,6 @@ const DeviceParameters = {
 	},
 };
 
-
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
 //============================================================================
@@ -593,6 +592,25 @@ class Leackagedect extends utils.Adapter {
 		try {
 			const response = await this.initDevice(this.config.device_ip, this.config.device_port);
 			this.log.debug(`[initDevice]Response:  ${response}`);
+
+			this.log.debug('Alarm Timer init');
+			// Die Timer für das Polling starten
+			alarm_Intervall_ID = this.setInterval(alarm_poll, 5000);
+
+			// Start des Short Timers um 3 Sekunden verzögern
+			await sleep(3000);
+			this.log.debug('Short Timer init');
+			short_Intervall_ID = this.setInterval(short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
+
+			// Start des Long Timers um 9 Sekunden verzögern
+			// da die Anwender die Tendenz ein Vielfaches des Short Timer al Zeit zu verwend ;-)
+			await sleep(9000);
+			this.log.debug('Long Timer init');
+			long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
+
+			// Connektion auf grün setzen
+			await this.setStateAsync('info.connection', { val: true, ack: true });
+			this.log.debug('info.connection gesetzt');
 		}
 		catch (err) {
 			this.log.error(`[initDevice] error: ${err}`);
@@ -662,23 +680,6 @@ class Leackagedect extends utils.Adapter {
 
 		this.log.info('Adapter wurde gestartet');
 
-		this.log.debug('Alarm Timer init');
-		// Die Timer für das Polling starten
-		alarm_Intervall_ID = this.setInterval(alarm_poll, 5000);
-
-		// Start des Short Timers um 3 Sekunden verzögern
-		await sleep(3000);
-		this.log.debug('Short Timer init');
-		short_Intervall_ID = this.setInterval(short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
-
-		// Start des Long Timers um 9 Sekunden verzögern
-		// da die Anwender die Tendenz ein Vielfaches des Short Timer al Zeit zu verwend ;-)
-		await sleep(9000);
-		this.log.debug('Long Timer init');
-		long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
-
-		await this.setStateAsync('info.connection',{ val: true, ack: true });
-		this.log.debug('info.connection gesetzt');
 	}
 
 	/**
