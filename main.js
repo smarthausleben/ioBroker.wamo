@@ -598,21 +598,20 @@ class wamo extends utils.Adapter {
 			const responseInitProfiles = await this.initDeviceProfiles(this.config.device_ip, this.config.device_port);
 			this.log.info(`[initDeviceProfiles] Response:  ${responseInitProfiles}`);
 
-
 			// Die Timer für das Polling starten
 			alarm_Intervall_ID = this.setInterval(alarm_poll, 5000);
-			this.log.info('Alarm Timer ID: '+ alarm_Intervall_ID);
+			this.log.info('Alarm Timer init');
 
 			// Start des Short Timers um 3 Sekunden verzögern
 			await sleep(3000);
 			short_Intervall_ID = this.setInterval(short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
-			this.log.info('Short Timer ID: ' + short_Intervall_ID);
+			this.log.info('Short Timer init');
 
 			// Start des Long Timers um 9 Sekunden verzögern
 			// da die Anwender die Tendenz ein Vielfaches des Short Timer al Zeit zu verwend ;-)
 			await sleep(9000);
 			long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
-			this.log.info('Long Timer ID: ' + long_Intervall_ID);
+			this.log.info('Long Timer ID: init');
 
 			// Connektion auf grün setzen
 			await this.setStateAsync('info.connection', { val: true, ack: true });
@@ -642,7 +641,7 @@ class wamo extends utils.Adapter {
 		*/
 
 		// In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
-		this.subscribeStates('info.connection');
+		// this.subscribeStates('info.connection');
 		// You can also add a subscription for multiple states. The following line watches all states starting with "lights."
 		// this.subscribeStates('lights.*');
 		// Or, if you really must, you can also watch all states. Don't do this if you don't need to. Otherwise this will cause a lot of unnecessary load on the system:
