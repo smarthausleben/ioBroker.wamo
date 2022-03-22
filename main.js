@@ -19,6 +19,7 @@ let alarm_Intervall_ID;
 let short_Intervall_ID;
 let long_Intervall_ID;
 
+let device_responsive = false;
 
 // Object all possible device commands
 const DeviceParameters = {
@@ -546,7 +547,7 @@ axios.interceptors.response.use(x => {
 
 // ein Kommentar von mir
 
-class Leackagedect extends utils.Adapter {
+class wamo extends utils.Adapter {
 
 	/**
 	 * @param {Partial<utils.AdapterOptions>} [options={}]
@@ -590,6 +591,7 @@ class Leackagedect extends utils.Adapter {
 		// Device Initialisation
 		this.log.debug('vor initDevice()');
 		try {
+
 			const response = await this.initDevice(this.config.device_ip, this.config.device_port);
 			this.log.debug(`[initDevice]Response:  ${response}`);
 
@@ -615,6 +617,7 @@ class Leackagedect extends utils.Adapter {
 		catch (err) {
 			this.log.error(`[initDevice] error: ${err}`);
 		}
+
 		this.log.debug('nach initDevice()');
 
 		// Device Profiles Initialisation
@@ -793,6 +796,18 @@ class Leackagedect extends utils.Adapter {
 		});
 	}
 	//===================================================
+
+	async deviceCommcheck(DeviceIP, DevicePort) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				result = await this.get_DevieParameter('ALA', DeviceIP, DevicePort);
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+
+	}
 
 	//===================================================
 	// Divice Initialisation (called on Adapter Start)
@@ -2303,10 +2318,10 @@ if (require.main !== module) {
 	/**
 	 * @param {Partial<utils.AdapterOptions>} [options={}]
 	 */
-	module.exports = (options) => new Leackagedect(options);
+	module.exports = (options) => new wamo(options);
 } else {
 	// otherwise start the instance directly
-	new Leackagedect();
+	new wamo();
 }
 
 
