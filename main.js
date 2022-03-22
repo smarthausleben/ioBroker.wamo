@@ -592,31 +592,31 @@ class wamo extends utils.Adapter {
 
 			// Device Initialisation
 			const responseInit = await this.initDevice(this.config.device_ip, this.config.device_port);
-			this.log.debug(`[initDevice]Response:  ${responseInit}`);
+			this.log.info(`[initDevice]Response:  ${responseInit}`);
 
 			// Device Profiles Initialisation
 			const responseInitProfiles = await this.initDeviceProfiles(this.config.device_ip, this.config.device_port);
-			this.log.debug(`[initDeviceProfiles] Response:  ${responseInitProfiles}`);
+			this.log.info(`[initDeviceProfiles] Response:  ${responseInitProfiles}`);
 
 
 			// Die Timer für das Polling starten
 			alarm_Intervall_ID = this.setInterval(alarm_poll, 5000);
-			this.log.debug('Alarm Timer ID: '+ alarm_Intervall_ID);
+			this.log.info('Alarm Timer ID: '+ alarm_Intervall_ID);
 
 			// Start des Short Timers um 3 Sekunden verzögern
 			await sleep(3000);
 			short_Intervall_ID = this.setInterval(short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
-			this.log.debug('Short Timer ID: ' + short_Intervall_ID);
+			this.log.info('Short Timer ID: ' + short_Intervall_ID);
 
 			// Start des Long Timers um 9 Sekunden verzögern
 			// da die Anwender die Tendenz ein Vielfaches des Short Timer al Zeit zu verwend ;-)
 			await sleep(9000);
 			long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
-			this.log.debug('Long Timer ID: ' + long_Intervall_ID);
+			this.log.info('Long Timer ID: ' + long_Intervall_ID);
 
 			// Connektion auf grün setzen
 			await this.setStateAsync('info.connection', { val: true, ack: true });
-			this.log.debug('info.connection gesetzt');
+			this.log.info('info.connection gesetzt');
 		}
 		catch (err) {
 			this.log.error(`[init] error: ${err}`);
