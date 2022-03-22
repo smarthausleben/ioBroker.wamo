@@ -14,28 +14,53 @@ systemDictionary = {
 		'pl': 'Ustawienia adaptera dla wamo',
 		'zh-cn': 'wamo的适配器设置'
 	},
-	'option1': {
-		'en': 'option1',
-		'de': 'Option 1',
-		'ru': 'Опция 1',
-		'pt': 'Opção 1',
-		'nl': 'Optie 1',
-		'fr': 'Option 1',
-		'it': 'opzione 1',
-		'es': 'Opción 1',
-		'pl': 'opcja 1',
-		'zh-cn': '选项1'
+	'Device IP Address': {
+		'en': 'Device IP Address',
+		'de': 'IP-Adresse des Geräts',
+		'ru': 'IP-адрес устройства',
+		'pt': 'Endereço IP do dispositivo',
+		'nl': 'IP-adres apparaat',
+		'fr': "Adresse IP de l'appareil",
+		'it': 'Indirizzo IP del dispositivo',
+		'es': 'Dirección IP del dispositivo',
+		'pl': 'Adres IP urządzenia',
+		'zh-cn': '设备 IP 地址'
 	},
-	'option2': {
-		'en': 'option2',
-		'de': 'Option 2',
-		'ru': 'вариант 2',
-		'pt': 'opção 2',
-		'nl': 'Optie 2',
-		'fr': 'Option 2',
-		'it': 'opzione 2',
-		'es': 'opcion 2',
-		'pl': 'Opcja 2',
-		'zh-cn': '选项2'
+	'Device Port': {
+		'en': 'Device Port',
+		'de': 'Geräte-Port',
+		'ru': 'Порт устройства',
+		'pt': 'Porta do dispositivo',
+		'nl': 'Apparaatpoort:',
+		'fr': "Port de l'appareil",
+		'it': 'Porta del dispositivo',
+		'es': 'Puerto del dispositivo',
+		'pl': 'Port urządzenia',
+		'zh-cn': '设备端口'
+	},
+	'fast polling time in seconds': {
+		'en': 'fast polling time in seconds',
+		'de': 'schnelle Abfragezeit in Sekunden',
+		'ru': 'быстрое время опроса в секундах',
+		'pt': 'tempo de sondagem rápido em segundos',
+		'nl': 'snelle pollingtijd in seconden',
+		'fr': "temps d'interrogation rapide en secondes",
+		'it': 'tempo di polling veloce in secondi',
+		'es': 'tiempo de sondeo rápido en segundos',
+		'pl': 'szybki czas odpytywania w sekundach',
+		'zh-cn': '以秒为单位的快速轮询时间'
+	},
+	'slow polling time in seconds': {
+		'en': 'slow polling time in seconds',
+		'de': 'langsame Abfragezeit in Sekunden',
+		'ru': 'медленное время опроса в секундах',
+		'pt': 'tempo de sondagem lento em segundos',
+		'nl': 'langzame pollingtijd in seconden',
+		'fr': "temps d'interrogation lent en secondes",
+		'it': 'tempo di polling lento in secondi',
+		'es': 'tiempo de sondeo lento en segundos',
+		'pl': 'powolny czas odpytywania w sekundach',
+		'zh-cn': '以秒为单位的慢轮询时间'
 	}
+
 };

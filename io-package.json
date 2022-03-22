@@ -14,7 +14,19 @@
 				"es": "Versión inicial",
 				"pl": "Pierwsze wydanie",
 				"zh-cn": "首次出版"
-			}
+			},
+			"0.0.2": {
+				"en": "test release",
+				"de": "Testfreigabe",
+				"ru": "тестовый выпуск",
+				"pt": "lançamento de teste",
+				"nl": "test release",
+				"fr": "version d'essai",
+				"it": "rilascio di prova",
+				"es": "versión de prueba",
+				"pl": "wersja testowa",
+				"zh-cn": "测试版本"
+			  }
 		},
 		"title": "wamo",
 		"titleLang": {
