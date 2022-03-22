@@ -600,18 +600,18 @@ class wamo extends utils.Adapter {
 
 			// Die Timer für das Polling starten
 			alarm_Intervall_ID = this.setInterval(alarm_poll, 5000);
-			this.log.info('Alarm Timer init');
+			this.log.info('Alarm Timer ID: ' + alarm_Intervall_ID);
 
 			// Start des Short Timers um 3 Sekunden verzögern
 			await sleep(3000);
 			short_Intervall_ID = this.setInterval(short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
-			this.log.info('Short Timer init');
+			this.log.info('Short Timer ID: ' + short_Intervall_ID);
 
 			// Start des Long Timers um 9 Sekunden verzögern
 			// da die Anwender die Tendenz ein Vielfaches des Short Timer al Zeit zu verwend ;-)
 			await sleep(9000);
 			long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
-			this.log.info('Long Timer ID: init');
+			this.log.info('Long Timer ID: ' + long_Intervall_ID);
 
 			// Connektion auf grün setzen
 			await this.setStateAsync('info.connection', { val: true, ack: true });
@@ -2282,7 +2282,7 @@ async function alarm_poll() {
 	try {
 		await myAdapter.alarm_TimerTick();
 	} catch (err) {
-		myAdapter.log.error('[async function alarm_poll()] ERROR: ' + err);
+		throw new Error(err);
 	}
 }
 
@@ -2290,7 +2290,7 @@ async function short_poll() {
 	try {
 		await myAdapter.short_TimerTick();
 	} catch (err) {
-		myAdapter.log.error('[async function short_poll()] ERROR: ' + err);
+		throw new Error(err);
 	}
 }
 
@@ -2298,7 +2298,7 @@ async function long_poll() {
 	try {
 		await myAdapter.long_TimerTick();
 	} catch (err) {
-		myAdapter.log.error('[async function long_poll()] ERROR: ' + err);
+		throw new Error(err);
 	}
 }
 //===================================================
