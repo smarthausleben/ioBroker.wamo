@@ -1060,13 +1060,13 @@ class Leackagedect extends utils.Adapter {
 				// Deutsche und Englische Beschreibung des States ermitteln ->
 				// wenn eine Beschreibung bzw. die en Beschreibung fehlt, Error auslösen und abbrechen
 				if ('translate' in stateID) {
-					if (stateID.description == null || stateID.description == '') {
-						throw String(stateID) + ' [async updateState(stateID, value)] has no description content (description == null or empty)';
+					if (stateID.translate == null || stateID.translate == '') {
+						throw String(stateID) + ' [async updateState(stateID, value)] has no translate content (description == null or empty)';
 					}
 					else { // wir haben die Beschreibung ohne Sprachversionen
 						cur_name = stateID.translate;
 					}
-				} else { throw String(stateID) + ' [async updateState(stateID, value)] has no description at all'; }
+				} else { throw String(stateID) + ' [async updateState(stateID, value)] has no translate at all'; }
 
 				// Einheit des States ermitteln -> wenn nicht vorhanden dan standard leerer string ''
 				if ('unit' in stateID) {
