@@ -588,48 +588,39 @@ class wamo extends utils.Adapter {
 		}
 		// ==================================================================================================================
 
-		// Device Initialisation
-		this.log.debug('vor initDevice()');
 		try {
 
-			const response = await this.initDevice(this.config.device_ip, this.config.device_port);
-			this.log.debug(`[initDevice]Response:  ${response}`);
+			// Device Initialisation
+			const responseInit = await this.initDevice(this.config.device_ip, this.config.device_port);
+			this.log.debug(`[initDevice]Response:  ${responseInit}`);
 
-			this.log.debug('Alarm Timer init');
+			// Device Profiles Initialisation
+			const responseInitProfiles = await this.initDeviceProfiles(this.config.device_ip, this.config.device_port);
+			this.log.debug(`[initDeviceProfiles] Response:  ${responseInitProfiles}`);
+
+
 			// Die Timer für das Polling starten
 			alarm_Intervall_ID = this.setInterval(alarm_poll, 5000);
+			this.log.debug('Alarm Timer ID: '+ alarm_Intervall_ID);
 
 			// Start des Short Timers um 3 Sekunden verzögern
 			await sleep(3000);
-			this.log.debug('Short Timer init');
 			short_Intervall_ID = this.setInterval(short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
+			this.log.debug('Short Timer ID: ' + short_Intervall_ID);
 
 			// Start des Long Timers um 9 Sekunden verzögern
 			// da die Anwender die Tendenz ein Vielfaches des Short Timer al Zeit zu verwend ;-)
 			await sleep(9000);
-			this.log.debug('Long Timer init');
 			long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
+			this.log.debug('Long Timer ID: ' + long_Intervall_ID);
 
 			// Connektion auf grün setzen
 			await this.setStateAsync('info.connection', { val: true, ack: true });
 			this.log.debug('info.connection gesetzt');
 		}
 		catch (err) {
-			this.log.error(`[initDevice] error: ${err}`);
+			this.log.error(`[init] error: ${err}`);
 		}
-
-		this.log.debug('nach initDevice()');
-
-		// Device Profiles Initialisation
-		this.log.debug('vor initDeviceProfiles()');
-		try {
-			const response = await this.initDeviceProfiles(this.config.device_ip, this.config.device_port);
-			this.log.debug(`[initDeviceProfiles] Response:  ${response}`);
-		}
-		catch (err) {
-			this.log.error(`[initDeviceProfiles] error: ${err}`);
-		}
-		this.log.debug('nach initDeviceProfiles()');
 
 
 		/*
