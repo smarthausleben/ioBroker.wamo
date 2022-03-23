@@ -960,6 +960,7 @@ class wamo extends utils.Adapter {
 				while (connTrys < conectionRetrys) {
 					try {
 						await this.updateState(DeviceParameters.CurrentValveStatus, await this.get_DevieParameter(DeviceParameters.CurrentValveStatus.id,this.config.device_ip,this.config.device_port));
+						device_responsive = true;
 						break;
 					}
 					catch (err) {
