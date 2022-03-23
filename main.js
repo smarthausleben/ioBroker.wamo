@@ -592,7 +592,7 @@ class wamo extends utils.Adapter {
 
 			// Device Initialisation
 			const responseInit = await this.initDevice(this.config.device_ip, this.config.device_port);
-			this.log.info(`[initDevice]Response:  ${responseInit}`);
+			this.log.info(`[initDevice] Response:  ${responseInit}`);
 
 			// Device Profiles Initialisation
 			const responseInitProfiles = await this.initDeviceProfiles(this.config.device_ip, this.config.device_port);
@@ -600,7 +600,7 @@ class wamo extends utils.Adapter {
 
 			// Start Timers
 			const tmstarted = await this.timerStarts();
-			this.log.info('Timers started ' + String(tmstarted));
+			this.log.info('Timers started - Result: ' + String(tmstarted));
 
 			// Connektion auf grün setzen
 			await this.setStateAsync('info.connection', { val: true, ack: true });
@@ -868,7 +868,7 @@ class wamo extends utils.Adapter {
 						'Profiles.' + String(ProfileNumber) + '.PB' + String(ProfileNumber),
 						'Profiles.' + String(ProfileNumber) + '.PW' + String(ProfileNumber)];
 
-					this.log.debug(`[initDeviceProfiles()]`);
+					this.log.debug(`[initDeviceProfiles()] Profil ` + ProfileNumber );
 					for (const stateID of listOfParameter) {
 						try {
 							const parameterIDs = stateID.split('.');
