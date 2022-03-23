@@ -840,6 +840,7 @@ class wamo extends utils.Adapter {
 				await this.get_DevieParameter('ALA', DeviceIP, DevicePort);
 				resolve(true);
 			} catch (err) {
+				this.log.warn('[async deviceCommcheck(DeviceIP, DevicePort)] Error: ' + err.message );
 				reject(false);
 			}
 		});
