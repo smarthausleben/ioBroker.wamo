@@ -583,9 +583,9 @@ class wamo extends utils.Adapter {
 		this.log.info('config Device IP: ' + this.config.device_ip);
 		this.log.info('config Device Port: ' + this.config.device_port);
 
-		let tt = 0;
+		let connTrys = 0;
 
-		while (tt < conectionRetrys) {
+		while (connTrys < conectionRetrys) {
 			try {
 				await this.deviceCommcheck(this.config.device_ip, this.config.device_port);
 				device_responsive = true;
@@ -593,55 +593,29 @@ class wamo extends utils.Adapter {
 				break;
 			}
 			catch (err) {
-				this.log.warn('no connection');
-				await sleep(2000);
+				this.log.error(String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
+				for (let i = 5; i > 0; i--) {
+					this.log.warn('waiting ' + i + ' seconds ...');
+					await sleep(1000);
+				}
 				this.log.warn('retry connection ...');
 			}
 			finally {
-				tt++;
-				this.log.warn('tt=' + tt);
+				connTrys++;
+				this.log.warn('connection attempt No. ' + connTrys);
 			}
 		}
 
-		if (device_responsive) {
-			this.log.warn('device connected OK');
-			throw 'exit OK';
-		} else {
+		if (!device_responsive) {
 			this.log.warn('device NOT connected');
+			// we throw an exception causing Adaper to restart
 			throw 'exit not OK';
+
 		}
 
-		while (device_responsive === false) {
-			let connTrys = 0;
-			try {
-				this.log.info(String(connTrys + 1) + ' try checking devie at ' + this.config.device_ip + ' on port ' + this.config.device_port);
-				if (await this.deviceCommcheck(this.config.device_ip, this.config.device_port)) {
-					this.log.info('Devie at ' + this.config.device_ip + ' on port ' + this.config.device_port + ' is responsive');
-					// Connektion auf grün setzen
-					await this.setStateAsync('info.connection', { val: true, ack: true });
-					this.log.debug('info.connection gesetzt');
-					device_responsive = true;
-					connError = false;
-					break;
-				}
-			}
-			catch (err) {
-				device_responsive = false;
-				this.log.error(String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
-			}
-			finally {
-				if (!device_responsive) {
-					connTrys++;
-					if (connTrys > conectionRetrys) {
-						device_responsive = true;
-					}
-				}
-			}
-		}
-		if (connError) {
-			this.log.error('no connection to device');
-			throw 'connection Error';
-		}
+		await this.setStateAsync('info.connection', { val: true, ack: true });
+		this.log.debug('info.connection gesetzt');
+
 
 		// ==================================================================================================================
 		// =======                                 TESTING															  =======
