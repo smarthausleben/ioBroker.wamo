@@ -24,6 +24,7 @@ let device_config_received = false;
 let device_config_groups_received = false;
 
 const conectionRetrys = 3;
+let connError = false;
 
 // Object all possible device commands
 const DeviceParameters = {
@@ -592,19 +593,26 @@ class wamo extends utils.Adapter {
 					await this.setStateAsync('info.connection', { val: true, ack: true });
 					this.log.debug('info.connection gesetzt');
 					device_responsive = true;
+					connError = false;
 					break;
 				}
 			}
 			catch (err) {
 				device_responsive = false;
 				this.log.error(String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
-				connTrys++;
-				if (connTrys < conectionRetrys) {
-					continue;
-				} else {
-					throw 'connection not possible';
+			}
+			finally {
+				if (!device_responsive) {
+					connTrys++;
+					if (connTrys > conectionRetrys) {
+						device_responsive = true;
+					}
 				}
 			}
+		}
+		if (connError) {
+			this.log.error('no connection to device');
+			throw 'connection Error';
 		}
 
 		// ==================================================================================================================
