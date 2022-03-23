@@ -583,6 +583,10 @@ class wamo extends utils.Adapter {
 		this.log.info('config Device IP: ' + this.config.device_ip);
 		this.log.info('config Device Port: ' + this.config.device_port);
 
+		while (!await this.deviceCommcheck(this.config.device_ip, this.config.device_port)) {
+			this.log.warn('no connection');
+			await sleep(2000);
+		}
 		while (device_responsive === false) {
 			let connTrys = 0;
 			try {
@@ -840,7 +844,7 @@ class wamo extends utils.Adapter {
 				await this.get_DevieParameter('ALA', DeviceIP, DevicePort);
 				resolve(true);
 			} catch (err) {
-				this.log.warn('[async deviceCommcheck(DeviceIP, DevicePort)] Error: ' + err.message );
+				this.log.warn('[async deviceCommcheck(DeviceIP, DevicePort)] Error:');
 				reject(false);
 			}
 		});
