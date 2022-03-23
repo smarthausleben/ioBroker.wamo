@@ -743,9 +743,9 @@ class wamo extends utils.Adapter {
 			try {
 				// Die Timer für das Polling starten
 				alarm_Intervall_ID = this.setInterval(alarm_poll, parseInt(this.config.device_alarm_poll_interval) * 1000);
-				await this.delay(5000); // Warten um einen Versatz zu erzeugen
+				await sleep(5000); // Warten um einen Versatz zu erzeugen
 				short_Intervall_ID = this.setInterval(short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
-				await this.delay(5000); // Warten um einen Versatz zu erzeugen
+				await sleep(5000); // Warten um einen Versatz zu erzeugen
 				long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
 				resolve('Alarm Timer ID=' + alarm_Intervall_ID + ' / Short Timer ID=' + short_Intervall_ID + ' / Long Timer ID=' + long_Intervall_ID);
 			} catch (err) {
