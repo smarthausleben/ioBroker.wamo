@@ -20,11 +20,9 @@ let short_Intervall_ID;
 let long_Intervall_ID;
 
 let device_responsive = false;
-let device_config_received = false;
-let device_config_groups_received = false;
 
+// number of connection attemts before throwing an error and exiting
 const conectionRetrys = 3;
-let connError = false;
 
 // Object all possible device commands
 const DeviceParameters = {
@@ -50,10 +48,30 @@ const DeviceParameters = {
 	},
 	TestDefinition: {
 		id: 'XXX',
-		translate: 'Test definition',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Test definition',
+					'de': 'Testdefinition',
+					'ru': 'Определение теста',
+					'pt': 'Definição de teste',
+					'nl': 'Testdefinitie',
+					'fr': 'Définition des tests',
+					'it': 'Definizione di prova',
+					'es': 'Definición de prueba',
+					'pl': 'Definicja testu',
+					'zh-cn': '测试定义'
+				},
+				type: 'number',
+				unit: 'ttt',
+				role: 'info.code',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
 		statePath: 'Testing',
-		type: 'number',
-		unit: 'ttt',
 		levelRead: 'USER',
 		levelWrite: null,
 		readCommand: 'get',
@@ -718,7 +736,7 @@ class wamo extends utils.Adapter {
 		// ==================================================================================================================
 		this.log.debug('Neue update Funktion Testen');
 		try {
-			await this.updateState(DeviceParameters.TestDefinition, '224');
+			await this.updateState(DeviceParameters.TestDefinition, 224);
 		}
 		catch (err) {
 			this.log.error(`[updateState(DeviceParameters.TestDefinition, '224')] error: ${err}`);
@@ -1192,43 +1210,11 @@ class wamo extends utils.Adapter {
 					throw String(stateID) + ' [async updateState(stateID, value)] has no id statePath';
 				}
 
-				// Deutsche und Englische Beschreibung des States ermitteln ->
-				// wenn eine Beschreibung bzw. die en Beschreibung fehlt, Error auslösen und abbrechen
-				if ('translate' in stateID) {
-					if (stateID.translate == null || stateID.translate == '') {
-						throw String(stateID) + ' [async updateState(stateID, value)] has no translate content (description == null or empty)';
-					}
-					else { // wir haben die Beschreibung ohne Sprachversionen
-						cur_name = stateID.translate;
-					}
-				} else { throw String(stateID) + ' [async updateState(stateID, value)] has no translate at all'; }
-
-				// Einheit des States ermitteln -> wenn nicht vorhanden dan standard leerer string ''
-				if ('unit' in stateID) {
-					if (cur_Unit != '' && cur_Unit != null) { cur_Unit = stateID.unit; } else { cur_Unit = ''; }
-				} else { cur_Unit = ''; }
-				// Typ des States ermitteln -> wenn nicht vorhanden dan standard Typ 'string'
-				if ('type' in stateID) {
-					if (stateID.type != '' && stateID.type != null) { cur_Type = stateID.type; } else { cur_Type = 'string'; }
-				} else { cur_Type = 'string'; }
-
 				const state_ID = cur_StatePath + '.' + cur_ParameterID;
-				await this.setObjectNotExistsAsync(state_ID, {
-					type: 'state',
-					common: {
-						name: {
-							en: cur_name,
-						},
-						type: cur_Type,
-						role: String(cur_StatePath).toLowerCase() + '.' + String(cur_ParameterID).toLowerCase(),
-						unit: cur_Unit,
-						read: true,
-						write: false
-					},
-					native: {}
-				});
+				await this.setObjectNotExistsAsync(state_ID, stateID.objectdefinition);
 				this.setStateAsync(state_ID, { val: value, ack: true });
 				this.log.info(cur_name + ' ' + value + ' ' + cur_Unit);
+
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -2255,7 +2241,7 @@ class wamo extends utils.Adapter {
 					type: 'state',
 					common: {
 						name: {
-							en: 'Currend Water Consumption',
+							en: 'Current water consumption',
 							de: 'Aktuelle Wasserentnahme'
 						},
 						type: 'string',
@@ -2268,7 +2254,7 @@ class wamo extends utils.Adapter {
 				});
 
 				this.setStateAsync(state_ID, { val: String(parseFloat(String(value.getAVO).replace('mL', ''))), ack: true });
-				this.log.info('Currend Water Consumption: ' + String(parseFloat(String(value.getAVO).replace('mL', ''))) + ' mL');
+				this.log.info('Current water consumption: ' + String(parseFloat(String(value.getAVO).replace('mL', ''))) + ' mL');
 				resolve(true);
 			} catch (err) {
 				reject(err);
