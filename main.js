@@ -584,20 +584,33 @@ class wamo extends utils.Adapter {
 		this.log.info('config Device Port: ' + this.config.device_port);
 
 		let tt = 0;
-		while (tt < 5) {
-			try{
+
+		while (tt < conectionRetrys) {
+			try {
 				await this.deviceCommcheck(this.config.device_ip, this.config.device_port);
+				device_responsive = true;
+				this.log.warn('device connected');
+				break;
 			}
-			catch(err)
-			{
+			catch (err) {
 				this.log.warn('no connection');
 				await sleep(2000);
+				this.log.warn('retry connection ...');
 			}
-			finally{
+			finally {
 				tt++;
 				this.log.warn('tt=' + tt);
 			}
 		}
+
+		if (device_config_groups_received) {
+			this.log.warn('device connected OK');
+			throw 'exit OK';
+		} else {
+			this.log.warn('device NOT connected');
+			throw 'exit not OK';
+		}
+
 		while (device_responsive === false) {
 			let connTrys = 0;
 			try {
