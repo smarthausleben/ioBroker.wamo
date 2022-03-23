@@ -20,6 +20,10 @@ let short_Intervall_ID;
 let long_Intervall_ID;
 
 let device_responsive = false;
+let device_config_received = false;
+let device_config_groups_received = false;
+
+const conectionRetrys = 3;
 
 // Object all possible device commands
 const DeviceParameters = {
@@ -569,25 +573,38 @@ class wamo extends utils.Adapter {
 	 * Is called when databases are connected and adapter received configuration.
 	 */
 	async onReady() {
-
+		/* Umrechnung in Härte
+		eine Quelle besagt, dass 33µS/cm in etwa 1° deutscher Härte entspricht
+		*/
 
 		// The adapters config (in the instance object everything under the attribute "native") is accessible via
 		// this.config:
 		this.log.info('config Device IP: ' + this.config.device_ip);
 		this.log.info('config Device Port: ' + this.config.device_port);
 
-		try {
-			this.log.info('checking devie at ' + this.config.device_ip + ' on port ' + this.config.device_port);
-			if (await this.deviceCommcheck(this.config.device_ip, this.config.device_port)) {
-				this.log.info('Devie at ' + this.config.device_ip + ' on port ' + this.config.device_port + ' is responsive');
-				device_responsive = true;
-				// Connektion auf grün setzen
-				await this.setStateAsync('info.connection', { val: true, ack: true });
-				this.log.debug('info.connection gesetzt');
+		while (device_responsive === false) {
+			let connTrys = 0;
+			try {
+				this.log.info(String(connTrys + 1) + ' try checking devie at ' + this.config.device_ip + ' on port ' + this.config.device_port);
+				if (await this.deviceCommcheck(this.config.device_ip, this.config.device_port)) {
+					this.log.info('Devie at ' + this.config.device_ip + ' on port ' + this.config.device_port + ' is responsive');
+					// Connektion auf grün setzen
+					await this.setStateAsync('info.connection', { val: true, ack: true });
+					this.log.debug('info.connection gesetzt');
+					device_responsive = true;
+					break;
+				}
 			}
-		}
-		catch (err) {
-			this.log.error('Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
+			catch (err) {
+				device_responsive = false;
+				this.log.error(String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
+				connTrys++;
+				if (connTrys < conectionRetrys) {
+					continue;
+				} else {
+					throw 'connection not possible';
+				}
+			}
 		}
 
 		// ==================================================================================================================
@@ -605,9 +622,11 @@ class wamo extends utils.Adapter {
 		try {
 
 			// Device Initialisation
-			const responseInit = await this.initDevice(this.config.device_ip, this.config.device_port);
-			this.log.debug(`[initDevice] Response:  ${responseInit}`);
+			if (device_responsive) {
 
+				const responseInit = await this.initDevice(this.config.device_ip, this.config.device_port);
+				this.log.debug(`[initDevice] Response:  ${responseInit}`);
+			}
 			// Device Profiles Initialisation
 			const responseInitProfiles = await this.initDeviceProfiles(this.config.device_ip, this.config.device_port);
 			this.log.debug(`[initDeviceProfiles] Response:  ${responseInitProfiles}`);
@@ -1068,8 +1087,6 @@ class wamo extends utils.Adapter {
 
 				// Parameter ID ermitteln, wenn nciht vorhanden, Error auslösen und abbrechen
 				if (stateID == null) { throw '[async updateState(stateID, value)] stateID is null'; }
-
-				if (isObject(stateID)) { this.log.info('StateID ist ein object'); }
 
 
 				if ('id' in stateID) {
