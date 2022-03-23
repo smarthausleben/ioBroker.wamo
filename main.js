@@ -840,7 +840,7 @@ class wamo extends utils.Adapter {
 				await this.get_DevieParameter('ALA', DeviceIP, DevicePort);
 				resolve(true);
 			} catch (err) {
-				reject(err);
+				reject(false);
 			}
 		});
 
