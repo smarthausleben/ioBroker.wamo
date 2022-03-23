@@ -603,7 +603,7 @@ class wamo extends utils.Adapter {
 			}
 		}
 
-		if (device_config_groups_received) {
+		if (device_responsive) {
 			this.log.warn('device connected OK');
 			throw 'exit OK';
 		} else {
