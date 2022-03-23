@@ -848,15 +848,15 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-	async initDeviceProfiles(DeviceIP, DevicePort) {
+	async initDeviceProfiles(DeviceIP, DevicePort,) {
 		return new Promise(async (resolve, reject) => {
+			try {
 
-			// alle 8 möglichen Profile durchlaufen
-			for (let ProfileNumber = 1; ProfileNumber < 9; ProfileNumber++) {
+				// alle 8 möglichen Profile durchlaufen
+				for (let ProfileNumber = 1; ProfileNumber < 9; ProfileNumber++) {
 
-				this.log.debug('[async initDeviceProfiles(DeviceIP, DevicePort)] Profil ' + ProfileNumber);
+					this.log.debug('[async initDeviceProfiles(DeviceIP, DevicePort)] Profil ' + ProfileNumber);
 
-				try {
 					const listOfParameter = [
 						'Profiles.' + String(ProfileNumber) + '.PA' + String(ProfileNumber),
 						'Profiles.' + String(ProfileNumber) + '.PN' + String(ProfileNumber),
@@ -868,25 +868,21 @@ class wamo extends utils.Adapter {
 						'Profiles.' + String(ProfileNumber) + '.PB' + String(ProfileNumber),
 						'Profiles.' + String(ProfileNumber) + '.PW' + String(ProfileNumber)];
 
-					this.log.debug(`[initDeviceProfiles()] Profil ` + ProfileNumber );
+					this.log.debug(`[initDeviceProfiles()] Profil ` + ProfileNumber);
 					for (const stateID of listOfParameter) {
-						try {
-							const parameterIDs = stateID.split('.');
-							this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
-							const result = await this.get_DevieProfileParameter(ProfileNumber, parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
-							this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
-							await this.UpdateProfileState(ProfileNumber, stateID, result);
-							this.log.debug('Profil ' + ProfileNumber + ' Parameter ' + parameterIDs[parameterIDs.length - 1]);
-						} catch (err) {
-							this.log.debug('[await this.get_DevieProfileParameter(ProfileNumber, parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort)] ERROR: ' + err.message);
-						}
+						const parameterIDs = stateID.split('.');
+						this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
+						const result = await this.get_DevieProfileParameter(ProfileNumber, parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
+						this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
+						await this.UpdateProfileState(ProfileNumber, stateID, result);
+						this.log.debug('Profil ' + ProfileNumber + ' Parameter ' + parameterIDs[parameterIDs.length - 1]);
 					}
-
-					resolve(true);
-				} catch (err) {
-					this.log.error(err.message);
-					reject(err);
 				}
+
+				resolve(true);
+			} catch (err) {
+				this.log.error(err.message);
+				reject(err);
 			}
 		});
 	}
