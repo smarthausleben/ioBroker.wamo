@@ -1249,15 +1249,6 @@ class wamo extends utils.Adapter {
 				let cur_ParameterID;	// Parameter ID
 				let cur_StatePath;		// State Path
 
-				let finalValue;
-				switch (stateID.objectdefinition.type) {
-					case 'number':
-						finalValue = parseFloat(value['get'+stateID.id]);
-						break;
-					default:
-						// andle as string
-						finalValue = String(value['get'+stateID.id]);
-				}
 				// Parameter ID ermitteln, wenn nciht vorhanden, Error auslösen und abbrechen
 				if (stateID == null) { throw '[async updateState(stateID, value)] stateID is null'; }
 
@@ -1281,8 +1272,19 @@ class wamo extends utils.Adapter {
 
 				const state_ID = cur_StatePath + '.' + cur_ParameterID;
 				await this.setObjectNotExistsAsync(state_ID, stateID.objectdefinition);
-				this.setStateAsync(state_ID, { val: finalValue, ack: true });
-				this.log.info(cur_StatePath + '.' + String(finalValue));
+
+				switch (stateID.objectdefinition.type) {
+					case 'number':
+						this.log.warn('[async updateState(stateID, value)] value is NUMBER');
+						this.setStateAsync(state_ID, { val: parseFloat(value['get'+stateID.id]), ack: true });
+						break;
+					default:
+						// handle as string
+						this.log.warn('[async updateState(stateID, value)] value is STRING');
+						this.setStateAsync(state_ID, { val: String(value['get'+stateID.id]), ack: true });
+				}
+
+				this.log.info(cur_StatePath + '.' + String(value['get'+stateID.id]));
 
 				resolve(true);
 			} catch (err) {
