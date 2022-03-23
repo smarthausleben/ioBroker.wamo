@@ -959,7 +959,7 @@ class wamo extends utils.Adapter {
 
 				while (connTrys < conectionRetrys) {
 					try {
-						await this.updateState(DeviceParameters.CurrentValveStatus, await this.get_DevieParameter(DeviceParameters.CurrentValveStatus.id,this.config.device_ip,this.config.device_port));
+						await this.updateState(DeviceParameters.CurrentValveStatus, await this.get_DevieParameter(DeviceParameters.CurrentValveStatus.id, this.config.device_ip, this.config.device_port));
 						device_responsive = true;
 						break;
 					}
@@ -1248,10 +1248,16 @@ class wamo extends utils.Adapter {
 
 				let cur_ParameterID;	// Parameter ID
 				let cur_StatePath;		// State Path
-				let cur_name;			// english description
-				let cur_Unit;			// unit
-				let cur_Type;			// data type
 
+				let finalValue;
+				switch (stateID.objectdefinition.type) {
+					case 'number':
+						finalValue = parseFloat(value['get'+stateID.id]);
+						break;
+					default:
+						// andle as string
+						finalValue = String(value['get'+stateID.id]);
+				}
 				// Parameter ID ermitteln, wenn nciht vorhanden, Error auslösen und abbrechen
 				if (stateID == null) { throw '[async updateState(stateID, value)] stateID is null'; }
 
@@ -1275,8 +1281,8 @@ class wamo extends utils.Adapter {
 
 				const state_ID = cur_StatePath + '.' + cur_ParameterID;
 				await this.setObjectNotExistsAsync(state_ID, stateID.objectdefinition);
-				this.setStateAsync(state_ID, { val: value, ack: true });
-				this.log.info(cur_name + ' ' + value + ' ' + cur_Unit);
+				this.setStateAsync(state_ID, { val: finalValue, ack: true });
+				this.log.info(cur_StatePath + '.' + String(finalValue));
 
 				resolve(true);
 			} catch (err) {
