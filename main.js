@@ -746,7 +746,7 @@ class wamo extends utils.Adapter {
 				alarm_Intervall_ID = this.setInterval(alarm_poll, 20000);
 				short_Intervall_ID = this.setInterval(short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
 				long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
-				resolve('Timer started');
+				resolve('Alarm Timer ID = ' + alarm_Intervall_ID);
 			} catch (err) {
 				reject(err);
 			}
