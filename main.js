@@ -599,8 +599,8 @@ class wamo extends utils.Adapter {
 			this.log.info(`[initDeviceProfiles] Response:  ${responseInitProfiles}`);
 
 			// Start Timers
-			await this.timerStarts();
-			this.log.info('Timers started');
+			const tmstarted = await this.timerStarts();
+			this.log.info('Timers started ' + String(tmstarted));
 
 			// Connektion auf grün setzen
 			await this.setStateAsync('info.connection', { val: true, ack: true });
@@ -854,25 +854,32 @@ class wamo extends utils.Adapter {
 			// alle 8 möglichen Profile durchlaufen
 			for (let ProfileNumber = 1; ProfileNumber < 9; ProfileNumber++) {
 
-				const listOfParameter = [
-					'Profiles.' + String(ProfileNumber) + '.PA' + String(ProfileNumber),
-					'Profiles.' + String(ProfileNumber) + '.PN' + String(ProfileNumber),
-					'Profiles.' + String(ProfileNumber) + '.PV' + String(ProfileNumber),
-					'Profiles.' + String(ProfileNumber) + '.PT' + String(ProfileNumber),
-					'Profiles.' + String(ProfileNumber) + '.PF' + String(ProfileNumber),
-					'Profiles.' + String(ProfileNumber) + '.PM' + String(ProfileNumber),
-					'Profiles.' + String(ProfileNumber) + '.PR' + String(ProfileNumber),
-					'Profiles.' + String(ProfileNumber) + '.PB' + String(ProfileNumber),
-					'Profiles.' + String(ProfileNumber) + '.PW' + String(ProfileNumber)];
+				this.log.debug('[async initDeviceProfiles(DeviceIP, DevicePort)] Profil ' + ProfileNumber);
 
-				this.log.debug(`[initDeviceProfiles()]`);
 				try {
+					const listOfParameter = [
+						'Profiles.' + String(ProfileNumber) + '.PA' + String(ProfileNumber),
+						'Profiles.' + String(ProfileNumber) + '.PN' + String(ProfileNumber),
+						'Profiles.' + String(ProfileNumber) + '.PV' + String(ProfileNumber),
+						'Profiles.' + String(ProfileNumber) + '.PT' + String(ProfileNumber),
+						'Profiles.' + String(ProfileNumber) + '.PF' + String(ProfileNumber),
+						'Profiles.' + String(ProfileNumber) + '.PM' + String(ProfileNumber),
+						'Profiles.' + String(ProfileNumber) + '.PR' + String(ProfileNumber),
+						'Profiles.' + String(ProfileNumber) + '.PB' + String(ProfileNumber),
+						'Profiles.' + String(ProfileNumber) + '.PW' + String(ProfileNumber)];
+
+					this.log.debug(`[initDeviceProfiles()]`);
 					for (const stateID of listOfParameter) {
-						const parameterIDs = stateID.split('.');
-						this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
-						const result = await this.get_DevieProfileParameter(ProfileNumber, parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
-						this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
-						await this.UpdateProfileState(ProfileNumber, stateID, result);
+						try {
+							const parameterIDs = stateID.split('.');
+							this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
+							const result = await this.get_DevieProfileParameter(ProfileNumber, parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
+							this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
+							await this.UpdateProfileState(ProfileNumber, stateID, result);
+							this.log.debug('Profil ' + ProfileNumber + ' Parameter ' + parameterIDs[parameterIDs.length - 1]);
+						} catch (err) {
+							this.log.debug('[await this.get_DevieProfileParameter(ProfileNumber, parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort)] ERROR: ' + err.message);
+						}
 					}
 
 					resolve(true);
