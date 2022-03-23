@@ -576,6 +576,20 @@ class wamo extends utils.Adapter {
 		this.log.info('config Device IP: ' + this.config.device_ip);
 		this.log.info('config Device Port: ' + this.config.device_port);
 
+		try {
+			this.log.info('checking devie at ' + this.config.device_ip + ' on port ' + this.config.device_port);
+			if (await this.deviceCommcheck(this.config.device_ip, this.config.device_port)) {
+				this.log.info('Devie at ' + this.config.device_ip + ' on port ' + this.config.device_port + ' is responsive');
+				device_responsive = true;
+				// Connektion auf grün setzen
+				await this.setStateAsync('info.connection', { val: true, ack: true });
+				this.log.debug('info.connection gesetzt');
+			}
+		}
+		catch (err) {
+			this.log.error('Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
+		}
+
 		// ==================================================================================================================
 		// =======                                 TESTING															  =======
 		// ==================================================================================================================
@@ -592,19 +606,16 @@ class wamo extends utils.Adapter {
 
 			// Device Initialisation
 			const responseInit = await this.initDevice(this.config.device_ip, this.config.device_port);
-			this.log.info(`[initDevice] Response:  ${responseInit}`);
+			this.log.debug(`[initDevice] Response:  ${responseInit}`);
 
 			// Device Profiles Initialisation
 			const responseInitProfiles = await this.initDeviceProfiles(this.config.device_ip, this.config.device_port);
-			this.log.info(`[initDeviceProfiles] Response:  ${responseInitProfiles}`);
+			this.log.debug(`[initDeviceProfiles] Response:  ${responseInitProfiles}`);
 
 			// Start Timers
 			const tmstarted = await this.timerStarts();
-			this.log.info('Timers started - Result: ' + String(tmstarted));
+			this.log.debug('Timers started - Result: ' + String(tmstarted));
 
-			// Connektion auf grün setzen
-			await this.setStateAsync('info.connection', { val: true, ack: true });
-			this.log.info('info.connection gesetzt');
 		}
 		catch (err) {
 			this.log.error(`[init] error: ${err}`);
@@ -736,8 +747,7 @@ class wamo extends utils.Adapter {
 
 
 	//===================================================
-	// Timer EVENTS
-
+	// Timer Starten
 	async timerStarts() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -755,6 +765,8 @@ class wamo extends utils.Adapter {
 	}
 
 
+	//===================================================
+	// Timer EVENTS
 	async alarm_TimerTick() {
 		return new Promise(async (resolve, reject) => {
 
@@ -794,10 +806,11 @@ class wamo extends utils.Adapter {
 	}
 	//===================================================
 
+	// reading ALA (Alarm) status from device to test if the device is present and responding
 	async deviceCommcheck(DeviceIP, DevicePort) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				result = await this.get_DevieParameter('ALA', DeviceIP, DevicePort);
+				await this.get_DevieParameter('ALA', DeviceIP, DevicePort);
 				resolve(true);
 			} catch (err) {
 				reject(err);
