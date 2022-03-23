@@ -1272,7 +1272,7 @@ class wamo extends utils.Adapter {
 
 				const state_ID = cur_StatePath + '.' + cur_ParameterID;
 				await this.setObjectNotExistsAsync(state_ID, stateID.objectdefinition);
-
+				this.log.warn('stateID.objectdefinition.type = '+ stateID.objectdefinition.type );
 				switch (stateID.objectdefinition.type) {
 					case 'number':
 						this.log.warn('[async updateState(stateID, value)] value is NUMBER');
