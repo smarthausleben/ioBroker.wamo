@@ -61,6 +61,17 @@ systemDictionary = {
 		'es': 'tiempo de sondeo lento en segundos',
 		'pl': 'powolny czas odpytywania w sekundach',
 		'zh-cn': '以秒为单位的慢轮询时间'
+	},
+	'alarm polling time in seconds': {
+		'en': 'alarm polling time in seconds',
+		'de': 'Alarmabfragezeit in Sekunden',
+		'ru': 'время опроса тревоги в секундах',
+		'pt': 'tempo de sondagem de alarme em segundos',
+		'nl': 'alarm polling tijd in seconden',
+		'fr': "temps d'interrogation de l'alarme en secondes",
+		'it': "tempo di polling dell'allarme in secondi",
+		'es': 'tiempo de sondeo de alarma en segundos',
+		'pl': 'czas odpytywania alarmu w sekundach',
+		'zh-cn': '报警轮询时间（秒）'
 	}
-
 };
