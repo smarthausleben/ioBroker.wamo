@@ -605,7 +605,9 @@ class wamo extends utils.Adapter {
 			}
 			finally {
 				connTrys++;
-				this.log.warn('connection attempt No. ' + connTrys);
+				if (connTrys > 1) {
+					this.log.warn('connection attempt No. ' + connTrys);
+				}
 			}
 		}
 
@@ -616,7 +618,7 @@ class wamo extends utils.Adapter {
 		}
 
 		//=================================================================================================
-		//===  Connection LED to Green																		===
+		//===  Connection LED to Green																	===
 		//=================================================================================================
 		await this.setStateAsync('info.connection', { val: true, ack: true });
 		this.log.debug('info.connection gesetzt');
@@ -648,7 +650,9 @@ class wamo extends utils.Adapter {
 			}
 			finally {
 				connTrys++;
-				this.log.warn('connection attempt No. ' + connTrys);
+				if (connTrys > 1) {
+					this.log.warn('connection attempt No. ' + connTrys);
+				}
 			}
 		}
 		if (!device_responsive) {
@@ -658,7 +662,7 @@ class wamo extends utils.Adapter {
 		}
 
 		//=================================================================================================
-		//===  Getting device Profiles data																		===
+		//===  Getting device Profiles data																===
 		//=================================================================================================
 
 		// Verbindungsversuche zurücksetzen
@@ -685,7 +689,9 @@ class wamo extends utils.Adapter {
 			}
 			finally {
 				connTrys++;
-				this.log.warn('connection attempt No. ' + connTrys);
+				if (connTrys > 1) {
+					this.log.warn('connection attempt No. ' + connTrys);
+				}
 			}
 		}
 		if (!device_responsive) {
@@ -694,11 +700,17 @@ class wamo extends utils.Adapter {
 			throw 'exit not OK';
 		}
 
-		// Start Timers
-		const tmstarted = await this.timerStarts();
-		this.log.debug('Timers started - Result: ' + String(tmstarted));
-
-
+		//=================================================================================================
+		//===  Timer starten																			===
+		//=================================================================================================
+		try {
+			const tmstarted = await this.timerStarts();
+			this.log.debug('Timers started - Result: ' + String(tmstarted));
+		} catch (err) {
+			this.log.error('device Timer start Error ... exit');
+			// we throw an exception causing Adaper to restart
+			throw err;
+		}
 
 
 		// ==================================================================================================================
@@ -844,10 +856,13 @@ class wamo extends utils.Adapter {
 			try {
 				// Die Timer für das Polling starten
 				alarm_Intervall_ID = this.setInterval(alarm_poll, parseInt(this.config.device_alarm_poll_interval) * 1000);
+				this.log.info('Alarm timer initialized');
 				await sleep(5000); // Warten um einen Versatz zu erzeugen
 				short_Intervall_ID = this.setInterval(short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
+				this.log.info('Short timer initialized');
 				await sleep(5000); // Warten um einen Versatz zu erzeugen
 				long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
+				this.log.info('Long timer initialized');
 				resolve('Alarm Timer ID=' + alarm_Intervall_ID + ' / Short Timer ID=' + short_Intervall_ID + ' / Long Timer ID=' + long_Intervall_ID);
 			} catch (err) {
 				reject(err);
