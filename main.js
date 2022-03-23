@@ -583,9 +583,20 @@ class wamo extends utils.Adapter {
 		this.log.info('config Device IP: ' + this.config.device_ip);
 		this.log.info('config Device Port: ' + this.config.device_port);
 
-		while (!await this.deviceCommcheck(this.config.device_ip, this.config.device_port)) {
-			this.log.warn('no connection');
-			await sleep(2000);
+		let tt = 0;
+		while (tt < 5) {
+			try{
+				await this.deviceCommcheck(this.config.device_ip, this.config.device_port);
+			}
+			catch(err)
+			{
+				this.log.warn('no connection');
+				await sleep(2000);
+			}
+			finally{
+				tt++;
+				this.log.warn('tt=' + tt);
+			}
 		}
 		while (device_responsive === false) {
 			let connTrys = 0;
