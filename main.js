@@ -77,6 +77,36 @@ const DeviceParameters = {
 		readCommand: 'get',
 		writeCommand: null
 	},
+	CurrentValveStatus: {
+		id: 'VLV',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Current valve status',
+					'de': 'Aktueller Ventilstatus',
+					'ru': 'Текущее состояние клапана',
+					'pt': 'Status atual da válvula',
+					'nl': 'Huidige klepstatus',
+					'fr': 'État actuel de la vanne',
+					'it': 'Stato attuale della valvola',
+					'es': 'Estado actual de la válvula',
+					'pl': 'Aktualny stan zaworu',
+					'zh-cn': '当前阀门状态'
+				},
+				type: 'number',
+				role: 'info.code',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: 'Testing',
+		levelRead: 'SERVICE',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
 	Shutoff: {
 		id: 'AB',
 		translate: 'Shut off',
@@ -922,6 +952,38 @@ class wamo extends utils.Adapter {
 
 			this.log.debug('Long Timer tick');
 			try {
+				// Verbindungsversuche zurücksetzen
+				let connTrys = 0;
+				// Verbindungsbestätigung zurücksetzen
+				device_responsive = false;
+
+				while (connTrys < conectionRetrys) {
+					try {
+						await this.updateState(DeviceParameters.CurrentValveStatus, await this.get_DevieParameter(DeviceParameters.CurrentValveStatus.id,this.config.device_ip,this.config.device_port));
+						break;
+					}
+					catch (err) {
+						this.log.error('[async long_TimerTick()] ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
+						for (let i = 5; i > 0; i--) {
+							this.log.warn('waiting ' + i + ' seconds ...');
+							await sleep(1000);
+						}
+						this.log.warn('retry connection ...');
+					}
+					finally {
+						connTrys++;
+						if (connTrys > 1) {
+							this.log.warn('connection attempt No. ' + connTrys);
+						}
+					}
+				}
+				if (!device_responsive) {
+					this.log.error('device NOT reachable ... exit');
+					// we throw an exception causing Adaper to restart
+					throw 'exit not OK';
+				}
+
+
 				resolve('Ok');
 			} catch (err) {
 				reject(err);
