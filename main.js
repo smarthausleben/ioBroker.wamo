@@ -585,11 +585,14 @@ class wamo extends utils.Adapter {
 
 		let connTrys = 0;
 
+		//=================================================================================================
+		//===  Connecting to device																		===
+		//=================================================================================================
 		while (connTrys < conectionRetrys) {
 			try {
 				await this.deviceCommcheck(this.config.device_ip, this.config.device_port);
 				device_responsive = true;
-				this.log.warn('device connected');
+				this.log.info('Device at ' + this.config.device_ip + ':' + this.config.device_port + ' is connected');
 				break;
 			}
 			catch (err) {
@@ -607,14 +610,95 @@ class wamo extends utils.Adapter {
 		}
 
 		if (!device_responsive) {
-			this.log.warn('device NOT connected');
+			this.log.error('device NOT connected ... exit');
 			// we throw an exception causing Adaper to restart
 			throw 'exit not OK';
-
 		}
 
+		//=================================================================================================
+		//===  Connection LED to Green																		===
+		//=================================================================================================
 		await this.setStateAsync('info.connection', { val: true, ack: true });
 		this.log.debug('info.connection gesetzt');
+
+		//=================================================================================================
+		//===  Getting device data																		===
+		//=================================================================================================
+
+		// Verbindungsversuche zurücksetzen
+		connTrys = 0;
+		// Verbindungsbestätigung zurücksetzen
+		device_responsive = false;
+
+		while (connTrys < conectionRetrys) {
+			try {
+				this.log.info('Getting data from device at ' + this.config.device_ip + ':' + this.config.device_port);
+				const responseInit = await this.initDevice(this.config.device_ip, this.config.device_port);
+				this.log.debug(`[initDevice] Response:  ${responseInit}`);
+				device_responsive = true;
+				break;
+			}
+			catch (err) {
+				this.log.error(String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
+				for (let i = 5; i > 0; i--) {
+					this.log.warn('waiting ' + i + ' seconds ...');
+					await sleep(1000);
+				}
+				this.log.warn('retry connection ...');
+			}
+			finally {
+				connTrys++;
+				this.log.warn('connection attempt No. ' + connTrys);
+			}
+		}
+		if (!device_responsive) {
+			this.log.error('device NOT connected ... exit');
+			// we throw an exception causing Adaper to restart
+			throw 'exit not OK';
+		}
+
+		//=================================================================================================
+		//===  Getting device Profiles data																		===
+		//=================================================================================================
+
+		// Verbindungsversuche zurücksetzen
+		connTrys = 0;
+		// Verbindungsbestätigung zurücksetzen
+		device_responsive = false;
+
+		while (connTrys < conectionRetrys) {
+			try {
+				// Device Profiles Initialisation
+				this.log.info('Getting Profiles data from device at ' + this.config.device_ip + ':' + this.config.device_port);
+				const responseInitProfiles = await this.initDeviceProfiles(this.config.device_ip, this.config.device_port);
+				this.log.debug(`[initDeviceProfiles] Response:  ${responseInitProfiles}`);
+				device_responsive = true;
+				break;
+			}
+			catch (err) {
+				this.log.error(String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
+				for (let i = 5; i > 0; i--) {
+					this.log.warn('waiting ' + i + ' seconds ...');
+					await sleep(1000);
+				}
+				this.log.warn('retry connection ...');
+			}
+			finally {
+				connTrys++;
+				this.log.warn('connection attempt No. ' + connTrys);
+			}
+		}
+		if (!device_responsive) {
+			this.log.error('device NOT connected ... exit');
+			// we throw an exception causing Adaper to restart
+			throw 'exit not OK';
+		}
+
+		// Start Timers
+		const tmstarted = await this.timerStarts();
+		this.log.debug('Timers started - Result: ' + String(tmstarted));
+
+
 
 
 		// ==================================================================================================================
@@ -628,28 +712,6 @@ class wamo extends utils.Adapter {
 			this.log.error(`[updateState(DeviceParameters.TestDefinition, '224')] error: ${err}`);
 		}
 		// ==================================================================================================================
-
-		try {
-
-			// Device Initialisation
-			if (device_responsive) {
-
-				const responseInit = await this.initDevice(this.config.device_ip, this.config.device_port);
-				this.log.debug(`[initDevice] Response:  ${responseInit}`);
-			}
-			// Device Profiles Initialisation
-			const responseInitProfiles = await this.initDeviceProfiles(this.config.device_ip, this.config.device_port);
-			this.log.debug(`[initDeviceProfiles] Response:  ${responseInitProfiles}`);
-
-			// Start Timers
-			const tmstarted = await this.timerStarts();
-			this.log.debug('Timers started - Result: ' + String(tmstarted));
-
-		}
-		catch (err) {
-			this.log.error(`[init] error: ${err}`);
-		}
-
 
 		/*
 		For every state in the system there has to be also an object of type state
@@ -853,31 +915,29 @@ class wamo extends utils.Adapter {
 	// Divice Initialisation (called on Adapter Start)
 	async initDevice(DeviceIP, DevicePort) {
 		return new Promise(async (resolve, reject) => {
-
-			const listOfParameter = [
-				'Device.Info.VER', 	// Firmware Version
-				'Device.Info.WIP',	// IP Address
-				'Device.Info.MAC',	// MAC Address
-				'Device.Info.WGW',	// Default Gatewa
-				'Device.Info.SRN',	// Serial Number
-				'Device.Info.CNO',	// Code Number
-				'Device.Info.WFR',	// WiFi RSSI
-				'Device.Info.WFC',	// WiFi SSID
-				'Device.Info.SRV',	// Next Maintenance
-				'Device.Info.WAH',	// WiFi AP Hidden
-				'Device.Info.WAD',	// WiFi AP Disabled
-				'Device.Info.APT',	// WiFi AP Timeout
-				'Device.Info.DWL',	// WiFi Deactivated
-				'Device.Info.WFS',	// WiFi State
-				'Device.Info.BAT',	// Batterie voltage
-				'Conditions.CEL',	// Water temperatur
-				'Conditions.CND',	// Water conductivity
-				'Device.Info.IDS'];	// Daylight Saving Time
-
-
-			this.log.debug(`[initDevice()]`);
-			let result;
 			try {
+				const listOfParameter = [
+					'Device.Info.VER', 	// Firmware Version
+					'Device.Info.WIP',	// IP Address
+					'Device.Info.MAC',	// MAC Address
+					'Device.Info.WGW',	// Default Gatewa
+					'Device.Info.SRN',	// Serial Number
+					'Device.Info.CNO',	// Code Number
+					'Device.Info.WFR',	// WiFi RSSI
+					'Device.Info.WFC',	// WiFi SSID
+					'Device.Info.SRV',	// Next Maintenance
+					'Device.Info.WAH',	// WiFi AP Hidden
+					'Device.Info.WAD',	// WiFi AP Disabled
+					'Device.Info.APT',	// WiFi AP Timeout
+					'Device.Info.DWL',	// WiFi Deactivated
+					'Device.Info.WFS',	// WiFi State
+					'Device.Info.BAT',	// Batterie voltage
+					'Conditions.CEL',	// Water temperatur
+					'Conditions.CND',	// Water conductivity
+					'Device.Info.IDS'];	// Daylight Saving Time
+
+				this.log.debug(`[initDevice()]`);
+				let result;
 				for (const stateID of listOfParameter) {
 					const parameterIDs = stateID.split('.');
 					this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
