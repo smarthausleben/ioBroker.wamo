@@ -647,7 +647,7 @@ class wamo extends utils.Adapter {
 			catch (err) {
 				this.log.error(String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
 				for (let i = 5; i > 0; i--) {
-					this.log.warn('waiting ' + i + ' seconds ...');
+					this.log.warn(i + ' attempt. Waiting for ' + String(connectionRetryPause / 1000) + 'seconds ...');
 					await sleep(connectionRetryPause);
 				}
 				this.log.warn('retry connection ...');
@@ -663,7 +663,6 @@ class wamo extends utils.Adapter {
 		if (!device_responsive) {
 			this.log.error('device NOT connected ... exit');
 			// we throw an exception causing Adaper to restart
-			this.common.enabled = false;
 			throw 'exit not OK';
 		}
 
@@ -693,7 +692,7 @@ class wamo extends utils.Adapter {
 			catch (err) {
 				this.log.error(String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
 				for (let i = 5; i > 0; i--) {
-					this.log.warn('waiting ' + i + ' seconds ...');
+					this.log.warn(i + ' attempt. Waiting for ' + String(connectionRetryPause / 1000) + 'seconds ...');
 					await sleep(connectionRetryPause);
 				}
 				this.log.warn('retry connection ...');
@@ -732,7 +731,7 @@ class wamo extends utils.Adapter {
 			catch (err) {
 				this.log.error(String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
 				for (let i = 5; i > 0; i--) {
-					this.log.warn('waiting ' + i + ' seconds ...');
+					this.log.warn(i + ' attempt. Waiting for ' + String(connectionRetryPause / 1000) + 'seconds ...');
 					await sleep(connectionRetryPause);
 				}
 				this.log.warn('retry connection ...');
@@ -968,7 +967,7 @@ class wamo extends utils.Adapter {
 					catch (err) {
 						this.log.error('[async long_TimerTick()] ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
 						for (let i = 5; i > 0; i--) {
-							this.log.warn('waiting ' + i + ' seconds ...');
+							this.log.warn(i + ' attempt. Waiting for ' + String(connectionRetryPause / 1000) + 'seconds ...');
 							await sleep(connectionRetryPause);
 						}
 						this.log.warn('retry connection ...');
