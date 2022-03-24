@@ -626,10 +626,8 @@ class wamo extends utils.Adapter {
 			}
 			catch (err) {
 				this.log.error(String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
-				for (let i = 5; i > 0; i--) {
-					this.log.warn(i + ' attempt. Waiting for ' + String(connectionRetryPause / 1000) + 'seconds ...');
-					await sleep(connectionRetryPause);
-				}
+				this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
+				await sleep(connectionRetryPause);
 				this.log.warn('retry connection ...');
 			}
 			finally {
@@ -671,10 +669,8 @@ class wamo extends utils.Adapter {
 			}
 			catch (err) {
 				this.log.error(String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
-				for (let i = 5; i > 0; i--) {
-					this.log.warn(i + ' attempt. Waiting for ' + String(connectionRetryPause / 1000) + 'seconds ...');
-					await sleep(connectionRetryPause);
-				}
+				this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
+				await sleep(connectionRetryPause);
 				this.log.warn('retry connection ...');
 			}
 			finally {
@@ -710,10 +706,8 @@ class wamo extends utils.Adapter {
 			}
 			catch (err) {
 				this.log.error(String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
-				for (let i = 5; i > 0; i--) {
-					this.log.warn(i + ' attempt. Waiting for ' + String(connectionRetryPause / 1000) + 'seconds ...');
-					await sleep(connectionRetryPause);
-				}
+				this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
+				await sleep(connectionRetryPause);
 				this.log.warn('retry connection ...');
 			}
 			finally {
@@ -946,10 +940,8 @@ class wamo extends utils.Adapter {
 					}
 					catch (err) {
 						this.log.error('[async long_TimerTick()] ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
-						for (let i = 5; i > 0; i--) {
-							this.log.warn(i + ' attempt. Waiting for ' + String(connectionRetryPause / 1000) + 'seconds ...');
-							await sleep(connectionRetryPause);
-						}
+						this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
+						await sleep(connectionRetryPause);
 						this.log.warn('retry connection ...');
 					}
 					finally {
@@ -1257,10 +1249,10 @@ class wamo extends utils.Adapter {
 
 				// convert into final value
 				let finalValue;
-				try{
-					finalValue = this.convertDeviceReturnValue(stateID.id,value['get' + stateID.id]);
+				try {
+					finalValue = this.convertDeviceReturnValue(stateID.id, value['get' + stateID.id]);
 				}
-				catch(err){
+				catch (err) {
 					reject(err);
 				}
 
