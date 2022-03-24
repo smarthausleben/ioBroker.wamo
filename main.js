@@ -1330,7 +1330,8 @@ class wamo extends utils.Adapter {
 						this.setStateAsync(state_ID, { val: String(finalValue), ack: true });
 				}
 
-				this.log.info(String(cur_StatePath) + ' ' + String(stateID.common.name) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
+				this.log.info(String(cur_StatePath) + ' ' + String(stateID.common.name.en) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
+				//this.log.info(String(cur_StatePath) + ' ' + String(stateID.common.name) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
 
 				resolve(true);
 			} catch (err) {
