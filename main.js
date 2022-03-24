@@ -89,6 +89,36 @@ const DeviceParameters = {
 		readCommand: 'get',
 		writeCommand: null
 	},
+	SystemTime: {
+		id: 'RTC',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					"en": "System time",
+					"de": "Systemzeit",
+					"ru": "Системное время",
+					"pt": "Hora do sistema",
+					"nl": "Systeemtijd",
+					"fr": "Le temps du système",
+					"it": "Ora di sistema",
+					"es": "hora del sistema",
+					"pl": "czas systemu",
+					"zh-cn": "系统时间"
+				},
+				type: 'string',
+				role: 'info.code',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: 'Testing',
+		levelRead: 'USER',
+		levelWrite: 'SERVICE',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
 	Shutoff: {
 		id: 'AB',
 		translate: 'Shut off',
@@ -561,6 +591,8 @@ const DeviceParameters = {
 	},
 };
 
+const shortPeriod[];
+const longPeriode[CurrentValveStatus, SystemTime];
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
 //============================================================================
@@ -943,42 +975,46 @@ class wamo extends utils.Adapter {
 
 			this.log.debug('Long Timer tick');
 			try {
-				if (!interfaceBussy) {
-					// Verbindungsversuche zurücksetzen
-					let connTrys = 0;
-					// Verbindungsbestätigung zurücksetzen
-					device_responsive = false;
+				for (let i = 0; i < longPeriode.length; i++) {
+					if (!interfaceBussy) {
+						// Verbindungsversuche zurücksetzen
+						let connTrys = 0;
+						// Verbindungsbestätigung zurücksetzen
+						device_responsive = false;
 
-					while (connTrys < connectionRetrys) {
-						try {
-							interfaceBussy = true;	// SET flag that device interface is bussy
-							await this.updateState(DeviceParameters.CurrentValveStatus, await this.get_DevieParameter(DeviceParameters.CurrentValveStatus.id, this.config.device_ip, this.config.device_port));
-							interfaceBussy = false;	// CLEAR flag that device interface is bussy
-							device_responsive = true;
-							break;
-						}
-						catch (err) {
-							this.log.error('[async long_TimerTick()] ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
-							this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
-							await sleep(connectionRetryPause);
-							this.log.warn('retry connection ...');
-						}
-						finally {
-							connTrys++;
-							if (connTrys > 1) {
-								this.log.warn('connection attempt No. ' + connTrys);
+						while (connTrys < connectionRetrys) {
+							try {
+								interfaceBussy = true;	// SET flag that device interface is bussy
+								await this.updateState(longPeriode[i], await this.get_DevieParameter(longPeriode[i].id, this.config.device_ip, this.config.device_port));
+								// await this.updateState(DeviceParameters.CurrentValveStatus, await this.get_DevieParameter(DeviceParameters.CurrentValveStatus.id, this.config.device_ip, this.config.device_port));
+								interfaceBussy = false;	// CLEAR flag that device interface is bussy
+								device_responsive = true;
+								break;
+							}
+							catch (err) {
+								this.log.error('[async long_TimerTick()] ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
+								this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
+								await sleep(connectionRetryPause);
+								this.log.warn('retry connection ...');
+							}
+							finally {
+								connTrys++;
+								if (connTrys > 1) {
+									this.log.warn('connection attempt No. ' + connTrys);
+								}
 							}
 						}
-					}
-					if (!device_responsive) {
-						this.log.error('device NOT reachable ... exit');
-						// we throw an exception causing Adaper to restart
-						throw 'exit not OK';
-					}
+						if (!device_responsive) {
+							this.log.error('device NOT reachable ... exit');
+							// we throw an exception causing Adaper to restart
+							throw 'exit not OK';
+						}
 
-				}
-				else {
-					this.log.warn('[async long_TimerTick()] Device interface is bussy!');
+
+					}
+					else {
+						this.log.warn('[async long_TimerTick()] Device interface is bussy!');
+					}
 				}
 
 				resolve('Ok');
@@ -1311,26 +1347,31 @@ class wamo extends utils.Adapter {
 					case 'VLV':	// Current Valve Status
 						switch (String(value)) {
 							case '10':
-								resolve('Closed');
+								finalValue = 'Closed';
 								break;
 							case '11':
-								resolve('Closing');
+								finalValue = 'Closing';
 								break;
 							case '20':
-								resolve('Open');
+								finalValue = 'Open';
 								break;
 							case '21':
-								resolve('Opening');
+								finalValue = 'Opening';
 								break;
 							case '30':
-								resolve('Undefined');
+								finalValue = 'Undefined';
 								break;
 							default:
-								reject('[async convertDeviceReturnValue(valueKey, value)] Value (' + String(value) + ') for Key (' + String(valueKey) + ') is not defined!');
+								this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Value (' + String(value) + ') for Key (' + String(valueKey) + ') is not defined!');
+								finalValue = null;
 						}
 						break;
+					case 'RTC':	// System Time
+						finalValue = String(value);
+						break;
 					default:
-						reject('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
+						this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
+						finalValue = null;
 				}
 				resolve(finalValue);
 			} catch (err) {
