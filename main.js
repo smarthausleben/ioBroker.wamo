@@ -1001,14 +1001,16 @@ class wamo extends utils.Adapter {
 							finally {
 								connTrys++;
 								if (connTrys > 1) {
+									interfaceBussy = false;	// CLEAR flag that device interface is bussy
 									this.log.warn('connection attempt No. ' + connTrys);
 								}
 							}
 						}
+
 						if (!device_responsive) {
-							this.log.error('device NOT reachable ... exit');
+							this.log.error('device NOT reachable');
 							// we throw an exception causing Adaper to restart
-							throw 'exit not OK';
+							interfaceBussy = false;	// CLEAR flag that device interface is bussy
 						}
 
 
@@ -1330,7 +1332,7 @@ class wamo extends utils.Adapter {
 						this.setStateAsync(state_ID, { val: String(finalValue), ack: true });
 				}
 
-				this.log.info(String(cur_StatePath) + ' ' + String(stateID.common.name.en) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
+				this.log.info(String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
 				//this.log.info(String(cur_StatePath) + ' ' + String(stateID.common.name) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
 
 				resolve(true);
