@@ -663,6 +663,7 @@ class wamo extends utils.Adapter {
 		if (!device_responsive) {
 			this.log.error('device NOT connected ... exit');
 			// we throw an exception causing Adaper to restart
+			this.common.enabled = false;
 			throw 'exit not OK';
 		}
 
