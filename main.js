@@ -27,26 +27,6 @@ const connectionRetryPause = 3000;
 
 // Object all possible device commands
 const DeviceParameters = {
-	empty: {
-		id: '',
-		statePath: '',
-		description: { en: '', de: '' },
-		default: {
-			value: '',
-			description: { en: '', de: '' }
-		},
-		range: {
-			description: { en: '', de: '' },
-			cmd: '',
-			min: null,
-			max: null
-		},
-		unit: null,
-		levelRead: null,
-		levelWrite: null,
-		readCommand: null,
-		writeCommand: null
-	},
 	TestDefinition: {
 		id: 'XXX',
 		objectdefinition: {
@@ -95,7 +75,7 @@ const DeviceParameters = {
 					'pl': 'Aktualny stan zaworu',
 					'zh-cn': '当前阀门状态'
 				},
-				type: 'number',
+				type: 'string',
 				role: 'info.code',
 				read: true,
 				write: false
@@ -1273,19 +1253,29 @@ class wamo extends utils.Adapter {
 
 				const state_ID = cur_StatePath + '.' + cur_ParameterID;
 				await this.setObjectNotExistsAsync(state_ID, stateID.objectdefinition);
-				this.log.debug('stateID.objectdefinition.common.type = '+ stateID.objectdefinition.common.type );
+				this.log.debug('stateID.objectdefinition.common.type = ' + stateID.objectdefinition.common.type);
+
+				// convert into final value
+				let finalValue;
+				try{
+					finalValue = this.convertDeviceReturnValue(stateID.id,value['get' + stateID.id]);
+				}
+				catch(err){
+					reject(err);
+				}
+
 				switch (stateID.objectdefinition.common.type) {
 					case 'number':
 						this.log.debug('[async updateState(stateID, value)] value is NUMBER');
-						this.setStateAsync(state_ID, { val: parseFloat(value['get'+stateID.id]), ack: true });
+						this.setStateAsync(state_ID, { val: parseFloat(String(finalValue)), ack: true });
 						break;
 					default:
 						// handle as string
 						this.log.debug('[async updateState(stateID, value)] value is STRING');
-						this.setStateAsync(state_ID, { val: String(value['get'+stateID.id]), ack: true });
+						this.setStateAsync(state_ID, { val: String(finalValue), ack: true });
 				}
 
-				this.log.info(cur_StatePath + '.' + String(value['get'+stateID.id]));
+				this.log.info(cur_StatePath + '.' + String(value['get' + stateID.id]));
 
 				resolve(true);
 			} catch (err) {
@@ -1294,6 +1284,41 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	async convertDeviceReturnValue(valueKey, value) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let finalValue;
+				switch (valueKey) {
+					case 'VLV':	// Current Valve Status
+						switch (value) {
+							case 10:
+								resolve('Closed');
+								break;
+							case 11:
+								resolve('Closing');
+								break;
+							case 20:
+								resolve('Open');
+								break;
+							case 21:
+								resolve('Opening');
+								break;
+							case 30:
+								resolve('Undefined');
+								break;
+							default:
+								reject('[async convertDeviceReturnValue(valueKey, value)] Value (' + String(value) + ') for Key (' + String(valueKey) + ') is not defined!');
+						}
+						break;
+					default:
+						reject('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
+				}
+				resolve(finalValue);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
 
 	async UpdateProfileState(ProfileNumber, stateID, value) {
 		return new Promise(async (resolve, reject) => {
@@ -2445,6 +2470,7 @@ class wamo extends utils.Adapter {
 			}
 		});
 	}
+
 }
 
 //===================================================
