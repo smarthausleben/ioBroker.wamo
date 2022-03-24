@@ -1284,22 +1284,22 @@ class wamo extends utils.Adapter {
 		return new Promise((resolve, reject) => {
 			try {
 				let finalValue;
-				switch (valueKey) {
+				switch (String(valueKey)) {
 					case 'VLV':	// Current Valve Status
-						switch (value) {
-							case 10:
+						switch (String(value)) {
+							case '10':
 								resolve('Closed');
 								break;
-							case 11:
+							case '11':
 								resolve('Closing');
 								break;
-							case 20:
+							case '20':
 								resolve('Open');
 								break;
-							case 21:
+							case '21':
 								resolve('Opening');
 								break;
-							case 30:
+							case '30':
 								resolve('Undefined');
 								break;
 							default:
