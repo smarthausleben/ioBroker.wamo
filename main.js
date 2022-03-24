@@ -95,16 +95,16 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					"en": "System time",
-					"de": "Systemzeit",
-					"ru": "Системное время",
-					"pt": "Hora do sistema",
-					"nl": "Systeemtijd",
-					"fr": "Le temps du système",
-					"it": "Ora di sistema",
-					"es": "hora del sistema",
-					"pl": "czas systemu",
-					"zh-cn": "系统时间"
+					'en': 'System time',
+					'de': 'Systemzeit',
+					'ru': 'Системное время',
+					'pt': 'Hora do sistema',
+					'nl': 'Systeemtijd',
+					'fr': 'Le temps du système',
+					'it': 'Ora di sistema',
+					'es': 'hora del sistema',
+					'pl': 'czas systemu',
+					'zh-cn': '系统时间'
 				},
 				type: 'string',
 				role: 'info.code',
@@ -646,14 +646,6 @@ class wamo extends utils.Adapter {
 		this.log.info('config Device IP: ' + this.config.device_ip);
 		this.log.info('config Device Port: ' + this.config.device_port);
 
-		try
-		{
-			let systemConfig = this.getForeignObjectAsync('system.config');
-			this.log.info('systemConfig.common.language = ' + String(systemConfig.common.language));
-		}
-		catch(err){
-			this.log.error(err);
-		}
 		let connTrys = 0;
 
 		//=================================================================================================
@@ -1338,7 +1330,7 @@ class wamo extends utils.Adapter {
 						this.setStateAsync(state_ID, { val: String(finalValue), ack: true });
 				}
 
-				this.log.info(String(cur_StatePath) + ' ' + String(stateID.name.en) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
+				this.log.info(String(cur_StatePath) + ' ' + String(stateID.common.name) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
 
 				resolve(true);
 			} catch (err) {
