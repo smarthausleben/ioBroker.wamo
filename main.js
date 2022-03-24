@@ -591,8 +591,9 @@ const DeviceParameters = {
 	},
 };
 
-const shortPeriod[];
-const longPeriode[CurrentValveStatus, SystemTime];
+const shortPeriod = [];
+
+const longPeriode = [DeviceParameters.CurrentValveStatus, DeviceParameters.SystemTime];
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
 //============================================================================
