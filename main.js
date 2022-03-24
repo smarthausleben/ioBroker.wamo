@@ -1251,7 +1251,7 @@ class wamo extends utils.Adapter {
 				// convert into final value
 				let finalValue;
 				try {
-					finalValue = this.convertDeviceReturnValue(stateID.id, value['get' + stateID.id]);
+					finalValue = await this.convertDeviceReturnValue(stateID.id, value['get' + stateID.id]);
 					this.log.debug('finalValue = ' + String(finalValue));
 				}
 				catch (err) {
