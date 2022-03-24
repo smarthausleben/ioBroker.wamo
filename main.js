@@ -1330,7 +1330,7 @@ class wamo extends utils.Adapter {
 						this.setStateAsync(state_ID, { val: String(finalValue), ack: true });
 				}
 
-				this.log.info(cur_StatePath + '.' + String(value['get' + stateID.id]));
+				this.log.info(String(cur_StatePath) + ' ' + String(stateID.name) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
 
 				resolve(true);
 			} catch (err) {
@@ -1368,7 +1368,8 @@ class wamo extends utils.Adapter {
 						}
 						break;
 					case 'RTC':	// System Time
-						finalValue = (new Date(parseInt(value) * 1000)).toISOString().match(/(\d{4}\-\d{2}\-\d{2})T(\d{2}:\d{2}:\d{2})/);
+						finalValue = (new Date(parseInt(value) * 1000)).toLocaleString();
+						//finalValue = (new Date(parseInt(value) * 1000)).toISOString().match(/(\d{4}\-\d{2}\-\d{2})T(\d{2}:\d{2}:\d{2})/);
 						break;
 					default:
 						this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
