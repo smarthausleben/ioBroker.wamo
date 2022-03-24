@@ -22,7 +22,8 @@ let long_Intervall_ID;
 let device_responsive = false;
 
 // number of connection attemts before throwing an error and exiting
-const conectionRetrys = 3;
+const connectionRetrys = 5;
+const connectionRetryPause = 3000;
 
 // Object all possible device commands
 const DeviceParameters = {
@@ -636,7 +637,7 @@ class wamo extends utils.Adapter {
 		//=================================================================================================
 		//===  Connecting to device																		===
 		//=================================================================================================
-		while (connTrys < conectionRetrys) {
+		while (connTrys < connectionRetrys) {
 			try {
 				await this.deviceCommcheck(this.config.device_ip, this.config.device_port);
 				device_responsive = true;
@@ -647,7 +648,7 @@ class wamo extends utils.Adapter {
 				this.log.error(String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
 				for (let i = 5; i > 0; i--) {
 					this.log.warn('waiting ' + i + ' seconds ...');
-					await sleep(1000);
+					await sleep(connectionRetryPause);
 				}
 				this.log.warn('retry connection ...');
 			}
@@ -680,7 +681,7 @@ class wamo extends utils.Adapter {
 		// Verbindungsbestätigung zurücksetzen
 		device_responsive = false;
 
-		while (connTrys < conectionRetrys) {
+		while (connTrys < connectionRetrys) {
 			try {
 				this.log.info('Getting data from device at ' + this.config.device_ip + ':' + this.config.device_port);
 				const responseInit = await this.initDevice(this.config.device_ip, this.config.device_port);
@@ -692,7 +693,7 @@ class wamo extends utils.Adapter {
 				this.log.error(String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
 				for (let i = 5; i > 0; i--) {
 					this.log.warn('waiting ' + i + ' seconds ...');
-					await sleep(1000);
+					await sleep(connectionRetryPause);
 				}
 				this.log.warn('retry connection ...');
 			}
@@ -718,7 +719,7 @@ class wamo extends utils.Adapter {
 		// Verbindungsbestätigung zurücksetzen
 		device_responsive = false;
 
-		while (connTrys < conectionRetrys) {
+		while (connTrys < connectionRetrys) {
 			try {
 				// Device Profiles Initialisation
 				this.log.info('Getting Profiles data from device at ' + this.config.device_ip + ':' + this.config.device_port);
@@ -731,7 +732,7 @@ class wamo extends utils.Adapter {
 				this.log.error(String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
 				for (let i = 5; i > 0; i--) {
 					this.log.warn('waiting ' + i + ' seconds ...');
-					await sleep(1000);
+					await sleep(connectionRetryPause);
 				}
 				this.log.warn('retry connection ...');
 			}
@@ -957,7 +958,7 @@ class wamo extends utils.Adapter {
 				// Verbindungsbestätigung zurücksetzen
 				device_responsive = false;
 
-				while (connTrys < conectionRetrys) {
+				while (connTrys < connectionRetrys) {
 					try {
 						await this.updateState(DeviceParameters.CurrentValveStatus, await this.get_DevieParameter(DeviceParameters.CurrentValveStatus.id, this.config.device_ip, this.config.device_port));
 						device_responsive = true;
@@ -967,7 +968,7 @@ class wamo extends utils.Adapter {
 						this.log.error('[async long_TimerTick()] ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
 						for (let i = 5; i > 0; i--) {
 							this.log.warn('waiting ' + i + ' seconds ...');
-							await sleep(1000);
+							await sleep(connectionRetryPause);
 						}
 						this.log.warn('retry connection ...');
 					}
@@ -1272,15 +1273,15 @@ class wamo extends utils.Adapter {
 
 				const state_ID = cur_StatePath + '.' + cur_ParameterID;
 				await this.setObjectNotExistsAsync(state_ID, stateID.objectdefinition);
-				this.log.warn('stateID.objectdefinition.common.type = '+ stateID.objectdefinition.common.type );
+				this.log.debug('stateID.objectdefinition.common.type = '+ stateID.objectdefinition.common.type );
 				switch (stateID.objectdefinition.common.type) {
 					case 'number':
-						this.log.warn('[async updateState(stateID, value)] value is NUMBER');
+						this.log.debug('[async updateState(stateID, value)] value is NUMBER');
 						this.setStateAsync(state_ID, { val: parseFloat(value['get'+stateID.id]), ack: true });
 						break;
 					default:
 						// handle as string
-						this.log.warn('[async updateState(stateID, value)] value is STRING');
+						this.log.debug('[async updateState(stateID, value)] value is STRING');
 						this.setStateAsync(state_ID, { val: String(value['get'+stateID.id]), ack: true });
 				}
 
