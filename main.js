@@ -20,6 +20,7 @@ let short_Intervall_ID;
 let long_Intervall_ID;
 
 let device_responsive = false;
+let interfaceBussy;
 
 // number of connection attemts before throwing an error and exiting
 const connectionRetrys = 5;
@@ -899,12 +900,19 @@ class wamo extends utils.Adapter {
 	// Timer EVENTS
 	async alarm_TimerTick() {
 		return new Promise(async (resolve, reject) => {
-
-			this.log.debug('Alarm Timer tick');
-			await this.get_AlarmTimerValues(this.config.device_ip, this.config.device_port);
 			try {
+				if (!interfaceBussy) {
+					this.log.debug('Alarm Timer tick');
+					interfaceBussy = true;	// SET flag that device interface is bussy
+					await this.get_AlarmTimerValues(this.config.device_ip, this.config.device_port);
+					interfaceBussy = false;	// CLEAR flag that device interface is bussy
+				}
+				else {
+					this.log.warn('[async alarm_TimerTick()] Device interface is bussy!');
+				}
 				resolve('Ok');
 			} catch (err) {
+				interfaceBussy = false;	// CLEAR flag that device interface is bussy
 				reject(err);
 			}
 		});
@@ -912,12 +920,19 @@ class wamo extends utils.Adapter {
 
 	async short_TimerTick() {
 		return new Promise(async (resolve, reject) => {
-
-			this.log.debug('Short Timer tick');
-			await this.get_ShortTimerValues(this.config.device_ip, this.config.device_port);
 			try {
+				if (!interfaceBussy) {
+					this.log.debug('Short Timer tick');
+					interfaceBussy = true;	// SET flag that device interface is bussy
+					await this.get_ShortTimerValues(this.config.device_ip, this.config.device_port);
+					interfaceBussy = false;	// CLEAR flag that device interface is bussy
+				}
+				else {
+					this.log.warn('[async short_TimerTick()] Device interface is bussy!');
+				}
 				resolve('Ok');
 			} catch (err) {
+				interfaceBussy = false;	// CLEAR flag that device interface is bussy
 				reject(err);
 			}
 		});
@@ -928,39 +943,47 @@ class wamo extends utils.Adapter {
 
 			this.log.debug('Long Timer tick');
 			try {
-				// Verbindungsversuche zurücksetzen
-				let connTrys = 0;
-				// Verbindungsbestätigung zurücksetzen
-				device_responsive = false;
+				if (!interfaceBussy) {
+					// Verbindungsversuche zurücksetzen
+					let connTrys = 0;
+					// Verbindungsbestätigung zurücksetzen
+					device_responsive = false;
 
-				while (connTrys < connectionRetrys) {
-					try {
-						await this.updateState(DeviceParameters.CurrentValveStatus, await this.get_DevieParameter(DeviceParameters.CurrentValveStatus.id, this.config.device_ip, this.config.device_port));
-						device_responsive = true;
-						break;
-					}
-					catch (err) {
-						this.log.error('[async long_TimerTick()] ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
-						this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
-						await sleep(connectionRetryPause);
-						this.log.warn('retry connection ...');
-					}
-					finally {
-						connTrys++;
-						if (connTrys > 1) {
-							this.log.warn('connection attempt No. ' + connTrys);
+					while (connTrys < connectionRetrys) {
+						try {
+							interfaceBussy = true;	// SET flag that device interface is bussy
+							await this.updateState(DeviceParameters.CurrentValveStatus, await this.get_DevieParameter(DeviceParameters.CurrentValveStatus.id, this.config.device_ip, this.config.device_port));
+							interfaceBussy = false;	// CLEAR flag that device interface is bussy
+							device_responsive = true;
+							break;
+						}
+						catch (err) {
+							this.log.error('[async long_TimerTick()] ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
+							this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
+							await sleep(connectionRetryPause);
+							this.log.warn('retry connection ...');
+						}
+						finally {
+							connTrys++;
+							if (connTrys > 1) {
+								this.log.warn('connection attempt No. ' + connTrys);
+							}
 						}
 					}
-				}
-				if (!device_responsive) {
-					this.log.error('device NOT reachable ... exit');
-					// we throw an exception causing Adaper to restart
-					throw 'exit not OK';
-				}
+					if (!device_responsive) {
+						this.log.error('device NOT reachable ... exit');
+						// we throw an exception causing Adaper to restart
+						throw 'exit not OK';
+					}
 
+				}
+				else {
+					this.log.warn('[async long_TimerTick()] Device interface is bussy!');
+				}
 
 				resolve('Ok');
 			} catch (err) {
+				interfaceBussy = false;	// CLEAR flag that device interface is bussy
 				reject(err);
 			}
 		});
