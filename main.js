@@ -1252,8 +1252,10 @@ class wamo extends utils.Adapter {
 				let finalValue;
 				try {
 					finalValue = this.convertDeviceReturnValue(stateID.id, value['get' + stateID.id]);
+					this.log.debug('finalValue = ' + String(finalValue));
 				}
 				catch (err) {
+					this.log.error('[async updateState(stateID, value)] Error: ' + String(err));
 					reject(err);
 				}
 
@@ -1272,13 +1274,14 @@ class wamo extends utils.Adapter {
 
 				resolve(true);
 			} catch (err) {
+				this.log.error('[async updateState(stateID, value)] Error: ' + String(err));
 				reject(err);
 			}
 		});
 	}
 
 	async convertDeviceReturnValue(valueKey, value) {
-		return new Promise(async (resolve, reject) => {
+		return new Promise((resolve, reject) => {
 			try {
 				let finalValue;
 				switch (valueKey) {
