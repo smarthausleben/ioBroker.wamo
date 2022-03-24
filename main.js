@@ -735,7 +735,7 @@ class wamo extends utils.Adapter {
 			throw err;
 		}
 
-
+		/*
 		// ==================================================================================================================
 		// =======                                 TESTING															  =======
 		// ==================================================================================================================
@@ -747,6 +747,7 @@ class wamo extends utils.Adapter {
 			this.log.error(`[updateState(DeviceParameters.TestDefinition, '224')] error: ${err}`);
 		}
 		// ==================================================================================================================
+		*/
 
 		/*
 		For every state in the system there has to be also an object of type state
