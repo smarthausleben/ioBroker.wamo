@@ -52,7 +52,7 @@ const DeviceParameters = {
 			},
 			native: {}
 		},
-		statePath: 'Testing',
+		statePath: 'Device.Device-Conditions',
 		levelRead: 'SERVICE',
 		levelWrite: null,
 		readCommand: 'get',
@@ -82,7 +82,7 @@ const DeviceParameters = {
 			},
 			native: {}
 		},
-		statePath: 'Testing',
+		statePath: 'Device.Alarm',
 		levelRead: 'USER',
 		levelWrite: null,
 		readCommand: 'get',
@@ -1083,6 +1083,11 @@ class wamo extends utils.Adapter {
 	async initDevice(DeviceIP, DevicePort) {
 		return new Promise(async (resolve, reject) => {
 			try {
+
+				Object.keys(DeviceParameters).forEach(key => {
+					this.log.info(key + DeviceParameters[key]);
+				});
+
 				if (false) {
 					const listOfParameter = [
 						'Device.Info.VER', 	// Firmware Version
