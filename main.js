@@ -1085,7 +1085,7 @@ class wamo extends utils.Adapter {
 			try {
 
 				Object.keys(DeviceParameters).forEach(key => {
-					this.log.info(key + DeviceParameters[key]);
+					this.log.info(key + ' Pfad = ' + DeviceParameters[key].statePath);
 				});
 
 				if (false) {
