@@ -28,37 +28,6 @@ const connectionRetryPause = 3000;
 
 // Object all possible device commands
 const DeviceParameters = {
-	TestDefinition: {
-		id: 'XXX',
-		objectdefinition: {
-			type: 'state',
-			common: {
-				name: {
-					'en': 'Test definition',
-					'de': 'Testdefinition',
-					'ru': 'Определение теста',
-					'pt': 'Definição de teste',
-					'nl': 'Testdefinitie',
-					'fr': 'Définition des tests',
-					'it': 'Definizione di prova',
-					'es': 'Definición de prueba',
-					'pl': 'Definicja testu',
-					'zh-cn': '测试定义'
-				},
-				type: 'number',
-				unit: 'ttt',
-				role: 'info.code',
-				read: true,
-				write: false
-			},
-			native: {}
-		},
-		statePath: 'Testing',
-		levelRead: 'USER',
-		levelWrite: null,
-		readCommand: 'get',
-		writeCommand: null
-	},
 	CurrentValveStatus: {
 		id: 'VLV',
 		objectdefinition: {
@@ -85,6 +54,36 @@ const DeviceParameters = {
 		},
 		statePath: 'Testing',
 		levelRead: 'SERVICE',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	CurrentAlarmStatus: {
+		id: 'ALA',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Ongoing alarm',
+					'de': 'Laufender Alarm',
+					'ru': 'Текущая тревога',
+					'pt': 'Alarme contínuo',
+					'nl': 'Lopend alarm',
+					'fr': 'Alarme en cours',
+					'it': 'Allarme in corso',
+					'es': 'alarma en curso',
+					'pl': 'Alarm w toku',
+					'zh-cn': '持续警报'
+				},
+				type: 'string',
+				role: 'info.code',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: 'Testing',
+		levelRead: 'USER',
 		levelWrite: null,
 		readCommand: 'get',
 		writeCommand: null
@@ -119,6 +118,40 @@ const DeviceParameters = {
 		readCommand: 'get',
 		writeCommand: 'set'
 	},
+	TestDefinition: {
+		id: 'XXX',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Test definition',
+					'de': 'Testdefinition',
+					'ru': 'Определение теста',
+					'pt': 'Definição de teste',
+					'nl': 'Testdefinitie',
+					'fr': 'Définition des tests',
+					'it': 'Definizione di prova',
+					'es': 'Definición de prueba',
+					'pl': 'Definicja testu',
+					'zh-cn': '测试定义'
+				},
+				type: 'number',
+				unit: 'ttt',
+				role: 'info.code',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: 'Testing',
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+};
+
+const oldDeviceParameters = {
 	Shutoff: {
 		id: 'AB',
 		translate: 'Shut off',
@@ -591,9 +624,11 @@ const DeviceParameters = {
 	},
 };
 
-const shortPeriod = [];
 
+const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
+const shortPeriod = [];
 const longPeriode = [DeviceParameters.CurrentValveStatus, DeviceParameters.SystemTime];
+
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
 //============================================================================
@@ -1048,34 +1083,36 @@ class wamo extends utils.Adapter {
 	async initDevice(DeviceIP, DevicePort) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const listOfParameter = [
-					'Device.Info.VER', 	// Firmware Version
-					'Device.Info.WIP',	// IP Address
-					'Device.Info.MAC',	// MAC Address
-					'Device.Info.WGW',	// Default Gatewa
-					'Device.Info.SRN',	// Serial Number
-					'Device.Info.CNO',	// Code Number
-					'Device.Info.WFR',	// WiFi RSSI
-					'Device.Info.WFC',	// WiFi SSID
-					'Device.Info.SRV',	// Next Maintenance
-					'Device.Info.WAH',	// WiFi AP Hidden
-					'Device.Info.WAD',	// WiFi AP Disabled
-					'Device.Info.APT',	// WiFi AP Timeout
-					'Device.Info.DWL',	// WiFi Deactivated
-					'Device.Info.WFS',	// WiFi State
-					'Device.Info.BAT',	// Batterie voltage
-					'Conditions.CEL',	// Water temperatur
-					'Conditions.CND',	// Water conductivity
-					'Device.Info.IDS'];	// Daylight Saving Time
+				if (false) {
+					const listOfParameter = [
+						'Device.Info.VER', 	// Firmware Version
+						'Device.Info.WIP',	// IP Address
+						'Device.Info.MAC',	// MAC Address
+						'Device.Info.WGW',	// Default Gatewa
+						'Device.Info.SRN',	// Serial Number
+						'Device.Info.CNO',	// Code Number
+						'Device.Info.WFR',	// WiFi RSSI
+						'Device.Info.WFC',	// WiFi SSID
+						'Device.Info.SRV',	// Next Maintenance
+						'Device.Info.WAH',	// WiFi AP Hidden
+						'Device.Info.WAD',	// WiFi AP Disabled
+						'Device.Info.APT',	// WiFi AP Timeout
+						'Device.Info.DWL',	// WiFi Deactivated
+						'Device.Info.WFS',	// WiFi State
+						'Device.Info.BAT',	// Batterie voltage
+						'Conditions.CEL',	// Water temperatur
+						'Conditions.CND',	// Water conductivity
+						'Device.Info.IDS'];	// Daylight Saving Time
 
-				this.log.debug(`[initDevice()]`);
-				let result;
-				for (const stateID of listOfParameter) {
-					const parameterIDs = stateID.split('.');
-					this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
-					result = await this.get_DevieParameter(parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
-					this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
-					await this.UpdateState(stateID, result);
+					this.log.debug(`[initDevice()]`);
+					let result;
+					for (const stateID of listOfParameter) {
+						const parameterIDs = stateID.split('.');
+						this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
+						result = await this.get_DevieParameter(parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
+						this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
+						await this.UpdateState(stateID, result);
+					}
 				}
 				resolve(true);
 			} catch (err) {
@@ -1087,34 +1124,35 @@ class wamo extends utils.Adapter {
 	async initDeviceProfiles(DeviceIP, DevicePort,) {
 		return new Promise(async (resolve, reject) => {
 			try {
+				if (false) {
 
-				// alle 8 möglichen Profile durchlaufen
-				for (let ProfileNumber = 1; ProfileNumber < 9; ProfileNumber++) {
+					// alle 8 möglichen Profile durchlaufen
+					for (let ProfileNumber = 1; ProfileNumber < 9; ProfileNumber++) {
 
-					this.log.debug('[async initDeviceProfiles(DeviceIP, DevicePort)] Profil ' + ProfileNumber);
+						this.log.debug('[async initDeviceProfiles(DeviceIP, DevicePort)] Profil ' + ProfileNumber);
 
-					const listOfParameter = [
-						'Profiles.' + String(ProfileNumber) + '.PA' + String(ProfileNumber),
-						'Profiles.' + String(ProfileNumber) + '.PN' + String(ProfileNumber),
-						'Profiles.' + String(ProfileNumber) + '.PV' + String(ProfileNumber),
-						'Profiles.' + String(ProfileNumber) + '.PT' + String(ProfileNumber),
-						'Profiles.' + String(ProfileNumber) + '.PF' + String(ProfileNumber),
-						'Profiles.' + String(ProfileNumber) + '.PM' + String(ProfileNumber),
-						'Profiles.' + String(ProfileNumber) + '.PR' + String(ProfileNumber),
-						'Profiles.' + String(ProfileNumber) + '.PB' + String(ProfileNumber),
-						'Profiles.' + String(ProfileNumber) + '.PW' + String(ProfileNumber)];
+						const listOfParameter = [
+							'Profiles.' + String(ProfileNumber) + '.PA' + String(ProfileNumber),
+							'Profiles.' + String(ProfileNumber) + '.PN' + String(ProfileNumber),
+							'Profiles.' + String(ProfileNumber) + '.PV' + String(ProfileNumber),
+							'Profiles.' + String(ProfileNumber) + '.PT' + String(ProfileNumber),
+							'Profiles.' + String(ProfileNumber) + '.PF' + String(ProfileNumber),
+							'Profiles.' + String(ProfileNumber) + '.PM' + String(ProfileNumber),
+							'Profiles.' + String(ProfileNumber) + '.PR' + String(ProfileNumber),
+							'Profiles.' + String(ProfileNumber) + '.PB' + String(ProfileNumber),
+							'Profiles.' + String(ProfileNumber) + '.PW' + String(ProfileNumber)];
 
-					this.log.debug(`[initDeviceProfiles()] Profil ` + ProfileNumber);
-					for (const stateID of listOfParameter) {
-						const parameterIDs = stateID.split('.');
-						this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
-						const result = await this.get_DevieProfileParameter(ProfileNumber, parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
-						this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
-						await this.UpdateProfileState(ProfileNumber, stateID, result);
-						this.log.debug('Profil ' + ProfileNumber + ' Parameter ' + parameterIDs[parameterIDs.length - 1]);
+						this.log.debug(`[initDeviceProfiles()] Profil ` + ProfileNumber);
+						for (const stateID of listOfParameter) {
+							const parameterIDs = stateID.split('.');
+							this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
+							const result = await this.get_DevieProfileParameter(ProfileNumber, parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
+							this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
+							await this.UpdateProfileState(ProfileNumber, stateID, result);
+							this.log.debug('Profil ' + ProfileNumber + ' Parameter ' + parameterIDs[parameterIDs.length - 1]);
+						}
 					}
 				}
-
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
@@ -1129,19 +1167,21 @@ class wamo extends utils.Adapter {
 
 	async get_AlarmTimerValues(DeviceIP, DevicePort) {
 		return new Promise(async (resolve, reject) => {
-
-			const listOfParameter = [
-				'Conditions.ALA'];
-
-			this.log.debug(`[get_AlarmTimerValues(DeviceIP, DevicePort)]`);
-			let result;
 			try {
-				for (const stateID of listOfParameter) {
-					const parameterIDs = stateID.split('.');
-					this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
-					result = await this.get_DevieParameter(parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
-					this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
-					await this.UpdateState(stateID, result);
+				if (false) {
+
+					const listOfParameter = [
+						'Conditions.ALA'];
+
+					this.log.debug(`[get_AlarmTimerValues(DeviceIP, DevicePort)]`);
+					let result;
+					for (const stateID of listOfParameter) {
+						const parameterIDs = stateID.split('.');
+						this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
+						result = await this.get_DevieParameter(parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
+						this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
+						await this.UpdateState(stateID, result);
+					}
 				}
 				resolve(true);
 			} catch (err) {
@@ -1155,25 +1195,26 @@ class wamo extends utils.Adapter {
 	// Short Timer: Get Values  (called on each short Timer Tick)
 	async get_ShortTimerValues(DeviceIP, DevicePort) {
 		return new Promise(async (resolve, reject) => {
-
-			const listOfParameter = [
-				'Conditions.CEL',	// Water temperatur
-				'Conditions.CND',	// Water conductivity
-				'Device.Info.BAT',
-				'Consumptions.AVO',
-				'Consumptions.LTV',
-				'Consumptions.VOL',
-				'Device.Info.NET'];
-
-			this.log.debug(`[get_ShortTimerValues(DeviceIP, DevicePort)]`);
-			let result;
 			try {
-				for (const stateID of listOfParameter) {
-					const parameterIDs = stateID.split('.');
-					this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
-					result = await this.get_DevieParameter(parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
-					this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
-					await this.UpdateState(stateID, result);
+				if (false) {
+					const listOfParameter = [
+						'Conditions.CEL',	// Water temperatur
+						'Conditions.CND',	// Water conductivity
+						'Device.Info.BAT',
+						'Consumptions.AVO',
+						'Consumptions.LTV',
+						'Consumptions.VOL',
+						'Device.Info.NET'];
+
+					this.log.debug(`[get_ShortTimerValues(DeviceIP, DevicePort)]`);
+					let result;
+					for (const stateID of listOfParameter) {
+						const parameterIDs = stateID.split('.');
+						this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
+						result = await this.get_DevieParameter(parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
+						this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
+						await this.UpdateState(stateID, result);
+					}
 				}
 				resolve(true);
 			} catch (err) {
