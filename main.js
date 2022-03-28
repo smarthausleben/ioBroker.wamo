@@ -28,6 +28,36 @@ const connectionRetryPause = 3000;
 
 // Object all possible device commands
 const DeviceParameters = {
+	WaterTemperature: {
+		id: 'CLC',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Water temperature',
+					'de': 'Wassertemperatur',
+					'ru': 'Температура воды',
+					'pt': 'Temperatura da água',
+					'nl': 'Water temperatuur',
+					'fr': "La température de l'eau",
+					'it': "Temperatura dell'acqua",
+					'es': 'Temperatura de agua',
+					'pl': 'Temperatura wody',
+					'zh-cn': '水温'
+				},
+				type: 'number',
+				role: 'value.temperature',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: 'Water.Condition',
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
 	CurrentValveStatus: {
 		id: 'VLV',
 		objectdefinition: {
@@ -406,16 +436,6 @@ const oldDeviceParameters = {
 		translate: 'DC power adapter voltage',
 		statePath: 'Device.Info',
 		unit: 'V',
-		levelRead: 'USER',
-		levelWrite: null,
-		readCommand: 'get',
-		writeCommand: null
-	},
-	WaterTemperature: {
-		id: 'CEL',
-		translate: 'Water temperature',
-		statePath: 'Conditions',
-		unit: '°',
 		levelRead: 'USER',
 		levelWrite: null,
 		readCommand: 'get',
@@ -892,7 +912,7 @@ const adapterChannels = {
 
 
 const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
-const shortPeriod = [];
+const shortPeriod = [DeviceParameters.WaterTemperature];
 const longPeriode = [DeviceParameters.CurrentValveStatus, DeviceParameters.SystemTime];
 
 //============================================================================
@@ -947,6 +967,9 @@ class wamo extends utils.Adapter {
 		this.log.info('config Device IP: ' + this.config.device_ip);
 		this.log.info('config Device Port: ' + this.config.device_port);
 
+		//=================================================================================================
+		//===  Create device object and all channel objects												===
+		//=================================================================================================
 		try {
 			await this.initDevicesAndChanels();
 		} catch (err) {
@@ -1260,16 +1283,10 @@ class wamo extends utils.Adapter {
 	async short_TimerTick() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				if (!interfaceBussy) {
-					this.log.debug('Short Timer tick');
-					interfaceBussy = true;	// SET flag that device interface is bussy
-					await this.get_ShortTimerValues(this.config.device_ip, this.config.device_port);
-					interfaceBussy = false;	// CLEAR flag that device interface is bussy
-				}
-				else {
-					this.log.warn('[async short_TimerTick()] Device interface is bussy!');
-				}
-				resolve('Ok');
+				this.log.debug('Short Timer tick');
+				// get longPeriode data
+				await this.getData(shortPeriod);
+				resolve(true);
 			} catch (err) {
 				interfaceBussy = false;	// CLEAR flag that device interface is bussy
 				reject(err);
@@ -1279,10 +1296,22 @@ class wamo extends utils.Adapter {
 
 	async long_TimerTick() {
 		return new Promise(async (resolve, reject) => {
-
-			this.log.debug('Long Timer tick');
 			try {
-				for (let i = 0; i < longPeriode.length; i++) {
+				this.log.debug('Long Timer tick');
+				// get longPeriode data
+				await this.getData(longPeriode);
+				resolve(true);
+			} catch (err) {
+				interfaceBussy = false;	// CLEAR flag that device interface is bussy
+				reject(err);
+			}
+		});
+	}
+
+	async getData(statesToGet) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				for (let i = 0; i < statesToGet.length; i++) {
 					if (!interfaceBussy) {
 						// Verbindungsversuche zurücksetzen
 						let connTrys = 0;
@@ -1292,14 +1321,14 @@ class wamo extends utils.Adapter {
 						while (connTrys < connectionRetrys) {
 							try {
 								interfaceBussy = true;	// SET flag that device interface is bussy
-								await this.updateState(longPeriode[i], await this.get_DevieParameter(longPeriode[i].id, this.config.device_ip, this.config.device_port));
+								await this.updateState(statesToGet[i], await this.get_DevieParameter(statesToGet[i].id, this.config.device_ip, this.config.device_port));
 								// await this.updateState(DeviceParameters.CurrentValveStatus, await this.get_DevieParameter(DeviceParameters.CurrentValveStatus.id, this.config.device_ip, this.config.device_port));
 								interfaceBussy = false;	// CLEAR flag that device interface is bussy
 								device_responsive = true;
 								break;
 							}
 							catch (err) {
-								this.log.error('[async long_TimerTick()] ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
+								this.log.error('[async getData(statesToGet)] ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
 								this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
 								await sleep(connectionRetryPause);
 								this.log.warn('retry connection ...');
@@ -1318,21 +1347,19 @@ class wamo extends utils.Adapter {
 							// we throw an exception causing Adaper to restart
 							interfaceBussy = false;	// CLEAR flag that device interface is bussy
 						}
-
-
 					}
 					else {
-						this.log.warn('[async long_TimerTick()] Device interface is bussy!');
+						this.log.warn('[async getData(statesToGet)] Device interface is bussy!');
 					}
 				}
-
-				resolve('Ok');
+				resolve(true);
 			} catch (err) {
 				interfaceBussy = false;	// CLEAR flag that device interface is bussy
 				reject(err);
 			}
 		});
 	}
+
 	//===================================================
 	// reading ALA (Alarm) status from device to test if the device is present and responding
 	async deviceCommcheck(DeviceIP, DevicePort) {
@@ -1722,6 +1749,9 @@ class wamo extends utils.Adapter {
 					case 'RTC':	// System Time
 						finalValue = (new Date(parseInt(value) * 1000)).toLocaleString();
 						//finalValue = (new Date(parseInt(value) * 1000)).toISOString().match(/(\d{4}\-\d{2}\-\d{2})T(\d{2}:\d{2}:\d{2})/);
+						break;
+					case 'CLC': // Water Temperature
+						finalValue = parseFloat(value);
 						break;
 					default:
 						this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
