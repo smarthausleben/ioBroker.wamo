@@ -1470,15 +1470,15 @@ class wamo extends utils.Adapter {
 					this.log.debug('[async initDeviceProfiles(DeviceIP, DevicePort)] Profil ' + ProfileNumber);
 
 					const listOfParameter = [
-						'Profiles.' + String(ProfileNumber) + '.PA' + String(ProfileNumber),
-						'Profiles.' + String(ProfileNumber) + '.PN' + String(ProfileNumber),
-						'Profiles.' + String(ProfileNumber) + '.PV' + String(ProfileNumber),
-						'Profiles.' + String(ProfileNumber) + '.PT' + String(ProfileNumber),
-						'Profiles.' + String(ProfileNumber) + '.PF' + String(ProfileNumber),
-						'Profiles.' + String(ProfileNumber) + '.PM' + String(ProfileNumber),
-						'Profiles.' + String(ProfileNumber) + '.PR' + String(ProfileNumber),
-						'Profiles.' + String(ProfileNumber) + '.PB' + String(ProfileNumber),
-						'Profiles.' + String(ProfileNumber) + '.PW' + String(ProfileNumber)];
+						'Device.Profiles.' + String(ProfileNumber) + '.PA' + String(ProfileNumber),
+						'Device.Profiles.' + String(ProfileNumber) + '.PN' + String(ProfileNumber),
+						'Device.Profiles.' + String(ProfileNumber) + '.PV' + String(ProfileNumber),
+						'Device.Profiles.' + String(ProfileNumber) + '.PT' + String(ProfileNumber),
+						'Device.Profiles.' + String(ProfileNumber) + '.PF' + String(ProfileNumber),
+						'Device.Profiles.' + String(ProfileNumber) + '.PM' + String(ProfileNumber),
+						'Device.Profiles.' + String(ProfileNumber) + '.PR' + String(ProfileNumber),
+						'Device.Profiles.' + String(ProfileNumber) + '.PB' + String(ProfileNumber),
+						'Device.Profiles.' + String(ProfileNumber) + '.PW' + String(ProfileNumber)];
 
 					this.log.debug(`[initDeviceProfiles()] Profil ` + ProfileNumber);
 					for (const stateID of listOfParameter) {
@@ -1952,16 +1952,24 @@ class wamo extends utils.Adapter {
 	async state_profile_PA(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const state_ID = 'Profiles.' + String(ProfileNumber) + '.PA' + String(ProfileNumber);
+				const state_ID = 'Device.Profiles.' + String(ProfileNumber) + '.PA' + String(ProfileNumber);
 				await this.setObjectNotExistsAsync(state_ID, {
 					type: 'state',
 					common: {
 						name: {
-							en: 'Profile ' + String(ProfileNumber) + ' available',
-							de: 'Profil ' + String(ProfileNumber) + ' verfügbar'
+							'en': 'Profile ' + String(ProfileNumber) + ' available',
+							'de': 'Profil ' + String(ProfileNumber) + ' verfügbar',
+							'ru': 'Профиль ' + String(ProfileNumber) + ' доступен',
+							'pt': 'Perfil ' + String(ProfileNumber) + ' disponível',
+							'nl': 'Profiel ' + String(ProfileNumber) + ' beschikbaar',
+							'fr': 'Profil ' + String(ProfileNumber) + ' disponible',
+							'it': 'Profilo ' + String(ProfileNumber) + ' disponibile',
+							'es': 'Perfil ' + String(ProfileNumber) + ' disponible',
+							'pl': 'Profil ' + String(ProfileNumber) + ' dostępny',
+							'zh-cn': '配置文件 ' + String(ProfileNumber) + ' 可用'
 						},
 						type: 'boolean',
-						role: 'profile.' + String(ProfileNumber) + '.available',
+						role: 'indicator.available',
 						read: true,
 						write: false
 					},
@@ -1985,23 +1993,31 @@ class wamo extends utils.Adapter {
 	async state_profile_PN(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const state_ID = 'Profiles.' + String(ProfileNumber) + '.PN' + String(ProfileNumber);
+				const state_ID = 'Device.Profiles.' + String(ProfileNumber) + '.PN' + String(ProfileNumber);
 				await this.setObjectNotExistsAsync(state_ID, {
 					type: 'state',
 					common: {
 						name: {
-							en: 'Profile ' + String(ProfileNumber) + ' Name',
-							de: 'Profil ' + String(ProfileNumber) + ' Name'
+							'en': 'Profile ' + String(ProfileNumber) + ' name',
+							'de': 'Profil ' + String(ProfileNumber) + ' Name',
+							'ru': 'Имя профиля ' + String(ProfileNumber) + '',
+							'pt': 'Nome do perfil ' + String(ProfileNumber) + '',
+							'nl': 'Profiel ' + String(ProfileNumber) + ' naam',
+							'fr': 'Nom du profil ' + String(ProfileNumber) + '',
+							'it': 'Nome del profilo ' + String(ProfileNumber) + '',
+							'es': 'Perfil ' + String(ProfileNumber) + ' nombre',
+							'pl': 'Nazwa profilu ' + String(ProfileNumber) + '',
+							'zh-cn': '配置文件 ' + String(ProfileNumber) + ' 名称'
 						},
 						type: 'string',
-						role: 'profile.' + String(ProfileNumber) + '.name',
+						role: 'info.name',
 						read: true,
 						write: false
 					},
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: value['getPN' + String(ProfileNumber)], ack: true });
-				this.log.info('Profile ' + String(ProfileNumber) + ' Name is ' + value['getPN' + String(ProfileNumber)]);
+				this.log.info('Device.Profile ' + String(ProfileNumber) + ' Name is ' + value['getPN' + String(ProfileNumber)]);
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
@@ -2014,30 +2030,31 @@ class wamo extends utils.Adapter {
 	async state_profile_PV(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const state_ID = 'Profiles.' + String(ProfileNumber) + '.PV' + String(ProfileNumber);
+				const state_ID = 'Device.Profiles.' + String(ProfileNumber) + '.PV' + String(ProfileNumber);
 				await this.setObjectNotExistsAsync(state_ID, {
 					type: 'state',
 					common: {
 						name: {
-							en: 'Profile ' + String(ProfileNumber) + ' Volume Level (0 = disabled 1...1900L)',
-							de: 'Profil ' + String(ProfileNumber) + ' Volumen Grenze (0 = deaktiviert 1...1900L)'
+							'en': 'Profile ' + String(ProfileNumber) + ' quantity limitation (0 = disabled 1...1900l)',
+							'de': 'Profil ' + String(ProfileNumber) + ' Mengenbegrenzung (0 = deaktiviert 1...1900l)',
+							'ru': 'Ограничение количества профиля ' + String(ProfileNumber) + ' (0 = отключено 1...1900l)',
+							'pt': 'Limitação de quantidade do perfil ' + String(ProfileNumber) + ' (0 = desabilitado 1...1900l)',
+							'nl': 'Profiel ' + String(ProfileNumber) + ' hoeveelheidsbeperking (0 = uitgeschakeld 1...1900l)',
+							'fr': 'Limitation de quantité profil ' + String(ProfileNumber) + ' (0 = désactivé 1...1900l)',
+							'it': 'Limitazione quantità profilo ' + String(ProfileNumber) + ' (0 = disabilitato 1...1900l)',
+							'es': 'Limitación de cantidad perfil ' + String(ProfileNumber) + ' (0 = deshabilitado 1...1900l)',
+							'pl': 'Ograniczenie ilości profilu ' + String(ProfileNumber) + ' (0 = wyłączone 1...1900l)',
+							'zh-cn': '配置文件 ' + String(ProfileNumber) + ' 数量限制（0 = 禁用 1...1900l）'
 						},
-						type: 'string',
-						role: 'profile.' + String(ProfileNumber) + '.volumelevel',
-						unit: 'L',
+						type: 'number',
+						role: 'level.volume',
+						unit: 'l',
 						read: true,
 						write: false
 					},
 					native: {}
 				});
-				if (parseFloat(value['getPV' + String(ProfileNumber)]) > 0) {
-					this.setStateAsync(state_ID, { val: value['getPV' + String(ProfileNumber)], ack: true });
-					this.log.info('Profile ' + String(ProfileNumber) + ' Volume Level is ' + value['getPV' + String(ProfileNumber)] + ' min');
-				}
-				else {
-					this.setStateAsync(state_ID, { val: 'disabled', ack: true });
-					this.log.info('Profile ' + String(ProfileNumber) + ' Volume Level is disabled');
-				}
+				this.setStateAsync(state_ID, { val: parseFloat(value['getPV' + String(ProfileNumber)]), ack: true });
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
@@ -2050,30 +2067,31 @@ class wamo extends utils.Adapter {
 	async state_profile_PT(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const state_ID = 'Profiles.' + String(ProfileNumber) + '.PT' + String(ProfileNumber);
+				const state_ID = 'Device.Profiles.' + String(ProfileNumber) + '.PT' + String(ProfileNumber);
 				await this.setObjectNotExistsAsync(state_ID, {
 					type: 'state',
 					common: {
 						name: {
-							en: 'Profile ' + String(ProfileNumber) + ' Time Level (0 = disabled 1...1500min (25h)',
-							de: 'Profil ' + String(ProfileNumber) + ' Zeit Grenze (0 = deaktiviert 1...1500min (25h)'
+							'en': 'Profile ' + String(ProfileNumber) + ' time limit (0 = disabled 1...1500min (25h)',
+							'de': 'Profil ' + String(ProfileNumber) + ' Zeitlimit (0 = deaktiviert 1...1500min (25h)',
+							'ru': 'Ограничение времени профиля ' + String(ProfileNumber) + ' (0 = отключено 1...1500 мин (25 ч)',
+							'pt': 'Limite de tempo do perfil ' + String(ProfileNumber) + ' (0 = desabilitado 1...1500min (25h)',
+							'nl': 'Tijdslimiet profiel ' + String(ProfileNumber) + ' (0 = uitgeschakeld 1...1500min (25h)',
+							'fr': 'Limite de temps profil ' + String(ProfileNumber) + ' (0 = désactivé 1...1500min (25h)',
+							'it': 'Limite di tempo del profilo ' + String(ProfileNumber) + ' (0 = disabilitato 1...1500min (25h)',
+							'es': 'Perfil ' + String(ProfileNumber) + ' límite de tiempo (0 = deshabilitado 1...1500min (25h)',
+							'pl': 'Limit czasu profilu ' + String(ProfileNumber) + ' (0 = wyłączone 1...1500min (25h)',
+							'zh-cn': '配置文件 ' + String(ProfileNumber) + ' 时间限制（0 = 禁用 1...1500min (25h)'
 						},
-						type: 'string',
-						role: 'profile.' + String(ProfileNumber) + '.timelevel',
+						type: 'number',
+						role: 'value.time',
 						unit: 'min',
 						read: true,
 						write: false
 					},
 					native: {}
 				});
-				if (parseFloat(value['getPV' + String(ProfileNumber)]) > 0) {
-					this.setStateAsync(state_ID, { val: value['getPT' + String(ProfileNumber)], ack: true });
-					this.log.info('Profile ' + String(ProfileNumber) + ' Time Level is ' + value['getPT' + String(ProfileNumber)] + ' min');
-				}
-				else {
-					this.setStateAsync(state_ID, { val: 'disabled', ack: true });
-					this.log.info('Profile ' + String(ProfileNumber) + ' Time Level is disabled');
-				}
+				this.setStateAsync(state_ID, { val: parseFloat(value['getPV' + String(ProfileNumber)]), ack: true });
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
@@ -2091,25 +2109,26 @@ class wamo extends utils.Adapter {
 					type: 'state',
 					common: {
 						name: {
-							en: 'Profile ' + String(ProfileNumber) + ' Max Flow (0 = disabled 1...5000L/h)',
-							de: 'Profil ' + String(ProfileNumber) + ' Maximaler Durchfluss (0 = deaktiviert 1...5000L/h)'
+							'en': 'Profile ' + String(ProfileNumber) + ' maximum flow (0 = deaktiviert 1...5000l/h)',
+							'de': 'Profil ' + String(ProfileNumber) + ' maximaler Durchfluss (0 = deaktiviert 1...5000l/h)',
+							'ru': 'Максимальный расход профиля ' + String(ProfileNumber) + ' (0 = деактивировать 1...5000 л/ч)',
+							'pt': 'Fluxo máximo do perfil ' + String(ProfileNumber) + ' (0 = inativo 1...5000l/h)',
+							'nl': 'Profiel ' + String(ProfileNumber) + ' maximaal debiet (0 = deaktiviert 1...5000l/h)',
+							'fr': 'Profil ' + String(ProfileNumber) + ' débit maximum (0 = désactivation 1...5000l/h)',
+							'it': 'Portata massima profilo ' + String(ProfileNumber) + ' (0 = deaktiviert 1...5000l/h)',
+							'es': 'Perfil ' + String(ProfileNumber) + ' caudal máximo (0 = desactivado 1...5000l/h)',
+							'pl': 'Profil ' + String(ProfileNumber) + ' maksymalny przepływ (0 = deaktiviert 1...5000l/h)',
+							'zh-cn': '轮廓 ' + String(ProfileNumber) + ' 最大流量 (0 = 失职 1...5000l/h)'
 						},
-						type: 'string',
-						role: 'profile.' + String(ProfileNumber) + '.maxflow',
-						unit: 'L/h',
+						type: 'number',
+						role: 'value.max',
+						unit: 'l/h',
 						read: true,
 						write: false
 					},
 					native: {}
 				});
-				if (parseFloat(value['getPV' + String(ProfileNumber)]) > 0) {
-					this.setStateAsync(state_ID, { val: value['getPF' + String(ProfileNumber)], ack: true });
-					this.log.info('Profile ' + String(ProfileNumber) + ' Max Flow is ' + value['getPF' + String(ProfileNumber)] + ' L/h');
-				}
-				else {
-					this.setStateAsync(state_ID, { val: 'disabled', ack: true });
-					this.log.info('Profile ' + String(ProfileNumber) + ' Max Flow is disabled');
-				}
+				this.setStateAsync(state_ID, { val: parseFloat(value['getPV' + String(ProfileNumber)]), ack: true });
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
@@ -2122,16 +2141,24 @@ class wamo extends utils.Adapter {
 	async state_profile_PM(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const state_ID = 'Profiles.' + String(ProfileNumber) + '.PM' + String(ProfileNumber);
+				const state_ID = 'Device.Profiles.' + String(ProfileNumber) + '.PM' + String(ProfileNumber);
 				await this.setObjectNotExistsAsync(state_ID, {
 					type: 'state',
 					common: {
 						name: {
-							en: 'Profile ' + String(ProfileNumber) + ' Microleak Detektion',
-							de: 'Profil ' + String(ProfileNumber) + ' Microleckageüberwachung'
+							'en': 'Profile ' + String(ProfileNumber) + ' microleak detektion',
+							'de': 'Profil ' + String(ProfileNumber) + ' Mikroleckerkennung',
+							'ru': 'Профиль ' + String(ProfileNumber) + ' обнаружение микроутечек',
+							'pt': 'Detecção de microvazamento de perfil ' + String(ProfileNumber) + '',
+							'nl': 'Profiel ' + String(ProfileNumber) + ' microlekdetectie',
+							'fr': 'Détection de microfuite profil ' + String(ProfileNumber) + '',
+							'it': 'Rilevamento microperdite del profilo ' + String(ProfileNumber) + '',
+							'es': 'Perfil ' + String(ProfileNumber) + ' detección de microfugas',
+							'pl': 'Profil ' + String(ProfileNumber) + ' wykrywanie mikroprzecieków',
+							'zh-cn': '轮廓 ' + String(ProfileNumber) + ' 微泄漏检测'
 						},
 						type: 'string',
-						role: 'profile.' + String(ProfileNumber) + '.microleakagedetection',
+						role: 'info.status',
 						read: true,
 						write: false
 					},
@@ -2157,7 +2184,7 @@ class wamo extends utils.Adapter {
 	async state_profile_PR(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const state_ID = 'Profiles.' + String(ProfileNumber) + '.PR' + String(ProfileNumber);
+				const state_ID = 'Device.Profiles.' + String(ProfileNumber) + '.PR' + String(ProfileNumber);
 				await this.setObjectNotExistsAsync(state_ID, {
 					type: 'state',
 					common: {
@@ -2166,7 +2193,7 @@ class wamo extends utils.Adapter {
 							de: 'Profil ' + String(ProfileNumber) + ' Zeit bis zur Rückkehr zum Standardprofil (1...720h (30 Tage))'
 						},
 						type: 'string',
-						role: 'profile.' + String(ProfileNumber) + '.returntime',
+						role: 'value.time',
 						unit: 'h',
 						read: true,
 						write: false
@@ -2187,16 +2214,24 @@ class wamo extends utils.Adapter {
 	async state_profile_PB(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const state_ID = 'Profiles.' + String(ProfileNumber) + '.PB' + String(ProfileNumber);
+				const state_ID = 'Device.Profiles.' + String(ProfileNumber) + '.PB' + String(ProfileNumber);
 				await this.setObjectNotExistsAsync(state_ID, {
 					type: 'state',
 					common: {
 						name: {
-							en: 'Profile ' + String(ProfileNumber) + ' Buzzer',
-							de: 'Profil ' + String(ProfileNumber) + ' Warnton'
+							'en': 'Profile ' + String(ProfileNumber) + ' Buzzer',
+							'de': 'Profil ' + String(ProfileNumber) + ' Summer',
+							'ru': 'Профиль ' + String(ProfileNumber) + ' Зуммер',
+							'pt': 'Campainha do Perfil ' + String(ProfileNumber),
+							'nl': 'Profiel ' + String(ProfileNumber) + ' zoemer',
+							'fr': 'Profil ' + String(ProfileNumber) + ' Buzzer',
+							'it': 'Cicalino di profilo ' + String(ProfileNumber),
+							'es': 'Perfil ' + String(ProfileNumber) + ' Zumbador',
+							'pl': 'Profil ' + String(ProfileNumber) + ' Brzęczyk',
+							'zh-cn': '配置文件 ' + String(ProfileNumber) + ' 蜂鸣器'
 						},
 						type: 'string',
-						role: 'profile.' + String(ProfileNumber) + '.buzzeron',
+						role: 'info.status',
 						read: true,
 						write: false
 					},
@@ -2222,16 +2257,24 @@ class wamo extends utils.Adapter {
 	async state_profile_PW(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const state_ID = 'Profiles.' + String(ProfileNumber) + '.PW' + String(ProfileNumber);
+				const state_ID = 'Device.Profiles.' + String(ProfileNumber) + '.PW' + String(ProfileNumber);
 				await this.setObjectNotExistsAsync(state_ID, {
 					type: 'state',
 					common: {
-						name: {
-							en: 'Profile ' + String(ProfileNumber) + ' Leakage Warning',
-							de: 'Profil ' + String(ProfileNumber) + ' Leckage Warnung'
+						name:{
+							'en': 'Profile ' + String(ProfileNumber) + ' leakage warning',
+							'de': 'Profil ' + String(ProfileNumber) + ' Leckagewarnung',
+							'ru': 'Предупреждение об утечке профиля ' + String(ProfileNumber),
+							'pt': 'Aviso de vazamento do perfil ' + String(ProfileNumber),
+							'nl': 'Lekkagewaarschuwing profiel ' + String(ProfileNumber),
+							'fr': 'Alerte fuite profil ' + String(ProfileNumber),
+							'it': 'Avviso di perdita del profilo ' + String(ProfileNumber),
+							'es': 'Advertencia de fuga del perfil ' + String(ProfileNumber),
+							'pl': 'Ostrzeżenie o wycieku profilu ' + String(ProfileNumber),
+							'zh-cn': 'Profile ' + String(ProfileNumber) + ' 泄漏警告'
 						},
 						type: 'string',
-						role: 'profile.' + String(ProfileNumber) + '.leakagewarning',
+						role: 'info.status',
 						read: true,
 						write: false
 					},
