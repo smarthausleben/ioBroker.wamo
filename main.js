@@ -979,7 +979,7 @@ class wamo extends utils.Adapter {
 		this.log.info('config Device Port: ' + this.config.device_port);
 
 		try {
-			await this.initStatesAndChanels();
+			await this.initDevicesAndChanels();
 		} catch (err) {
 			this.log.error('Error from initStatesAndChanels : ' + err);
 		}
