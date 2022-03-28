@@ -2017,7 +2017,7 @@ class wamo extends utils.Adapter {
 					native: {}
 				});
 				this.setStateAsync(state_ID, { val: value['getPN' + String(ProfileNumber)], ack: true });
-				this.log.info('Device.Profile ' + String(ProfileNumber) + ' Name is ' + value['getPN' + String(ProfileNumber)]);
+				this.log.info('Profile ' + String(ProfileNumber) + ' Name is ' + value['getPN' + String(ProfileNumber)]);
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
@@ -2084,14 +2084,14 @@ class wamo extends utils.Adapter {
 							'zh-cn': '配置文件 ' + String(ProfileNumber) + ' 时间限制（0 = 禁用 1...1500min (25h)'
 						},
 						type: 'number',
-						role: 'value.time',
+						role: 'value.info',
 						unit: 'min',
 						read: true,
 						write: false
 					},
 					native: {}
 				});
-				this.setStateAsync(state_ID, { val: parseFloat(value['getPV' + String(ProfileNumber)]), ack: true });
+				this.setStateAsync(state_ID, { val: parseFloat(value['getPT' + String(ProfileNumber)]), ack: true });
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
@@ -2128,7 +2128,7 @@ class wamo extends utils.Adapter {
 					},
 					native: {}
 				});
-				this.setStateAsync(state_ID, { val: parseFloat(value['getPV' + String(ProfileNumber)]), ack: true });
+				this.setStateAsync(state_ID, { val: parseFloat(value['getPF' + String(ProfileNumber)]), ack: true });
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
@@ -2193,7 +2193,7 @@ class wamo extends utils.Adapter {
 							de: 'Profil ' + String(ProfileNumber) + ' Zeit bis zur Rückkehr zum Standardprofil (1...720h (30 Tage))'
 						},
 						type: 'string',
-						role: 'value.time',
+						role: 'value.info',
 						unit: 'h',
 						read: true,
 						write: false
