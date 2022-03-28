@@ -29,7 +29,7 @@ const connectionRetryPause = 3000;
 // Object all possible device commands
 const DeviceParameters = {
 	WaterTemperature: {
-		id: 'CLC',
+		id: 'CEL',
 		objectdefinition: {
 			type: 'state',
 			common: {
@@ -46,6 +46,7 @@ const DeviceParameters = {
 					'zh-cn': '水温'
 				},
 				type: 'number',
+				unit: '°C',
 				role: 'value.temperature',
 				read: true,
 				write: false
@@ -1750,12 +1751,12 @@ class wamo extends utils.Adapter {
 						finalValue = (new Date(parseInt(value) * 1000)).toLocaleString();
 						//finalValue = (new Date(parseInt(value) * 1000)).toISOString().match(/(\d{4}\-\d{2}\-\d{2})T(\d{2}:\d{2}:\d{2})/);
 						break;
-					case 'CLC': // Water Temperature
+					case 'CEL': // Water Temperature
 						finalValue = parseFloat(value);
 						break;
 					default:
 						this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
-						finalValue = null;
+						finalValue = value;
 				}
 				resolve(finalValue);
 			} catch (err) {
