@@ -624,6 +624,325 @@ const oldDeviceParameters = {
 	},
 };
 
+const adapterDevices = {
+
+	WamoDevice: {
+		type: 'device',
+		common: {
+			name: {
+				'en': 'Device',
+				'de': 'Gerät',
+				'ru': 'Устройство',
+				'pt': 'Dispositivo',
+				'nl': 'Apparaat',
+				'fr': 'Appareil',
+				'it': 'Dispositivo',
+				'es': 'Dispositivo',
+				'pl': 'Urządzenie',
+				'zh-cn': '设备'
+			},
+		},
+		native: {}
+	}
+};
+
+const adapterChannels = {
+	WaterConumption: {
+		path: 'Device.Water-Consumption',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Water consumption',
+					'de': 'Wasserverbrauch',
+					'ru': 'Потребление воды',
+					'pt': 'Consumo de água',
+					'nl': 'Waterverbruik',
+					'fr': "Consommation d'eau",
+					'it': "Consumo d'acqua",
+					'es': 'Consumo de agua',
+					'pl': 'Konsumpcja wody',
+					'zh-cn': '耗水量'
+				},
+			},
+			native: {}
+		}
+	},
+	WaterCondition: {
+		path: 'Device.Water-Condition',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Water Condition',
+					'de': 'Wasserzustand',
+					'ru': 'Состояние воды',
+					'pt': 'Condição da Água',
+					'nl': 'Waterconditie',
+					'fr': "État de l'eau",
+					'it': "Condizione dell'acqua",
+					'es': 'Condición del agua',
+					'pl': 'Stan wody',
+					'zh-cn': '水质'
+				},
+			},
+			native: {}
+		}
+	},
+	Alarm: {
+		path: 'Device.Alarm',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Alarm',
+					'de': 'Alarm',
+					'ru': 'Тревога',
+					'pt': 'Alarme',
+					'nl': 'Alarm',
+					'fr': 'Alarme',
+					'it': 'Allarme',
+					'es': 'Alarma',
+					'pl': 'Alarm',
+					'zh-cn': '警报'
+				},
+			},
+			native: {}
+		}
+	},
+	DeviceConditions: {
+		path: 'Device.Device-Conditions',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Device conditions',
+					'de': 'Gerätebedingungen',
+					'ru': 'Условия устройства',
+					'pt': 'Condições do dispositivo',
+					'nl': 'Apparaatvoorwaarden',
+					'fr': "État de l'appareil",
+					'it': 'Condizioni del dispositivo',
+					'es': 'Condiciones del dispositivo',
+					'pl': 'Warunki urządzenia',
+					'zh-cn': '设备条件'
+				},
+			},
+			native: {}
+		}
+	},
+	DevicePofiles: {
+		path: 'Device.Profiles',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Device profiles',
+					'de': 'Geräteprofile',
+					'ru': 'Профили устройств',
+					'pt': 'Perfis de dispositivo',
+					'nl': 'Apparaatprofielen',
+					'fr': "Profils d'appareils",
+					'it': 'Profili dispositivo',
+					'es': 'Perfiles de dispositivos',
+					'pl': 'Profile urządzeń',
+					'zh-cn': '设备配置文件'
+				},
+			},
+			native: {}
+		}
+	},
+	DevicePofile1: {
+		path: 'Device.Profiles.1',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Device profile 1',
+					'de': 'Geräteprofil 1',
+					'ru': 'Профиль устройства 1',
+					'pt': 'Perfil do dispositivo 1',
+					'nl': 'Apparaatprofiel 1',
+					'fr': "Profil d'appareil 1",
+					'it': 'Profilo dispositivo 1',
+					'es': 'Perfil de dispositivo 1',
+					'pl': 'Profil urządzenia 1',
+					'zh-cn': '设备配置文件 1'
+				},
+			},
+			native: {}
+		}
+	},
+	DevicePofile2: {
+		path: 'Device.Profiles.2',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Device profile 2',
+					'de': 'Geräteprofil 2',
+					'ru': 'Профиль устройства 2',
+					'pt': 'Perfil do dispositivo 2',
+					'nl': 'Apparaatprofiel 2',
+					'fr': "Profil d'appareil 2",
+					'it': 'Profilo dispositivo 2',
+					'es': 'Perfil de dispositivo 2',
+					'pl': 'Profil urządzenia 2',
+					'zh-cn': '设备配置文件 2'
+				},
+			},
+			native: {}
+		}
+	},
+	DevicePofile3: {
+		path: 'Device.Profiles.3',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Device profile 3',
+					'de': 'Geräteprofil 3',
+					'ru': 'Профиль устройства 3',
+					'pt': 'Perfil do dispositivo 3',
+					'nl': 'Apparaatprofiel 3',
+					'fr': "Profil d'appareil 3",
+					'it': 'Profilo del dispositivo 3',
+					'es': 'Perfil de dispositivo 3',
+					'pl': 'Profil urządzenia 3',
+					'zh-cn': '设备配置文件 3'
+				},
+			},
+			native: {}
+		}
+	},
+	DevicePofile4: {
+		path: 'Device.Profiles.4',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Device profile 4',
+					'de': 'Geräteprofil 4',
+					'ru': 'Профиль устройства 4',
+					'pt': 'Perfil do dispositivo 4',
+					'nl': 'Apparaatprofiel 4',
+					'fr': "Profil d'appareil 4",
+					'it': 'Profilo del dispositivo 4',
+					'es': 'Perfil de dispositivo 4',
+					'pl': 'Profil urządzenia 4',
+					'zh-cn': '设备配置文件 4'
+				},
+			},
+			native: {}
+		}
+	},
+	DevicePofile5: {
+		path: 'Device.Profiles.5',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Device profile 5',
+					'de': 'Geräteprofil 5',
+					'ru': 'Профиль устройства 5',
+					'pt': 'Perfil do dispositivo 5',
+					'nl': 'Apparaatprofiel 5',
+					'fr': "Profil d'appareil 5",
+					'it': 'Profilo del dispositivo 5',
+					'es': 'Perfil de dispositivo 5',
+					'pl': 'Profil urządzenia 5',
+					'zh-cn': '设备配置文件 5'
+				},
+			},
+			native: {}
+		}
+	},
+	DevicePofile6: {
+		path: 'Device.Profiles.6',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Device profile 6',
+					'de': 'Geräteprofil 6',
+					'ru': 'Профиль устройства 6',
+					'pt': 'Perfil do dispositivo 6',
+					'nl': 'Apparaatprofiel 6',
+					'fr': "Profil d'appareil 6",
+					'it': 'Profilo del dispositivo 6',
+					'es': 'Perfil de dispositivo 6',
+					'pl': 'Profil urządzenia 6',
+					'zh-cn': '设备配置文件 6'
+				},
+			},
+			native: {}
+		}
+	},
+	DevicePofile7: {
+		path: 'Device.Profiles.7',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Device profile 7',
+					'de': 'Geräteprofil 7',
+					'ru': 'Профиль устройства 7',
+					'pt': 'Perfil do dispositivo 7',
+					'nl': 'Apparaatprofiel 7',
+					'fr': "Profil d'appareil 7",
+					'it': 'Profilo del dispositivo 7',
+					'es': 'Perfil de dispositivo 7',
+					'pl': 'Profil urządzenia 7',
+					'zh-cn': '设备配置文件 7'
+				},
+			},
+			native: {}
+		}
+	},
+	DevicePofile8: {
+		path: 'Device.Profiles.8',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Device profile 8',
+					'de': 'Geräteprofil 8',
+					'ru': 'Профиль устройства 8',
+					'pt': 'Perfil do dispositivo 8',
+					'nl': 'Apparaatprofiel 8',
+					'fr': "Profil d'appareil 8",
+					'it': 'Profilo del dispositivo 8',
+					'es': 'Perfil de dispositivo 8',
+					'pl': 'Profil urządzenia 8',
+					'zh-cn': '设备配置文件 8'
+				},
+			},
+			native: {}
+		}
+	},
+	DeviceSettings: {
+		path: 'Device.Settings',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Device settings',
+					'de': 'Geräteeinstellungen',
+					'ru': 'Настройки устройства',
+					'pt': 'Configurações do dispositivo',
+					'nl': 'Apparaat instellingen',
+					'fr': "Réglages de l'appareil",
+					'it': 'Impostazioni del dispositivo',
+					'es': 'Configuración de dispositivo',
+					'pl': 'Ustawienia urządzenia',
+					'zh-cn': '设备设置'
+				},
+			},
+			native: {}
+		}
+	},
+};
+
 
 const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
 const shortPeriod = [];
@@ -681,6 +1000,11 @@ class wamo extends utils.Adapter {
 		this.log.info('config Device IP: ' + this.config.device_ip);
 		this.log.info('config Device Port: ' + this.config.device_port);
 
+		try{
+			await this.initStatesAndChanels();
+		}catch(err){
+			this.log.error('Error from initStatesAndChanels : ' + err);
+		}
 		let connTrys = 0;
 
 		//=================================================================================================
@@ -1076,6 +1400,22 @@ class wamo extends utils.Adapter {
 			}
 		});
 
+	}
+
+	async initStatesAndChanels() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				for(const key in adapterChannels){
+					this.log.info('Key Name = ' + String(key));
+					this.log.info('Path =' + String (adapterChannels[key].path));
+					this.log.info('Chanel Srtuktur =' + String (adapterChannels[key].channel));
+				}
+
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
 	}
 
 	//===================================================
