@@ -168,7 +168,7 @@ const DeviceParameters = {
 					'zh-cn': '系统时间'
 				},
 				type: 'string',
-				role: 'info.code',
+				role: 'date',
 				read: true,
 				write: false
 			},
@@ -1011,7 +1011,6 @@ class wamo extends utils.Adapter {
 				}
 			}
 		}
-
 		if (!device_responsive) {
 			this.log.error('device NOT connected ... exit');
 			// we throw an exception causing Adaper to restart
@@ -1464,33 +1463,31 @@ class wamo extends utils.Adapter {
 	async initDeviceProfiles(DeviceIP, DevicePort,) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				if (false) {
 
-					// alle 8 möglichen Profile durchlaufen
-					for (let ProfileNumber = 1; ProfileNumber < 9; ProfileNumber++) {
+				// alle 8 möglichen Profile durchlaufen
+				for (let ProfileNumber = 1; ProfileNumber < 9; ProfileNumber++) {
 
-						this.log.debug('[async initDeviceProfiles(DeviceIP, DevicePort)] Profil ' + ProfileNumber);
+					this.log.debug('[async initDeviceProfiles(DeviceIP, DevicePort)] Profil ' + ProfileNumber);
 
-						const listOfParameter = [
-							'Profiles.' + String(ProfileNumber) + '.PA' + String(ProfileNumber),
-							'Profiles.' + String(ProfileNumber) + '.PN' + String(ProfileNumber),
-							'Profiles.' + String(ProfileNumber) + '.PV' + String(ProfileNumber),
-							'Profiles.' + String(ProfileNumber) + '.PT' + String(ProfileNumber),
-							'Profiles.' + String(ProfileNumber) + '.PF' + String(ProfileNumber),
-							'Profiles.' + String(ProfileNumber) + '.PM' + String(ProfileNumber),
-							'Profiles.' + String(ProfileNumber) + '.PR' + String(ProfileNumber),
-							'Profiles.' + String(ProfileNumber) + '.PB' + String(ProfileNumber),
-							'Profiles.' + String(ProfileNumber) + '.PW' + String(ProfileNumber)];
+					const listOfParameter = [
+						'Profiles.' + String(ProfileNumber) + '.PA' + String(ProfileNumber),
+						'Profiles.' + String(ProfileNumber) + '.PN' + String(ProfileNumber),
+						'Profiles.' + String(ProfileNumber) + '.PV' + String(ProfileNumber),
+						'Profiles.' + String(ProfileNumber) + '.PT' + String(ProfileNumber),
+						'Profiles.' + String(ProfileNumber) + '.PF' + String(ProfileNumber),
+						'Profiles.' + String(ProfileNumber) + '.PM' + String(ProfileNumber),
+						'Profiles.' + String(ProfileNumber) + '.PR' + String(ProfileNumber),
+						'Profiles.' + String(ProfileNumber) + '.PB' + String(ProfileNumber),
+						'Profiles.' + String(ProfileNumber) + '.PW' + String(ProfileNumber)];
 
-						this.log.debug(`[initDeviceProfiles()] Profil ` + ProfileNumber);
-						for (const stateID of listOfParameter) {
-							const parameterIDs = stateID.split('.');
-							this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
-							const result = await this.get_DevieProfileParameter(ProfileNumber, parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
-							this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
-							await this.UpdateProfileState(ProfileNumber, stateID, result);
-							this.log.debug('Profil ' + ProfileNumber + ' Parameter ' + parameterIDs[parameterIDs.length - 1]);
-						}
+					this.log.debug(`[initDeviceProfiles()] Profil ` + ProfileNumber);
+					for (const stateID of listOfParameter) {
+						const parameterIDs = stateID.split('.');
+						this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
+						const result = await this.get_DevieProfileParameter(ProfileNumber, parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
+						this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
+						await this.UpdateProfileState(ProfileNumber, stateID, result);
+						this.log.debug('Profil ' + ProfileNumber + ' Parameter ' + parameterIDs[parameterIDs.length - 1]);
 					}
 				}
 				resolve(true);
@@ -1713,8 +1710,7 @@ class wamo extends utils.Adapter {
 						this.setStateAsync(state_ID, { val: String(finalValue), ack: true });
 				}
 
-				if ('unit' in stateID.objectdefinition.common && (stateID.objectdefinition.common.unit != null || stateID.objectdefinition.common.unit != ''))
-				{
+				if ('unit' in stateID.objectdefinition.common && (stateID.objectdefinition.common.unit != null || stateID.objectdefinition.common.unit != '')) {
 					this.log.info(String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue) + ' ' + String(stateID.objectdefinition.common.unit));
 					//this.log.info(String(cur_StatePath) + ' ' + String(stateID.common.name) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
 				}
