@@ -28,6 +28,37 @@ const connectionRetryPause = 3000;
 
 // Object all possible device commands
 const DeviceParameters = {
+	WaterConductivity: {
+		id: 'CND',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Water conductivity',
+					'de': 'Wasserleitfähigkeit',
+					'ru': 'Проводимость воды',
+					'pt': 'Condutividade da água',
+					'nl': 'Water geleidbaarheid',
+					'fr': "Conductivité de l'eau",
+					'it': "Conducibilità dell'acqua",
+					'es': 'Conductividad del agua',
+					'pl': 'Przewodność wody',
+					'zh-cn': '水电导率'
+				},
+				type: 'number',
+				unit: 'µS/cm',
+				role: 'value.conductivity',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: 'Device.Water-Condition',
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
 	WaterTemperature: {
 		id: 'CEL',
 		objectdefinition: {
@@ -53,7 +84,7 @@ const DeviceParameters = {
 			},
 			native: {}
 		},
-		statePath: 'Water.Condition',
+		statePath: 'Device.Water-Condition',
 		levelRead: 'USER',
 		levelWrite: null,
 		readCommand: 'get',
@@ -913,7 +944,7 @@ const adapterChannels = {
 
 
 const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
-const shortPeriod = [DeviceParameters.WaterTemperature];
+const shortPeriod = [DeviceParameters.WaterTemperature, DeviceParameters.WaterConductivity];
 const longPeriode = [DeviceParameters.CurrentValveStatus, DeviceParameters.SystemTime];
 
 //============================================================================
@@ -1709,9 +1740,15 @@ class wamo extends utils.Adapter {
 						this.setStateAsync(state_ID, { val: String(finalValue), ack: true });
 				}
 
-				this.log.info(String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
-				//this.log.info(String(cur_StatePath) + ' ' + String(stateID.common.name) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
-
+				if ('unit' in stateID.objectdefinition && (stateID.objectdefinition.unit != null || stateID.objectdefinition.unit != ''))
+				{
+					this.log.info(String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue) + ' ' + String(stateID.objectdefinition.unit));
+					//this.log.info(String(cur_StatePath) + ' ' + String(stateID.common.name) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
+				}
+				else {
+					this.log.info(String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
+					//this.log.info(String(cur_StatePath) + ' ' + String(stateID.common.name) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
+				}
 				resolve(true);
 			} catch (err) {
 				this.log.error('[async updateState(stateID, value)] Error: ' + String(err));
@@ -1751,7 +1788,10 @@ class wamo extends utils.Adapter {
 						finalValue = (new Date(parseInt(value) * 1000)).toLocaleString();
 						//finalValue = (new Date(parseInt(value) * 1000)).toISOString().match(/(\d{4}\-\d{2}\-\d{2})T(\d{2}:\d{2}:\d{2})/);
 						break;
-					case 'CEL': // Water Temperature
+					case 'CEL': // Water temperature
+						finalValue = parseFloat(value) / 10;
+						break;
+					case 'CND': // Water conductivity
 						finalValue = parseFloat(value);
 						break;
 					default:
