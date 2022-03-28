@@ -138,13 +138,13 @@ const DeviceParameters = {
 					'zh-cn': '持续警报'
 				},
 				type: 'string',
-				role: 'info.code',
+				role: 'indicator.alarm',
 				read: true,
 				write: false
 			},
 			native: {}
 		},
-		statePath: 'Device.Alarm',
+		statePath: 'Device',
 		levelRead: 'USER',
 		levelWrite: null,
 		readCommand: 'get',
@@ -919,27 +919,6 @@ const adapterChannels = {
 			native: {}
 		}
 	},
-	Alarm: {
-		path: 'Device.Alarm',
-		channel: {
-			type: 'channel',
-			common: {
-				name: {
-					'en': 'Alarm',
-					'de': 'Alarm',
-					'ru': 'Тревога',
-					'pt': 'Alarme',
-					'nl': 'Alarm',
-					'fr': 'Alarme',
-					'it': 'Allarme',
-					'es': 'Alarma',
-					'pl': 'Alarm',
-					'zh-cn': '警报'
-				},
-			},
-			native: {}
-		}
-	},
 };
 
 
@@ -1295,16 +1274,10 @@ class wamo extends utils.Adapter {
 	async alarm_TimerTick() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				if (!interfaceBussy) {
-					this.log.debug('Alarm Timer tick');
-					interfaceBussy = true;	// SET flag that device interface is bussy
-					await this.get_AlarmTimerValues(this.config.device_ip, this.config.device_port);
-					interfaceBussy = false;	// CLEAR flag that device interface is bussy
-				}
-				else {
-					this.log.warn('[async alarm_TimerTick()] Device interface is bussy!');
-				}
-				resolve('Ok');
+				this.log.debug('Alarm Timer tick');
+				// get alarmPeriode data
+				await this.getData(alarmPeriod);
+				resolve(true);
 			} catch (err) {
 				interfaceBussy = false;	// CLEAR flag that device interface is bussy
 				reject(err);
@@ -1740,9 +1713,9 @@ class wamo extends utils.Adapter {
 						this.setStateAsync(state_ID, { val: String(finalValue), ack: true });
 				}
 
-				if ('unit' in stateID.objectdefinition && (stateID.objectdefinition.unit != null || stateID.objectdefinition.unit != ''))
+				if ('unit' in stateID.objectdefinition.common && (stateID.objectdefinition.common.unit != null || stateID.objectdefinition.common.unit != ''))
 				{
-					this.log.info(String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue) + ' ' + String(stateID.objectdefinition.unit));
+					this.log.info(String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue) + ' ' + String(stateID.objectdefinition.common.unit));
 					//this.log.info(String(cur_StatePath) + ' ' + String(stateID.common.name) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
 				}
 				else {
@@ -1762,6 +1735,60 @@ class wamo extends utils.Adapter {
 			try {
 				let finalValue;
 				switch (String(valueKey)) {
+					case 'ALA':
+						switch (String(value)) {
+							case 'FF':
+								finalValue = 'NO ALARM';
+								break;
+							case 'A1':
+								finalValue = 'ALARM END SWITCH';
+								break;
+							case 'A2':
+								finalValue = 'NO NETWORK';
+								break;
+							case 'A3':
+								finalValue = 'ALARM VOLUME LEAKAGE';
+								break;
+							case 'A4':
+								finalValue = 'ALARM TIME LEAKAGE';
+								break;
+							case 'A5':
+								finalValue = 'ALARM MAX FLOW LEAKAGE';
+								break;
+							case 'A6':
+								finalValue = 'ALARM MICRO LEAKAGE';
+								break;
+							case 'A7':
+								finalValue = 'ALARM EXT. SENSOR LEAKAGE';
+								break;
+							case 'A8':
+								finalValue = 'ALARM TURBINE BLOCKED';
+								break;
+							case 'A9':
+								finalValue = 'ALARM PRESSURE SENSOR ERROR';
+								break;
+							case 'AA':
+								finalValue = 'ALARM TEMPERATURE SENSOR ERROR';
+								break;
+							case 'AB':
+								finalValue = 'ALARM CONDUCTIVITY SENSOR ERROR';
+								break;
+							case 'AC':
+								finalValue = 'ALARM TO HIGH CONDUCTIVITY';
+								break;
+							case 'AD':
+								finalValue = 'LOW BATTERY';
+								break;
+							case 'AE':
+								finalValue = 'WARNING VOLUME LEAKAGE';
+								break;
+							case 'AF':
+								finalValue = 'ALARM NO POWER SUPPLY';
+								break;
+							default:
+								finalValue = 'undefined';
+						}
+						break;
 					case 'VLV':	// Current Valve Status
 						switch (String(value)) {
 							case '10':
