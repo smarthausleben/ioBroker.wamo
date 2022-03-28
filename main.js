@@ -112,7 +112,7 @@ const DeviceParameters = {
 			},
 			native: {}
 		},
-		statePath: 'Testing',
+		statePath: 'Device.Settings',
 		levelRead: 'USER',
 		levelWrite: 'SERVICE',
 		readCommand: 'get',
@@ -1334,7 +1334,6 @@ class wamo extends utils.Adapter {
 		});
 	}
 	//===================================================
-
 	// reading ALA (Alarm) status from device to test if the device is present and responding
 	async deviceCommcheck(DeviceIP, DevicePort) {
 		return new Promise(async (resolve, reject) => {
@@ -1349,6 +1348,8 @@ class wamo extends utils.Adapter {
 
 	}
 
+	//===================================================
+	// Creating device object and all channel objects 
 	async initDevicesAndChanels() {
 		return new Promise(async (resolve, reject) => {
 			try {
