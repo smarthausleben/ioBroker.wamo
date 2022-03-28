@@ -624,28 +624,6 @@ const oldDeviceParameters = {
 	},
 };
 
-const adapterDevices = {
-
-	WamoDevice: {
-		type: 'device',
-		common: {
-			name: {
-				'en': 'Device',
-				'de': 'Gerät',
-				'ru': 'Устройство',
-				'pt': 'Dispositivo',
-				'nl': 'Apparaat',
-				'fr': 'Appareil',
-				'it': 'Dispositivo',
-				'es': 'Dispositivo',
-				'pl': 'Urządzenie',
-				'zh-cn': '设备'
-			},
-		},
-		native: {}
-	}
-};
-
 const adapterChannels = {
 	WaterConumption: {
 		path: 'Device.Water-Consumption',
@@ -1000,9 +978,9 @@ class wamo extends utils.Adapter {
 		this.log.info('config Device IP: ' + this.config.device_ip);
 		this.log.info('config Device Port: ' + this.config.device_port);
 
-		try{
+		try {
 			await this.initStatesAndChanels();
-		}catch(err){
+		} catch (err) {
 			this.log.error('Error from initStatesAndChanels : ' + err);
 		}
 		let connTrys = 0;
@@ -1402,15 +1380,32 @@ class wamo extends utils.Adapter {
 
 	}
 
-	async initStatesAndChanels() {
+	async initDevicesAndChanels() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				for(const key in adapterChannels){
-					this.log.info('Key Name = ' + String(key));
-					this.log.info('Path =' + String (adapterChannels[key].path));
-					this.log.info('Chanel Srtuktur =' + String (adapterChannels[key].channel));
+				try {
+					await this.setObjectNotExistsAsync('Device', {
+						type: 'device',
+						common: {
+							name: 'Device'
+						},
+						native: {}
+					});
+					this.log.info('[async initDevicesAndChanels()] Device object created');
+				} catch (err) {
+					this.log.info('[async initDevicesAndChanels()] ERROR Device: ]' + err);
 				}
 
+				for (const key in adapterChannels) {
+					try {
+						await this.setObjectNotExistsAsync(String(adapterChannels[key].path), adapterChannels[key].channel);
+						this.log.info('Key Name = ' + String(key));
+						this.log.info('Path =' + String(adapterChannels[key].path));
+						this.log.info('Chanel Srtuktur =' + String(adapterChannels[key].channel));
+					} catch (err) {
+						this.log.info('[async initDevicesAndChanels()] ERROR Channel: ]' + err);
+					}
+				}
 				resolve(true);
 			} catch (err) {
 				reject(err);
