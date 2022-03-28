@@ -118,37 +118,6 @@ const DeviceParameters = {
 		readCommand: 'get',
 		writeCommand: 'set'
 	},
-	TestDefinition: {
-		id: 'XXX',
-		objectdefinition: {
-			type: 'state',
-			common: {
-				name: {
-					'en': 'Test definition',
-					'de': 'Testdefinition',
-					'ru': 'Определение теста',
-					'pt': 'Definição de teste',
-					'nl': 'Testdefinitie',
-					'fr': 'Définition des tests',
-					'it': 'Definizione di prova',
-					'es': 'Definición de prueba',
-					'pl': 'Definicja testu',
-					'zh-cn': '测试定义'
-				},
-				type: 'number',
-				unit: 'ttt',
-				role: 'info.code',
-				read: true,
-				write: false
-			},
-			native: {}
-		},
-		statePath: 'Testing',
-		levelRead: 'USER',
-		levelWrite: null,
-		readCommand: 'get',
-		writeCommand: null
-	},
 };
 
 const oldDeviceParameters = {
@@ -625,64 +594,22 @@ const oldDeviceParameters = {
 };
 
 const adapterChannels = {
-	WaterConumption: {
-		path: 'Device.Water-Consumption',
+	DeviceSettings: {
+		path: 'Device.Settings',
 		channel: {
 			type: 'channel',
 			common: {
 				name: {
-					'en': 'Water consumption',
-					'de': 'Wasserverbrauch',
-					'ru': 'Потребление воды',
-					'pt': 'Consumo de água',
-					'nl': 'Waterverbruik',
-					'fr': "Consommation d'eau",
-					'it': "Consumo d'acqua",
-					'es': 'Consumo de agua',
-					'pl': 'Konsumpcja wody',
-					'zh-cn': '耗水量'
-				},
-			},
-			native: {}
-		}
-	},
-	WaterCondition: {
-		path: 'Device.Water-Condition',
-		channel: {
-			type: 'channel',
-			common: {
-				name: {
-					'en': 'Water Condition',
-					'de': 'Wasserzustand',
-					'ru': 'Состояние воды',
-					'pt': 'Condição da Água',
-					'nl': 'Waterconditie',
-					'fr': "État de l'eau",
-					'it': "Condizione dell'acqua",
-					'es': 'Condición del agua',
-					'pl': 'Stan wody',
-					'zh-cn': '水质'
-				},
-			},
-			native: {}
-		}
-	},
-	Alarm: {
-		path: 'Device.Alarm',
-		channel: {
-			type: 'channel',
-			common: {
-				name: {
-					'en': 'Alarm',
-					'de': 'Alarm',
-					'ru': 'Тревога',
-					'pt': 'Alarme',
-					'nl': 'Alarm',
-					'fr': 'Alarme',
-					'it': 'Allarme',
-					'es': 'Alarma',
-					'pl': 'Alarm',
-					'zh-cn': '警报'
+					'en': 'Device settings',
+					'de': 'Geräteeinstellungen',
+					'ru': 'Настройки устройства',
+					'pt': 'Configurações do dispositivo',
+					'nl': 'Apparaat instellingen',
+					'fr': "Réglages de l'appareil",
+					'it': 'Impostazioni del dispositivo',
+					'es': 'Configuración de dispositivo',
+					'pl': 'Ustawienia urządzenia',
+					'zh-cn': '设备设置'
 				},
 			},
 			native: {}
@@ -898,22 +825,64 @@ const adapterChannels = {
 			native: {}
 		}
 	},
-	DeviceSettings: {
-		path: 'Device.Settings',
+	WaterCondition: {
+		path: 'Device.Water-Condition',
 		channel: {
 			type: 'channel',
 			common: {
 				name: {
-					'en': 'Device settings',
-					'de': 'Geräteeinstellungen',
-					'ru': 'Настройки устройства',
-					'pt': 'Configurações do dispositivo',
-					'nl': 'Apparaat instellingen',
-					'fr': "Réglages de l'appareil",
-					'it': 'Impostazioni del dispositivo',
-					'es': 'Configuración de dispositivo',
-					'pl': 'Ustawienia urządzenia',
-					'zh-cn': '设备设置'
+					'en': 'Water Condition',
+					'de': 'Wasserzustand',
+					'ru': 'Состояние воды',
+					'pt': 'Condição da Água',
+					'nl': 'Waterconditie',
+					'fr': "État de l'eau",
+					'it': "Condizione dell'acqua",
+					'es': 'Condición del agua',
+					'pl': 'Stan wody',
+					'zh-cn': '水质'
+				},
+			},
+			native: {}
+		}
+	},
+	WaterConumption: {
+		path: 'Device.Water-Consumption',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Water consumption',
+					'de': 'Wasserverbrauch',
+					'ru': 'Потребление воды',
+					'pt': 'Consumo de água',
+					'nl': 'Waterverbruik',
+					'fr': "Consommation d'eau",
+					'it': "Consumo d'acqua",
+					'es': 'Consumo de agua',
+					'pl': 'Konsumpcja wody',
+					'zh-cn': '耗水量'
+				},
+			},
+			native: {}
+		}
+	},
+	Alarm: {
+		path: 'Device.Alarm',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Alarm',
+					'de': 'Alarm',
+					'ru': 'Тревога',
+					'pt': 'Alarme',
+					'nl': 'Alarm',
+					'fr': 'Alarme',
+					'it': 'Allarme',
+					'es': 'Alarma',
+					'pl': 'Alarm',
+					'zh-cn': '警报'
 				},
 			},
 			native: {}
