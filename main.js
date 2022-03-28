@@ -1360,19 +1360,17 @@ class wamo extends utils.Adapter {
 						},
 						native: {}
 					});
-					this.log.info('[async initDevicesAndChanels()] Device object created');
+					this.log.debug('[async initDevicesAndChanels()] Device object created');
 				} catch (err) {
-					this.log.info('[async initDevicesAndChanels()] ERROR Device: ]' + err);
+					this.log.error('[async initDevicesAndChanels()] ERROR Device: ]' + err);
 				}
 
 				for (const key in adapterChannels) {
 					try {
 						await this.setObjectNotExistsAsync(String(adapterChannels[key].path), adapterChannels[key].channel);
-						this.log.info('Key Name = ' + String(key));
-						this.log.info('Path =' + String(adapterChannels[key].path));
-						this.log.info('Chanel Srtuktur =' + String(adapterChannels[key].channel));
+						this.log.debug('Channel ' + String(adapterChannels[key].path) + ' created');
 					} catch (err) {
-						this.log.info('[async initDevicesAndChanels()] ERROR Channel: ]' + err);
+						this.log.error('[async initDevicesAndChanels()] ERROR Channel: ]' + err);
 					}
 				}
 				resolve(true);
