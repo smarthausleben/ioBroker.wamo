@@ -2104,7 +2104,7 @@ class wamo extends utils.Adapter {
 	async state_profile_PF(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const state_ID = 'Profiles.' + String(ProfileNumber) + '.PF' + String(ProfileNumber);
+				const state_ID = 'Device.Profiles.' + String(ProfileNumber) + '.PF' + String(ProfileNumber);
 				await this.setObjectNotExistsAsync(state_ID, {
 					type: 'state',
 					common: {
