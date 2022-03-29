@@ -328,6 +328,37 @@ const adapterChannels = {
 
 // Object all possible device commands
 const DeviceParameters = {
+	WiFiDeaktivate: {
+		id: 'DWL',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'WiFi deactivate',
+					'de': 'WLAN deaktivieren',
+					'ru': 'Wi-Fi деактивировать',
+					'pt': 'Desativar Wi-Fi',
+					'nl': 'WiFi deactiveren',
+					'fr': 'Wi-Fi désactiver',
+					'it': 'Wi-Fi disattivato',
+					'es': 'WiFi desactivar',
+					'pl': 'Wyłącz Wi-Fi',
+					'zh-cn': 'WiFi 停用'
+				},
+				type: 'string',
+				unit: 's',
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceSettings.path,
+		levelRead: 'FACTORY',
+		levelWrite: 'FACTORY',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
 	APTimeout: {
 		id: 'APT',
 		objectdefinition: {
@@ -1333,7 +1364,8 @@ const initStates = [
 	DeviceParameters.NextMaintenance,
 	DeviceParameters.APHidden,
 	DeviceParameters.APDisabled,
-	DeviceParameters.APTimeout];
+	DeviceParameters.APTimeout,
+	DeviceParameters.WiFiDeaktivate];
 
 const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
 
@@ -1355,7 +1387,8 @@ const longPeriode = [
 	DeviceParameters.NextMaintenance,
 	DeviceParameters.APHidden,
 	DeviceParameters.APDisabled,
-	DeviceParameters.APTimeout];
+	DeviceParameters.APTimeout,
+	DeviceParameters.WiFiDeaktivate];
 
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
@@ -2274,7 +2307,14 @@ class wamo extends utils.Adapter {
 						if (parseInt(value) == 0) {
 							finalValue = 'AP timeout not active';
 						} else {
-							finalValue = 'AP disabled after ' + String(value) +  ' seconds after internet connection';
+							finalValue = 'AP disabled after ' + String(value) + ' seconds after internet connection';
+						}
+						break;
+					case 'DWL':	// WiFi deactivated
+						if (parseInt(value) == 0) {
+							finalValue = 'active (default)';
+						} else {
+							finalValue = 'deactivated';
 						}
 						break;
 					case 'VER':	// Firmware Version
