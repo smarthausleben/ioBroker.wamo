@@ -28,6 +28,37 @@ const connectionRetryPause = 3000;
 
 // Object all possible device commands
 const DeviceParameters = {
+	FirmwareVersion: {
+		id: 'VER',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Firmware Version',
+					'de': 'Firmware Version',
+					'ru': 'Версия прошивки',
+					'pt': 'Versão do firmware',
+					'nl': 'Firmware versie',
+					'fr': 'Version du firmware',
+					'it': 'Versione del firmware',
+					'es': 'Versión de firmware',
+					'pl': 'Wersja oprogramowania',
+					'zh-cn': '固件版本'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: 'Device.Device-Conditions',
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
 	WaterConductivity: {
 		id: 'CND',
 		objectdefinition: {
@@ -921,10 +952,10 @@ const adapterChannels = {
 	},
 };
 
-
+const initStates =[DeviceParameters.FirmwareVersion];
 const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
 const shortPeriod = [DeviceParameters.WaterTemperature, DeviceParameters.WaterConductivity];
-const longPeriode = [DeviceParameters.CurrentValveStatus, DeviceParameters.SystemTime];
+const longPeriode = [DeviceParameters.CurrentValveStatus, DeviceParameters.SystemTime, DeviceParameters.FirmwareVersion];
 
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
@@ -1817,6 +1848,9 @@ class wamo extends utils.Adapter {
 					case 'CND': // Water conductivity
 						finalValue = parseFloat(value);
 						break;
+					case 'VER':	// Firmware Version
+						finalValue = value;
+						break;
 					default:
 						this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
 						finalValue = value;
@@ -2047,7 +2081,7 @@ class wamo extends utils.Adapter {
 							'zh-cn': '配置文件 ' + String(ProfileNumber) + ' 数量限制（0 = 禁用 1...1900l）'
 						},
 						type: 'number',
-						role: 'level.volume',
+						role: 'value.info',
 						unit: 'l',
 						read: true,
 						write: false
