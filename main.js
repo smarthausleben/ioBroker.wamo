@@ -1799,13 +1799,6 @@ class wamo extends utils.Adapter {
 	async timerStarts() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				if (true) {
-					// schedule jobs for testing statistich functions
-					schedule.scheduleJob('*/1 * * * *', cron_poll_day);
-					schedule.scheduleJob('*/10 * * * *', cron_poll_week);
-					schedule.scheduleJob('*/20 * * * *', cron_poll_month);
-					schedule.scheduleJob('*/30 * * * *', cron_poll_year);
-				}
 				schedule.scheduleJob(cron_Day, cron_poll_day);
 				schedule.scheduleJob(cron_Week, cron_poll_week);
 				schedule.scheduleJob(cron_Month, cron_poll_month);
@@ -1838,6 +1831,14 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 				this.log.warn('Cron day tick');
+				const TotalDayState = await this.getStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id);
+
+				await this.setObjectNotExistsAsync(StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id, StatisticStates.TotalPastDay.objectdefinition);
+				await this.setStateAsync(StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id, { val: parseFloat(TotalDayState.val), ack: true });
+
+				await this.setObjectNotExistsAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, StatisticStates.TotalDay.objectdefinition);
+				await this.setStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, { val: 0, ack: true });
+
 				// get alarmPeriode data
 				//await this.getData(alarmPeriod);
 				resolve(true);
