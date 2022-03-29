@@ -843,7 +843,7 @@ const DeviceParameters = {
 				},
 				type: 'string',
 				unit: null,
-				role: 'date',
+				role: 'state',
 				read: true,
 				write: false
 			},
