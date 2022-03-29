@@ -328,8 +328,39 @@ const adapterChannels = {
 
 // Object all possible device commands
 const DeviceParameters = {
+	NextMaintenance: {
+		id: 'SRV',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Next maintenance',
+					'de': 'Nächste Wartung',
+					'ru': 'Следующее обслуживание',
+					'pt': 'Próxima manutenção',
+					'nl': 'Volgende onderhoud',
+					'fr': 'Prochain entretien',
+					'it': 'Prossima manutenzione',
+					'es': 'Próximo mantenimiento',
+					'pl': 'Następna konserwacja',
+					'zh-cn': '下次维护'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceInfo.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
 	WiFiSSID: {
-		id: 'WFR',
+		id: 'WFC',
 		objectdefinition: {
 			type: 'state',
 			common: {
@@ -1205,7 +1236,8 @@ const initStates = [
 	DeviceParameters.SerialNumber,
 	DeviceParameters.CodeNumber,
 	DeviceParameters.WiFiRSSI,
-	DeviceParameters.WiFiSSID];
+	DeviceParameters.WiFiSSID,
+	DeviceParameters.NextMaintenance];
 
 const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
 
@@ -1223,7 +1255,8 @@ const longPeriode = [
 	DeviceParameters.SerialNumber,
 	DeviceParameters.CodeNumber,
 	DeviceParameters.WiFiRSSI,
-	DeviceParameters.WiFiSSID];
+	DeviceParameters.WiFiSSID,
+	DeviceParameters.NextMaintenance];
 
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
@@ -2123,6 +2156,9 @@ class wamo extends utils.Adapter {
 						break;
 					case 'CND': // Water conductivity
 						finalValue = parseFloat(value);
+						break;
+					case 'SRV':	// Next Maintenance
+						finalValue = value;
 						break;
 					case 'VER':	// Firmware Version
 					case 'WIP': // IP address
