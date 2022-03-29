@@ -325,6 +325,37 @@ const adapterChannels = {
 
 // Object all possible device commands
 const DeviceParameters = {
+	DaylightSavingTime: {
+		id: 'IDS',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Daylight saving time',
+					'de': 'Sommerzeit',
+					'ru': 'Летнее время',
+					'pt': 'Horário de verão',
+					'nl': 'Zomertijd',
+					'fr': "Heure d'été",
+					'it': 'Ora legale',
+					'es': 'Horario de verano',
+					'pl': 'Czas letni',
+					'zh-cn': '夏令时'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceSettings.path,
+		levelRead: 'USER',
+		levelWrite: 'SERVICE',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
 	PowerAdapterVoltage: {
 		id: 'NET',
 		objectdefinition: {
@@ -1458,7 +1489,8 @@ const initStates = [
 	DeviceParameters.WiFiDeaktivate,
 	DeviceParameters.WiFiState,
 	DeviceParameters.BatteryVoltage,
-	DeviceParameters.PowerAdapterVoltage];
+	DeviceParameters.PowerAdapterVoltage,
+	DeviceParameters.DaylightSavingTime];
 
 const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
 
@@ -1484,7 +1516,8 @@ const longPeriode = [
 	DeviceParameters.WiFiDeaktivate,
 	DeviceParameters.WiFiState,
 	DeviceParameters.BatteryVoltage,
-	DeviceParameters.PowerAdapterVoltage];
+	DeviceParameters.PowerAdapterVoltage,
+	DeviceParameters.DaylightSavingTime];
 
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
@@ -2422,6 +2455,13 @@ class wamo extends utils.Adapter {
 							finalValue = 'Connected';
 						} else {
 							finalValue = 'undefined';
+						}
+						break;
+					case 'IDS':	// Daylight saving time
+						if (parseInt(value) == 0) {
+							finalValue = 'Disabled';
+						} else {
+							finalValue = 'Enabled';
 						}
 						break;
 					case 'VER':	// Firmware Version
