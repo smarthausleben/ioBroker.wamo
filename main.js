@@ -1612,10 +1612,11 @@ class wamo extends utils.Adapter {
 		}
 
 
-		if(this.existsState('Device.Test')){
-			this.log.warn('State existiert');
-		}else{
-			this.log.warn('State existiert nicht');
+		try{
+			await this.getStateAsync('Device.Test');
+			this.log.warn('state resolved');
+		}catch(err){
+			this.log.warn('state rejected');
 		}
 		/*
 		// ==================================================================================================================
