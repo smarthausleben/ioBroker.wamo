@@ -351,6 +351,256 @@ const adapterChannels = {
 	},
 };
 
+const StatisticStates = {
+	TotalDay: {
+		id: 'TCD',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'total current day',
+					'de': 'insgesamt aktueller Tag',
+					'ru': 'общий текущий день',
+					'pt': 'dia atual total',
+					'nl': 'totale huidige dag',
+					'fr': 'total du jour en cours',
+					'it': 'giorno corrente totale',
+					'es': 'dia actual total',
+					'pl': 'całkowity bieżący dzień',
+					'zh-cn': '当日总计'
+				},
+				type: 'number',
+				unit: 'l',
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.WaterStatistic.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	TotalWeek: {
+		id: 'TCW',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'total current week',
+					'de': 'insgesamt aktuelle Woche',
+					'ru': 'всего за текущую неделю',
+					'pt': 'semana atual total',
+					'nl': 'totale huidige week',
+					'fr': 'total semaine en cours',
+					'it': 'totale settimana corrente',
+					'es': 'total de la semana actual',
+					'pl': 'całkowity bieżący tydzień',
+					'zh-cn': '本周总计'
+				},
+				type: 'number',
+				unit: 'l',
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.WaterStatistic.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	TotalMonth: {
+		id: 'TCM',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'total current month',
+					'de': 'insgesamt aktueller Monat',
+					'ru': 'всего за текущий месяц',
+					'pt': 'total do mês atual',
+					'nl': 'totale huidige maand',
+					'fr': 'total du mois en cours',
+					'it': 'mese corrente totale',
+					'es': 'total del mes actual',
+					'pl': 'całkowity bieżący miesiąc',
+					'zh-cn': '本月总计'
+				},
+				type: 'number',
+				unit: 'l',
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.WaterStatistic.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	TotalYear: {
+		id: 'TCY',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'total current year',
+					'de': 'insgesamt laufendes Jahr',
+					'ru': 'всего за текущий год',
+					'pt': 'total do ano atual',
+					'nl': 'totaal huidig jaar',
+					'fr': "total de l'année en cours",
+					'it': 'totale anno in corso',
+					'es': 'total del año en curso',
+					'pl': 'całkowity bieżący rok',
+					'zh-cn': '本年度总计'
+				},
+				type: 'number',
+				unit: 'm3',
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.WaterStatistic.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	TotalPastDay: {
+		id: 'TPD',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'total past day',
+					'de': 'total vergangener tag',
+					'ru': 'всего за прошедший день',
+					'pt': 'total do dia anterior',
+					'nl': 'totaal afgelopen dag',
+					'fr': 'total de la journée passée',
+					'it': 'giorno passato totale',
+					'es': 'días pasados totales',
+					'pl': 'łącznie miniony dzień',
+					'zh-cn': '过去的总天数'
+				},
+				type: 'number',
+				unit: 'l',
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.WaterStatistic.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	TotalPastWeek: {
+		id: 'TPW',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'total past week',
+					'de': 'insgesamt vergangene Woche',
+					'ru': 'всего за прошлую неделю',
+					'pt': 'total da semana passada',
+					'nl': 'totaal afgelopen week',
+					'fr': 'total de la semaine dernière',
+					'it': 'totale della scorsa settimana',
+					'es': 'semana pasada total',
+					'pl': 'łącznie zeszły tydzień',
+					'zh-cn': '过去一周总计'
+				},
+				type: 'number',
+				unit: 'l',
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.WaterStatistic.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	TotalPastMonth: {
+		id: 'TPM',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'total past month',
+					'de': 'insgesamt letzten Monat',
+					'ru': 'всего за прошлый месяц',
+					'pt': 'total do mês passado',
+					'nl': 'totaal afgelopen maand',
+					'fr': 'total du mois passé',
+					'it': 'totale del mese scorso',
+					'es': 'mes pasado total',
+					'pl': 'łącznie ostatni miesiąc',
+					'zh-cn': '过去一个月总计'
+				},
+				type: 'number',
+				unit: 'l',
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.WaterStatistic.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	TotalPastYear: {
+		id: 'TPY',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'total past year',
+					'de': 'insgesamt vergangenes Jahr',
+					'ru': 'всего за прошлый год',
+					'pt': 'total do ano passado',
+					'nl': 'totaal afgelopen jaar',
+					'fr': "total de l'année écoulée",
+					'it': "totale dell'anno passato",
+					'es': 'total del año pasado',
+					'pl': 'łącznie ubiegły rok',
+					'zh-cn': '过去一年总计'
+				},
+				type: 'number',
+				unit: 'm3',
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.WaterStatistic.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+};
 // Object all possible device commands
 const DeviceParameters = {
 	CurrentVolume: {
@@ -1361,6 +1611,12 @@ class wamo extends utils.Adapter {
 			throw err;
 		}
 
+
+		if(this.existsState('Device.Test')){
+			this.log.warn('State existiert');
+		}else{
+			this.log.warn('State existiert nicht');
+		}
 		/*
 		// ==================================================================================================================
 		// =======                                 TESTING															  =======
@@ -1510,11 +1766,13 @@ class wamo extends utils.Adapter {
 	async timerStarts() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				schedule.scheduleJob('*/1 * * * *', cron_poll_day);
-				schedule.scheduleJob('*/2 * * * *', cron_poll_week);
-				schedule.scheduleJob('*/3 * * * *', cron_poll_month);
-				schedule.scheduleJob('*/4 * * * *', cron_poll_year);
-
+				if (true) {
+					// schedule jobs for testing statistich functions
+					schedule.scheduleJob('*/1 * * * *', cron_poll_day);
+					schedule.scheduleJob('*/10 * * * *', cron_poll_week);
+					schedule.scheduleJob('*/20 * * * *', cron_poll_month);
+					schedule.scheduleJob('*/30 * * * *', cron_poll_year);
+				}
 				schedule.scheduleJob(cron_Day, cron_poll_day);
 				schedule.scheduleJob(cron_Week, cron_poll_week);
 				schedule.scheduleJob(cron_Month, cron_poll_month);
