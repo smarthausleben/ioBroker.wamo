@@ -325,6 +325,37 @@ const adapterChannels = {
 
 // Object all possible device commands
 const DeviceParameters = {
+	LastTappedVolume: {
+		id: 'LTV',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'last tapped water',
+					'de': 'letztes gezapftes Wasser',
+					'ru': 'последняя вода из-под крана',
+					'pt': 'última água encanada',
+					'nl': 'laatst getapt water',
+					'fr': 'dernière eau du robinet',
+					'it': 'ultima acqua spillata',
+					'es': 'última agua del grifo',
+					'pl': 'ostatnia woda z kranu',
+					'zh-cn': '最后自来水'
+				},
+				type: 'number',
+				unit: 'l',
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.WaterConumption.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
 	DaylightSavingTime: {
 		id: 'IDS',
 		objectdefinition: {
@@ -373,7 +404,7 @@ const DeviceParameters = {
 					'pl': 'Napięcie zasilacza',
 					'zh-cn': '电源适配器电压'
 				},
-				type: 'string',
+				type: 'number',
 				unit: 'V',
 				role: 'state',
 				read: true,
@@ -404,7 +435,7 @@ const DeviceParameters = {
 					'pl': 'Napięcie baterii',
 					'zh-cn': '电池电压'
 				},
-				type: 'string',
+				type: 'number',
 				unit: 'V',
 				role: 'state',
 				read: true,
@@ -1009,470 +1040,6 @@ const DeviceParameters = {
 	},
 };
 
-const oldDeviceParameters = {
-	Shutoff: {
-		id: 'AB',
-		translate: 'Shut off',
-		statePath: 'Device.Info',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: 'USER',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	SelectedProfile: {
-		id: 'PRF',
-		translate: 'Active profile',
-		statePath: 'Settings',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: 'USER',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	NumAvailableProfiles: {
-		id: 'PRN',
-		translate: 'Number of available profiles',
-		statePath: 'Device.Info',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: null,
-		readCommand: 'get',
-		writeCommand: null
-	},
-	ProfileAvailable: {
-		id: 'PA',
-		translate: 'Available',
-		statePath: 'Profile',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: 'USER',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	ProfileName: {
-		id: 'PN',
-		translate: 'Name',
-		statePath: 'Profile',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: 'USER',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	ProfileVolumeLevel: {
-		id: 'PV',
-		translate: 'Volume level',
-		statePath: 'Profile',
-		unit: 'l',
-		levelRead: 'USER',
-		levelWrite: 'USER',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	ProfileTimeLevel: {
-		id: 'PT',
-		translate: 'Time level',
-		statePath: 'Profile',
-		unit: 'min',
-		levelRead: 'USER',
-		levelWrite: 'USER',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	ProfileMaxFlow: {
-		id: 'PF',
-		translate: 'Max flow',
-		statePath: 'Profile',
-		unit: 'l/h',
-		levelRead: 'USER',
-		levelWrite: 'USER',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	ProfileMicroLeakageDetection: {
-		id: 'PM',
-		translate: 'Micro leak detection',
-		statePath: 'Profile',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: 'USER',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	ProfileReturnTimeToStandardProfile: {
-		id: 'PR',
-		translate: 'Returne time to standard profile',
-		statePath: 'Profile',
-		unit: 'h',
-		levelRead: 'USER',
-		levelWrite: 'USER',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	ProfileBuzzerOn: {
-		id: 'PB',
-		translate: 'Buzzer on',
-		statePath: 'Profile',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: 'USER',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	ProfileLeakageWarningOn: {
-		id: 'PW',
-		translate: 'Leak warning on',
-		statePath: 'Profile',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: 'USER',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	LeakageProtectionTemoraryDisanled: {
-		id: 'TMP',
-		translate: 'Leak protection temporary disabled',
-		statePath: 'Device.Settings',
-		unit: 's',
-		levelRead: 'USER',
-		levelWrite: 'USER',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	Language: {
-		id: 'LNG',
-		translate: 'Language',
-		statePath: 'Device.Settings',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: 'USER',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	Units: {
-		id: 'UNI',
-		translate: 'Units',
-		statePath: 'Device.Settings',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: 'USER',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	MaxFlowLeakageTime: {
-		id: 'T2',
-		translate: 'Max flow leakage time',
-		statePath: 'Device.Settings',
-		unit: 'min',
-		levelRead: 'USER',
-		levelWrite: 'USER',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	FloorSensor: {
-		id: 'BSA',
-		translate: 'Floor sensor',
-		statePath: 'Device.Settings',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: 'USER',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	MicroLeakageTest: {
-		id: 'DMA',
-		translate: 'Micro leake test',
-		statePath: 'Device.Settings',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: 'USER',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	BuzzerOnAlarm: {
-		id: 'BUZ',
-		translate: 'Buzzer on alarm',
-		statePath: 'Device.Settings',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: 'USER',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	ConductivityLimit: {
-		id: 'CNL',
-		translate: 'Conductivity limit',
-		statePath: 'Device.Settings',
-		unit: 'µS/cm',
-		levelRead: 'USER',
-		levelWrite: 'USER',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	ConductivityFactor: {
-		id: 'CNF',
-		translate: 'Conductivity factor',
-		statePath: 'Device.Settings',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: 'USER',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	LeakageWarningThreshold: {
-		id: 'LWT',
-		translate: 'Leakage warning threshold',
-		statePath: 'Device.Settings',
-		unit: '%',
-		levelRead: 'USER',
-		levelWrite: 'USER',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	FirmwareVersion: {
-		id: 'VER',
-		translate: 'Firmware version',
-		statePath: 'Device.Info',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: null,
-		readCommand: 'get',
-		writeCommand: null
-	},
-	SerialNumber: {
-		id: 'SRN',
-		translate: 'Serial number',
-		statePath: 'Device.Info',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: null,
-		readCommand: 'get',
-		writeCommand: null
-	},
-	CodeNumber: {
-		id: 'CNO',
-		translate: 'Code number',
-		statePath: 'Device.Info',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: null,
-		readCommand: 'get',
-		writeCommand: null
-	},
-	MacAddress: {
-		id: 'MAC',
-		translate: 'MAC address',
-		statePath: 'Device.Info',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: null,
-		readCommand: 'get',
-		writeCommand: null
-	},
-	NextMaintenance: {
-		id: 'SRV',
-		translate: 'Next maintenance',
-		statePath: 'Device.Info',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: null,
-		readCommand: 'get',
-		writeCommand: null
-	},
-	BatteryVoltage: {
-		id: 'BAT',
-		translate: 'Battery voltage',
-		statePath: 'Device.Info',
-		unit: 'V',
-		levelRead: 'USER',
-		levelWrite: null,
-		readCommand: 'get',
-		writeCommand: null
-	},
-	DcPowerAdapterVoltage: {
-		id: 'NET',
-		translate: 'DC power adapter voltage',
-		statePath: 'Device.Info',
-		unit: 'V',
-		levelRead: 'USER',
-		levelWrite: null,
-		readCommand: 'get',
-		writeCommand: null
-	},
-	WaterPressure: {
-		id: 'BAR',
-		translate: 'Water pressure',
-		statePath: 'Conditions',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: null,
-		readCommand: 'get',
-		writeCommand: null
-	},
-	WaterConductivity: {
-		id: 'CND',
-		translate: 'Water conductivity',
-		statePath: 'Conditions',
-		unit: 'µS/cm',
-		levelRead: 'USER',
-		levelWrite: null,
-		readCommand: 'get',
-		writeCommand: null
-	},
-	WaterFlow: {
-		id: 'FLO',
-		translate: 'Water flow',
-		statePath: 'Consumption',
-		unit: 'l/h',
-		levelRead: 'USER',
-		levelWrite: null,
-		readCommand: 'get',
-		writeCommand: null
-	},
-	LastTappedVolume: {
-		id: 'LTV',
-		translate: 'Last tapped volume',
-		statePath: 'Consumption',
-		unit: 'l',
-		levelRead: 'USER',
-		levelWrite: null,
-		readCommand: 'get',
-		writeCommand: null
-	},
-	DeaktivateTemperatureSensor: {
-		id: 'TSD',
-		translate: 'Deactivate temperatur sensor',
-		statePath: 'Settings',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: 'FACTORY',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	DeaktivatePressureSensor: {
-		id: 'PSD',
-		translate: 'Deactivate pressure sensor',
-		statePath: 'Settings',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: 'FACTORY',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	DeaktivateConductivitySensor: {
-		id: 'CSD',
-		translate: 'Deactivate conductivity sensor',
-		statePath: 'Settings',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: 'FACTORY',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	WifiKey: {
-		id: 'WFK',
-		translate: 'WiFi key',
-		statePath: 'Settings',
-		unit: null,
-		levelRead: null,
-		levelWrite: 'USER',
-		readCommand: null,
-		writeCommand: 'set'
-	},
-	WifiConnectSsid: {
-		id: 'WFC',
-		translate: 'WiFi ssid',
-		statePath: 'Settings',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: 'USER',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	WifiDisconnect: {
-		id: 'WFD',
-		translate: 'WiFi disconnect',
-		statePath: 'Settings',
-		unit: null,
-		levelRead: null,
-		levelWrite: 'USER',
-		readCommand: null,
-		writeCommand: 'set'
-	},
-	WifiState: {
-		id: 'WFS',
-		translate: 'WiFi state',
-		statePath: 'Device.Info',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: null,
-		readCommand: 'get',
-		writeCommand: null
-	},
-	WifiRssi: {
-		id: 'WFR',
-		translate: 'WiFi rssi',
-		statePath: 'Device.Info',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: null,
-		readCommand: 'get',
-		writeCommand: null
-	},
-	WifiScan: {
-		id: 'WFL',
-		translate: 'WiFi scan',
-		statePath: 'Device.Info',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: null,
-		readCommand: 'get',
-		writeCommand: null
-	},
-	IpAddress: {
-		id: 'WIP',
-		translate: 'IP address',
-		statePath: 'Device.Info',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: null,
-		readCommand: 'get',
-		writeCommand: null
-	},
-	DefaultGateway: {
-		id: 'WGW',
-		translate: 'Default gateway',
-		statePath: 'Device.Info',
-		unit: null,
-		levelRead: 'USER',
-		levelWrite: null,
-		readCommand: 'get',
-		writeCommand: null
-	},
-	WifiDisableScan: {
-		id: 'WNS',
-		translate: 'WiFi disable scan',
-		statePath: 'Device.Settings',
-		unit: null,
-		levelRead: 'SERVICE',
-		levelWrite: 'SERVICE',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	WifiAPhidden: {
-		id: 'WAH',
-		translate: 'WiFi ap hidden',
-		statePath: 'Device.Settings',
-		unit: null,
-		levelRead: 'SERVICE',
-		levelWrite: 'SERVICE',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
-};
-
-
 const initStates = [
 	DeviceParameters.FirmwareVersion,
 	DeviceParameters.IPAddress,
@@ -1496,7 +1063,8 @@ const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
 
 const shortPeriod = [
 	DeviceParameters.WaterTemperature,
-	DeviceParameters.WaterConductivity];
+	DeviceParameters.WaterConductivity,
+	DeviceParameters.LastTappedVolume];
 
 const longPeriode = [
 	DeviceParameters.CurrentValveStatus,
@@ -1628,7 +1196,7 @@ class wamo extends utils.Adapter {
 		while (connTrys < connectionRetrys) {
 			try {
 				this.log.info('Getting data from device at ' + this.config.device_ip + ':' + this.config.device_port);
-				const responseInit = await this.initDevice(this.config.device_ip, this.config.device_port);
+				const responseInit = await this.initDevice();
 				this.log.debug(`[initDevice] Response:  ${responseInit}`);
 				device_responsive = true;
 				break;
@@ -2007,7 +1575,7 @@ class wamo extends utils.Adapter {
 
 	//===================================================
 	// Divice Initialisation (called on Adapter Start)
-	async initDevice(DeviceIP, DevicePort) {
+	async initDevice() {
 		return new Promise(async (resolve, reject) => {
 			try {
 				this.log.debug('Long Timer tick');
@@ -2017,48 +1585,6 @@ class wamo extends utils.Adapter {
 			} catch (err) {
 				interfaceBussy = false;	// CLEAR flag that device interface is bussy
 				reject(err);
-			}
-
-			if (false) {
-				try {
-
-					Object.keys(DeviceParameters).forEach(key => {
-						this.log.info(key + ' Pfad = ' + DeviceParameters[key].statePath);
-					});
-
-					const listOfParameter = [
-						'Device.Info.VER', 	// Firmware Version
-						'Device.Info.WIP',	// IP Address
-						'Device.Info.MAC',	// MAC Address
-						'Device.Info.WGW',	// Default Gateway
-						'Device.Info.SRN',	// Serial Number
-						'Device.Info.CNO',	// Code Number
-						'Device.Info.WFR',	// WiFi RSSI
-						'Device.Info.WFC',	// WiFi SSID
-						'Device.Info.SRV',	// Next Maintenance
-						'Device.Info.WAH',	// WiFi AP Hidden
-						'Device.Info.WAD',	// WiFi AP Disabled
-						'Device.Info.APT',	// WiFi AP Timeout
-						'Device.Info.DWL',	// WiFi Deactivated
-						'Device.Info.WFS',	// WiFi State
-						'Device.Info.BAT',	// Batterie voltage
-						'Conditions.CEL',	// Water temperatur
-						'Conditions.CND',	// Water conductivity
-						'Device.Info.IDS'];	// Daylight Saving Time
-
-					this.log.debug(`[initDevice()]`);
-					let result;
-					for (const stateID of listOfParameter) {
-						const parameterIDs = stateID.split('.');
-						this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
-						result = await this.get_DevieParameter(parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
-						this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
-						await this.UpdateState(stateID, result);
-					}
-					resolve(true);
-				} catch (err) {
-					reject(err);
-				}
 			}
 		});
 	}
@@ -2416,7 +1942,10 @@ class wamo extends utils.Adapter {
 						finalValue = parseFloat(value) / 10;
 						break;
 					case 'CND': // Water conductivity
-						finalValue = parseFloat(value);
+					case 'BAT':	// Batterie voltage
+					case 'NET':	// DC voltage (power adaptor)
+					case 'LTV':	// Last tapped Volume
+						finalValue = parseFloat(String(value).replace(',', '.'));
 						break;
 					case 'WAH':	// WiFi AP hidden
 						if (parseInt(value) == 0) {
@@ -2473,8 +2002,6 @@ class wamo extends utils.Adapter {
 					case 'WFR':	// WiFi RSSI
 					case 'WFC':	// WiFi SSID
 					case 'SRV':	// Next Maintenance
-					case 'BAT':	// Batterie voltage
-					case 'NET':	// DC voltage (power adaptor)
 						finalValue = value;
 						break;
 					default:
