@@ -328,6 +328,37 @@ const adapterChannels = {
 
 // Object all possible device commands
 const DeviceParameters = {
+	BatteryVoltage: {
+		id: 'BAT',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Battery voltage',
+					'de': 'Batteriespannung',
+					'ru': 'Напряжение батареи',
+					'pt': 'Voltagem da bateria',
+					'nl': 'Batterij voltage',
+					'fr': 'Voltage de batterie',
+					'it': 'Voltaggio batteria',
+					'es': 'Voltaje de la batería',
+					'pl': 'Napięcie baterii',
+					'zh-cn': '电池电压'
+				},
+				type: 'number',
+				unit: 'V',
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceConditions.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
 	WiFiState: {
 		id: 'WFS',
 		objectdefinition: {
@@ -353,7 +384,7 @@ const DeviceParameters = {
 			},
 			native: {}
 		},
-		statePath: adapterChannels.DeviceInfo.path,
+		statePath: adapterChannels.DeviceConditions.path,
 		levelRead: 'USER',
 		levelWrite: null,
 		readCommand: 'get',
@@ -563,7 +594,7 @@ const DeviceParameters = {
 					'zh-cn': '无线RSSI'
 				},
 				type: 'string',
-				unit: null,
+				unit: '%',
 				role: 'state',
 				read: true,
 				write: false
@@ -1397,7 +1428,8 @@ const initStates = [
 	DeviceParameters.APDisabled,
 	DeviceParameters.APTimeout,
 	DeviceParameters.WiFiDeaktivate,
-	DeviceParameters.WiFiState];
+	DeviceParameters.WiFiState,
+	DeviceParameters.BatteryVoltage];
 
 const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
 
@@ -1421,7 +1453,8 @@ const longPeriode = [
 	DeviceParameters.APDisabled,
 	DeviceParameters.APTimeout,
 	DeviceParameters.WiFiDeaktivate,
-	DeviceParameters.WiFiState];
+	DeviceParameters.WiFiState,
+	DeviceParameters.BatteryVoltage];
 
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
@@ -2360,6 +2393,9 @@ class wamo extends utils.Adapter {
 						} else {
 							finalValue = 'undefined';
 						}
+						break;
+					case 'BAT':	// Batterie voltage
+						finalValue = parseFloat(value);
 						break;
 					case 'VER':	// Firmware Version
 					case 'WIP': // IP address
