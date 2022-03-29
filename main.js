@@ -328,6 +328,37 @@ const adapterChannels = {
 
 // Object all possible device commands
 const DeviceParameters = {
+	APDisabled: {
+		id: 'WAD',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'WiFi AP disabled',
+					'de': 'WiFi-AP deaktiviert',
+					'ru': 'Точка доступа Wi-Fi отключена',
+					'pt': 'Wi-Fi AP desativado',
+					'nl': 'WiFi AP uitgeschakeld',
+					'fr': "Point d'accès Wi-Fi désactivé",
+					'it': 'Punto di accesso Wi-Fi disabilitato',
+					'es': 'WiFi AP deshabilitado',
+					'pl': 'AP Wi-Fi wyłączony',
+					'zh-cn': 'WiFi AP 已禁用'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceSettings.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
 	APHidden: {
 		id: 'WAH',
 		objectdefinition: {
@@ -353,7 +384,7 @@ const DeviceParameters = {
 			},
 			native: {}
 		},
-		statePath: adapterChannels.DeviceInfo.path,
+		statePath: adapterChannels.DeviceSettings.path,
 		levelRead: 'USER',
 		levelWrite: null,
 		readCommand: 'get',
@@ -415,7 +446,7 @@ const DeviceParameters = {
 			},
 			native: {}
 		},
-		statePath: adapterChannels.DeviceInfo.path,
+		statePath: adapterChannels.DeviceSettings.path,
 		levelRead: 'USER',
 		levelWrite: null,
 		readCommand: 'get',
@@ -1269,7 +1300,8 @@ const initStates = [
 	DeviceParameters.WiFiRSSI,
 	DeviceParameters.WiFiSSID,
 	DeviceParameters.NextMaintenance,
-	DeviceParameters.APHidden];
+	DeviceParameters.APHidden,
+	DeviceParameters.APDisabled];
 
 const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
 
@@ -1289,7 +1321,8 @@ const longPeriode = [
 	DeviceParameters.WiFiRSSI,
 	DeviceParameters.WiFiSSID,
 	DeviceParameters.NextMaintenance,
-	DeviceParameters.APHidden];
+	DeviceParameters.APHidden,
+	DeviceParameters.APDisabled];
 
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
@@ -2190,11 +2223,18 @@ class wamo extends utils.Adapter {
 					case 'CND': // Water conductivity
 						finalValue = parseFloat(value);
 						break;
-					case 'WAH':	// WiFi AP Hidden
-						if(parseInt(value) == 0){
+					case 'WAH':	// WiFi AP hidden
+						if (parseInt(value) == 0) {
 							finalValue = 'AP not hidden (visible)';
-						}else{
+						} else {
 							finalValue = 'AP hidden';
+						}
+						break;
+					case 'WAD':	// WiFi AP dissabled
+						if (parseInt(value) == 0) {
+							finalValue = 'AP not disabled';
+						} else {
+							finalValue = 'AP disabled';
 						}
 						break;
 					case 'VER':	// Firmware Version
