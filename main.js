@@ -26,8 +26,367 @@ let interfaceBussy;
 const connectionRetrys = 5;
 const connectionRetryPause = 3000;
 
+const adapterChannels = {
+	DeviceInfo: {
+		path: 'Device.Info',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Device info',
+					'de': 'Geräteinformationen',
+					'ru': 'Информация об устройстве',
+					'pt': 'Informação do dispositivo',
+					'nl': 'Apparaat info',
+					'fr': 'Info appareil',
+					'it': 'Informazioni sul dispositivo',
+					'es': 'Información del dispositivo',
+					'pl': 'Informacje o urządzeniu',
+					'zh-cn': '设备信息'
+				},
+			},
+			native: {}
+		}
+	},
+	DeviceSettings: {
+		path: 'Device.Settings',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Device settings',
+					'de': 'Geräteeinstellungen',
+					'ru': 'Настройки устройства',
+					'pt': 'Configurações do dispositivo',
+					'nl': 'Apparaat instellingen',
+					'fr': "Réglages de l'appareil",
+					'it': 'Impostazioni del dispositivo',
+					'es': 'Configuración de dispositivo',
+					'pl': 'Ustawienia urządzenia',
+					'zh-cn': '设备设置'
+				},
+			},
+			native: {}
+		}
+	},
+	DeviceConditions: {
+		path: 'Device.Device-Conditions',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Device conditions',
+					'de': 'Gerätebedingungen',
+					'ru': 'Условия устройства',
+					'pt': 'Condições do dispositivo',
+					'nl': 'Apparaatvoorwaarden',
+					'fr': "État de l'appareil",
+					'it': 'Condizioni del dispositivo',
+					'es': 'Condiciones del dispositivo',
+					'pl': 'Warunki urządzenia',
+					'zh-cn': '设备条件'
+				},
+			},
+			native: {}
+		}
+	},
+	DevicePofiles: {
+		path: 'Device.Profiles',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Device profiles',
+					'de': 'Geräteprofile',
+					'ru': 'Профили устройств',
+					'pt': 'Perfis de dispositivo',
+					'nl': 'Apparaatprofielen',
+					'fr': "Profils d'appareils",
+					'it': 'Profili dispositivo',
+					'es': 'Perfiles de dispositivos',
+					'pl': 'Profile urządzeń',
+					'zh-cn': '设备配置文件'
+				},
+			},
+			native: {}
+		}
+	},
+	DevicePofile1: {
+		path: 'Device.Profiles.1',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Device profile 1',
+					'de': 'Geräteprofil 1',
+					'ru': 'Профиль устройства 1',
+					'pt': 'Perfil do dispositivo 1',
+					'nl': 'Apparaatprofiel 1',
+					'fr': "Profil d'appareil 1",
+					'it': 'Profilo dispositivo 1',
+					'es': 'Perfil de dispositivo 1',
+					'pl': 'Profil urządzenia 1',
+					'zh-cn': '设备配置文件 1'
+				},
+			},
+			native: {}
+		}
+	},
+	DevicePofile2: {
+		path: 'Device.Profiles.2',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Device profile 2',
+					'de': 'Geräteprofil 2',
+					'ru': 'Профиль устройства 2',
+					'pt': 'Perfil do dispositivo 2',
+					'nl': 'Apparaatprofiel 2',
+					'fr': "Profil d'appareil 2",
+					'it': 'Profilo dispositivo 2',
+					'es': 'Perfil de dispositivo 2',
+					'pl': 'Profil urządzenia 2',
+					'zh-cn': '设备配置文件 2'
+				},
+			},
+			native: {}
+		}
+	},
+	DevicePofile3: {
+		path: 'Device.Profiles.3',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Device profile 3',
+					'de': 'Geräteprofil 3',
+					'ru': 'Профиль устройства 3',
+					'pt': 'Perfil do dispositivo 3',
+					'nl': 'Apparaatprofiel 3',
+					'fr': "Profil d'appareil 3",
+					'it': 'Profilo del dispositivo 3',
+					'es': 'Perfil de dispositivo 3',
+					'pl': 'Profil urządzenia 3',
+					'zh-cn': '设备配置文件 3'
+				},
+			},
+			native: {}
+		}
+	},
+	DevicePofile4: {
+		path: 'Device.Profiles.4',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Device profile 4',
+					'de': 'Geräteprofil 4',
+					'ru': 'Профиль устройства 4',
+					'pt': 'Perfil do dispositivo 4',
+					'nl': 'Apparaatprofiel 4',
+					'fr': "Profil d'appareil 4",
+					'it': 'Profilo del dispositivo 4',
+					'es': 'Perfil de dispositivo 4',
+					'pl': 'Profil urządzenia 4',
+					'zh-cn': '设备配置文件 4'
+				},
+			},
+			native: {}
+		}
+	},
+	DevicePofile5: {
+		path: 'Device.Profiles.5',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Device profile 5',
+					'de': 'Geräteprofil 5',
+					'ru': 'Профиль устройства 5',
+					'pt': 'Perfil do dispositivo 5',
+					'nl': 'Apparaatprofiel 5',
+					'fr': "Profil d'appareil 5",
+					'it': 'Profilo del dispositivo 5',
+					'es': 'Perfil de dispositivo 5',
+					'pl': 'Profil urządzenia 5',
+					'zh-cn': '设备配置文件 5'
+				},
+			},
+			native: {}
+		}
+	},
+	DevicePofile6: {
+		path: 'Device.Profiles.6',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Device profile 6',
+					'de': 'Geräteprofil 6',
+					'ru': 'Профиль устройства 6',
+					'pt': 'Perfil do dispositivo 6',
+					'nl': 'Apparaatprofiel 6',
+					'fr': "Profil d'appareil 6",
+					'it': 'Profilo del dispositivo 6',
+					'es': 'Perfil de dispositivo 6',
+					'pl': 'Profil urządzenia 6',
+					'zh-cn': '设备配置文件 6'
+				},
+			},
+			native: {}
+		}
+	},
+	DevicePofile7: {
+		path: 'Device.Profiles.7',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Device profile 7',
+					'de': 'Geräteprofil 7',
+					'ru': 'Профиль устройства 7',
+					'pt': 'Perfil do dispositivo 7',
+					'nl': 'Apparaatprofiel 7',
+					'fr': "Profil d'appareil 7",
+					'it': 'Profilo del dispositivo 7',
+					'es': 'Perfil de dispositivo 7',
+					'pl': 'Profil urządzenia 7',
+					'zh-cn': '设备配置文件 7'
+				},
+			},
+			native: {}
+		}
+	},
+	DevicePofile8: {
+		path: 'Device.Profiles.8',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Device profile 8',
+					'de': 'Geräteprofil 8',
+					'ru': 'Профиль устройства 8',
+					'pt': 'Perfil do dispositivo 8',
+					'nl': 'Apparaatprofiel 8',
+					'fr': "Profil d'appareil 8",
+					'it': 'Profilo del dispositivo 8',
+					'es': 'Perfil de dispositivo 8',
+					'pl': 'Profil urządzenia 8',
+					'zh-cn': '设备配置文件 8'
+				},
+			},
+			native: {}
+		}
+	},
+	WaterCondition: {
+		path: 'Device.Water-Conditions',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Water Condition',
+					'de': 'Wasserzustand',
+					'ru': 'Состояние воды',
+					'pt': 'Condição da Água',
+					'nl': 'Waterconditie',
+					'fr': "État de l'eau",
+					'it': "Condizione dell'acqua",
+					'es': 'Condición del agua',
+					'pl': 'Stan wody',
+					'zh-cn': '水质'
+				},
+			},
+			native: {}
+		}
+	},
+	WaterConumption: {
+		path: 'Device.Water-Consumption',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Water consumption',
+					'de': 'Wasserverbrauch',
+					'ru': 'Потребление воды',
+					'pt': 'Consumo de água',
+					'nl': 'Waterverbruik',
+					'fr': "Consommation d'eau",
+					'it': "Consumo d'acqua",
+					'es': 'Consumo de agua',
+					'pl': 'Konsumpcja wody',
+					'zh-cn': '耗水量'
+				},
+			},
+			native: {}
+		}
+	},
+};
+
 // Object all possible device commands
 const DeviceParameters = {
+	SerialNumber: {
+		id: 'SRN',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'serial number',
+					'de': 'Seriennummer',
+					'ru': 'серийный номер',
+					'pt': 'número de série',
+					'nl': 'serienummer',
+					'fr': 'numéro de série',
+					'it': 'numero di serie',
+					'es': 'número de serie',
+					'pl': 'numer seryjny',
+					'zh-cn': '序列号'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceInfo.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	DefaultGateway: {
+		id: 'WGW',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'default gateway',
+					'de': 'Standard-Gateway',
+					'ru': 'шлюз по умолчанию',
+					'pt': 'gateway padrão',
+					'nl': 'standaard gateway',
+					'fr': 'passerelle par défaut',
+					'it': 'Gateway predefinito',
+					'es': 'puerta de enlace predeterminada',
+					'pl': 'Brama domyślna',
+					'zh-cn': '默认网关'
+				},
+				type: 'string',
+				unit: null,
+				role: 'info.address',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceInfo.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
 	MACAddress: {
 		id: 'MAC',
 		objectdefinition: {
@@ -53,7 +412,7 @@ const DeviceParameters = {
 			},
 			native: {}
 		},
-		statePath: 'Device.Device-Conditions',
+		statePath: adapterChannels.DeviceInfo.path,
 		levelRead: 'USER',
 		levelWrite: null,
 		readCommand: 'get',
@@ -84,7 +443,7 @@ const DeviceParameters = {
 			},
 			native: {}
 		},
-		statePath: 'Device.Device-Conditions',
+		statePath: adapterChannels.DeviceInfo.path,
 		levelRead: 'USER',
 		levelWrite: null,
 		readCommand: 'get',
@@ -115,7 +474,7 @@ const DeviceParameters = {
 			},
 			native: {}
 		},
-		statePath: 'Device.Device-Conditions',
+		statePath: adapterChannels.DeviceInfo.path,
 		levelRead: 'USER',
 		levelWrite: null,
 		readCommand: 'get',
@@ -146,7 +505,7 @@ const DeviceParameters = {
 			},
 			native: {}
 		},
-		statePath: 'Device.Water-Condition',
+		statePath: adapterChannels.WaterCondition.path,
 		levelRead: 'USER',
 		levelWrite: null,
 		readCommand: 'get',
@@ -177,7 +536,7 @@ const DeviceParameters = {
 			},
 			native: {}
 		},
-		statePath: 'Device.Water-Condition',
+		statePath: adapterChannels.WaterCondition.path,
 		levelRead: 'USER',
 		levelWrite: null,
 		readCommand: 'get',
@@ -207,7 +566,7 @@ const DeviceParameters = {
 			},
 			native: {}
 		},
-		statePath: 'Device.Device-Conditions',
+		statePath: adapterChannels.DeviceConditions.path,
 		levelRead: 'SERVICE',
 		levelWrite: null,
 		readCommand: 'get',
@@ -267,7 +626,7 @@ const DeviceParameters = {
 			},
 			native: {}
 		},
-		statePath: 'Device.Settings',
+		statePath: adapterChannels.DeviceSettings.path,
 		levelRead: 'USER',
 		levelWrite: 'SERVICE',
 		readCommand: 'get',
@@ -738,286 +1097,13 @@ const oldDeviceParameters = {
 	},
 };
 
-const adapterChannels = {
-	DeviceSettings: {
-		path: 'Device.Settings',
-		channel: {
-			type: 'channel',
-			common: {
-				name: {
-					'en': 'Device settings',
-					'de': 'Geräteeinstellungen',
-					'ru': 'Настройки устройства',
-					'pt': 'Configurações do dispositivo',
-					'nl': 'Apparaat instellingen',
-					'fr': "Réglages de l'appareil",
-					'it': 'Impostazioni del dispositivo',
-					'es': 'Configuración de dispositivo',
-					'pl': 'Ustawienia urządzenia',
-					'zh-cn': '设备设置'
-				},
-			},
-			native: {}
-		}
-	},
-	DeviceConditions: {
-		path: 'Device.Device-Conditions',
-		channel: {
-			type: 'channel',
-			common: {
-				name: {
-					'en': 'Device conditions',
-					'de': 'Gerätebedingungen',
-					'ru': 'Условия устройства',
-					'pt': 'Condições do dispositivo',
-					'nl': 'Apparaatvoorwaarden',
-					'fr': "État de l'appareil",
-					'it': 'Condizioni del dispositivo',
-					'es': 'Condiciones del dispositivo',
-					'pl': 'Warunki urządzenia',
-					'zh-cn': '设备条件'
-				},
-			},
-			native: {}
-		}
-	},
-	DevicePofiles: {
-		path: 'Device.Profiles',
-		channel: {
-			type: 'channel',
-			common: {
-				name: {
-					'en': 'Device profiles',
-					'de': 'Geräteprofile',
-					'ru': 'Профили устройств',
-					'pt': 'Perfis de dispositivo',
-					'nl': 'Apparaatprofielen',
-					'fr': "Profils d'appareils",
-					'it': 'Profili dispositivo',
-					'es': 'Perfiles de dispositivos',
-					'pl': 'Profile urządzeń',
-					'zh-cn': '设备配置文件'
-				},
-			},
-			native: {}
-		}
-	},
-	DevicePofile1: {
-		path: 'Device.Profiles.1',
-		channel: {
-			type: 'channel',
-			common: {
-				name: {
-					'en': 'Device profile 1',
-					'de': 'Geräteprofil 1',
-					'ru': 'Профиль устройства 1',
-					'pt': 'Perfil do dispositivo 1',
-					'nl': 'Apparaatprofiel 1',
-					'fr': "Profil d'appareil 1",
-					'it': 'Profilo dispositivo 1',
-					'es': 'Perfil de dispositivo 1',
-					'pl': 'Profil urządzenia 1',
-					'zh-cn': '设备配置文件 1'
-				},
-			},
-			native: {}
-		}
-	},
-	DevicePofile2: {
-		path: 'Device.Profiles.2',
-		channel: {
-			type: 'channel',
-			common: {
-				name: {
-					'en': 'Device profile 2',
-					'de': 'Geräteprofil 2',
-					'ru': 'Профиль устройства 2',
-					'pt': 'Perfil do dispositivo 2',
-					'nl': 'Apparaatprofiel 2',
-					'fr': "Profil d'appareil 2",
-					'it': 'Profilo dispositivo 2',
-					'es': 'Perfil de dispositivo 2',
-					'pl': 'Profil urządzenia 2',
-					'zh-cn': '设备配置文件 2'
-				},
-			},
-			native: {}
-		}
-	},
-	DevicePofile3: {
-		path: 'Device.Profiles.3',
-		channel: {
-			type: 'channel',
-			common: {
-				name: {
-					'en': 'Device profile 3',
-					'de': 'Geräteprofil 3',
-					'ru': 'Профиль устройства 3',
-					'pt': 'Perfil do dispositivo 3',
-					'nl': 'Apparaatprofiel 3',
-					'fr': "Profil d'appareil 3",
-					'it': 'Profilo del dispositivo 3',
-					'es': 'Perfil de dispositivo 3',
-					'pl': 'Profil urządzenia 3',
-					'zh-cn': '设备配置文件 3'
-				},
-			},
-			native: {}
-		}
-	},
-	DevicePofile4: {
-		path: 'Device.Profiles.4',
-		channel: {
-			type: 'channel',
-			common: {
-				name: {
-					'en': 'Device profile 4',
-					'de': 'Geräteprofil 4',
-					'ru': 'Профиль устройства 4',
-					'pt': 'Perfil do dispositivo 4',
-					'nl': 'Apparaatprofiel 4',
-					'fr': "Profil d'appareil 4",
-					'it': 'Profilo del dispositivo 4',
-					'es': 'Perfil de dispositivo 4',
-					'pl': 'Profil urządzenia 4',
-					'zh-cn': '设备配置文件 4'
-				},
-			},
-			native: {}
-		}
-	},
-	DevicePofile5: {
-		path: 'Device.Profiles.5',
-		channel: {
-			type: 'channel',
-			common: {
-				name: {
-					'en': 'Device profile 5',
-					'de': 'Geräteprofil 5',
-					'ru': 'Профиль устройства 5',
-					'pt': 'Perfil do dispositivo 5',
-					'nl': 'Apparaatprofiel 5',
-					'fr': "Profil d'appareil 5",
-					'it': 'Profilo del dispositivo 5',
-					'es': 'Perfil de dispositivo 5',
-					'pl': 'Profil urządzenia 5',
-					'zh-cn': '设备配置文件 5'
-				},
-			},
-			native: {}
-		}
-	},
-	DevicePofile6: {
-		path: 'Device.Profiles.6',
-		channel: {
-			type: 'channel',
-			common: {
-				name: {
-					'en': 'Device profile 6',
-					'de': 'Geräteprofil 6',
-					'ru': 'Профиль устройства 6',
-					'pt': 'Perfil do dispositivo 6',
-					'nl': 'Apparaatprofiel 6',
-					'fr': "Profil d'appareil 6",
-					'it': 'Profilo del dispositivo 6',
-					'es': 'Perfil de dispositivo 6',
-					'pl': 'Profil urządzenia 6',
-					'zh-cn': '设备配置文件 6'
-				},
-			},
-			native: {}
-		}
-	},
-	DevicePofile7: {
-		path: 'Device.Profiles.7',
-		channel: {
-			type: 'channel',
-			common: {
-				name: {
-					'en': 'Device profile 7',
-					'de': 'Geräteprofil 7',
-					'ru': 'Профиль устройства 7',
-					'pt': 'Perfil do dispositivo 7',
-					'nl': 'Apparaatprofiel 7',
-					'fr': "Profil d'appareil 7",
-					'it': 'Profilo del dispositivo 7',
-					'es': 'Perfil de dispositivo 7',
-					'pl': 'Profil urządzenia 7',
-					'zh-cn': '设备配置文件 7'
-				},
-			},
-			native: {}
-		}
-	},
-	DevicePofile8: {
-		path: 'Device.Profiles.8',
-		channel: {
-			type: 'channel',
-			common: {
-				name: {
-					'en': 'Device profile 8',
-					'de': 'Geräteprofil 8',
-					'ru': 'Профиль устройства 8',
-					'pt': 'Perfil do dispositivo 8',
-					'nl': 'Apparaatprofiel 8',
-					'fr': "Profil d'appareil 8",
-					'it': 'Profilo del dispositivo 8',
-					'es': 'Perfil de dispositivo 8',
-					'pl': 'Profil urządzenia 8',
-					'zh-cn': '设备配置文件 8'
-				},
-			},
-			native: {}
-		}
-	},
-	WaterCondition: {
-		path: 'Device.Water-Condition',
-		channel: {
-			type: 'channel',
-			common: {
-				name: {
-					'en': 'Water Condition',
-					'de': 'Wasserzustand',
-					'ru': 'Состояние воды',
-					'pt': 'Condição da Água',
-					'nl': 'Waterconditie',
-					'fr': "État de l'eau",
-					'it': "Condizione dell'acqua",
-					'es': 'Condición del agua',
-					'pl': 'Stan wody',
-					'zh-cn': '水质'
-				},
-			},
-			native: {}
-		}
-	},
-	WaterConumption: {
-		path: 'Device.Water-Consumption',
-		channel: {
-			type: 'channel',
-			common: {
-				name: {
-					'en': 'Water consumption',
-					'de': 'Wasserverbrauch',
-					'ru': 'Потребление воды',
-					'pt': 'Consumo de água',
-					'nl': 'Waterverbruik',
-					'fr': "Consommation d'eau",
-					'it': "Consumo d'acqua",
-					'es': 'Consumo de agua',
-					'pl': 'Konsumpcja wody',
-					'zh-cn': '耗水量'
-				},
-			},
-			native: {}
-		}
-	},
-};
 
-const initStates =[
+const initStates = [
 	DeviceParameters.FirmwareVersion,
 	DeviceParameters.IPAddress,
-	DeviceParameters.MACAddress];
+	DeviceParameters.MACAddress,
+	DeviceParameters.DefaultGateway,
+	DeviceParameters.SerialNumber];
 
 const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
 
@@ -1030,7 +1116,9 @@ const longPeriode = [
 	DeviceParameters.SystemTime,
 	DeviceParameters.FirmwareVersion,
 	DeviceParameters.IPAddress,
-	DeviceParameters.MACAddress];
+	DeviceParameters.MACAddress,
+	DeviceParameters.DefaultGateway,
+	DeviceParameters.SerialNumber];
 
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
@@ -1533,7 +1621,7 @@ class wamo extends utils.Adapter {
 						'Device.Info.VER', 	// Firmware Version
 						'Device.Info.WIP',	// IP Address
 						'Device.Info.MAC',	// MAC Address
-						'Device.Info.WGW',	// Default Gatewa
+						'Device.Info.WGW',	// Default Gateway
 						'Device.Info.SRN',	// Serial Number
 						'Device.Info.CNO',	// Code Number
 						'Device.Info.WFR',	// WiFi RSSI
@@ -1926,6 +2014,8 @@ class wamo extends utils.Adapter {
 					case 'VER':	// Firmware Version
 					case 'WIP': // IP address
 					case 'MAC':	// MAC address
+					case 'WGW':	// Default gateway
+					case 'SRN':	// Device serial number
 						finalValue = value;
 						break;
 					default:
@@ -2372,7 +2462,7 @@ class wamo extends utils.Adapter {
 				await this.setObjectNotExistsAsync(state_ID, {
 					type: 'state',
 					common: {
-						name:{
+						name: {
 							'en': 'Profile ' + String(ProfileNumber) + ' leakage warning',
 							'de': 'Profil ' + String(ProfileNumber) + ' Leckagewarnung',
 							'ru': 'Предупреждение об утечке профиля ' + String(ProfileNumber),
