@@ -1499,7 +1499,7 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 				// cron job every minute
-				schedule('*/1 * * * *', cron_poll);
+				const j = schedule.scheduleJob('*/1 * * * *', cron_poll);
 
 				// Die Timer für das Polling starten
 				alarm_Intervall_ID = this.setInterval(alarm_poll, parseInt(this.config.device_alarm_poll_interval) * 1000);
