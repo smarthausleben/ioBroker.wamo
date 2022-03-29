@@ -328,6 +328,37 @@ const adapterChannels = {
 
 // Object all possible device commands
 const DeviceParameters = {
+	WiFiState: {
+		id: 'WFS',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'WiFi state',
+					'de': 'WiFi-Zustand',
+					'ru': 'Состояние WiFi',
+					'pt': 'Estado Wi-Fi',
+					'nl': 'wifi-status',
+					'fr': 'État Wi-Fi',
+					'it': 'Stato Wi-Fi',
+					'es': 'estado wifi',
+					'pl': 'Stan Wi-Fi',
+					'zh-cn': 'WiFi 状态'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceInfo.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
 	WiFiDeaktivate: {
 		id: 'DWL',
 		objectdefinition: {
@@ -346,7 +377,7 @@ const DeviceParameters = {
 					'zh-cn': 'WiFi 停用'
 				},
 				type: 'string',
-				unit: 's',
+				unit: null,
 				role: 'state',
 				read: true,
 				write: false
@@ -1365,7 +1396,8 @@ const initStates = [
 	DeviceParameters.APHidden,
 	DeviceParameters.APDisabled,
 	DeviceParameters.APTimeout,
-	DeviceParameters.WiFiDeaktivate];
+	DeviceParameters.WiFiDeaktivate,
+	DeviceParameters.WiFiState];
 
 const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
 
@@ -1388,7 +1420,8 @@ const longPeriode = [
 	DeviceParameters.APHidden,
 	DeviceParameters.APDisabled,
 	DeviceParameters.APTimeout,
-	DeviceParameters.WiFiDeaktivate];
+	DeviceParameters.WiFiDeaktivate,
+	DeviceParameters.WiFiState];
 
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
@@ -2315,6 +2348,17 @@ class wamo extends utils.Adapter {
 							finalValue = 'active (default)';
 						} else {
 							finalValue = 'deactivated';
+						}
+						break;
+					case 'WFS':	// WiFi state
+						if (parseInt(value) == 0) {
+							finalValue = 'Disconnected';
+						} else if (parseInt(value) == 1) {
+							finalValue = 'Connecting';
+						} else if (parseInt(value) == 2) {
+							finalValue = 'Connected';
+						} else {
+							finalValue = 'undefined';
 						}
 						break;
 					case 'VER':	// Firmware Version
