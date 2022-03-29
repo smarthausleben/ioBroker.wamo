@@ -2521,7 +2521,7 @@ class wamo extends utils.Adapter {
 				current_Day += deltaValue;
 				current_Week += deltaValue;
 				current_Month += deltaValue;
-				current_Year += deltaValue;
+				current_Year += (deltaValue / 1000);
 
 
 				if(deltaValue > 0)
