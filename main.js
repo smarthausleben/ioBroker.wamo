@@ -325,6 +325,37 @@ const adapterChannels = {
 
 // Object all possible device commands
 const DeviceParameters = {
+	CodeNumber: {
+		id: 'CNO',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Code number',
+					'de': 'Codenummer',
+					'ru': 'Кодовое число',
+					'pt': 'Número do código',
+					'nl': 'Codenummer',
+					'fr': 'Numéro de code',
+					'it': 'Numero di codice',
+					'es': 'Número de código',
+					'pl': 'Numer kodu',
+					'zh-cn': '代号'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceInfo.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
 	SerialNumber: {
 		id: 'SRN',
 		objectdefinition: {
@@ -560,6 +591,7 @@ const DeviceParameters = {
 					'zh-cn': '当前阀门状态'
 				},
 				type: 'string',
+				unit: null,
 				role: 'info.code',
 				read: true,
 				write: false
@@ -590,6 +622,7 @@ const DeviceParameters = {
 					'zh-cn': '持续警报'
 				},
 				type: 'string',
+				unit: null,
 				role: 'indicator.alarm',
 				read: true,
 				write: false
@@ -620,6 +653,7 @@ const DeviceParameters = {
 					'zh-cn': '系统时间'
 				},
 				type: 'string',
+				unit: null,
 				role: 'date',
 				read: true,
 				write: false
@@ -1103,7 +1137,8 @@ const initStates = [
 	DeviceParameters.IPAddress,
 	DeviceParameters.MACAddress,
 	DeviceParameters.DefaultGateway,
-	DeviceParameters.SerialNumber];
+	DeviceParameters.SerialNumber,
+	DeviceParameters.CodeNumber];
 
 const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
 
@@ -1118,7 +1153,8 @@ const longPeriode = [
 	DeviceParameters.IPAddress,
 	DeviceParameters.MACAddress,
 	DeviceParameters.DefaultGateway,
-	DeviceParameters.SerialNumber];
+	DeviceParameters.SerialNumber,
+	DeviceParameters.CodeNumber];
 
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
@@ -1574,7 +1610,7 @@ class wamo extends utils.Adapter {
 	}
 
 	//===================================================
-	// Creating device object and all channel objects 
+	// Creating device object and all channel objects
 	async initDevicesAndChanels() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -1611,12 +1647,22 @@ class wamo extends utils.Adapter {
 	async initDevice(DeviceIP, DevicePort) {
 		return new Promise(async (resolve, reject) => {
 			try {
+				this.log.debug('Long Timer tick');
+				// get longPeriode data
+				await this.getData(initStates);
+				resolve(true);
+			} catch (err) {
+				interfaceBussy = false;	// CLEAR flag that device interface is bussy
+				reject(err);
+			}
 
-				Object.keys(DeviceParameters).forEach(key => {
-					this.log.info(key + ' Pfad = ' + DeviceParameters[key].statePath);
-				});
+			if (false) {
+				try {
 
-				if (false) {
+					Object.keys(DeviceParameters).forEach(key => {
+						this.log.info(key + ' Pfad = ' + DeviceParameters[key].statePath);
+					});
+
 					const listOfParameter = [
 						'Device.Info.VER', 	// Firmware Version
 						'Device.Info.WIP',	// IP Address
@@ -1646,10 +1692,10 @@ class wamo extends utils.Adapter {
 						this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
 						await this.UpdateState(stateID, result);
 					}
+					resolve(true);
+				} catch (err) {
+					reject(err);
 				}
-				resolve(true);
-			} catch (err) {
-				reject(err);
 			}
 		});
 	}
@@ -1904,13 +1950,11 @@ class wamo extends utils.Adapter {
 						this.setStateAsync(state_ID, { val: String(finalValue), ack: true });
 				}
 
-				if ('unit' in stateID.objectdefinition.common && (stateID.objectdefinition.common.unit != null || stateID.objectdefinition.common.unit != '')) {
-					this.log.info(String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue) + ' ' + String(stateID.objectdefinition.common.unit));
-					//this.log.info(String(cur_StatePath) + ' ' + String(stateID.common.name) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
+				if (stateID.objectdefinition.common.unit != null) {
+					this.log.info('[async updateState(stateID, value)] info: ' + String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue) + ' ' + String(stateID.objectdefinition.common.unit));
 				}
 				else {
-					this.log.info(String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
-					//this.log.info(String(cur_StatePath) + ' ' + String(stateID.common.name) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
+					this.log.info('[async updateState(stateID, value)] info: ' + String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
 				}
 				resolve(true);
 			} catch (err) {
@@ -2016,6 +2060,7 @@ class wamo extends utils.Adapter {
 					case 'MAC':	// MAC address
 					case 'WGW':	// Default gateway
 					case 'SRN':	// Device serial number
+					case 'CNO':	// Code Number
 						finalValue = value;
 						break;
 					default:
