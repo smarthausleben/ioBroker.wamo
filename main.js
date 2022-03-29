@@ -323,11 +323,39 @@ const adapterChannels = {
 	},
 };
 
-//case 'WFR':	// WiFi RSSI
-//case 'WFC':	// WiFi SSID
-
 // Object all possible device commands
 const DeviceParameters = {
+	PowerAdapterVoltage: {
+		id: 'NET',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Power adaptor voltage',
+					'de': 'Netzteilspannung',
+					'ru': 'Напряжение адаптера питания',
+					'pt': 'Voltagem do adaptador de energia',
+					'nl': 'Spanning voedingsadapter',
+					'fr': "Tension de l'adaptateur secteur",
+					'it': "Tensione dell'adattatore di alimentazione",
+					'es': 'Voltaje del adaptador de corriente',
+					'pl': 'Napięcie zasilacza',
+					'zh-cn': '电源适配器电压'
+				},
+				type: 'string',
+				unit: 'V',
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceConditions.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
 	BatteryVoltage: {
 		id: 'BAT',
 		objectdefinition: {
@@ -345,7 +373,7 @@ const DeviceParameters = {
 					'pl': 'Napięcie baterii',
 					'zh-cn': '电池电压'
 				},
-				type: 'number',
+				type: 'string',
 				unit: 'V',
 				role: 'state',
 				read: true,
@@ -1429,7 +1457,8 @@ const initStates = [
 	DeviceParameters.APTimeout,
 	DeviceParameters.WiFiDeaktivate,
 	DeviceParameters.WiFiState,
-	DeviceParameters.BatteryVoltage];
+	DeviceParameters.BatteryVoltage,
+	DeviceParameters.PowerAdapterVoltage];
 
 const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
 
@@ -1454,7 +1483,8 @@ const longPeriode = [
 	DeviceParameters.APTimeout,
 	DeviceParameters.WiFiDeaktivate,
 	DeviceParameters.WiFiState,
-	DeviceParameters.BatteryVoltage];
+	DeviceParameters.BatteryVoltage,
+	DeviceParameters.PowerAdapterVoltage];
 
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
@@ -2394,9 +2424,6 @@ class wamo extends utils.Adapter {
 							finalValue = 'undefined';
 						}
 						break;
-					case 'BAT':	// Batterie voltage
-						finalValue = parseFloat(value);
-						break;
 					case 'VER':	// Firmware Version
 					case 'WIP': // IP address
 					case 'MAC':	// MAC address
@@ -2406,6 +2433,8 @@ class wamo extends utils.Adapter {
 					case 'WFR':	// WiFi RSSI
 					case 'WFC':	// WiFi SSID
 					case 'SRV':	// Next Maintenance
+					case 'BAT':	// Batterie voltage
+					case 'NET':	// DC voltage (power adaptor)
 						finalValue = value;
 						break;
 					default:
