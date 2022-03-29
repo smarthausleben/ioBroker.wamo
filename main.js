@@ -323,8 +323,73 @@ const adapterChannels = {
 	},
 };
 
+//case 'WFR':	// WiFi RSSI
+//case 'WFC':	// WiFi SSID
+
 // Object all possible device commands
 const DeviceParameters = {
+	WiFiSSID: {
+		id: 'WFR',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'WiFi SSID',
+					'de': 'WLAN-SSID',
+					'ru': 'WiFi SSID',
+					'pt': 'Wi-Fi SSID',
+					'nl': 'WiFi SSID',
+					'fr': 'SSID Wi-Fi',
+					'it': 'WiFi SSID',
+					'es': 'Wi-Fi SSID',
+					'pl': 'Wi-Fi SSID',
+					'zh-cn': '无线SSID'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceInfo.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	WiFiRSSI: {
+		id: 'WFR',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'WiFi RSSI',
+					'de': 'WLAN-RSSI',
+					'ru': 'WiFi RSSI',
+					'pt': 'Wi-Fi RSSI',
+					'nl': 'WiFi RSSI',
+					'fr': 'RSSI Wi-Fi',
+					'it': 'WiFi RSSI',
+					'es': 'Wi-Fi RSSI',
+					'pl': 'Wi-Fi RSSI',
+					'zh-cn': '无线RSSI'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceInfo.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
 	CodeNumber: {
 		id: 'CNO',
 		objectdefinition: {
@@ -629,7 +694,7 @@ const DeviceParameters = {
 			},
 			native: {}
 		},
-		statePath: 'Device',
+		statePath: adapterChannels.DeviceConditions.path,
 		levelRead: 'USER',
 		levelWrite: null,
 		readCommand: 'get',
@@ -1138,7 +1203,9 @@ const initStates = [
 	DeviceParameters.MACAddress,
 	DeviceParameters.DefaultGateway,
 	DeviceParameters.SerialNumber,
-	DeviceParameters.CodeNumber];
+	DeviceParameters.CodeNumber,
+	DeviceParameters.WiFiRSSI,
+	DeviceParameters.WiFiSSID];
 
 const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
 
@@ -1154,7 +1221,9 @@ const longPeriode = [
 	DeviceParameters.MACAddress,
 	DeviceParameters.DefaultGateway,
 	DeviceParameters.SerialNumber,
-	DeviceParameters.CodeNumber];
+	DeviceParameters.CodeNumber,
+	DeviceParameters.WiFiRSSI,
+	DeviceParameters.WiFiSSID];
 
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
@@ -1950,7 +2019,7 @@ class wamo extends utils.Adapter {
 						this.setStateAsync(state_ID, { val: String(finalValue), ack: true });
 				}
 
-				if (stateID.objectdefinition.common.unit != null) {
+				if (stateID.objectdefinition.common.unit !== null) {
 					this.log.info('[async updateState(stateID, value)] info: ' + String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue) + ' ' + String(stateID.objectdefinition.common.unit));
 				}
 				else {
@@ -2061,6 +2130,8 @@ class wamo extends utils.Adapter {
 					case 'WGW':	// Default gateway
 					case 'SRN':	// Device serial number
 					case 'CNO':	// Code Number
+					case 'WFR':	// WiFi RSSI
+					case 'WFC':	// WiFi SSID
 						finalValue = value;
 						break;
 					default:
