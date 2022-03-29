@@ -8,6 +8,7 @@
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
 const axios = require('axios');
+const schedule = require('node-schedule');
 
 const adapterName = require('./package.json').name.split('.').pop();
 
@@ -1497,6 +1498,9 @@ class wamo extends utils.Adapter {
 	async timerStarts() {
 		return new Promise(async (resolve, reject) => {
 			try {
+				// cron job every minute
+				schedule('*/1 * * * *', cron_poll);
+
 				// Die Timer für das Polling starten
 				alarm_Intervall_ID = this.setInterval(alarm_poll, parseInt(this.config.device_alarm_poll_interval) * 1000);
 				this.log.info('Alarm timer initialized');
@@ -1514,6 +1518,18 @@ class wamo extends utils.Adapter {
 	}
 
 
+	async alarm_cronTick(){
+		return new Promise(async (resolve, reject) => {
+			try {
+				this.log.debug('Cron Timer tick');
+				// get alarmPeriode data
+				//await this.getData(alarmPeriod);
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
 	//===================================================
 	// Timer EVENTS
 	async alarm_TimerTick() {
@@ -3339,6 +3355,16 @@ async function long_poll() {
 	} catch (err) {
 		//throw new Error(err);
 	}
+}
+
+async function cron_poll()
+{
+	try {
+		await myAdapter.alarm_CronTick();
+	} catch (err) {
+		//throw new Error(err);
+	}
+
 }
 //===================================================
 
