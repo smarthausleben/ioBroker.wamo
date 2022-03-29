@@ -1332,7 +1332,8 @@ const initStates = [
 	DeviceParameters.WiFiSSID,
 	DeviceParameters.NextMaintenance,
 	DeviceParameters.APHidden,
-	DeviceParameters.APDisabled];
+	DeviceParameters.APDisabled,
+	DeviceParameters.APTimeout];
 
 const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
 
@@ -1353,7 +1354,8 @@ const longPeriode = [
 	DeviceParameters.WiFiSSID,
 	DeviceParameters.NextMaintenance,
 	DeviceParameters.APHidden,
-	DeviceParameters.APDisabled];
+	DeviceParameters.APDisabled,
+	DeviceParameters.APTimeout];
 
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
