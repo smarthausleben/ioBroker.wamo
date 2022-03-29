@@ -1615,7 +1615,7 @@ class wamo extends utils.Adapter {
 
 		try{
 			const test = await this.getStateAsync(adapterChannels.DeviceInfo.path + '.' + DeviceParameters.IPAddress.id);
-			this.log.warn('state resolved: ' + String(test));
+			this.log.warn('state resolved: ' + test.val);
 		}catch(err){
 			this.log.warn('state rejected');
 		}
