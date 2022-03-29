@@ -28,6 +28,68 @@ const connectionRetryPause = 3000;
 
 // Object all possible device commands
 const DeviceParameters = {
+	MACAddress: {
+		id: 'MAC',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'IP address',
+					'de': 'IP Adresse',
+					'ru': 'айпи адрес',
+					'pt': 'endereço de IP',
+					'nl': 'IP adres',
+					'fr': 'adresse IP',
+					'it': 'indirizzo IP',
+					'es': 'dirección IP',
+					'pl': 'adres IP',
+					'zh-cn': 'IP地址'
+				},
+				type: 'string',
+				unit: null,
+				role: 'info.mac',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: 'Device.Device-Conditions',
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	IPAddress: {
+		id: 'WIP',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'IP address',
+					'de': 'IP Adresse',
+					'ru': 'айпи адрес',
+					'pt': 'endereço de IP',
+					'nl': 'IP adres',
+					'fr': 'adresse IP',
+					'it': 'indirizzo IP',
+					'es': 'dirección IP',
+					'pl': 'adres IP',
+					'zh-cn': 'IP地址'
+				},
+				type: 'string',
+				unit: null,
+				role: 'info.ip',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: 'Device.Device-Conditions',
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
 	FirmwareVersion: {
 		id: 'VER',
 		objectdefinition: {
@@ -952,10 +1014,23 @@ const adapterChannels = {
 	},
 };
 
-const initStates =[DeviceParameters.FirmwareVersion];
+const initStates =[
+	DeviceParameters.FirmwareVersion,
+	DeviceParameters.IPAddress,
+	DeviceParameters.MACAddress];
+
 const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
-const shortPeriod = [DeviceParameters.WaterTemperature, DeviceParameters.WaterConductivity];
-const longPeriode = [DeviceParameters.CurrentValveStatus, DeviceParameters.SystemTime, DeviceParameters.FirmwareVersion];
+
+const shortPeriod = [
+	DeviceParameters.WaterTemperature,
+	DeviceParameters.WaterConductivity];
+
+const longPeriode = [
+	DeviceParameters.CurrentValveStatus,
+	DeviceParameters.SystemTime,
+	DeviceParameters.FirmwareVersion,
+	DeviceParameters.IPAddress,
+	DeviceParameters.MACAddress];
 
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
@@ -1849,6 +1924,8 @@ class wamo extends utils.Adapter {
 						finalValue = parseFloat(value);
 						break;
 					case 'VER':	// Firmware Version
+					case 'WIP': // IP address
+					case 'MAC':	// MAC address
 						finalValue = value;
 						break;
 					default:
