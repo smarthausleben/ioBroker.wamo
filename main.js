@@ -9,6 +9,7 @@
 const utils = require('@iobroker/adapter-core');
 const axios = require('axios');
 const schedule = require('node-schedule');
+const { join } = require('path');
 
 const adapterName = require('./package.json').name.split('.').pop();
 
@@ -1428,14 +1429,20 @@ class wamo extends utils.Adapter {
 	 */
 	onUnload(callback) {
 		try {
+			schedule.gracefulShutdown();
+		} catch (err) {
+			this.log.error('Disable Cron Jobs' + err);
+		}
+
+		try {
 			// Here you must clear all timeouts or intervals that may still be active
 			// clearTimeout(timeout1);
 			// clearTimeout(timeout2);
 			// ...
+
 			clearInterval(alarm_Intervall_ID);
 			clearInterval(short_Intervall_ID);
 			clearInterval(long_Intervall_ID);
-
 			callback();
 		} catch (e) {
 			callback();
@@ -1499,7 +1506,11 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 				// cron job every minute
-				const j = schedule.scheduleJob('*/1 * * * *', cron_poll);
+				schedule.scheduleJob('*/1 * * * *', cron_poll);
+			} catch (err) {
+				this.log.error('Cron Start Error: ' + err);
+			}
+			try {
 
 				// Die Timer für das Polling starten
 				alarm_Intervall_ID = this.setInterval(alarm_poll, parseInt(this.config.device_alarm_poll_interval) * 1000);
@@ -1518,7 +1529,7 @@ class wamo extends utils.Adapter {
 	}
 
 
-	async alarm_cronTick(){
+	async alarm_cronTick() {
 		return new Promise(async (resolve, reject) => {
 			try {
 				this.log.info('Cron Timer tick');
@@ -3357,8 +3368,7 @@ async function long_poll() {
 	}
 }
 
-async function cron_poll()
-{
+async function cron_poll() {
 	try {
 		await myAdapter.alarm_CronTick();
 	} catch (err) {
