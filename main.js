@@ -321,12 +321,33 @@ const adapterChannels = {
 			native: {}
 		}
 	},
+	WaterStatistic: {
+		path: 'Device.Statistics',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Statistics',
+					'de': 'Statistiken',
+					'ru': 'Статистика',
+					'pt': 'Estatisticas',
+					'nl': 'Statistieken',
+					'fr': 'Statistiques',
+					'it': 'Statistiche',
+					'es': 'Estadísticas',
+					'pl': 'Statystyka',
+					'zh-cn': '统计数据'
+				},
+			},
+			native: {}
+		}
+	},
 };
 
 // Object all possible device commands
 const DeviceParameters = {
 	CurrentVolume: {
-		id: 'VOL',
+		id: 'AVO',
 		objectdefinition: {
 			type: 'state',
 			common: {
