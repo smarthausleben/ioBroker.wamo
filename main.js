@@ -1614,7 +1614,7 @@ class wamo extends utils.Adapter {
 
 
 		try{
-			const test = await this.getStateAsync('Device.Test');
+			const test = await this.getStateAsync('WIP');
 			this.log.warn('state resolved: ' + String(test));
 		}catch(err){
 			this.log.warn('state rejected');
