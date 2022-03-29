@@ -328,6 +328,37 @@ const adapterChannels = {
 
 // Object all possible device commands
 const DeviceParameters = {
+	APHidden: {
+		id: 'WAH',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'WiFi AP hidden',
+					'de': 'WiFi-AP versteckt',
+					'ru': 'Точка доступа Wi-Fi скрыта',
+					'pt': 'Wi-Fi AP escondido',
+					'nl': 'WiFi AP verborgen',
+					'fr': "Point d'accès Wi-Fi caché",
+					'it': 'Punto di accesso Wi-Fi nascosto',
+					'es': 'WiFi AP oculto',
+					'pl': 'Ukryto punkt dostępu Wi-Fi',
+					'zh-cn': 'WiFi AP隐藏'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceInfo.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
 	NextMaintenance: {
 		id: 'SRV',
 		objectdefinition: {
@@ -1237,7 +1268,8 @@ const initStates = [
 	DeviceParameters.CodeNumber,
 	DeviceParameters.WiFiRSSI,
 	DeviceParameters.WiFiSSID,
-	DeviceParameters.NextMaintenance];
+	DeviceParameters.NextMaintenance,
+	DeviceParameters.APHidden];
 
 const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
 
@@ -1256,7 +1288,8 @@ const longPeriode = [
 	DeviceParameters.CodeNumber,
 	DeviceParameters.WiFiRSSI,
 	DeviceParameters.WiFiSSID,
-	DeviceParameters.NextMaintenance];
+	DeviceParameters.NextMaintenance,
+	DeviceParameters.APHidden];
 
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
@@ -2157,8 +2190,12 @@ class wamo extends utils.Adapter {
 					case 'CND': // Water conductivity
 						finalValue = parseFloat(value);
 						break;
-					case 'SRV':	// Next Maintenance
-						finalValue = value;
+					case 'WAH':	// WiFi AP Hidden
+						if(parseInt(value) == 0){
+							finalValue = 'AP not hidden (visible)';
+						}else{
+							finalValue = 'AP hidden';
+						}
 						break;
 					case 'VER':	// Firmware Version
 					case 'WIP': // IP address
@@ -2168,6 +2205,7 @@ class wamo extends utils.Adapter {
 					case 'CNO':	// Code Number
 					case 'WFR':	// WiFi RSSI
 					case 'WFC':	// WiFi SSID
+					case 'SRV':	// Next Maintenance
 						finalValue = value;
 						break;
 					default:
