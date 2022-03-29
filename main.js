@@ -2495,20 +2495,19 @@ class wamo extends utils.Adapter {
 				let lastTotalValue = 0;
 				let currentTotalValue = 0;
 
-				const lastTotalvalueState = this.getStateAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id);
+				const lastTotalvalueState = await this.getStateAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id);
 				if (lastTotalvalueState !== null) {
-					// @ts-ignore
 					lastTotalValue = parseFloat(lastTotalvalueState.val);
 				}
 
-				const currentTotalvalueState = this.getStateAsync(DeviceParameters.TotalVolume.statePath + '.' + DeviceParameters.TotalVolume.id);
-				// @ts-ignore
+				const currentTotalvalueState = await this.getStateAsync(DeviceParameters.TotalVolume.statePath + '.' + DeviceParameters.TotalVolume.id);
+
 				currentTotalValue = parseFloat(currentTotalvalueState.val) * 1000;
 
 				this.log.warn('old total = ' + String(lastTotalValue) + 'l / akt total = ' + String(currentTotalValue) + 'l / Delta = ' + String(lastTotalValue - currentTotalValue) + 'l');
 
 				await this.setObjectNotExistsAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id, StatisticStates.TotalLastValue.objectdefinition);
-				this.setStateAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id, { val: currentTotalValue, ack: true });
+				await this.setStateAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id, { val: currentTotalValue, ack: true });
 
 				resolve(true);
 			} catch (err) {
