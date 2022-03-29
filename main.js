@@ -1521,7 +1521,7 @@ class wamo extends utils.Adapter {
 	async alarm_cronTick(){
 		return new Promise(async (resolve, reject) => {
 			try {
-				this.log.debug('Cron Timer tick');
+				this.log.info('Cron Timer tick');
 				// get alarmPeriode data
 				//await this.getData(alarmPeriod);
 				resolve(true);
