@@ -13,6 +13,11 @@ const { join } = require('path');
 
 const adapterName = require('./package.json').name.split('.').pop();
 
+const cron_Beginning_Year = '0 0 1 1 *';
+const cron_Beginning_Month = '0 0 1 * *';
+const cron_Beginning_Week = '0 0 * * 1';
+const cron_Beginning_Day = '0 0 * * *';
+
 //Reference to my own adapter
 let myAdapter;
 
@@ -3373,6 +3378,7 @@ async function long_poll() {
 
 async function cron_poll() {
 	try {
+		myAdapter.log.warn('async function cron_poll() hit');
 		await myAdapter.alarm_CronTick();
 	} catch (err) {
 		//throw new Error(err);
