@@ -325,6 +325,37 @@ const adapterChannels = {
 
 // Object all possible device commands
 const DeviceParameters = {
+	CurrentVolume: {
+		id: 'VOL',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Volume of the current water consumption',
+					'de': 'Volumen des aktuellen Wasserverbrauchs',
+					'ru': 'Объем текущего водопотребления',
+					'pt': 'Volume do consumo de água atual',
+					'nl': 'Volume van het huidige waterverbruik',
+					'fr': "Volume de la consommation d'eau actuelle",
+					'it': 'Volume del consumo idrico attuale',
+					'es': 'Volumen del consumo de agua actual',
+					'pl': 'Wielkość aktualnego zużycia wody',
+					'zh-cn': '当前用水量'
+				},
+				type: 'number',
+				unit: 'ml',
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.WaterConumption.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
 	TotalVolume: {
 		id: 'VOL',
 		objectdefinition: {
@@ -1096,7 +1127,8 @@ const shortPeriod = [
 	DeviceParameters.WaterTemperature,
 	DeviceParameters.WaterConductivity,
 	DeviceParameters.LastTappedVolume,
-	DeviceParameters.TotalVolume];
+	DeviceParameters.TotalVolume,
+	DeviceParameters.CurrentVolume];
 
 const longPeriode = [
 	DeviceParameters.CurrentValveStatus,
@@ -1980,7 +2012,10 @@ class wamo extends utils.Adapter {
 						finalValue = parseFloat(String(value).replace(',', '.'));
 						break;
 					case 'VOL':
-						finalValue = parseFloat(String(value.getVOL).replace('Vol[L]', '')) / 1000;
+						finalValue = parseFloat(String(value).replace(',', '.').replace('Vol[L]', '')) / 1000;
+						break;
+					case 'AVO':
+						finalValue = parseFloat(String(value).replace(',', '.').replace('mL', ''));
 						break;
 					case 'WAH':	// WiFi AP hidden
 						if (parseInt(value) == 0) {
