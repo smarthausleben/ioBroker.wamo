@@ -328,6 +328,37 @@ const adapterChannels = {
 
 // Object all possible device commands
 const DeviceParameters = {
+	APTimeout: {
+		id: 'APT',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'WiFi AP timeout',
+					'de': 'WLAN-AP-Zeitüberschreitung',
+					'ru': 'Тайм-аут точки доступа Wi-Fi',
+					'pt': 'Tempo limite do AP Wi-Fi',
+					'nl': 'Time-out wifi AP',
+					'fr': "Délai d'expiration du point d'accès Wi-Fi",
+					'it': "Timeout dell'AP Wi-Fi",
+					'es': 'Tiempo de espera de WiFi AP',
+					'pl': 'Limit czasu punktu dostępu Wi-Fi',
+					'zh-cn': 'WiFi AP 超时'
+				},
+				type: 'string',
+				unit: 's',
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceSettings.path,
+		levelRead: 'SERVICE',
+		levelWrite: 'SERVICE',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
 	APDisabled: {
 		id: 'WAD',
 		objectdefinition: {
@@ -354,10 +385,10 @@ const DeviceParameters = {
 			native: {}
 		},
 		statePath: adapterChannels.DeviceSettings.path,
-		levelRead: 'USER',
-		levelWrite: null,
+		levelRead: 'SERVICE',
+		levelWrite: 'SERVICE',
 		readCommand: 'get',
-		writeCommand: null
+		writeCommand: 'set'
 	},
 	APHidden: {
 		id: 'WAH',
@@ -385,10 +416,10 @@ const DeviceParameters = {
 			native: {}
 		},
 		statePath: adapterChannels.DeviceSettings.path,
-		levelRead: 'USER',
-		levelWrite: null,
+		levelRead: 'SERVICE',
+		levelWrite: 'SERVICE',
 		readCommand: 'get',
-		writeCommand: null
+		writeCommand: 'set'
 	},
 	NextMaintenance: {
 		id: 'SRV',
@@ -2235,6 +2266,13 @@ class wamo extends utils.Adapter {
 							finalValue = 'AP not disabled';
 						} else {
 							finalValue = 'AP disabled';
+						}
+						break;
+					case 'APT':	// WiFi AP timeout
+						if (parseInt(value) == 0) {
+							finalValue = 'AP timeout not active';
+						} else {
+							finalValue = 'AP disabled after ' + String(value) +  ' seconds after internet connection';
 						}
 						break;
 					case 'VER':	// Firmware Version
