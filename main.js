@@ -2515,7 +2515,7 @@ class wamo extends utils.Adapter {
 				if (current_Year_valueState !== null) {current_Year = parseFloat(current_Year_valueState.val);}
 
 
-				deltaValue = lastTotalValue - currentTotalValue;
+				deltaValue = currentTotalValue - lastTotalValue;
 				this.log.warn('old total = ' + String(lastTotalValue) + 'l / akt total = ' + String(currentTotalValue) + 'l / Delta = ' + String(deltaValue) + 'l');
 
 				current_Day += deltaValue;
