@@ -353,6 +353,37 @@ const adapterChannels = {
 };
 
 const StatisticStates = {
+	TotalLastValue: {
+		id: 'TLV',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'last total value',
+					'de': 'letzter Gesamtwert',
+					'ru': 'последнее общее значение',
+					'pt': 'último valor total',
+					'nl': 'laatste totale waarde',
+					'fr': 'dernière valeur totale',
+					'it': 'ultimo valore totale',
+					'es': 'último valor total',
+					'pl': 'ostatnia łączna wartość',
+					'zh-cn': '最后总价值'
+				},
+				type: 'number',
+				unit: 'l',
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.WaterStatistic.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
 	TotalDay: {
 		id: 'TCD',
 		objectdefinition: {
@@ -1613,10 +1644,10 @@ class wamo extends utils.Adapter {
 		}
 
 
-		try{
+		try {
 			const test = await this.getStateAsync(adapterChannels.DeviceInfo.path + '.' + DeviceParameters.IPAddress.id);
 			this.log.warn('state resolved: ' + test.val);
-		}catch(err){
+		} catch (err) {
 			this.log.warn('state rejected');
 		}
 		/*
@@ -1880,6 +1911,12 @@ class wamo extends utils.Adapter {
 				this.log.debug('Short Timer tick');
 				// get longPeriode data
 				await this.getData(shortPeriod);
+
+				try {
+					await this.updateStatistics();
+				} catch (err) {
+					this.log.error('Statistics Error: ' + err);
+				}
 				resolve(true);
 			} catch (err) {
 				interfaceBussy = false;	// CLEAR flag that device interface is bussy
@@ -2444,6 +2481,36 @@ class wamo extends utils.Adapter {
 						finalValue = value;
 				}
 				resolve(finalValue);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async updateStatistics() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				this.log.debug('update Statistics');
+
+				let lastTotalValue = 0;
+				let currentTotalValue = 0;
+
+				const lastTotalvalueState = this.getStateAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id);
+				if (lastTotalvalueState !== null) {
+					// @ts-ignore
+					lastTotalValue = parseFloat(lastTotalvalueState.val);
+				}
+
+				const currentTotalvalueState = this.getStateAsync(DeviceParameters.TotalVolume.statePath + '.' + DeviceParameters.TotalVolume.id);
+				// @ts-ignore
+				currentTotalValue = parseFloat(currentTotalvalueState.val) * 1000;
+
+				this.log.warn('old total = ' + String(lastTotalValue) + 'l / akt total = ' + String(currentTotalValue) + 'l / Delta = ' + String(lastTotalValue - currentTotalValue) + 'l');
+
+				await this.setObjectNotExistsAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id, StatisticStates.TotalLastValue.objectdefinition);
+				this.setStateAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id, { val: currentTotalValue, ack: true });
+
+				resolve(true);
 			} catch (err) {
 				reject(err);
 			}
