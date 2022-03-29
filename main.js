@@ -13,10 +13,10 @@ const { join } = require('path');
 
 const adapterName = require('./package.json').name.split('.').pop();
 
-const cron_Beginning_Year = '0 0 1 1 *';
-const cron_Beginning_Month = '0 0 1 * *';
-const cron_Beginning_Week = '0 0 * * 1';
-const cron_Beginning_Day = '0 0 * * *';
+const cron_Year = '0 0 1 1 *';
+const cron_Month = '0 0 1 * *';
+const cron_Week = '0 0 * * 1';
+const cron_Day = '0 0 * * *';
 
 //Reference to my own adapter
 let myAdapter;
@@ -1510,11 +1510,15 @@ class wamo extends utils.Adapter {
 	async timerStarts() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				schedule.scheduleJob('*/1 * * * *', cron_poll);
-				schedule.scheduleJob('*/2 * * * *', function () {
-					cron_poll();
-					myAdapter.log.warn('Cron internal Tick');
-				});
+				schedule.scheduleJob('*/1 * * * *', cron_poll_day);
+				schedule.scheduleJob('*/2 * * * *', cron_poll_week);
+				schedule.scheduleJob('*/3 * * * *', cron_poll_month);
+				schedule.scheduleJob('*/4 * * * *', cron_poll_year);
+
+				schedule.scheduleJob(cron_Day, cron_poll_day);
+				schedule.scheduleJob(cron_Week, cron_poll_week);
+				schedule.scheduleJob(cron_Month, cron_poll_month);
+				schedule.scheduleJob(cron_Year, cron_poll_year);
 				this.log.info('Cron Timer Started');
 			} catch (err) {
 				this.log.error('Cron Start Error: ' + err);
@@ -1538,10 +1542,13 @@ class wamo extends utils.Adapter {
 	}
 
 
-	async alarm_cronTick() {
+
+	//===================================================
+	// Cron EVENTS
+	async alarm_cron_day_Tick() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				this.log.warn(' alarm_cronTick() hit');
+				this.log.warn('Cron day tick');
 				// get alarmPeriode data
 				//await this.getData(alarmPeriod);
 				resolve(true);
@@ -1549,7 +1556,48 @@ class wamo extends utils.Adapter {
 				reject(err);
 			}
 		});
+
 	}
+	async alarm_cron_week_Tick() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				this.log.warn('Cron week tick');
+				// get alarmPeriode data
+				//await this.getData(alarmPeriod);
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+
+	}
+	async alarm_cron_month_Tick() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				this.log.warn('Cron month tick');
+				// get alarmPeriode data
+				//await this.getData(alarmPeriod);
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+
+	}
+	async alarm_cron_year_Tick() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				this.log.warn('Cron year tick');
+				// get alarmPeriode data
+				//await this.getData(alarmPeriod);
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+
+	}
+
 	//===================================================
 	// Timer EVENTS
 	async alarm_TimerTick() {
@@ -3377,9 +3425,36 @@ async function long_poll() {
 	}
 }
 
-async function cron_poll() {
+async function cron_poll_day() {
 	try {
-		await myAdapter.alarm_cronTick();
+		await myAdapter.alarm_cron_day_Tick();
+	} catch (err) {
+		//throw new Error(err);
+	}
+
+}
+
+async function cron_poll_week() {
+	try {
+		await myAdapter.alarm_cron_week_Tick();
+	} catch (err) {
+		//throw new Error(err);
+	}
+
+}
+
+async function cron_poll_month() {
+	try {
+		await myAdapter.alarm_cron_month_Tick();
+	} catch (err) {
+		//throw new Error(err);
+	}
+
+}
+
+async function cron_poll_year() {
+	try {
+		await myAdapter.alarm_cron_year_Tick();
 	} catch (err) {
 		//throw new Error(err);
 	}
