@@ -10,6 +10,7 @@ const utils = require('@iobroker/adapter-core');
 const axios = require('axios');
 const schedule = require('node-schedule');
 const { join } = require('path');
+const { stringify } = require('querystring');
 
 const adapterName = require('./package.json').name.split('.').pop();
 
@@ -1613,8 +1614,8 @@ class wamo extends utils.Adapter {
 
 
 		try{
-			await this.getStateAsync('Device.Test');
-			this.log.warn('state resolved');
+			const test = await this.getStateAsync('Device.Test');
+			this.log.warn('state resolved: ' + String(test));
 		}catch(err){
 			this.log.warn('state rejected');
 		}
