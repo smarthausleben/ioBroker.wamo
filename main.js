@@ -1832,8 +1832,6 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-
-
 	//===================================================
 	// Cron EVENTS
 	async alarm_cron_day_Tick() {
@@ -2494,20 +2492,55 @@ class wamo extends utils.Adapter {
 
 				let lastTotalValue = 0;
 				let currentTotalValue = 0;
+				let deltaValue = 0;
+				let current_Day = 0;
+				let current_Week = 0;
+				let current_Month = 0;
+				let current_Year = 0;
 
 				const lastTotalvalueState = await this.getStateAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id);
-				if (lastTotalvalueState !== null) {
-					lastTotalValue = parseFloat(lastTotalvalueState.val);
-				}
-
 				const currentTotalvalueState = await this.getStateAsync(DeviceParameters.TotalVolume.statePath + '.' + DeviceParameters.TotalVolume.id);
 
-				currentTotalValue = parseFloat(currentTotalvalueState.val) * 1000;
+				const current_Day_valueState = await this.getStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id);
+				const current_Week_valueState = await this.getStateAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id);
+				const current_Month_valueState = await this.getStateAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id);
+				const current_Year_valueState = await this.getStateAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id);
 
-				this.log.warn('old total = ' + String(lastTotalValue) + 'l / akt total = ' + String(currentTotalValue) + 'l / Delta = ' + String(lastTotalValue - currentTotalValue) + 'l');
+				if (lastTotalvalueState !== null) {lastTotalValue = parseFloat(lastTotalvalueState.val);}
+				if (currentTotalvalueState !== null) {currentTotalValue = parseFloat(currentTotalvalueState.val) * 1000;}
 
-				await this.setObjectNotExistsAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id, StatisticStates.TotalLastValue.objectdefinition);
-				await this.setStateAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id, { val: currentTotalValue, ack: true });
+				if (current_Day_valueState !== null) {current_Day = parseFloat(current_Day_valueState.val);}
+				if (current_Week_valueState !== null) {current_Week = parseFloat(current_Week_valueState.val);}
+				if (current_Month_valueState !== null) {current_Month = parseFloat(current_Month_valueState.val);}
+				if (current_Year_valueState !== null) {current_Year = parseFloat(current_Year_valueState.val);}
+
+
+				deltaValue = lastTotalValue - currentTotalValue;
+				this.log.warn('old total = ' + String(lastTotalValue) + 'l / akt total = ' + String(currentTotalValue) + 'l / Delta = ' + String(deltaValue) + 'l');
+
+				current_Day += deltaValue;
+				current_Week += deltaValue;
+				current_Month += deltaValue;
+				current_Year += deltaValue;
+
+
+				if(deltaValue > 0)
+				{
+					await this.setObjectNotExistsAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id, StatisticStates.TotalLastValue.objectdefinition);
+					await this.setStateAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id, { val: currentTotalValue, ack: true });
+
+					await this.setObjectNotExistsAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, StatisticStates.TotalDay.objectdefinition);
+					await this.setStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, { val: current_Day, ack: true });
+
+					await this.setObjectNotExistsAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id, StatisticStates.TotalWeek.objectdefinition);
+					await this.setStateAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id, { val: current_Week, ack: true });
+
+					await this.setObjectNotExistsAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id, StatisticStates.TotalMonth.objectdefinition);
+					await this.setStateAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id, { val: current_Month, ack: true });
+
+					await this.setObjectNotExistsAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id, StatisticStates.TotalYear.objectdefinition);
+					await this.setStateAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id, { val: current_Year, ack: true });
+				}
 
 				resolve(true);
 			} catch (err) {
