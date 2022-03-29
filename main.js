@@ -1510,7 +1510,8 @@ class wamo extends utils.Adapter {
 	async timerStarts() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				schedule.scheduleJob('*/1 * * * *', function(){
+				schedule.scheduleJob('*/1 * * * *', cron_poll);
+				schedule.scheduleJob('*/2 * * * *', function () {
 					cron_poll();
 					myAdapter.log.warn('Cron internal Tick');
 				});
@@ -3378,7 +3379,6 @@ async function long_poll() {
 
 async function cron_poll() {
 	try {
-		myAdapter.log.warn('async function cron_poll() hit');
 		await myAdapter.alarm_cronTick();
 	} catch (err) {
 		//throw new Error(err);
