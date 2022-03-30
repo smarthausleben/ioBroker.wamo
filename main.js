@@ -1950,6 +1950,7 @@ class wamo extends utils.Adapter {
 			clearInterval(alarm_Intervall_ID);
 			clearInterval(short_Intervall_ID);
 			clearInterval(long_Intervall_ID);
+
 			callback();
 		} catch (e) {
 			callback();
@@ -2586,10 +2587,10 @@ class wamo extends utils.Adapter {
 				}
 
 				if (stateID.objectdefinition.common.unit !== null) {
-					this.log.info('[async updateState(stateID, value)] info: ' + String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue) + ' ' + String(stateID.objectdefinition.common.unit));
+					this.log.debug('[async updateState(stateID, value)] info: ' + String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue) + ' ' + String(stateID.objectdefinition.common.unit));
 				}
 				else {
-					this.log.info('[async updateState(stateID, value)] info: ' + String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
+					this.log.debug('[async updateState(stateID, value)] info: ' + String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
 				}
 				resolve(true);
 			} catch (err) {
