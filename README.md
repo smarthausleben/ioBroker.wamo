@@ -15,7 +15,7 @@
 
 This adapter adds "wamo" leakage protection monitoring to your ioBroker installation.
 
-The adapter connects to your "SYR SafeTech Connect 2422" or "POLYGONVATRO" leakage protection device in order to read date from the device and create some statistic data like water consumption history
+The adapter connects to your "SYR SafeTech Connect 2422" or "POLYGONVATRO" leakage protection device in order to read data from the device and create some statistic data like water consumption history.
 
 
 ## Changelog

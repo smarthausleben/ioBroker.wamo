@@ -31,6 +31,8 @@ let sensor_temperature_present = false;
 let sensor_pressure_present = false;
 let sensor_conductivity_present = false;
 
+const moreMessages = true;
+
 let device_responsive = false;
 let interfaceBussy;
 
@@ -2607,6 +2609,10 @@ class wamo extends utils.Adapter {
 				switch (String(valueKey)) {
 					case DeviceParameters.AvailableProfiles.id: 		// PRN - available profiles
 						finalValue = parseInt(value);
+						if(moreMessages)
+						{
+							this.log.info(DeviceParameters.AvailableProfiles.id + ' - ' + DeviceParameters.AvailableProfiles.objectdefinition.common.name + ' = ' + finalValue + ' ' +  DeviceParameters.AvailableProfiles.objectdefinition.common.unit);
+						}
 						break;
 					case DeviceParameters.SelectedProfile.id: 			// PRF - selected profile
 						finalValue = parseInt(value);
