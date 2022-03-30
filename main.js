@@ -2550,11 +2550,11 @@ class wamo extends utils.Adapter {
 
 				let skipp = false;
 
-				if(cur_ParameterID === DeviceParameters.WaterConductivity.id && sensor_conductivity_present === false){skipp = true;}
-				else if(cur_ParameterID === DeviceParameters.WaterPressure.id && sensor_pressure_present === false){skipp = true;}
-				else if(cur_ParameterID === DeviceParameters.WaterTemperature.id && sensor_temperature_present === false){skipp = true;}
+				if (cur_ParameterID === DeviceParameters.WaterConductivity.id && sensor_conductivity_present === false) { skipp = true; }
+				else if (cur_ParameterID === DeviceParameters.WaterPressure.id && sensor_pressure_present === false) { skipp = true; }
+				else if (cur_ParameterID === DeviceParameters.WaterTemperature.id && sensor_temperature_present === false) { skipp = true; }
 
-				if(skipp){
+				if (skipp) {
 					this.log.debug('Sensor not Present ... skipped');
 					resolve(true);
 					return;
@@ -2609,9 +2609,12 @@ class wamo extends utils.Adapter {
 				switch (String(valueKey)) {
 					case DeviceParameters.AvailableProfiles.id: 		// PRN - available profiles
 						finalValue = parseInt(value);
-						if(moreMessages)
-						{
-							this.log.info(DeviceParameters.AvailableProfiles.id + ' - ' + DeviceParameters.AvailableProfiles.objectdefinition.common.name + ' = ' + finalValue + ' ' +  DeviceParameters.AvailableProfiles.objectdefinition.common.unit);
+						if (moreMessages) {
+							if (DeviceParameters.AvailableProfiles.objectdefinition.common.unit !== null) {
+								this.log.info(DeviceParameters.AvailableProfiles.id + ' - ' + DeviceParameters.AvailableProfiles.objectdefinition.common.name.en + ' = ' + finalValue + ' ' + DeviceParameters.AvailableProfiles.objectdefinition.common.unit);
+							} else {
+								this.log.info(DeviceParameters.AvailableProfiles.id + ' - ' + DeviceParameters.AvailableProfiles.objectdefinition.common.name.en + ' = ' + finalValue);
+							}
 						}
 						break;
 					case DeviceParameters.SelectedProfile.id: 			// PRF - selected profile
