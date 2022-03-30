@@ -27,6 +27,10 @@ let alarm_Intervall_ID;
 let short_Intervall_ID;
 let long_Intervall_ID;
 
+let sensor_temperature_present = false;
+let sensor_pressure_present = false;
+let sensor_conductivity_present = false;
+
 let device_responsive = false;
 let interfaceBussy;
 
@@ -2455,6 +2459,18 @@ class wamo extends utils.Adapter {
 				}
 
 				const state_ID = cur_StatePath + '.' + cur_ParameterID;
+
+				let skipp = false;
+
+				if(cur_ParameterID === DeviceParameters.WaterConductivity.id && sensor_conductivity_present === false){skipp = true;}
+				else if(cur_ParameterID === DeviceParameters.WaterPressure.id && sensor_pressure_present === false){skipp = true;}
+				else if(cur_ParameterID === DeviceParameters.WaterTemperature.id && sensor_temperature_present === false){skipp = true;}
+
+				if(skipp){
+					this.log.warn('Sensor not Present ... skipped');
+					resolve(true);
+				}
+
 				await this.setObjectNotExistsAsync(state_ID, stateID.objectdefinition);
 				this.log.debug('stateID.objectdefinition.common.type = ' + stateID.objectdefinition.common.type);
 
@@ -2502,16 +2518,34 @@ class wamo extends utils.Adapter {
 			try {
 				let finalValue;
 				switch (String(valueKey)) {
-					case 'TSD':
-					case 'CSD':
-					case 'PSD':
+					case 'TSD':	// Temp sensor present
 						if (parseInt(value) == 0) {
+							sensor_temperature_present = true;
 							finalValue = 'Sensor active';
 						} else {
+							sensor_temperature_present = false;
 							finalValue = 'Sensor deactivated';
 						}
 						break;
-					case 'ALA':
+					case 'CSD':	// conductivity sensor present
+						if (parseInt(value) == 0) {
+							sensor_conductivity_present = true;
+							finalValue = 'Sensor active';
+						} else {
+							sensor_conductivity_present = false;
+							finalValue = 'Sensor deactivated';
+						}
+						break;
+					case 'PSD':	// Pressure sensor present
+						if (parseInt(value) == 0) {
+							sensor_pressure_present = true;
+							finalValue = 'Sensor active';
+						} else {
+							sensor_pressure_present = false;
+							finalValue = 'Sensor deactivated';
+						}
+						break;
+					case 'ALA':	// Alarm status
 						switch (String(value)) {
 							case 'FF':
 								finalValue = 'NO ALARM';
@@ -2595,8 +2629,20 @@ class wamo extends utils.Adapter {
 						finalValue = parseFloat(value) / 10;
 						break;
 					case 'BAR': // Water pressure
+						if (sensor_pressure_present) {
+							finalValue = parseFloat(String(value).replace(',', '.'));
+						}
+						break;
 					case 'CND': // Water conductivity
+						if (sensor_conductivity_present) {
+							finalValue = parseFloat(String(value).replace(',', '.'));
+						}
+						break;
 					case 'BAT':	// Batterie voltage
+						if (sensor_temperature_present) {
+							finalValue = parseFloat(String(value).replace(',', '.'));
+						}
+						break;
 					case 'NET':	// DC voltage (power adaptor)
 					case 'LTV':	// Last tapped Volume
 						finalValue = parseFloat(String(value).replace(',', '.'));
