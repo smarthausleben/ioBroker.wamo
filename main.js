@@ -639,6 +639,37 @@ const StatisticStates = {
 };
 // Object all possible device commands
 const DeviceParameters = {
+	SelectedProfile: {
+		id: 'PRF',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Selected profile number',
+					'de': 'Ausgewählte Profilnummer',
+					'ru': 'Выбранный номер профиля',
+					'pt': 'Número do perfil selecionado',
+					'nl': 'Geselecteerd profielnummer',
+					'fr': 'Numéro de profil sélectionné',
+					'it': 'Numero di profilo selezionato',
+					'es': 'Número de perfil seleccionado',
+					'pl': 'Wybrany numer profilu',
+					'zh-cn': '选择的个人资料编号'
+				},
+				type: 'number',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofiles.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
 	DeactivateConductivitySensor: {
 		id: 'CSD',
 		objectdefinition: {
@@ -1560,7 +1591,8 @@ const initStates = [
 	DeviceParameters.DaylightSavingTime,
 	DeviceParameters.DeactivatePressureSensor,
 	DeviceParameters.DeactivateConductivitySensor,
-	DeviceParameters.DeactivateTemperatureSensor];
+	DeviceParameters.DeactivateTemperatureSensor,
+	DeviceParameters.SelectedProfile];
 
 const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
 
@@ -2467,7 +2499,7 @@ class wamo extends utils.Adapter {
 				else if(cur_ParameterID === DeviceParameters.WaterTemperature.id && sensor_temperature_present === false){skipp = true;}
 
 				if(skipp){
-					this.log.warn('Sensor not Present ... skipped');
+					this.log.debug('Sensor not Present ... skipped');
 					resolve(true);
 					return;
 				}
@@ -2519,6 +2551,9 @@ class wamo extends utils.Adapter {
 			try {
 				let finalValue;
 				switch (String(valueKey)) {
+					case DeviceParameters.SelectedProfile.id: // PRF - Selected Profile
+						finalValue = parseInt(value);
+						break;
 					case 'TSD':	// Temp sensor present
 						if (parseInt(value) == 0) {
 							sensor_temperature_present = true;
