@@ -639,6 +639,37 @@ const StatisticStates = {
 };
 // Object all possible device commands
 const DeviceParameters = {
+	AvailableProfiles: {
+		id: 'PRN',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Amount available profiles',
+					'de': 'Anzahl verfügbarer Profile',
+					'ru': 'Количество доступных профилей',
+					'pt': 'Quantidade de perfis disponíveis',
+					'nl': 'Aantal beschikbare profielen',
+					'fr': 'Montant des profils disponibles',
+					'it': 'Quantità profili disponibili',
+					'es': 'Cantidad perfiles disponibles',
+					'pl': 'Ilość dostępnych profili',
+					'zh-cn': '可用配置文件数量'
+				},
+				type: 'number',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofiles.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
 	SelectedProfile: {
 		id: 'PRF',
 		objectdefinition: {
@@ -1592,7 +1623,8 @@ const initStates = [
 	DeviceParameters.DeactivatePressureSensor,
 	DeviceParameters.DeactivateConductivitySensor,
 	DeviceParameters.DeactivateTemperatureSensor,
-	DeviceParameters.SelectedProfile];
+	DeviceParameters.SelectedProfile,
+	DeviceParameters.AvailableProfiles];
 
 const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
 
@@ -2551,7 +2583,10 @@ class wamo extends utils.Adapter {
 			try {
 				let finalValue;
 				switch (String(valueKey)) {
-					case DeviceParameters.SelectedProfile.id: // PRF - Selected Profile
+					case DeviceParameters.AvailableProfiles.id: // PRN - available profiles
+						finalValue = parseInt(value);
+						break;
+					case DeviceParameters.SelectedProfile.id: // PRF - selected profile
 						finalValue = parseInt(value);
 						break;
 					case 'TSD':	// Temp sensor present
