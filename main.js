@@ -1317,6 +1317,37 @@ const DeviceParameters = {
 		readCommand: 'get',
 		writeCommand: null
 	},
+	WaterPressure: {
+		id: 'BAR',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Waterr pressure',
+					'de': 'Wasserdruck',
+					'ru': 'Давление воды',
+					'pt': 'Pressão da água',
+					'nl': 'Waterdruk',
+					'fr': "Pression d'eau",
+					'it': "Pressione dell'acqua",
+					'es': 'Presión de agua',
+					'pl': 'Ciśnienie wody',
+					'zh-cn': '水压'
+				},
+				type: 'number',
+				unit: 'bar',
+				role: 'value.pressure',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.WaterCondition.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
 	CurrentValveStatus: {
 		id: 'VLV',
 		objectdefinition: {
@@ -1436,6 +1467,7 @@ const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
 const shortPeriod = [
 	DeviceParameters.WaterTemperature,
 	DeviceParameters.WaterConductivity,
+	DeviceParameters.WaterPressure,
 	DeviceParameters.LastTappedVolume,
 	DeviceParameters.TotalVolume,
 	DeviceParameters.CurrentVolume];
@@ -2457,6 +2489,7 @@ class wamo extends utils.Adapter {
 					case 'CEL': // Water temperature
 						finalValue = parseFloat(value) / 10;
 						break;
+					case 'BAR': // Water pressure
 					case 'CND': // Water conductivity
 					case 'BAT':	// Batterie voltage
 					case 'NET':	// DC voltage (power adaptor)
