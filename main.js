@@ -2736,25 +2736,25 @@ class wamo extends utils.Adapter {
 						if (moreMessages) { this.moremessages(DeviceParameters.SystemTime, finalValue); }
 						break;
 					case DeviceParameters.WaterTemperature.id:			// CEL - Water temperature
-						finalValue = parseFloat(value) / 10;
-						if (moreMessages) { this.moremessages(DeviceParameters.WaterTemperature, finalValue); }
+						if (sensor_temperature_present) {
+							finalValue = parseFloat(value) / 10;
+							if (moreMessages) { this.moremessages(DeviceParameters.WaterTemperature, finalValue); }
+						}
 						break;
 					case DeviceParameters.WaterPressure.id:				// BAR Water pressure
 						if (sensor_pressure_present) {
 							finalValue = parseFloat(String(value).replace(',', '.'));
+							if (moreMessages) { this.moremessages(DeviceParameters.WaterPressure, finalValue); }
 						}
-						if (moreMessages) { this.moremessages(DeviceParameters.WaterPressure, finalValue); }
 						break;
 					case DeviceParameters.WaterConductivity.id:			// CND - Water conductivity
 						if (sensor_conductivity_present) {
 							finalValue = parseFloat(String(value).replace(',', '.'));
+							if (moreMessages) { this.moremessages(DeviceParameters.WaterConductivity, finalValue); }
 						}
-						if (moreMessages) { this.moremessages(DeviceParameters.WaterConductivity, finalValue); }
 						break;
 					case DeviceParameters.BatteryVoltage.id:			// BAT Batterie voltage
-						if (sensor_temperature_present) {
-							finalValue = parseFloat(String(value).replace(',', '.'));
-						}
+						finalValue = parseFloat(String(value).replace(',', '.'));
 						if (moreMessages) { this.moremessages(DeviceParameters.BatteryVoltage, finalValue); }
 						break;
 					case DeviceParameters.PowerAdapterVoltage.id:		// NET - DC voltage (power adaptor)
