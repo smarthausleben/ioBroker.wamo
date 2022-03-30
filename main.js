@@ -635,6 +635,37 @@ const StatisticStates = {
 };
 // Object all possible device commands
 const DeviceParameters = {
+	DeactivatePressureSensor: {
+		id: 'PSD',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Deactivate pressure sensor',
+					'de': 'Drucksensor deaktivieren',
+					'ru': 'Деактивировать датчик давления',
+					'pt': 'Desativar sensor de pressão',
+					'nl': 'Druksensor deactiveren',
+					'fr': 'Désactiver le capteur de pression',
+					'it': 'Disattiva sensore di pressione',
+					'es': 'Desactivar sensor de presión',
+					'pl': 'Dezaktywuj czujnik ciśnienia',
+					'zh-cn': '停用压力传感器（0=激活 1=停用）'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceSettings.path,
+		levelRead: 'USER',
+		levelWrite: 'FACTORY',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
 	CurrentVolume: {
 		id: 'AVO',
 		objectdefinition: {
@@ -1460,7 +1491,8 @@ const initStates = [
 	DeviceParameters.WiFiState,
 	DeviceParameters.BatteryVoltage,
 	DeviceParameters.PowerAdapterVoltage,
-	DeviceParameters.DaylightSavingTime];
+	DeviceParameters.DaylightSavingTime,
+	DeviceParameters.DeactivatePressureSensor];
 
 const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
 
@@ -2406,6 +2438,13 @@ class wamo extends utils.Adapter {
 			try {
 				let finalValue;
 				switch (String(valueKey)) {
+					case 'PSD':
+						if (parseInt(value) == 0) {
+							finalValue = 'active';
+						} else {
+							finalValue = 'deactivated';
+						}
+						break;
 					case 'ALA':
 						switch (String(value)) {
 							case 'FF':
