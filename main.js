@@ -31,7 +31,7 @@ let sensor_temperature_present = false;
 let sensor_pressure_present = false;
 let sensor_conductivity_present = false;
 
-const moreMessages = true;
+let moreMessages = true;
 
 let device_responsive = false;
 let interfaceBussy;
@@ -1731,7 +1731,7 @@ class wamo extends utils.Adapter {
 		// this.config:
 		this.log.debug('config Device IP: ' + this.config.device_ip);
 		this.log.debug('config Device Port: ' + this.config.device_port);
-
+		moreMessages = this.config.moremessages;
 		//=================================================================================================
 		//===  Create device object and all channel objects												===
 		//=================================================================================================

@@ -73,5 +73,17 @@ systemDictionary = {
 		'es': 'tiempo de sondeo de alarma en segundos',
 		'pl': 'czas odpytywania alarmu w sekundach',
 		'zh-cn': '报警轮询时间（秒）'
+	},
+	'more messages': {
+		'en': 'more messages',
+		'de': 'mehr Nachrichten',
+		'ru': 'больше сообщений',
+		'pt': 'mais mensagens',
+		'nl': 'meer berichten',
+		'fr': 'plus de messages',
+		'it': 'più messaggi',
+		'es': 'más mensajes',
+		'pl': 'więcej wiadomości',
+		'zh-cn': '更多信息'
 	}
 };
