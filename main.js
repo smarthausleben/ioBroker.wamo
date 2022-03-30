@@ -635,6 +635,68 @@ const StatisticStates = {
 };
 // Object all possible device commands
 const DeviceParameters = {
+	DeactivateConductivitySensor: {
+		id: 'CSD',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Deactivate conductivity sensor',
+					'de': 'Leitfähigkeitssensor deaktivieren',
+					'ru': 'Отключить датчик проводимости',
+					'pt': 'Desativar sensor de condutividade',
+					'nl': 'Geleidbaarheidssensor deactiveren',
+					'fr': 'Désactiver le capteur de conductivité',
+					'it': 'Disattiva il sensore di conducibilità',
+					'es': 'Desactivar sensor de conductividad',
+					'pl': 'Dezaktywuj czujnik przewodności',
+					'zh-cn': '停用电导率传感器'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceSettings.path,
+		levelRead: 'USER',
+		levelWrite: 'FACTORY',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	DeactivateTemperatureSensor: {
+		id: 'TSD',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Deactivate temperature sensor',
+					'de': 'Temperatursensor deaktivieren',
+					'ru': 'Деактивировать датчик температуры',
+					'pt': 'Desativar sensor de temperatura',
+					'nl': 'Temperatuursensor deactiveren',
+					'fr': 'Désactiver le capteur de température',
+					'it': 'Disattiva il sensore di temperatura',
+					'es': 'Desactivar sensor de temperatura',
+					'pl': 'Dezaktywuj czujnik temperatury',
+					'zh-cn': '停用温度传感器'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceSettings.path,
+		levelRead: 'USER',
+		levelWrite: 'FACTORY',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
 	DeactivatePressureSensor: {
 		id: 'PSD',
 		objectdefinition: {
@@ -1492,7 +1554,9 @@ const initStates = [
 	DeviceParameters.BatteryVoltage,
 	DeviceParameters.PowerAdapterVoltage,
 	DeviceParameters.DaylightSavingTime,
-	DeviceParameters.DeactivatePressureSensor];
+	DeviceParameters.DeactivatePressureSensor,
+	DeviceParameters.DeactivateConductivitySensor,
+	DeviceParameters.DeactivateTemperatureSensor];
 
 const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
 
@@ -1762,10 +1826,10 @@ class wamo extends utils.Adapter {
 
 		// examples for the checkPassword/checkGroup functions
 		let result = await this.checkPasswordAsync('admin', 'iobroker');
-		this.log.info('check user admin pw iobroker: ' + result);
+		this.log.debug('check user admin pw iobroker: ' + result);
 
 		result = await this.checkGroupAsync('admin', 'admin');
-		this.log.info('check group user admin group admin: ' + result);
+		this.log.debug('check group user admin group admin: ' + result);
 
 		// reference to Adapter
 		myAdapter = this;
@@ -2438,11 +2502,13 @@ class wamo extends utils.Adapter {
 			try {
 				let finalValue;
 				switch (String(valueKey)) {
+					case 'TSD':
+					case 'CSD':
 					case 'PSD':
 						if (parseInt(value) == 0) {
-							finalValue = 'active';
+							finalValue = 'Sensor active';
 						} else {
-							finalValue = 'deactivated';
+							finalValue = 'Sensor deactivated';
 						}
 						break;
 					case 'ALA':
