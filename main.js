@@ -81,6 +81,27 @@ const adapterChannels = {
 			native: {}
 		}
 	},
+	DeviceSettingsSensors: {
+		path: 'Device.Settings.Sensors',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Sensors',
+					'de': 'Sensoren',
+					'ru': 'Датчики',
+					'pt': 'Sensores',
+					'nl': 'Sensoren',
+					'fr': 'Capteurs',
+					'it': 'Sensori',
+					'es': 'Sensores',
+					'pl': 'Czujniki',
+					'zh-cn': '传感器'
+				},
+			},
+			native: {}
+		}
+	},
 	DeviceConditions: {
 		path: 'Device.Device-Conditions',
 		channel: {
@@ -726,7 +747,7 @@ const DeviceParameters = {
 			},
 			native: {}
 		},
-		statePath: adapterChannels.DeviceSettings.path,
+		statePath: adapterChannels.DeviceSettingsSensors.path,
 		levelRead: 'USER',
 		levelWrite: 'FACTORY',
 		readCommand: 'get',
@@ -757,7 +778,7 @@ const DeviceParameters = {
 			},
 			native: {}
 		},
-		statePath: adapterChannels.DeviceSettings.path,
+		statePath: adapterChannels.DeviceSettingsSensors.path,
 		levelRead: 'USER',
 		levelWrite: 'FACTORY',
 		readCommand: 'get',
@@ -788,7 +809,7 @@ const DeviceParameters = {
 			},
 			native: {}
 		},
-		statePath: adapterChannels.DeviceSettings.path,
+		statePath: adapterChannels.DeviceSettingsSensors.path,
 		levelRead: 'USER',
 		levelWrite: 'FACTORY',
 		readCommand: 'get',
