@@ -1643,13 +1643,6 @@ class wamo extends utils.Adapter {
 			throw err;
 		}
 
-
-		try {
-			const test = await this.getStateAsync(adapterChannels.DeviceInfo.path + '.' + DeviceParameters.IPAddress.id);
-			this.log.warn('state resolved: ' + test.val);
-		} catch (err) {
-			this.log.warn('state rejected');
-		}
 		/*
 		// ==================================================================================================================
 		// =======                                 TESTING															  =======
@@ -1830,62 +1823,117 @@ class wamo extends utils.Adapter {
 	async alarm_cron_day_Tick() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				this.log.warn('Cron day tick');
+				this.log.debug('Cron day tick');
+
+				// ================================================
+				// Dayly sum reset
+				// ================================================
+				// here we save the sumary and the we reset it to 0
+				// ================================================
+
+				// getting saved Total state
 				const TotalDayState = await this.getStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id);
 
+				// saving sum to "past" State
 				await this.setObjectNotExistsAsync(StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id, StatisticStates.TotalPastDay.objectdefinition);
 				await this.setStateAsync(StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id, { val: parseFloat(TotalDayState.val), ack: true });
 
+				// resetting sum to 0
 				await this.setObjectNotExistsAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, StatisticStates.TotalDay.objectdefinition);
 				await this.setStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, { val: 0, ack: true });
 
-				// get alarmPeriode data
-				//await this.getData(alarmPeriod);
 				resolve(true);
 			} catch (err) {
 				reject(err);
 			}
 		});
-
 	}
+
 	async alarm_cron_week_Tick() {
 		return new Promise(async (resolve, reject) => {
 			try {
 				this.log.warn('Cron week tick');
-				// get alarmPeriode data
-				//await this.getData(alarmPeriod);
+
+				// ================================================
+				// Week sum reset
+				// ================================================
+				// here we save the sumary and the we reset it to 0
+				// ================================================
+
+				// getting saved Total state
+				const TotalWeekState = await this.getStateAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id);
+
+				// saving sum to "past" State
+				await this.setObjectNotExistsAsync(StatisticStates.TotalPastWeek.statePath + '.' + StatisticStates.TotalPastWeek.id, StatisticStates.TotalPastWeek.objectdefinition);
+				await this.setStateAsync(StatisticStates.TotalPastWeek.statePath + '.' + StatisticStates.TotalPastWeek.id, { val: parseFloat(TotalWeekState.val), ack: true });
+
+				// resetting sum to 0
+				await this.setObjectNotExistsAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id, StatisticStates.TotalWeek.objectdefinition);
+				await this.setStateAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id, { val: 0, ack: true });
+
 				resolve(true);
 			} catch (err) {
 				reject(err);
 			}
 		});
-
 	}
+
 	async alarm_cron_month_Tick() {
 		return new Promise(async (resolve, reject) => {
 			try {
 				this.log.warn('Cron month tick');
-				// get alarmPeriode data
-				//await this.getData(alarmPeriod);
+
+				// ================================================
+				// Month sum reset
+				// ================================================
+				// here we save the sumary and the we reset it to 0
+				// ================================================
+
+				// getting saved Total state
+				const TotalMonthState = await this.getStateAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id);
+
+				// saving sum to "past" State
+				await this.setObjectNotExistsAsync(StatisticStates.TotalPastMonth.statePath + '.' + StatisticStates.TotalPastMonth.id, StatisticStates.TotalPastMonth.objectdefinition);
+				await this.setStateAsync(StatisticStates.TotalPastMonth.statePath + '.' + StatisticStates.TotalPastMonth.id, { val: parseFloat(TotalMonthState.val), ack: true });
+
+				// resetting sum to 0
+				await this.setObjectNotExistsAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id, StatisticStates.TotalMonth.objectdefinition);
+				await this.setStateAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id, { val: 0, ack: true });
+
 				resolve(true);
 			} catch (err) {
 				reject(err);
 			}
 		});
-
 	}
+
 	async alarm_cron_year_Tick() {
 		return new Promise(async (resolve, reject) => {
 			try {
 				this.log.warn('Cron year tick');
-				// get alarmPeriode data
-				//await this.getData(alarmPeriod);
+
+				// ================================================
+				// Year sum reset
+				// ================================================
+				// here we save the sumary and the we reset it to 0
+				// ================================================
+
+				// getting saved Total state
+				const TotalYearState = await this.getStateAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id);
+
+				// saving sum to "past" State
+				await this.setObjectNotExistsAsync(StatisticStates.TotalPastYear.statePath + '.' + StatisticStates.TotalPastYear.id, StatisticStates.TotalPastYear.objectdefinition);
+				await this.setStateAsync(StatisticStates.TotalPastYear.statePath + '.' + StatisticStates.TotalPastYear.id, { val: parseFloat(TotalYearState.val), ack: true });
+
+				// resetting sum to 0
+				await this.setObjectNotExistsAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id, StatisticStates.TotalYear.objectdefinition);
+				await this.setStateAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id, { val: 0, ack: true });
+
 				resolve(true);
 			} catch (err) {
 				reject(err);
 			}
 		});
-
 	}
 
 	//===================================================
@@ -2318,6 +2366,9 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	//================================================================================
+	// here we convert the raw values from the device into final values for the states
+	//================================================================================
 	async convertDeviceReturnValue(valueKey, value) {
 		return new Promise((resolve, reject) => {
 			try {
@@ -2486,6 +2537,9 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	//=============================================================================
+	// here we do a part of the math for the statistics
+	//=============================================================================
 	async updateStatistics() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -2499,46 +2553,52 @@ class wamo extends utils.Adapter {
 				let current_Month = 0;
 				let current_Year = 0;
 
+				// getting states
 				const lastTotalvalueState = await this.getStateAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id);
 				const currentTotalvalueState = await this.getStateAsync(DeviceParameters.TotalVolume.statePath + '.' + DeviceParameters.TotalVolume.id);
-
 				const current_Day_valueState = await this.getStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id);
 				const current_Week_valueState = await this.getStateAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id);
 				const current_Month_valueState = await this.getStateAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id);
 				const current_Year_valueState = await this.getStateAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id);
 
-				if (lastTotalvalueState !== null) {lastTotalValue = parseFloat(lastTotalvalueState.val);}
-				if (currentTotalvalueState !== null) {currentTotalValue = parseFloat(currentTotalvalueState.val) * 1000;}
+				// pulling values from states if state already existed
+				if (lastTotalvalueState !== null) { lastTotalValue = parseFloat(lastTotalvalueState.val); }
+				if (currentTotalvalueState !== null) { currentTotalValue = parseFloat(currentTotalvalueState.val) * 1000; }
+				if (current_Day_valueState !== null) { current_Day = parseFloat(current_Day_valueState.val); }
+				if (current_Week_valueState !== null) { current_Week = parseFloat(current_Week_valueState.val); }
+				if (current_Month_valueState !== null) { current_Month = parseFloat(current_Month_valueState.val); }
+				if (current_Year_valueState !== null) { current_Year = parseFloat(current_Year_valueState.val); }
 
-				if (current_Day_valueState !== null) {current_Day = parseFloat(current_Day_valueState.val);}
-				if (current_Week_valueState !== null) {current_Week = parseFloat(current_Week_valueState.val);}
-				if (current_Month_valueState !== null) {current_Month = parseFloat(current_Month_valueState.val);}
-				if (current_Year_valueState !== null) {current_Year = parseFloat(current_Year_valueState.val);}
-
-
+				// calculating the delta
 				deltaValue = currentTotalValue - lastTotalValue;
-				this.log.warn('old total = ' + String(lastTotalValue) + 'l / akt total = ' + String(currentTotalValue) + 'l / Delta = ' + String(deltaValue) + 'l');
+				this.log.debug('old total = ' + String(lastTotalValue) + 'l / akt total = ' + String(currentTotalValue) + 'l / Delta = ' + String(deltaValue) + 'l');
 
-				current_Day += deltaValue;
-				current_Week += deltaValue;
-				current_Month += deltaValue;
-				current_Year += (deltaValue / 1000);
+				// only update states if we hav a change in total consumption
+				if (deltaValue > 0) {
+					// adding delta to states
+					current_Day += deltaValue;
+					current_Week += deltaValue;
+					current_Month += deltaValue;
+					current_Year += (deltaValue / 1000);
 
-
-				if(deltaValue > 0)
-				{
+					// saving states
+					// new last total
 					await this.setObjectNotExistsAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id, StatisticStates.TotalLastValue.objectdefinition);
 					await this.setStateAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id, { val: currentTotalValue, ack: true });
 
+					// new day total
 					await this.setObjectNotExistsAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, StatisticStates.TotalDay.objectdefinition);
 					await this.setStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, { val: current_Day, ack: true });
 
+					// new week total
 					await this.setObjectNotExistsAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id, StatisticStates.TotalWeek.objectdefinition);
 					await this.setStateAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id, { val: current_Week, ack: true });
 
+					// new month total
 					await this.setObjectNotExistsAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id, StatisticStates.TotalMonth.objectdefinition);
 					await this.setStateAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id, { val: current_Month, ack: true });
 
+					// new year total
 					await this.setObjectNotExistsAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id, StatisticStates.TotalYear.objectdefinition);
 					await this.setStateAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id, { val: current_Year, ack: true });
 				}
