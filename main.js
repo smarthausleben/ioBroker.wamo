@@ -1932,6 +1932,7 @@ class wamo extends utils.Adapter {
 	 * @param {() => void} callback
 	 */
 	onUnload(callback) {
+		this.log.warn('[onUnload(callback)] was hit');
 		try {
 			schedule.gracefulShutdown();
 		} catch (err) {
@@ -2604,46 +2605,46 @@ class wamo extends utils.Adapter {
 			try {
 				let finalValue;
 				switch (String(valueKey)) {
-					case DeviceParameters.AvailableProfiles.id: // PRN - available profiles
+					case DeviceParameters.AvailableProfiles.id: 		// PRN - available profiles
 						finalValue = parseInt(value);
 						break;
-					case DeviceParameters.SelectedProfile.id: // PRF - selected profile
+					case DeviceParameters.SelectedProfile.id: 			// PRF - selected profile
 						finalValue = parseInt(value);
 						break;
-					case 'TSD':	// Temp sensor present
+					case DeviceParameters.DeactivateTemperatureSensor.id:	// TSD - Temp sensor present
 						if (parseInt(value) == 0) {
 							sensor_temperature_present = true;
 							finalValue = 'Sensor active';
-							this.log.info('Temperatur sensor Present');
+							this.log.info('Temperatur sensor present');
 						} else {
 							sensor_temperature_present = false;
 							finalValue = 'Sensor deactivated';
-							this.log.warn('Temperatur sensor not Present');
+							this.log.warn('Temperatur sensor not present');
 						}
 						break;
-					case 'CSD':	// conductivity sensor present
+					case DeviceParameters.DeactivateConductivitySensor.id:	// CSD - conductivity sensor present
 						if (parseInt(value) == 0) {
 							sensor_conductivity_present = true;
 							finalValue = 'Sensor active';
-							this.log.info('Conductivity sensor Present');
+							this.log.info('Conductivity sensor present');
 						} else {
 							sensor_conductivity_present = false;
 							finalValue = 'Sensor deactivated';
-							this.log.warn('Conductivity sensor not Present');
+							this.log.warn('Conductivity sensor not present');
 						}
 						break;
-					case 'PSD':	// Pressure sensor present
+					case DeviceParameters.DeactivatePressureSensor.id:	// PSD - Pressure sensor present
 						if (parseInt(value) == 0) {
 							sensor_pressure_present = true;
 							finalValue = 'Sensor active';
-							this.log.info('Pressure sensor Present');
+							this.log.info('Pressure sensor present');
 						} else {
 							sensor_pressure_present = false;
 							finalValue = 'Sensor deactivated';
-							this.log.warn('Pressure sensor not Present');
+							this.log.warn('Pressure sensor not present');
 						}
 						break;
-					case 'ALA':	// Alarm status
+					case DeviceParameters.CurrentAlarmStatus.id:		// ALA Alarm status
 						switch (String(value)) {
 							case 'FF':
 								finalValue = 'NO ALARM';
@@ -2697,7 +2698,7 @@ class wamo extends utils.Adapter {
 								finalValue = 'undefined';
 						}
 						break;
-					case 'VLV':	// Current Valve Status
+					case DeviceParameters.CurrentValveStatus.id:		// VLV - Current Valve Status
 						switch (String(value)) {
 							case '10':
 								finalValue = 'Closed';
@@ -2719,67 +2720,66 @@ class wamo extends utils.Adapter {
 								finalValue = null;
 						}
 						break;
-					case 'RTC':	// System Time
+					case DeviceParameters.SystemTime.id:				// RTC - System Time
 						finalValue = (new Date(parseInt(value) * 1000)).toLocaleString();
-						//finalValue = (new Date(parseInt(value) * 1000)).toISOString().match(/(\d{4}\-\d{2}\-\d{2})T(\d{2}:\d{2}:\d{2})/);
 						break;
-					case 'CEL': // Water temperature
+					case DeviceParameters.WaterTemperature.id:			// CEL - Water temperature
 						finalValue = parseFloat(value) / 10;
 						break;
-					case 'BAR': // Water pressure
+					case DeviceParameters.WaterPressure.id:				// BAR Water pressure
 						if (sensor_pressure_present) {
 							finalValue = parseFloat(String(value).replace(',', '.'));
 						}
 						break;
-					case 'CND': // Water conductivity
+					case DeviceParameters.WaterConductivity.id:			// CND - Water conductivity
 						if (sensor_conductivity_present) {
 							finalValue = parseFloat(String(value).replace(',', '.'));
 						}
 						break;
-					case 'BAT':	// Batterie voltage
+					case DeviceParameters.BatteryVoltage.id:			// BAT Batterie voltage
 						if (sensor_temperature_present) {
 							finalValue = parseFloat(String(value).replace(',', '.'));
 						}
 						break;
-					case 'NET':	// DC voltage (power adaptor)
-					case 'LTV':	// Last tapped Volume
+					case DeviceParameters.PowerAdapterVoltage.id:		// NET - DC voltage (power adaptor)
+					case DeviceParameters.LastTappedVolume.id:			// LTV - Last tapped Volume
 						finalValue = parseFloat(String(value).replace(',', '.'));
 						break;
-					case 'VOL':
+					case DeviceParameters.TotalVolume.id:				// VOL - total consumed water
 						finalValue = parseFloat(String(value).replace(',', '.').replace('Vol[L]', '')) / 1000;
 						break;
-					case 'AVO':
+					case DeviceParameters.CurrentVolume.id:				// AVO - current water volume
 						finalValue = parseFloat(String(value).replace(',', '.').replace('mL', ''));
 						break;
-					case 'WAH':	// WiFi AP hidden
+					case DeviceParameters.APHidden.id:					// WAH - WiFi AP hidden
 						if (parseInt(value) == 0) {
 							finalValue = 'AP not hidden (visible)';
 						} else {
 							finalValue = 'AP hidden';
 						}
 						break;
-					case 'WAD':	// WiFi AP dissabled
+					case DeviceParameters.APDisabled.id:				// WAD - WiFi AP dissabled
 						if (parseInt(value) == 0) {
 							finalValue = 'AP not disabled';
 						} else {
 							finalValue = 'AP disabled';
 						}
 						break;
-					case 'APT':	// WiFi AP timeout
+					case DeviceParameters.APTimeout.id:					// APT - WiFi AP timeout
 						if (parseInt(value) == 0) {
 							finalValue = 'AP timeout not active';
 						} else {
 							finalValue = 'AP disabled after ' + String(value) + ' seconds after internet connection';
 						}
 						break;
-					case 'DWL':	// WiFi deactivated
+					case DeviceParameters.WiFiDeaktivate.id:			// DWL - WiFi deactivated
 						if (parseInt(value) == 0) {
 							finalValue = 'active (default)';
 						} else {
 							finalValue = 'deactivated';
 						}
 						break;
-					case 'WFS':	// WiFi state
+					case DeviceParameters.WiFiState.id:					// WFS - WiFi state
 						if (parseInt(value) == 0) {
 							finalValue = 'Disconnected';
 						} else if (parseInt(value) == 1) {
@@ -2790,22 +2790,22 @@ class wamo extends utils.Adapter {
 							finalValue = 'undefined';
 						}
 						break;
-					case 'IDS':	// Daylight saving time
+					case DeviceParameters.DaylightSavingTime.id:		// IDS - Daylight saving time
 						if (parseInt(value) == 0) {
 							finalValue = 'Disabled';
 						} else {
 							finalValue = 'Enabled';
 						}
 						break;
-					case 'VER':	// Firmware Version
-					case 'WIP': // IP address
-					case 'MAC':	// MAC address
-					case 'WGW':	// Default gateway
-					case 'SRN':	// Device serial number
-					case 'CNO':	// Code Number
-					case 'WFR':	// WiFi RSSI
-					case 'WFC':	// WiFi SSID
-					case 'SRV':	// Next Maintenance
+					case DeviceParameters.FirmwareVersion.id:			// VER -Firmware Version
+					case DeviceParameters.IPAddress.id: 				// WIP - IP address
+					case DeviceParameters.MACAddress.id:				// MAC -MAC address
+					case DeviceParameters.DefaultGateway.id:			// WGW - Default gateway
+					case DeviceParameters.SerialNumber.id:				// SRN - Device serial number
+					case DeviceParameters.CodeNumber.id:				// CNO - Code Number
+					case DeviceParameters.WiFiRSSI.id:					// WFR - WiFi RSSI
+					case DeviceParameters.WiFiSSID.id:					// WFC - WiFi SSID
+					case DeviceParameters.NextMaintenance.id:			// SRV - Next Maintenance
 						finalValue = value;
 						break;
 					default:
