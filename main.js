@@ -2469,6 +2469,7 @@ class wamo extends utils.Adapter {
 				if(skipp){
 					this.log.warn('Sensor not Present ... skipped');
 					resolve(true);
+					return;
 				}
 
 				await this.setObjectNotExistsAsync(state_ID, stateID.objectdefinition);
@@ -2522,27 +2523,33 @@ class wamo extends utils.Adapter {
 						if (parseInt(value) == 0) {
 							sensor_temperature_present = true;
 							finalValue = 'Sensor active';
+							this.log.info('Temperatur sensor Present');
 						} else {
 							sensor_temperature_present = false;
 							finalValue = 'Sensor deactivated';
+							this.log.warn('Temperatur sensor not Present');
 						}
 						break;
 					case 'CSD':	// conductivity sensor present
 						if (parseInt(value) == 0) {
 							sensor_conductivity_present = true;
 							finalValue = 'Sensor active';
+							this.log.info('Conductivity sensor Present');
 						} else {
 							sensor_conductivity_present = false;
 							finalValue = 'Sensor deactivated';
+							this.log.warn('Conductivity sensor not Present');
 						}
 						break;
 					case 'PSD':	// Pressure sensor present
 						if (parseInt(value) == 0) {
 							sensor_pressure_present = true;
 							finalValue = 'Sensor active';
+							this.log.info('Pressure sensor Present');
 						} else {
 							sensor_pressure_present = false;
 							finalValue = 'Sensor deactivated';
+							this.log.warn('Pressure sensor not Present');
 						}
 						break;
 					case 'ALA':	// Alarm status
