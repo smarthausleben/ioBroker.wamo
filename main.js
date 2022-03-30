@@ -1510,9 +1510,8 @@ class wamo extends utils.Adapter {
 
 		// The adapters config (in the instance object everything under the attribute "native") is accessible via
 		// this.config:
-		this.log.info('config Device IP: ' + this.config.device_ip);
-		this.log.info('config Device Port: ' + this.config.device_port);
-		this.log.warn('==============================================================');
+		this.log.debug('config Device IP: ' + this.config.device_ip);
+		this.log.debug('config Device Port: ' + this.config.device_port);
 
 		//=================================================================================================
 		//===  Create device object and all channel objects												===
