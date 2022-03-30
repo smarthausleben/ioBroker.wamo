@@ -2599,6 +2599,7 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+
 	//================================================================================
 	// here we convert the raw values from the device into final values for the states
 	//================================================================================
@@ -2610,11 +2611,7 @@ class wamo extends utils.Adapter {
 					case DeviceParameters.AvailableProfiles.id: 		// PRN - available profiles
 						finalValue = parseInt(value);
 						if (moreMessages) {
-							if (DeviceParameters.AvailableProfiles.objectdefinition.common.unit !== null) {
-								this.log.info(DeviceParameters.AvailableProfiles.id + ' - ' + DeviceParameters.AvailableProfiles.objectdefinition.common.name.en + ' = ' + finalValue + ' ' + DeviceParameters.AvailableProfiles.objectdefinition.common.unit);
-							} else {
-								this.log.info(DeviceParameters.AvailableProfiles.id + ' - ' + DeviceParameters.AvailableProfiles.objectdefinition.common.name.en + ' = ' + finalValue);
-							}
+							this.moremessages(DeviceParameters.AvailableProfiles, finalValue);
 						}
 						break;
 					case DeviceParameters.SelectedProfile.id: 			// PRF - selected profile
@@ -2705,6 +2702,9 @@ class wamo extends utils.Adapter {
 								break;
 							default:
 								finalValue = 'undefined';
+						}
+						if (moreMessages) {
+							this.moremessages(DeviceParameters.CurrentAlarmStatus, finalValue);
 						}
 						break;
 					case DeviceParameters.CurrentValveStatus.id:		// VLV - Current Valve Status
@@ -2828,6 +2828,23 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	async moremessages(ParameterStruct, value) {
+		return new Promise((resolve, reject) => {
+			try {
+				const ID = ParameterStruct.id;
+				const NameEN = ParameterStruct.objectdefinition.common.name.en;
+				const Unit = ParameterStruct.objectdefinition.common.unit;
+				if (Unit !== null) {
+					this.log.info(ID + ' - ' + NameEN + ' = ' + String(value) + ' ' + Unit);
+				} else {
+					this.log.info(ID + ' - ' + NameEN + ' = ' + String(value));
+				}
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
 	//=============================================================================
 	// here we do a part of the math for the statistics
 	//=============================================================================
