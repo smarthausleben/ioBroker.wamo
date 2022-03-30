@@ -74,16 +74,16 @@ systemDictionary = {
 		'pl': 'czas odpytywania alarmu w sekundach',
 		'zh-cn': '报警轮询时间（秒）'
 	},
-	'more messages': {
-		'en': 'more messages',
-		'de': 'mehr Nachrichten',
-		'ru': 'больше сообщений',
-		'pt': 'mais mensagens',
-		'nl': 'meer berichten',
-		'fr': 'plus de messages',
-		'it': 'più messaggi',
-		'es': 'más mensajes',
-		'pl': 'więcej wiadomości',
-		'zh-cn': '更多信息'
+	'more loging messages': {
+		'en': 'more loging messages',
+		'de': 'mehr Logging-Meldungen',
+		'ru': 'больше сообщений журнала',
+		'pt': 'mais mensagens de registro',
+		'nl': 'meer logberichten',
+		'fr': 'plus de messages de journalisation',
+		'it': 'più messaggi di registrazione',
+		'es': 'más mensajes de registro',
+		'pl': 'więcej wiadomości logowania',
+		'zh-cn': '更多日志信息'
 	}
 };
