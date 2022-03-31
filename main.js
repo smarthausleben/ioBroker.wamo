@@ -1723,6 +1723,68 @@ const DeviceParameters = {
 			native: {}
 		},
 		statePath: adapterChannels.DeviceConditions.path,
+		rangevalues: {
+			'10': {
+				'en': 'closed',
+				'de': 'geschlossen',
+				'ru': 'закрыто',
+				'pt': 'fechado',
+				'nl': 'gesloten',
+				'fr': 'fermé',
+				'it': 'Chiuso',
+				'es': 'cerrado',
+				'pl': 'Zamknięte',
+				'zh-cn': '关闭'
+			},
+			'11': {
+				'en': 'is closing',
+				'de': 'schließt',
+				'ru': 'закрывается',
+				'pt': 'está fechando',
+				'nl': 'gaat sluiten',
+				'fr': 'se ferme',
+				'it': 'sta chiudendo',
+				'es': 'está cerrando',
+				'pl': 'zamyka się',
+				'zh-cn': '正在关闭'
+			},
+			'20': {
+				'en': 'open',
+				'de': 'offen',
+				'ru': 'открытым',
+				'pt': 'abrir',
+				'nl': 'open',
+				'fr': 'ouvrir',
+				'it': 'aprire',
+				'es': 'abierto',
+				'pl': 'otwarty',
+				'zh-cn': '打开'
+			},
+			'21': {
+				'en': 'is opening',
+				'de': 'öffnet',
+				'ru': 'открывается',
+				'pt': 'está abrindo',
+				'nl': 'gaat open',
+				'fr': "s'ouvre",
+				'it': 'sta aprendo',
+				'es': 'Esta abierto',
+				'pl': 'otwiera się',
+				'zh-cn': '正在打开'
+			},
+			'30': {
+				'en': 'undefined',
+				'de': 'nicht definiert',
+				'ru': 'неопределенный',
+				'pt': 'Indefinido',
+				'nl': 'ongedefinieerd',
+				'fr': 'indéfini',
+				'it': 'non definito',
+				'es': 'indefinido',
+				'pl': 'nieokreślony',
+				'zh-cn': '不明确的'
+			}
+		},
 		levelRead: 'SERVICE',
 		levelWrite: null,
 		readCommand: 'get',
@@ -3177,25 +3239,28 @@ class wamo extends utils.Adapter {
 						if (moreMessages) { await this.moremessages(DeviceParameters.CurrentAlarmStatus, finalValue); }
 						break;
 					case DeviceParameters.CurrentValveStatus.id:		// VLV - Current Valve Status
-						switch (String(value)) {
-							case '10':
-								finalValue = 'Closed';
-								break;
-							case '11':
-								finalValue = 'Closing';
-								break;
-							case '20':
-								finalValue = 'Open';
-								break;
-							case '21':
-								finalValue = 'Opening';
-								break;
-							case '30':
-								finalValue = 'Undefined';
-								break;
-							default:
-								this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Value (' + String(value) + ') for Key (' + String(valueKey) + ') is not defined!');
-								finalValue = null;
+						finalValue = await this.getGlobalisedValue(DeviceParameters.CurrentValveStatus, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							switch (String(value)) {
+								case '10':
+									finalValue = 'Closed';
+									break;
+								case '11':
+									finalValue = 'Closing';
+									break;
+								case '20':
+									finalValue = 'Open';
+									break;
+								case '21':
+									finalValue = 'Opening';
+									break;
+								case '30':
+									finalValue = 'Undefined';
+									break;
+								default:
+									this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Value (' + String(value) + ') for Key (' + String(valueKey) + ') is not defined!');
+									finalValue = null;
+							}
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.CurrentValveStatus, finalValue); }
 						break;
@@ -3340,6 +3405,10 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	//=============================================================================
+	// here we generate the additional messages if this option is aktive in the 
+	// adapter settings
+	//=============================================================================
 	async moremessages(ParameterStruct, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -3353,9 +3422,9 @@ class wamo extends utils.Adapter {
 				const Name = ParameterStruct.objectdefinition.common.name[nameWish];
 				const Unit = ParameterStruct.objectdefinition.common.unit;
 				if (Unit !== null) {
-					this.log.info(ID + ' - ' + Name + ' = ' + String(value) + ' ' + Unit);
+					this.log.info(ID + ' - ' + Name + ': ' + String(value) + ' ' + Unit);
 				} else {
-					this.log.info(ID + ' - ' + Name + ' = ' + String(value));
+					this.log.info(ID + ' - ' + Name + ': ' + String(value));
 				}
 				resolve(true);
 			} catch (err) {
@@ -3436,6 +3505,9 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	//#########################################################################
+	// OBSOLETE ?
+	//#########################################################################
 	async UpdateProfileState(ProfileNumber, stateID, value) {
 		return new Promise(async (resolve, reject) => {
 
