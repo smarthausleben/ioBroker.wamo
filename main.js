@@ -2721,7 +2721,7 @@ class wamo extends utils.Adapter {
 				if ('rangevalues' in ParameterObject) {	// do we have globalised values?
 					if (String(value) in ParameterObject.rangevalues) {	// ist the current value globalised?
 						if (SystemLanguage in ParameterObject.rangevalues[String(value)]) { // value in current system language available?
-							result = ParameterObject.rangevalues[String(value)][SystemLanguage]; // OK we take it
+							result = String(ParameterObject.rangevalues[String(value)][SystemLanguage]); // OK we take it
 						}
 						else {
 							result = null;
@@ -2732,7 +2732,6 @@ class wamo extends utils.Adapter {
 				} else {
 					result = null;
 				}
-
 				resolve(result);
 			} catch (err) {
 				reject(err);
@@ -2749,7 +2748,7 @@ class wamo extends utils.Adapter {
 				let finalValue;
 				switch (String(valueKey)) {
 					case DeviceParameters.Units.id:						// UNI - Units
-						finalValue = this.getGlobalisedValue(DeviceParameters.Units, value);
+						finalValue = this.getGlobalisedValue(DeviceParameters.Units, value).then();
 						// did we get a globalised Value back?
 						if (finalValue === null) {
 							this.log.warn('Barameter id: ' + String(valueKey) + ' is not globalised');
