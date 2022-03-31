@@ -689,6 +689,32 @@ const DeviceParameters = {
 			native: {}
 		},
 		statePath: adapterChannels.DeviceSettings.path,
+		rangevalues: {
+			0: {
+				'en': 'metric units',
+				'de': 'metrische Einheiten',
+				'ru': 'метрические единицы',
+				'pt': 'unidades métricas',
+				'nl': 'metrische eenheden',
+				'fr': 'unités métriques',
+				'it': 'unità metrica',
+				'es': 'unidades metricas',
+				'pl': 'jednostki metryczne',
+				'zh-cn': '公制单位'
+			},
+			1: {
+				'en': 'imperial units',
+				'de': 'imperiale Einheiten',
+				'ru': 'имперские единицы',
+				'pt': 'unidades imperiais',
+				'nl': 'keizerlijke eenheden',
+				'fr': 'unités impériales',
+				'it': 'unità imperiali',
+				'es': 'unidades imperiales',
+				'pl': 'jednostki imperialne',
+				'zh-cn': '英制单位'
+			}
+		},
 		levelRead: 'USER',
 		levelWrite: 'USER',
 		readCommand: 'get',
@@ -2697,10 +2723,17 @@ class wamo extends utils.Adapter {
 				let finalValue;
 				switch (String(valueKey)) {
 					case DeviceParameters.Units.id:						// UNI - Units
-						if (parseInt(value) === 0) {
-							finalValue = 'metric';
-						} else {
-							finalValue = 'imperial';
+						if (parseInt(value) in DeviceParameters.Units.rangevalues) {
+							if (SystemLanguage in DeviceParameters.Units.rangevalues[parseInt(value)]) {
+								finalValue = DeviceParameters.Units.rangevalues[parseInt(value)][SystemLanguage];
+							}
+							else {
+								if (parseInt(value) === 0) {
+									finalValue = 'metric units';
+								} else {
+									finalValue = 'imperial units';
+								}
+							}
 						}
 						if (moreMessages) { this.moremessages(DeviceParameters.Units, finalValue); }
 						break;
@@ -2995,9 +3028,9 @@ class wamo extends utils.Adapter {
 			try {
 				const ID = ParameterStruct.id;
 				let nameWish;
-				if (SystemLanguage in ParameterStruct.objectdefinition.common.name){
+				if (SystemLanguage in ParameterStruct.objectdefinition.common.name) {
 					nameWish = SystemLanguage;
-				}else{
+				} else {
 					nameWish = 'en';
 				}
 				const Name = ParameterStruct.objectdefinition.common.name[nameWish];
