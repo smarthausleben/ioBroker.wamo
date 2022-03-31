@@ -2714,14 +2714,14 @@ class wamo extends utils.Adapter {
 	}
 
 	async getGlobalisedValue(ParameterObject, value) {
-		return new Promise((resolve, reject) => {
+		return new Promise( async(resolve, reject) => {
 			try {
 				let result;
 
 				if ('rangevalues' in ParameterObject) {	// do we have globalised values?
 					if (String(value) in ParameterObject.rangevalues) {	// ist the current value globalised?
 						if (SystemLanguage in ParameterObject.rangevalues[String(value)]) { // value in current system language available?
-							result = String(ParameterObject.rangevalues[String(value)][SystemLanguage]); // OK we take it
+							result = ParameterObject.rangevalues[String(value)][SystemLanguage]; // OK we take it
 						}
 						else {
 							result = null;
@@ -2743,12 +2743,12 @@ class wamo extends utils.Adapter {
 	// here we convert the raw values from the device into final values for the states
 	//================================================================================
 	async convertDeviceReturnValue(valueKey, value) {
-		return new Promise((resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
 				let finalValue;
 				switch (String(valueKey)) {
 					case DeviceParameters.Units.id:						// UNI - Units
-						finalValue = this.getGlobalisedValue(DeviceParameters.Units, value).then();
+						finalValue = await this.getGlobalisedValue(DeviceParameters.Units, value);
 						// did we get a globalised Value back?
 						if (finalValue === null) {
 							this.log.warn('Barameter id: ' + String(valueKey) + ' is not globalised');
@@ -2758,7 +2758,7 @@ class wamo extends utils.Adapter {
 								finalValue = 'imperial units';
 							}
 						}
-						if (moreMessages) { this.moremessages(DeviceParameters.Units, finalValue); }
+						if (moreMessages){await this.moremessages(DeviceParameters.Units, finalValue);}
 						break;
 					case DeviceParameters.Language.id:					// LNG - Language
 						switch (parseInt(String(value).substring(0, 1))) {
@@ -2781,15 +2781,15 @@ class wamo extends utils.Adapter {
 								this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Value (' + String(value) + ') for Key (' + String(valueKey) + ') is not defined!');
 								finalValue = null;
 						}
-						if (moreMessages) { this.moremessages(DeviceParameters.Language, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.Language, finalValue); }
 						break;
 					case DeviceParameters.AvailableProfiles.id: 		// PRN - available profiles
 						finalValue = parseInt(value);
-						if (moreMessages) { this.moremessages(DeviceParameters.AvailableProfiles, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.AvailableProfiles, finalValue); }
 						break;
 					case DeviceParameters.SelectedProfile.id: 			// PRF - selected profile
 						finalValue = parseInt(value);
-						if (moreMessages) { this.moremessages(DeviceParameters.SelectedProfile, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.SelectedProfile, finalValue); }
 						break;
 					case DeviceParameters.DeactivateTemperatureSensor.id:	// TSD - Temp sensor present
 						if (parseInt(value) == 0) {
@@ -2801,7 +2801,7 @@ class wamo extends utils.Adapter {
 							finalValue = 'Sensor deactivated';
 							this.log.warn('Temperatur sensor not present');
 						}
-						if (moreMessages) { this.moremessages(DeviceParameters.DeactivateTemperatureSensor, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.DeactivateTemperatureSensor, finalValue); }
 						break;
 					case DeviceParameters.DeactivateConductivitySensor.id:	// CSD - conductivity sensor present
 						if (parseInt(value) == 0) {
@@ -2813,7 +2813,7 @@ class wamo extends utils.Adapter {
 							finalValue = 'Sensor deactivated';
 							this.log.warn('Conductivity sensor not present');
 						}
-						if (moreMessages) { this.moremessages(DeviceParameters.DeactivateConductivitySensor, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.DeactivateConductivitySensor, finalValue); }
 						break;
 					case DeviceParameters.DeactivatePressureSensor.id:	// PSD - Pressure sensor present
 						if (parseInt(value) == 0) {
@@ -2825,7 +2825,7 @@ class wamo extends utils.Adapter {
 							finalValue = 'Sensor deactivated';
 							this.log.warn('Pressure sensor not present');
 						}
-						if (moreMessages) { this.moremessages(DeviceParameters.DeactivatePressureSensor, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.DeactivatePressureSensor, finalValue); }
 						break;
 					case DeviceParameters.CurrentAlarmStatus.id:		// ALA Alarm status
 						switch (String(value)) {
@@ -2880,7 +2880,7 @@ class wamo extends utils.Adapter {
 							default:
 								finalValue = 'undefined';
 						}
-						if (moreMessages) { this.moremessages(DeviceParameters.CurrentAlarmStatus, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.CurrentAlarmStatus, finalValue); }
 						break;
 					case DeviceParameters.CurrentValveStatus.id:		// VLV - Current Valve Status
 						switch (String(value)) {
@@ -2903,49 +2903,49 @@ class wamo extends utils.Adapter {
 								this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Value (' + String(value) + ') for Key (' + String(valueKey) + ') is not defined!');
 								finalValue = null;
 						}
-						if (moreMessages) { this.moremessages(DeviceParameters.CurrentValveStatus, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.CurrentValveStatus, finalValue); }
 						break;
 					case DeviceParameters.SystemTime.id:				// RTC - System Time
 						finalValue = (new Date(parseInt(value) * 1000)).toLocaleString();
-						if (moreMessages) { this.moremessages(DeviceParameters.SystemTime, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.SystemTime, finalValue); }
 						break;
 					case DeviceParameters.WaterTemperature.id:			// CEL - Water temperature
 						if (sensor_temperature_present) {
 							finalValue = parseFloat(value) / 10;
-							if (moreMessages) { this.moremessages(DeviceParameters.WaterTemperature, finalValue); }
+							if (moreMessages) { await this.moremessages(DeviceParameters.WaterTemperature, finalValue); }
 						}
 						break;
 					case DeviceParameters.WaterPressure.id:				// BAR Water pressure
 						if (sensor_pressure_present) {
 							finalValue = parseFloat(String(value).replace(',', '.'));
-							if (moreMessages) { this.moremessages(DeviceParameters.WaterPressure, finalValue); }
+							if (moreMessages) { await this.moremessages(DeviceParameters.WaterPressure, finalValue); }
 						}
 						break;
 					case DeviceParameters.WaterConductivity.id:			// CND - Water conductivity
 						if (sensor_conductivity_present) {
 							finalValue = parseFloat(String(value).replace(',', '.'));
-							if (moreMessages) { this.moremessages(DeviceParameters.WaterConductivity, finalValue); }
+							if (moreMessages) { await this.moremessages(DeviceParameters.WaterConductivity, finalValue); }
 						}
 						break;
 					case DeviceParameters.BatteryVoltage.id:			// BAT Batterie voltage
 						finalValue = parseFloat(String(value).replace(',', '.'));
-						if (moreMessages) { this.moremessages(DeviceParameters.BatteryVoltage, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.BatteryVoltage, finalValue); }
 						break;
 					case DeviceParameters.PowerAdapterVoltage.id:		// NET - DC voltage (power adaptor)
 						finalValue = parseFloat(String(value).replace(',', '.'));
-						if (moreMessages) { this.moremessages(DeviceParameters.PowerAdapterVoltage, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.PowerAdapterVoltage, finalValue); }
 						break;
 					case DeviceParameters.LastTappedVolume.id:			// LTV - Last tapped Volume
 						finalValue = parseFloat(String(value).replace(',', '.'));
-						if (moreMessages) { this.moremessages(DeviceParameters.LastTappedVolume, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.LastTappedVolume, finalValue); }
 						break;
 					case DeviceParameters.TotalVolume.id:				// VOL - total consumed water
 						finalValue = parseFloat(String(value).replace(',', '.').replace('Vol[L]', '')) / 1000;
-						if (moreMessages) { this.moremessages(DeviceParameters.TotalVolume, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.TotalVolume, finalValue); }
 						break;
 					case DeviceParameters.CurrentVolume.id:				// AVO - current water volume
 						finalValue = parseFloat(String(value).replace(',', '.').replace('mL', ''));
-						if (moreMessages) { this.moremessages(DeviceParameters.CurrentVolume, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.CurrentVolume, finalValue); }
 						break;
 					case DeviceParameters.APHidden.id:					// WAH - WiFi AP hidden
 						if (parseInt(value) == 0) {
@@ -2953,7 +2953,7 @@ class wamo extends utils.Adapter {
 						} else {
 							finalValue = 'AP hidden';
 						}
-						if (moreMessages) { this.moremessages(DeviceParameters.APHidden, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.APHidden, finalValue); }
 						break;
 					case DeviceParameters.APDisabled.id:				// WAD - WiFi AP dissabled
 						if (parseInt(value) == 0) {
@@ -2961,7 +2961,7 @@ class wamo extends utils.Adapter {
 						} else {
 							finalValue = 'AP disabled';
 						}
-						if (moreMessages) { this.moremessages(DeviceParameters.APDisabled, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.APDisabled, finalValue); }
 						break;
 					case DeviceParameters.APTimeout.id:					// APT - WiFi AP timeout
 						if (parseInt(value) == 0) {
@@ -2969,7 +2969,7 @@ class wamo extends utils.Adapter {
 						} else {
 							finalValue = 'AP disabled after ' + String(value) + ' seconds after internet connection';
 						}
-						if (moreMessages) { this.moremessages(DeviceParameters.APTimeout, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.APTimeout, finalValue); }
 						break;
 					case DeviceParameters.WiFiDeaktivate.id:			// DWL - WiFi deactivated
 						if (parseInt(value) == 0) {
@@ -2977,7 +2977,7 @@ class wamo extends utils.Adapter {
 						} else {
 							finalValue = 'deactivated';
 						}
-						if (moreMessages) { this.moremessages(DeviceParameters.WiFiDeaktivate, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.WiFiDeaktivate, finalValue); }
 						break;
 					case DeviceParameters.WiFiState.id:					// WFS - WiFi state
 						if (parseInt(value) == 0) {
@@ -2989,7 +2989,7 @@ class wamo extends utils.Adapter {
 						} else {
 							finalValue = 'undefined';
 						}
-						if (moreMessages) { this.moremessages(DeviceParameters.WiFiState, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.WiFiState, finalValue); }
 						break;
 					case DeviceParameters.DaylightSavingTime.id:		// IDS - Daylight saving time
 						if (parseInt(value) == 0) {
@@ -2997,43 +2997,43 @@ class wamo extends utils.Adapter {
 						} else {
 							finalValue = 'Enabled';
 						}
-						if (moreMessages) { this.moremessages(DeviceParameters.DaylightSavingTime, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.DaylightSavingTime, finalValue); }
 						break;
 					case DeviceParameters.FirmwareVersion.id:			// VER -Firmware Version
 						finalValue = value;
-						if (moreMessages) { this.moremessages(DeviceParameters.FirmwareVersion, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.FirmwareVersion, finalValue); }
 						break;
 					case DeviceParameters.IPAddress.id: 				// WIP - IP address
 						finalValue = value;
-						if (moreMessages) { this.moremessages(DeviceParameters.IPAddress, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.IPAddress, finalValue); }
 						break;
 					case DeviceParameters.MACAddress.id:				// MAC -MAC address
 						finalValue = value;
-						if (moreMessages) { this.moremessages(DeviceParameters.MACAddress, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.MACAddress, finalValue); }
 						break;
 					case DeviceParameters.DefaultGateway.id:			// WGW - Default gateway
 						finalValue = value;
-						if (moreMessages) { this.moremessages(DeviceParameters.DefaultGateway, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.DefaultGateway, finalValue); }
 						break;
 					case DeviceParameters.SerialNumber.id:				// SRN - Device serial number
 						finalValue = value;
-						if (moreMessages) { this.moremessages(DeviceParameters.SerialNumber, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.SerialNumber, finalValue); }
 						break;
 					case DeviceParameters.CodeNumber.id:				// CNO - Code Number
 						finalValue = value;
-						if (moreMessages) { this.moremessages(DeviceParameters.CodeNumber, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.CodeNumber, finalValue); }
 						break;
 					case DeviceParameters.WiFiRSSI.id:					// WFR - WiFi RSSI
 						finalValue = value;
-						if (moreMessages) { this.moremessages(DeviceParameters.WiFiRSSI, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.WiFiRSSI, finalValue); }
 						break;
 					case DeviceParameters.WiFiSSID.id:					// WFC - WiFi SSID
 						finalValue = value;
-						if (moreMessages) { this.moremessages(DeviceParameters.WiFiSSID, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.WiFiSSID, finalValue); }
 						break;
 					case DeviceParameters.NextMaintenance.id:			// SRV - Next Maintenance
 						finalValue = value;
-						if (moreMessages) { this.moremessages(DeviceParameters.NextMaintenance, finalValue); }
+						if (moreMessages) { await this.moremessages(DeviceParameters.NextMaintenance, finalValue); }
 						break;
 					default:
 						this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
@@ -3047,7 +3047,7 @@ class wamo extends utils.Adapter {
 	}
 
 	async moremessages(ParameterStruct, value) {
-		return new Promise((resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
 				const ID = ParameterStruct.id;
 				let nameWish;
