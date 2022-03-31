@@ -2718,7 +2718,7 @@ class wamo extends utils.Adapter {
 			try {
 				let result;
 
-				if ('rangevalues' in ParameterObject.Units) {	// do we have globalised values?
+				if ('rangevalues' in ParameterObject) {	// do we have globalised values?
 					if (String(value) in ParameterObject.rangevalues) {	// ist the current value globalised?
 						if (SystemLanguage in ParameterObject.rangevalues[String(value)]) { // value in current system language available?
 							result = ParameterObject.rangevalues[String(value)][SystemLanguage]; // OK we take it
