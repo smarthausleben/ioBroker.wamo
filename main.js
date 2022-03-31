@@ -662,6 +662,37 @@ const StatisticStates = {
 };
 // Object all possible device commands
 const DeviceParameters = {
+	Language: {
+		id: 'LNG',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'language setting',
+					'de': 'Spracheinstellungen',
+					'ru': 'языковые настройки',
+					'pt': 'configuração de idioma',
+					'nl': 'taalinstelling',
+					'fr': 'Paramètres de langue',
+					'it': 'impostazione della lingua',
+					'es': 'configuración de idioma',
+					'pl': 'ustawienie języka',
+					'zh-cn': '语言设置'
+				},
+				type: 'number',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceSettings.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
 	AvailableProfiles: {
 		id: 'PRN',
 		objectdefinition: {
@@ -1647,7 +1678,8 @@ const initStates = [
 	DeviceParameters.DeactivateConductivitySensor,
 	DeviceParameters.DeactivateTemperatureSensor,
 	DeviceParameters.SelectedProfile,
-	DeviceParameters.AvailableProfiles];
+	DeviceParameters.AvailableProfiles,
+	DeviceParameters.Language];
 
 const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
 
@@ -2609,6 +2641,29 @@ class wamo extends utils.Adapter {
 			try {
 				let finalValue;
 				switch (String(valueKey)) {
+					case DeviceParameters.Language.id:					// LNG - Language
+						switch (parseInt(value)) {
+							case 0:
+								finalValue = 'DE';
+								break;
+							case 1:
+								finalValue = 'EN';
+								break;
+							case 2:
+								finalValue = 'ES';
+								break;
+							case 3:
+								finalValue = 'IT';
+								break;
+							case 4:
+								finalValue = 'PL';
+								break;
+							default:
+								this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Value (' + String(value) + ') for Key (' + String(valueKey) + ') is not defined!');
+								finalValue = null;
+						}
+						if (moreMessages) { this.moremessages(DeviceParameters.Language, finalValue); }
+						break;
 					case DeviceParameters.AvailableProfiles.id: 		// PRN - available profiles
 						finalValue = parseInt(value);
 						if (moreMessages) { this.moremessages(DeviceParameters.AvailableProfiles, finalValue); }
