@@ -662,6 +662,37 @@ const StatisticStates = {
 };
 // Object all possible device commands
 const DeviceParameters = {
+	Units: {
+		id: 'UNI',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'units',
+					'de': 'Einheiten',
+					'ru': 'единицы',
+					'pt': 'unidades',
+					'nl': 'eenheden',
+					'fr': 'unités',
+					'it': 'unità',
+					'es': 'unidades',
+					'pl': 'jednostki',
+					'zh-cn': '单位'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceSettings.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
 	Language: {
 		id: 'LNG',
 		objectdefinition: {
@@ -679,7 +710,7 @@ const DeviceParameters = {
 					'pl': 'ustawienie języka',
 					'zh-cn': '语言设置'
 				},
-				type: 'number',
+				type: 'string',
 				unit: null,
 				role: 'state',
 				read: true,
@@ -1679,7 +1710,8 @@ const initStates = [
 	DeviceParameters.DeactivateTemperatureSensor,
 	DeviceParameters.SelectedProfile,
 	DeviceParameters.AvailableProfiles,
-	DeviceParameters.Language];
+	DeviceParameters.Language,
+	DeviceParameters.Units];
 
 const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
 
@@ -2641,6 +2673,15 @@ class wamo extends utils.Adapter {
 			try {
 				let finalValue;
 				switch (String(valueKey)) {
+					case DeviceParameters.Units.id:						// UNI - Units
+						if(parseInt(value) === 0)
+						{
+							finalValue = 'metric';
+						}else{
+							finalValue = 'imperial';
+						}
+						if (moreMessages) { this.moremessages(DeviceParameters.Units, finalValue); }
+						break;
 					case DeviceParameters.Language.id:					// LNG - Language
 						switch (parseInt(String(value).substring(0,1))) {
 							case 0:
