@@ -2724,12 +2724,15 @@ class wamo extends utils.Adapter {
 							result = ParameterObject.rangevalues[String(value)][SystemLanguage]; // OK we take it
 						}
 						else {
+							this.log.warn('Parameter id: ' + String(ParameterObject.id) + ' is not globalised');
 							result = null;
 						}
 					} else {
+						this.log.warn('Parameter id: ' + String(ParameterObject.id) + ' is not globalised');
 						result = null;
 					}
 				} else {
+					this.log.warn('Parameter id: ' + String(ParameterObject.id) + ' is not globalised');
 					result = null;
 				}
 				resolve(result);
@@ -2751,7 +2754,6 @@ class wamo extends utils.Adapter {
 						finalValue = await this.getGlobalisedValue(DeviceParameters.Units, value);
 						// did we get a globalised Value back?
 						if (finalValue === null) {
-							this.log.warn('Barameter id: ' + String(valueKey) + ' is not globalised');
 							if (parseInt(value) === 0) {
 								finalValue = 'metric units';
 							} else {
