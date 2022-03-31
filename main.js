@@ -1796,6 +1796,20 @@ class wamo extends utils.Adapter {
 		this.log.debug('config Device IP: ' + this.config.device_ip);
 		this.log.debug('config Device Port: ' + this.config.device_port);
 		moreMessages = this.config.moremessages;
+
+		try{
+			const systemSettings = await this.getForeignObjectAsync('system.config');
+			if(systemSettings != null){
+				this.log.warn('System Sprache ist ' + String(systemSettings.common.language));
+			}
+			else
+			{
+				this.log.error('systemSettings objekt ist null');
+			}
+		}catch(err)
+		{
+			this.log.error('ERROR getting system config: ' + err);
+		}
 		//=================================================================================================
 		//===  Create device object and all channel objects												===
 		//=================================================================================================
@@ -1835,6 +1849,7 @@ class wamo extends utils.Adapter {
 			throw 'exit not OK';
 		}
 
+		
 		//=================================================================================================
 		//===  Connection LED to Green																	===
 		//=================================================================================================
@@ -2074,6 +2089,7 @@ class wamo extends utils.Adapter {
 
 	//===================================================
 	// Timer Starten
+
 	async timerStarts() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -2674,16 +2690,15 @@ class wamo extends utils.Adapter {
 				let finalValue;
 				switch (String(valueKey)) {
 					case DeviceParameters.Units.id:						// UNI - Units
-						if(parseInt(value) === 0)
-						{
+						if (parseInt(value) === 0) {
 							finalValue = 'metric';
-						}else{
+						} else {
 							finalValue = 'imperial';
 						}
 						if (moreMessages) { this.moremessages(DeviceParameters.Units, finalValue); }
 						break;
 					case DeviceParameters.Language.id:					// LNG - Language
-						switch (parseInt(String(value).substring(0,1))) {
+						switch (parseInt(String(value).substring(0, 1))) {
 							case 0:
 								finalValue = 'DE';
 								break;
