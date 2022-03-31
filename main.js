@@ -690,7 +690,7 @@ const DeviceParameters = {
 		},
 		statePath: adapterChannels.DeviceSettings.path,
 		rangevalues: {
-			0: {
+			'0': {
 				'en': 'metric units',
 				'de': 'metrische Einheiten',
 				'ru': 'метрические единицы',
@@ -702,7 +702,7 @@ const DeviceParameters = {
 				'pl': 'jednostki metryczne',
 				'zh-cn': '公制单位'
 			},
-			1: {
+			'1': {
 				'en': 'imperial units',
 				'de': 'imperiale Einheiten',
 				'ru': 'имперские единицы',
@@ -2713,6 +2713,32 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	async getGlobalisedValue(ParameterObject, value) {
+		return new Promise((resolve, reject) => {
+			try {
+				let result;
+
+				if ('rangevalues' in ParameterObject.Units) {	// do we have globalised values?
+					if (String(value) in ParameterObject.rangevalues) {	// ist the current value globalised?
+						if (SystemLanguage in ParameterObject.rangevalues[String(value)]) { // value in current system language available?
+							result = ParameterObject.rangevalues[String(value)][SystemLanguage]; // OK we take it
+						}
+						else {
+							result = null;
+						}
+					} else {
+						result = null;
+					}
+				} else {
+					result = null;
+				}
+
+				resolve(result);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
 
 	//================================================================================
 	// here we convert the raw values from the device into final values for the states
@@ -2723,16 +2749,14 @@ class wamo extends utils.Adapter {
 				let finalValue;
 				switch (String(valueKey)) {
 					case DeviceParameters.Units.id:						// UNI - Units
-						if (parseInt(value) in DeviceParameters.Units.rangevalues) {
-							if (SystemLanguage in DeviceParameters.Units.rangevalues[parseInt(value)]) {
-								finalValue = DeviceParameters.Units.rangevalues[parseInt(value)][SystemLanguage];
-							}
-							else {
-								if (parseInt(value) === 0) {
-									finalValue = 'metric units';
-								} else {
-									finalValue = 'imperial units';
-								}
+						finalValue = this.getGlobalisedValue(DeviceParameters.Units, value);
+						// did we get a globalised Value back?
+						if (finalValue === null) {
+							this.log.warn('Barameter id: ' + String(valueKey) + ' is not globalised');
+							if (parseInt(value) === 0) {
+								finalValue = 'metric units';
+							} else {
+								finalValue = 'imperial units';
 							}
 						}
 						if (moreMessages) { this.moremessages(DeviceParameters.Units, finalValue); }
