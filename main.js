@@ -2714,7 +2714,7 @@ class wamo extends utils.Adapter {
 	}
 
 	async getGlobalisedValue(ParameterObject, value) {
-		return new Promise( async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
 				let result;
 
@@ -2758,28 +2758,32 @@ class wamo extends utils.Adapter {
 								finalValue = 'imperial units';
 							}
 						}
-						if (moreMessages){await this.moremessages(DeviceParameters.Units, finalValue);}
+						if (moreMessages) { await this.moremessages(DeviceParameters.Units, finalValue); }
 						break;
 					case DeviceParameters.Language.id:					// LNG - Language
-						switch (parseInt(String(value).substring(0, 1))) {
-							case 0:
-								finalValue = 'de';
-								break;
-							case 1:
-								finalValue = 'en';
-								break;
-							case 2:
-								finalValue = 'es';
-								break;
-							case 3:
-								finalValue = 'it';
-								break;
-							case 4:
-								finalValue = 'pl';
-								break;
-							default:
-								this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Value (' + String(value) + ') for Key (' + String(valueKey) + ') is not defined!');
-								finalValue = null;
+						finalValue = await this.getGlobalisedValue(DeviceParameters.Language, value);
+						// did we get a globalised Value back?
+						if (finalValue === null) {
+							switch (parseInt(String(value).substring(0, 1))) {
+								case 0:
+									finalValue = 'de';
+									break;
+								case 1:
+									finalValue = 'en';
+									break;
+								case 2:
+									finalValue = 'es';
+									break;
+								case 3:
+									finalValue = 'it';
+									break;
+								case 4:
+									finalValue = 'pl';
+									break;
+								default:
+									this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Value (' + String(value) + ') for Key (' + String(valueKey) + ') is not defined!');
+									finalValue = null;
+							}
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.Language, finalValue); }
 						break;
