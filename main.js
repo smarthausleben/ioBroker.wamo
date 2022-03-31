@@ -870,6 +870,32 @@ const DeviceParameters = {
 			native: {}
 		},
 		statePath: adapterChannels.DeviceSettingsSensors.path,
+		rangevalues: {
+			'0': {
+				'en': 'temperature sensor activated',
+				'de': 'Temperatursensor aktiviert',
+				'ru': 'датчик температуры активирован',
+				'pt': 'sensor de temperatura ativado',
+				'nl': 'temperatuursensor geactiveerd',
+				'fr': 'capteur de température activé',
+				'it': 'sensore di temperatura attivato',
+				'es': 'sensor de temperatura activado',
+				'pl': 'czujnik temperatury aktywowany',
+				'zh-cn': '温度传感器激活'
+			},
+			'1': {
+				'en': 'temperature sensor deactivated',
+				'de': 'Temperatursensor deaktiviert',
+				'ru': 'датчик температуры деактивирован',
+				'pt': 'sensor de temperatura desativado',
+				'nl': 'temperatuursensor gedeactiveerd',
+				'fr': 'capteur de température désactivé',
+				'it': 'sensore di temperatura disattivato',
+				'es': 'sensor de temperatura desactivado',
+				'pl': 'czujnik temperatury wyłączony',
+				'zh-cn': '温度传感器已停用'
+			}
+		},
 		levelRead: 'USER',
 		levelWrite: 'FACTORY',
 		readCommand: 'get',
@@ -2713,6 +2739,9 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	//=============================================================================
+	// returns a globalised value if defined in the parameter Structure
+	//=============================================================================
 	async getGlobalisedValue(ParameterObject, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -2724,15 +2753,15 @@ class wamo extends utils.Adapter {
 							result = ParameterObject.rangevalues[String(value)][SystemLanguage]; // OK we take it
 						}
 						else {
-							this.log.warn('Parameter id: ' + String(ParameterObject.id) + ' is not globalised');
+							this.log.debug('Parameter id : ' + String(ParameterObject.id) + ' value is not globalised');
 							result = null;
 						}
 					} else {
-						this.log.warn('Parameter id: ' + String(ParameterObject.id) + ' is not globalised');
+						this.log.debug('Parameter id: ' + String(ParameterObject.id) + ' value is not globalised');
 						result = null;
 					}
 				} else {
-					this.log.warn('Parameter id: ' + String(ParameterObject.id) + ' is not globalised');
+					this.log.debug('Parameter id: ' + String(ParameterObject.id) + ' value is not globalised');
 					result = null;
 				}
 				resolve(result);
@@ -2752,8 +2781,7 @@ class wamo extends utils.Adapter {
 				switch (String(valueKey)) {
 					case DeviceParameters.Units.id:						// UNI - Units
 						finalValue = await this.getGlobalisedValue(DeviceParameters.Units, value);
-						// did we get a globalised Value back?
-						if (finalValue === null) {
+						if (finalValue === null) {	// did we get a globalised Value back?
 							if (parseInt(value) === 0) {
 								finalValue = 'metric units';
 							} else {
@@ -2764,8 +2792,7 @@ class wamo extends utils.Adapter {
 						break;
 					case DeviceParameters.Language.id:					// LNG - Language
 						finalValue = await this.getGlobalisedValue(DeviceParameters.Language, value);
-						// did we get a globalised Value back?
-						if (finalValue === null) {
+						if (finalValue === null) {	// did we get a globalised Value back?
 							switch (parseInt(String(value).substring(0, 1))) {
 								case 0:
 									finalValue = 'de';
@@ -2790,22 +2817,31 @@ class wamo extends utils.Adapter {
 						if (moreMessages) { await this.moremessages(DeviceParameters.Language, finalValue); }
 						break;
 					case DeviceParameters.AvailableProfiles.id: 		// PRN - available profiles
-						finalValue = parseInt(value);
+						finalValue = await this.getGlobalisedValue(DeviceParameters.AvailableProfiles, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = parseInt(value);
+						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.AvailableProfiles, finalValue); }
 						break;
 					case DeviceParameters.SelectedProfile.id: 			// PRF - selected profile
-						finalValue = parseInt(value);
+						finalValue = await this.getGlobalisedValue(DeviceParameters.SelectedProfile, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = parseInt(value);
+						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.SelectedProfile, finalValue); }
 						break;
 					case DeviceParameters.DeactivateTemperatureSensor.id:	// TSD - Temp sensor present
-						if (parseInt(value) == 0) {
-							sensor_temperature_present = true;
-							finalValue = 'Sensor active';
-							this.log.info('Temperatur sensor present');
-						} else {
-							sensor_temperature_present = false;
-							finalValue = 'Sensor deactivated';
-							this.log.warn('Temperatur sensor not present');
+						finalValue = await this.getGlobalisedValue(DeviceParameters.DeactivateTemperatureSensor, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							if (parseInt(value) == 0) {
+								sensor_temperature_present = true;
+								finalValue = 'Sensor active';
+								this.log.debug('Temperatur sensor present');
+							} else {
+								sensor_temperature_present = false;
+								finalValue = 'Sensor deactivated';
+								this.log.debug('Temperatur sensor not present');
+							}
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.DeactivateTemperatureSensor, finalValue); }
 						break;
