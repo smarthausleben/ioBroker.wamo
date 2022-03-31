@@ -35,6 +35,7 @@ let moreMessages = true;
 
 let device_responsive = false;
 let interfaceBussy;
+let SystemLanguage;
 
 // number of connection attemts before throwing an error and exiting
 const connectionRetrys = 5;
@@ -1797,17 +1798,23 @@ class wamo extends utils.Adapter {
 		this.log.debug('config Device Port: ' + this.config.device_port);
 		moreMessages = this.config.moremessages;
 
-		try{
+		//=================================================================================================
+		// getting system language
+		//=================================================================================================
+		try {
 			const systemSettings = await this.getForeignObjectAsync('system.config');
-			if(systemSettings != null){
-				this.log.warn('System Sprache ist ' + String(systemSettings.common.language));
+			if (systemSettings != null) {
+				SystemLanguage = String(systemSettings.common.language);
+				this.log.debug('System language is ' + String(systemSettings.common.language));
 			}
-			else
-			{
-				this.log.error('systemSettings objekt ist null');
+			else {
+				// we set language to default english
+				SystemLanguage = String('en');
+				this.log.error('systemSettings objekt is null');
 			}
-		}catch(err)
-		{
+		} catch (err) {
+			// we set language to default; english
+			SystemLanguage = String('en');
 			this.log.error('ERROR getting system config: ' + err);
 		}
 		//=================================================================================================
@@ -1849,7 +1856,7 @@ class wamo extends utils.Adapter {
 			throw 'exit not OK';
 		}
 
-		
+
 		//=================================================================================================
 		//===  Connection LED to Green																	===
 		//=================================================================================================
@@ -2700,19 +2707,19 @@ class wamo extends utils.Adapter {
 					case DeviceParameters.Language.id:					// LNG - Language
 						switch (parseInt(String(value).substring(0, 1))) {
 							case 0:
-								finalValue = 'DE';
+								finalValue = 'de';
 								break;
 							case 1:
-								finalValue = 'EN';
+								finalValue = 'en';
 								break;
 							case 2:
-								finalValue = 'ES';
+								finalValue = 'es';
 								break;
 							case 3:
-								finalValue = 'IT';
+								finalValue = 'it';
 								break;
 							case 4:
-								finalValue = 'PL';
+								finalValue = 'pl';
 								break;
 							default:
 								this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Value (' + String(value) + ') for Key (' + String(valueKey) + ') is not defined!');
@@ -2987,12 +2994,18 @@ class wamo extends utils.Adapter {
 		return new Promise((resolve, reject) => {
 			try {
 				const ID = ParameterStruct.id;
-				const NameEN = ParameterStruct.objectdefinition.common.name.en;
+				let nameWish;
+				if (SystemLanguage in ParameterStruct.objectdefinition.common.name){
+					nameWish = SystemLanguage;
+				}else{
+					nameWish = 'en';
+				}
+				const Name = ParameterStruct.objectdefinition.common.name[nameWish];
 				const Unit = ParameterStruct.objectdefinition.common.unit;
 				if (Unit !== null) {
-					this.log.info(ID + ' - ' + NameEN + ' = ' + String(value) + ' ' + Unit);
+					this.log.info(ID + ' - ' + Name + ' = ' + String(value) + ' ' + Unit);
 				} else {
-					this.log.info(ID + ' - ' + NameEN + ' = ' + String(value));
+					this.log.info(ID + ' - ' + Name + ' = ' + String(value));
 				}
 				resolve(true);
 			} catch (err) {
