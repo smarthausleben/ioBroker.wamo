@@ -1103,6 +1103,32 @@ const DeviceParameters = {
 			native: {}
 		},
 		statePath: adapterChannels.DeviceSettings.path,
+		rangevalues: {
+			'0': {
+				'en': 'disabled',
+				'de': 'deaktiviert',
+				'ru': 'инвалид',
+				'pt': 'Desativado',
+				'nl': 'gehandicapt',
+				'fr': 'désactivé',
+				'it': 'Disabilitato',
+				'es': 'discapacitado',
+				'pl': 'wyłączone',
+				'zh-cn': '禁用'
+			},
+			'1': {
+				'en': 'enabled',
+				'de': 'aktiviert',
+				'ru': 'включено',
+				'pt': 'ativado',
+				'nl': 'ingeschakeld',
+				'fr': 'autorisé',
+				'it': 'abilitato',
+				'es': 'activado',
+				'pl': 'włączony',
+				'zh-cn': '启用'
+			}
+		},
 		levelRead: 'USER',
 		levelWrite: 'SERVICE',
 		readCommand: 'get',
@@ -1196,6 +1222,44 @@ const DeviceParameters = {
 			native: {}
 		},
 		statePath: adapterChannels.DeviceConditions.path,
+		rangevalues: {
+			'0': {
+				'en': 'is disconnected',
+				'de': 'ist getrennt',
+				'ru': 'отключен',
+				'pt': 'está desconectado',
+				'nl': 'is losgekoppeld',
+				'fr': 'est déconnecté',
+				'it': 'è disconnesso',
+				'es': 'está desconectado',
+				'pl': 'jest odłączony',
+				'zh-cn': '已断开连接'
+			},
+			'1': {
+				'en': 'is connecting',
+				'de': 'verbindet',
+				'ru': 'подключается',
+				'pt': 'está conectando',
+				'nl': 'is verbinden',
+				'fr': 'se connecte',
+				'it': 'si sta connettendo',
+				'es': 'está conectando',
+				'pl': 'łączy się',
+				'zh-cn': '正在连接'
+			},
+			'2': {
+				'en': 'is connected',
+				'de': 'Ist verbunden',
+				'ru': 'подключен',
+				'pt': 'está conectado',
+				'nl': 'is verbonden',
+				'fr': 'est connecté',
+				'it': 'è connesso',
+				'es': 'está conectado',
+				'pl': 'jest połączone',
+				'zh-cn': '已连接'
+			}
+		},
 		levelRead: 'USER',
 		levelWrite: null,
 		readCommand: 'get',
@@ -1227,6 +1291,32 @@ const DeviceParameters = {
 			native: {}
 		},
 		statePath: adapterChannels.DeviceSettings.path,
+		rangevalues: {
+			'0': {
+				'en': 'active (default)',
+				'de': 'aktiv (Standard)',
+				'ru': 'активен (по умолчанию)',
+				'pt': 'ativo (padrão)',
+				'nl': 'actief (standaard)',
+				'fr': 'actif (par défaut)',
+				'it': 'attivo (predefinito)',
+				'es': 'activo (predeterminado)',
+				'pl': 'aktywny (domyślnie)',
+				'zh-cn': '活动（默认）'
+			},
+			'1': {
+				'en': 'deactivated',
+				'de': 'deaktiviert',
+				'ru': 'деактивирован',
+				'pt': 'desativado',
+				'nl': 'gedeactiveerd',
+				'fr': 'désactivé',
+				'it': 'disattivato',
+				'es': 'desactivado',
+				'pl': 'dezaktywowany',
+				'zh-cn': '停用'
+			}
+		},
 		levelRead: 'FACTORY',
 		levelWrite: 'FACTORY',
 		readCommand: 'get',
@@ -1250,7 +1340,7 @@ const DeviceParameters = {
 					'zh-cn': 'WiFi AP 超时'
 				},
 				type: 'string',
-				unit: 's',
+				unit: null,
 				role: 'state',
 				read: true,
 				write: false
@@ -1273,7 +1363,7 @@ const DeviceParameters = {
 			},
 			'else': {
 				'en': 'AP disabled after XX seconds after internet connection',
-				'de': 'AP nach XX Sekunden nach Internetverbindung deaktiviert',
+				'de': 'AP XX Sekunden nach Internetverbindung deaktiviert',
 				'ru': 'AP отключается через XX секунд после подключения к интернету',
 				'pt': 'AP desabilitado após XX segundos após a conexão com a internet',
 				'nl': 'AP uitgeschakeld na XX seconden na internetverbinding',
@@ -3452,75 +3542,110 @@ class wamo extends utils.Adapter {
 							if (finalValue === null) {	// did we get a globalised Value back?
 								finalValue = 'AP disabled after ' + String(value) + ' seconds after internet connection';
 							}
-							else
-							{
+							else {
 								finalValue = String(finalValue).replace('XX', String(value));
 							}
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.APTimeout, finalValue); }
 						break;
 					case DeviceParameters.WiFiDeaktivate.id:			// DWL - WiFi deactivated
-						if (parseInt(value) == 0) {
-							finalValue = 'active (default)';
-						} else {
-							finalValue = 'deactivated';
+						finalValue = await this.getGlobalisedValue(DeviceParameters.WiFiDeaktivate, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							if (parseInt(value) == 0) {
+								finalValue = 'active (default)';
+							} else {
+								finalValue = 'deactivated';
+							}
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.WiFiDeaktivate, finalValue); }
 						break;
 					case DeviceParameters.WiFiState.id:					// WFS - WiFi state
-						if (parseInt(value) == 0) {
-							finalValue = 'Disconnected';
-						} else if (parseInt(value) == 1) {
-							finalValue = 'Connecting';
-						} else if (parseInt(value) == 2) {
-							finalValue = 'Connected';
-						} else {
-							finalValue = 'undefined';
+						finalValue = await this.getGlobalisedValue(DeviceParameters.WiFiState, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							if (parseInt(value) == 0) {
+								finalValue = 'disconnected';
+							} else if (parseInt(value) == 1) {
+								finalValue = 'connecting';
+							} else if (parseInt(value) == 2) {
+								finalValue = 'connected';
+							} else {
+								finalValue = 'undefined';
+							}
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.WiFiState, finalValue); }
 						break;
 					case DeviceParameters.DaylightSavingTime.id:		// IDS - Daylight saving time
-						if (parseInt(value) == 0) {
-							finalValue = 'Disabled';
-						} else {
-							finalValue = 'Enabled';
+						finalValue = await this.getGlobalisedValue(DeviceParameters.DaylightSavingTime, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							if (parseInt(value) == 0) {
+								finalValue = 'disabled';
+							} else {
+								finalValue = 'enabled';
+							}
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.DaylightSavingTime, finalValue); }
 						break;
 					case DeviceParameters.FirmwareVersion.id:			// VER -Firmware Version
-						finalValue = value;
+						finalValue = await this.getGlobalisedValue(DeviceParameters.FirmwareVersion, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = value;
+						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.FirmwareVersion, finalValue); }
 						break;
 					case DeviceParameters.IPAddress.id: 				// WIP - IP address
-						finalValue = value;
+						finalValue = await this.getGlobalisedValue(DeviceParameters.IPAddress, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = value;
+						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.IPAddress, finalValue); }
 						break;
 					case DeviceParameters.MACAddress.id:				// MAC -MAC address
-						finalValue = value;
+						finalValue = await this.getGlobalisedValue(DeviceParameters.MACAddress, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = value;
+						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.MACAddress, finalValue); }
 						break;
 					case DeviceParameters.DefaultGateway.id:			// WGW - Default gateway
-						finalValue = value;
+						finalValue = await this.getGlobalisedValue(DeviceParameters.DefaultGateway, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = value;
+						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.DefaultGateway, finalValue); }
 						break;
 					case DeviceParameters.SerialNumber.id:				// SRN - Device serial number
-						finalValue = value;
+						finalValue = await this.getGlobalisedValue(DeviceParameters.SerialNumber, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = value;
+						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.SerialNumber, finalValue); }
 						break;
 					case DeviceParameters.CodeNumber.id:				// CNO - Code Number
-						finalValue = value;
+						finalValue = await this.getGlobalisedValue(DeviceParameters.CodeNumber, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = value;
+						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.CodeNumber, finalValue); }
 						break;
 					case DeviceParameters.WiFiRSSI.id:					// WFR - WiFi RSSI
-						finalValue = value;
+						finalValue = await this.getGlobalisedValue(DeviceParameters.WiFiRSSI, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = value;
+						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.WiFiRSSI, finalValue); }
 						break;
 					case DeviceParameters.WiFiSSID.id:					// WFC - WiFi SSID
-						finalValue = value;
+						finalValue = await this.getGlobalisedValue(DeviceParameters.WiFiSSID, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = value;
+						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.WiFiSSID, finalValue); }
 						break;
 					case DeviceParameters.NextMaintenance.id:			// SRV - Next Maintenance
-						finalValue = value;
+						finalValue = await this.getGlobalisedValue(DeviceParameters.NextMaintenance, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = value;
+						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.NextMaintenance, finalValue); }
 						break;
 					default:
