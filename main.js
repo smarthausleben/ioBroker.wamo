@@ -839,6 +839,32 @@ const DeviceParameters = {
 			native: {}
 		},
 		statePath: adapterChannels.DeviceSettingsSensors.path,
+		rangevalues: {
+			'0': {
+				'en': 'conductivity sensor activated',
+				'de': 'Leitfähigkeitssensor aktiviert',
+				'ru': 'активирован датчик электропроводности',
+				'pt': 'sensor de condutividade ativado',
+				'nl': 'geleidbaarheidssensor geactiveerd',
+				'fr': 'capteur de conductivité activé',
+				'it': 'sensore di conducibilità attivato',
+				'es': 'sensor de conductividad activado',
+				'pl': 'czujnik przewodności aktywowany',
+				'zh-cn': '电导率传感器激活'
+			},
+			'1': {
+				'en': 'conductivity sensor deactivated',
+				'de': 'Leitfähigkeitssensor deaktiviert',
+				'ru': 'датчик проводимости деактивирован',
+				'pt': 'sensor de condutividade desativado',
+				'nl': 'geleidbaarheidssensor gedeactiveerd',
+				'fr': 'capteur de conductivité désactivé',
+				'it': 'sensore di conducibilità disattivato',
+				'es': 'sensor de conductividad desactivado',
+				'pl': 'czujnik przewodności wyłączony',
+				'zh-cn': '电导率传感器停用'
+			}
+		},
 		levelRead: 'USER',
 		levelWrite: 'FACTORY',
 		readCommand: 'get',
@@ -927,6 +953,32 @@ const DeviceParameters = {
 			native: {}
 		},
 		statePath: adapterChannels.DeviceSettingsSensors.path,
+		rangevalues: {
+			'0': {
+				'en': 'pressure sensor activated',
+				'de': 'Drucksensor aktiviert',
+				'ru': 'датчик давления активирован',
+				'pt': 'sensor de pressão ativado',
+				'nl': 'druksensor geactiveerd',
+				'fr': 'capteur de pression activé',
+				'it': 'sensore di pressione attivato',
+				'es': 'sensor de presión activado',
+				'pl': 'czujnik ciśnienia aktywowany',
+				'zh-cn': '压力传感器激活'
+			},
+			'1': {
+				'en': 'pressure sensor deactivated',
+				'de': 'Drucksensor deaktiviert',
+				'ru': 'датчик давления деактивирован',
+				'pt': 'sensor de pressão desativado',
+				'nl': 'druksensor gedeactiveerd',
+				'fr': 'capteur de pression désactivé',
+				'it': 'sensore di pressione disattivato',
+				'es': 'sensor de presión desactivado',
+				'pl': 'czujnik ciśnienia wyłączony',
+				'zh-cn': '压力传感器已停用'
+			}
+		},
 		levelRead: 'USER',
 		levelWrite: 'FACTORY',
 		readCommand: 'get',
@@ -1702,6 +1754,200 @@ const DeviceParameters = {
 			native: {}
 		},
 		statePath: adapterChannels.DeviceConditions.path,
+		rangevalues: {
+			'FF': {
+				'en': 'OK',
+				'de': 'OK',
+				'ru': 'Ok',
+				'pt': 'OK',
+				'nl': 'Oke',
+				'fr': "d'accord",
+				'it': 'ok',
+				'es': 'OK',
+				'pl': 'ok',
+				'zh-cn': '好的'
+			},
+			'A1': {
+				'en': 'ALARM end switch',
+				'de': 'ALARM-Endschalter',
+				'ru': 'концевой выключатель ТРЕВОГА',
+				'pt': 'Interruptor final de ALARME',
+				'nl': 'ALARM eindschakelaar',
+				'fr': 'Fin de course ALARME',
+				'it': 'Finecorsa ALLARME',
+				'es': 'Final de carrera de ALARMA',
+				'pl': 'Wyłącznik krańcowy ALARM',
+				'zh-cn': '报警结束开关'
+			},
+			'A2': {
+				'en': 'no network',
+				'de': 'kein Netzwerk',
+				'ru': 'нет сети',
+				'pt': 'sem rede',
+				'nl': 'geen netwerk',
+				'fr': 'pas de réseau',
+				'it': 'nessuna rete',
+				'es': 'sin red',
+				'pl': 'brak sieci',
+				'zh-cn': '没有网络'
+			},
+			'A3': {
+				'en': 'ALARM volume leakage',
+				'de': 'ALARM Volumenleckage',
+				'ru': 'СИГНАЛИЗАЦИЯ Объемная утечка',
+				'pt': 'Vazamento de volume de ALARME',
+				'nl': 'ALARM volume lekkage',
+				'fr': 'ALARME fuite de volume',
+				'it': 'ALLARME perdita di volume',
+				'es': 'ALARMA fuga de volumen',
+				'pl': 'Wyciek objętości ALARM',
+				'zh-cn': 'ALARM 体积泄漏'
+			},
+			'A4': {
+				'en': 'ALARM time leakage',
+				'de': 'ALARM Zeitleckage',
+				'ru': 'Утечка времени ТРЕВОГИ',
+				'pt': 'Fuga de tempo de ALARME',
+				'nl': 'ALARM tijd lekkage',
+				'fr': 'ALARME temps de fuite',
+				'it': 'Perdita di tempo di ALLARME',
+				'es': 'Fuga de tiempo de ALARMA',
+				'pl': 'Upływ czasu ALARM',
+				'zh-cn': '报警时间泄漏'
+			},
+			'A5': {
+				'en': 'ALARM max flow leakage',
+				'de': 'ALARM max. Durchflussleckage',
+				'ru': 'АВАРИЙНЫЙ СИГНАЛ Макс. утечка потока',
+				'pt': 'ALARME vazamento de fluxo máximo',
+				'nl': 'ALARM max. stroomlekkage',
+				'fr': 'ALARME débit max fuite',
+				'it': 'ALLARME massima perdita di flusso',
+				'es': 'ALARMA fuga de caudal máx.',
+				'pl': 'ALARM maks. wyciek przepływu',
+				'zh-cn': 'ALARM 最大流量泄漏'
+			},
+			'A6': {
+				'en': 'ALARM micro leakage',
+				'de': 'ALARM Mikroleckage',
+				'ru': 'СИГНАЛИЗАЦИЯ микроутечка',
+				'pt': 'ALARME micro vazamento',
+				'nl': 'ALARM microlekkage',
+				'fr': 'ALARME micro fuite',
+				'it': 'ALLARME microperdita',
+				'es': 'ALARMA microfuga',
+				'pl': 'ALARM mikroprzeciek',
+				'zh-cn': 'ALARM 微泄漏'
+			},
+			'A7': {
+				'en': 'ALARM external sensor leakage',
+				'de': 'ALARM Leckag von externem Sensors',
+				'ru': 'АВАРИЙНЫЙ СИГНАЛ: утечка внешнего датчика',
+				'pt': 'ALARME vazamento do sensor externo',
+				'nl': 'ALARM lekkage externe sensor',
+				'fr': 'ALARME fuite capteur externe',
+				'it': 'ALLARME perdita sensore esterno',
+				'es': 'ALARMA fuga del sensor externo',
+				'pl': 'ALARM wyciek z czujnika zewnętrznego',
+				'zh-cn': 'ALARM 外部传感器泄漏'
+			},
+			'A8': {
+				'en': 'ALARM turbine blocked',
+				'de': 'ALARM Turbine blockiert',
+				'ru': 'СИГНАЛИЗАЦИЯ турбина заблокирована',
+				'pt': 'ALARME turbina bloqueada',
+				'nl': 'ALARM turbine geblokkeerd',
+				'fr': 'ALARME turbine bloquée',
+				'it': 'ALLARME turbina bloccata',
+				'es': 'ALARMA turbina bloqueada',
+				'pl': 'ALARM turbina zablokowana',
+				'zh-cn': '警报 涡轮阻塞'
+			},
+			'A9': {
+				'en': 'ALARM pressure sensor error',
+				'de': 'ALARM Drucksensorfehler',
+				'ru': 'АВАРИЙНЫЙ СИГНАЛ Ошибка датчика давления',
+				'pt': 'Erro do sensor de pressão ALARME',
+				'nl': 'ALARM druksensor fout',
+				'fr': 'ALARME erreur capteur de pression',
+				'it': 'Errore sensore di pressione ALLARME',
+				'es': 'ALARMA error sensor presión',
+				'pl': 'Błąd czujnika ciśnienia ALARM',
+				'zh-cn': '报警压力传感器错误'
+			},
+			'AA': {
+				'en': 'ALARM temperature sensor error',
+				'de': 'ALARM Temperatursensorfehler',
+				'ru': 'АВАРИЙНЫЙ СИГНАЛ Ошибка датчика температуры',
+				'pt': 'Erro do sensor de temperatura ALARME',
+				'nl': 'ALARM temperatuursensor fout',
+				'fr': 'ALARME erreur du capteur de température',
+				'it': 'Errore sensore temperatura ALLARME',
+				'es': 'ALARMA error sensor temperatura',
+				'pl': 'Błąd czujnika temperatury ALARM',
+				'zh-cn': 'ALARM 温度传感器错误'
+			},
+			'AB': {
+				'en': 'ALARM conductivity sensor error',
+				'de': 'ALARM Leitfähigkeitssensorfehler',
+				'ru': 'СИГНАЛИЗАЦИЯ Ошибка датчика проводимости',
+				'pt': 'Erro do sensor de condutividade do ALARME',
+				'nl': 'ALARM geleidbaarheidssensor fout',
+				'fr': 'ALARME erreur du capteur de conductivité',
+				'it': 'ALLARME errore sensore di conducibilità',
+				'es': 'ALARMA error sensor conductividad',
+				'pl': 'ALARM błąd czujnika przewodności',
+				'zh-cn': '报警电导率传感器错误'
+			},
+			'AC': {
+				'en': 'ALARM conductivity to high',
+				'de': 'ALARM Leitfähigkeit zu hoch',
+				'ru': 'ALARM электропроводность слишком высокая',
+				'pt': 'Condutividade do ALARME para alta',
+				'nl': 'ALARM geleidbaarheid te hoog',
+				'fr': 'ALARME conductivité trop élevée',
+				'it': 'ALLARME conducibilità elevata',
+				'es': 'ALARMA conductividad demasiado alta',
+				'pl': 'Przewodność ALARM za wysoka',
+				'zh-cn': '报警电导率高'
+			},
+			'AD': {
+				'en': 'low battery',
+				'de': 'niedriger Batteriestatus',
+				'ru': 'низкий заряд батареи',
+				'pt': 'Bateria Fraca',
+				'nl': 'lage batterij',
+				'fr': 'batterie faible',
+				'it': 'batteria scarica',
+				'es': 'batería baja',
+				'pl': 'niski poziom baterii',
+				'zh-cn': '低电量'
+			},
+			'AE': {
+				'en': 'WARNING volume leakage',
+				'de': 'WARNUNG Volumenleckage',
+				'ru': 'ПРЕДУПРЕЖДЕНИЕ объемная утечка',
+				'pt': 'AVISO vazamento de volume',
+				'nl': 'WAARSCHUWING volumelekkage',
+				'fr': 'AVERTISSEMENT fuite de volume',
+				'it': 'AVVERTENZA perdita di volume',
+				'es': 'ADVERTENCIA fuga de volumen',
+				'pl': 'OSTRZEŻENIE wyciek objętości',
+				'zh-cn': '警告 体积泄漏'
+			},
+			'AF': {
+				'en': 'ALARM no power supply',
+				'de': 'ALARM keine Stromversorgung',
+				'ru': 'СИГНАЛИЗАЦИЯ Нет питания',
+				'pt': 'ALARME sem alimentação',
+				'nl': 'ALARM geen voeding',
+				'fr': "ALARME pas d'alimentation",
+				'it': 'ALLARME mancanza di alimentazione',
+				'es': 'ALARMA sin alimentación',
+				'pl': 'ALARM brak zasilania',
+				'zh-cn': '报警无电源'
+			}
+		},
 		levelRead: 'USER',
 		levelWrite: null,
 		readCommand: 'get',
@@ -2831,96 +3077,102 @@ class wamo extends utils.Adapter {
 						if (moreMessages) { await this.moremessages(DeviceParameters.SelectedProfile, finalValue); }
 						break;
 					case DeviceParameters.DeactivateTemperatureSensor.id:	// TSD - Temp sensor present
+						if (parseInt(value) == 0) { sensor_temperature_present = true; } else { sensor_temperature_present = false; }
 						finalValue = await this.getGlobalisedValue(DeviceParameters.DeactivateTemperatureSensor, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
 							if (parseInt(value) == 0) {
 								sensor_temperature_present = true;
 								finalValue = 'Sensor active';
-								this.log.debug('Temperatur sensor present');
 							} else {
 								sensor_temperature_present = false;
 								finalValue = 'Sensor deactivated';
-								this.log.debug('Temperatur sensor not present');
 							}
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.DeactivateTemperatureSensor, finalValue); }
 						break;
 					case DeviceParameters.DeactivateConductivitySensor.id:	// CSD - conductivity sensor present
-						if (parseInt(value) == 0) {
-							sensor_conductivity_present = true;
-							finalValue = 'Sensor active';
-							this.log.info('Conductivity sensor present');
-						} else {
-							sensor_conductivity_present = false;
-							finalValue = 'Sensor deactivated';
-							this.log.warn('Conductivity sensor not present');
+						if (parseInt(value) == 0) { sensor_conductivity_present = true; } else { sensor_conductivity_present = false; }
+						finalValue = await this.getGlobalisedValue(DeviceParameters.DeactivateConductivitySensor, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							if (parseInt(value) == 0) {
+								sensor_conductivity_present = true;
+								finalValue = 'Sensor active';
+							} else {
+								sensor_conductivity_present = false;
+								finalValue = 'Sensor deactivated';
+							}
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.DeactivateConductivitySensor, finalValue); }
 						break;
 					case DeviceParameters.DeactivatePressureSensor.id:	// PSD - Pressure sensor present
-						if (parseInt(value) == 0) {
-							sensor_pressure_present = true;
-							finalValue = 'Sensor active';
-							this.log.info('Pressure sensor present');
-						} else {
-							sensor_pressure_present = false;
-							finalValue = 'Sensor deactivated';
-							this.log.warn('Pressure sensor not present');
+						if (parseInt(value) == 0) { sensor_pressure_present = true; } else { sensor_pressure_present = false; }
+						finalValue = await this.getGlobalisedValue(DeviceParameters.DeactivatePressureSensor, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							if (parseInt(value) == 0) {
+								sensor_pressure_present = true;
+								finalValue = 'Sensor active';
+							} else {
+								sensor_pressure_present = false;
+								finalValue = 'Sensor deactivated';
+							}
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.DeactivatePressureSensor, finalValue); }
 						break;
 					case DeviceParameters.CurrentAlarmStatus.id:		// ALA Alarm status
-						switch (String(value)) {
-							case 'FF':
-								finalValue = 'NO ALARM';
-								break;
-							case 'A1':
-								finalValue = 'ALARM END SWITCH';
-								break;
-							case 'A2':
-								finalValue = 'NO NETWORK';
-								break;
-							case 'A3':
-								finalValue = 'ALARM VOLUME LEAKAGE';
-								break;
-							case 'A4':
-								finalValue = 'ALARM TIME LEAKAGE';
-								break;
-							case 'A5':
-								finalValue = 'ALARM MAX FLOW LEAKAGE';
-								break;
-							case 'A6':
-								finalValue = 'ALARM MICRO LEAKAGE';
-								break;
-							case 'A7':
-								finalValue = 'ALARM EXT. SENSOR LEAKAGE';
-								break;
-							case 'A8':
-								finalValue = 'ALARM TURBINE BLOCKED';
-								break;
-							case 'A9':
-								finalValue = 'ALARM PRESSURE SENSOR ERROR';
-								break;
-							case 'AA':
-								finalValue = 'ALARM TEMPERATURE SENSOR ERROR';
-								break;
-							case 'AB':
-								finalValue = 'ALARM CONDUCTIVITY SENSOR ERROR';
-								break;
-							case 'AC':
-								finalValue = 'ALARM TO HIGH CONDUCTIVITY';
-								break;
-							case 'AD':
-								finalValue = 'LOW BATTERY';
-								break;
-							case 'AE':
-								finalValue = 'WARNING VOLUME LEAKAGE';
-								break;
-							case 'AF':
-								finalValue = 'ALARM NO POWER SUPPLY';
-								break;
-							default:
-								finalValue = 'undefined';
+						finalValue = await this.getGlobalisedValue(DeviceParameters.CurrentAlarmStatus, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							switch (String(value)) {
+								case 'FF':
+									finalValue = 'NO ALARM';
+									break;
+								case 'A1':
+									finalValue = 'ALARM END SWITCH';
+									break;
+								case 'A2':
+									finalValue = 'NO NETWORK';
+									break;
+								case 'A3':
+									finalValue = 'ALARM VOLUME LEAKAGE';
+									break;
+								case 'A4':
+									finalValue = 'ALARM TIME LEAKAGE';
+									break;
+								case 'A5':
+									finalValue = 'ALARM MAX FLOW LEAKAGE';
+									break;
+								case 'A6':
+									finalValue = 'ALARM MICRO LEAKAGE';
+									break;
+								case 'A7':
+									finalValue = 'ALARM EXT. SENSOR LEAKAGE';
+									break;
+								case 'A8':
+									finalValue = 'ALARM TURBINE BLOCKED';
+									break;
+								case 'A9':
+									finalValue = 'ALARM PRESSURE SENSOR ERROR';
+									break;
+								case 'AA':
+									finalValue = 'ALARM TEMPERATURE SENSOR ERROR';
+									break;
+								case 'AB':
+									finalValue = 'ALARM CONDUCTIVITY SENSOR ERROR';
+									break;
+								case 'AC':
+									finalValue = 'ALARM TO HIGH CONDUCTIVITY';
+									break;
+								case 'AD':
+									finalValue = 'LOW BATTERY';
+									break;
+								case 'AE':
+									finalValue = 'WARNING VOLUME LEAKAGE';
+									break;
+								case 'AF':
+									finalValue = 'ALARM NO POWER SUPPLY';
+									break;
+								default:
+									finalValue = 'undefined';
+							}
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.CurrentAlarmStatus, finalValue); }
 						break;
