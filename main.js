@@ -2642,7 +2642,7 @@ class wamo extends utils.Adapter {
 				let finalValue;
 				switch (String(valueKey)) {
 					case DeviceParameters.Language.id:					// LNG - Language
-						switch (parseInt(value)) {
+						switch (parseInt(String(value).substring(0,1))) {
 							case 0:
 								finalValue = 'DE';
 								break;
