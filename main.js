@@ -1258,6 +1258,32 @@ const DeviceParameters = {
 			native: {}
 		},
 		statePath: adapterChannels.DeviceSettings.path,
+		rangevalues: {
+			'0': {
+				'en': 'AP timeout not active',
+				'de': 'AP-Timeout nicht aktiv',
+				'ru': 'Тайм-аут AP не активен',
+				'pt': 'Tempo limite do AP não ativo',
+				'nl': 'AP time-out niet actief',
+				'fr': "Délai d'attente AP non actif",
+				'it': 'Timeout AP non attivo',
+				'es': 'Tiempo de espera de AP no activo',
+				'pl': 'Limit czasu AP nieaktywny',
+				'zh-cn': 'AP 超时未激活'
+			},
+			'else': {
+				'en': 'AP disabled after XX seconds after internet connection',
+				'de': 'AP nach XX Sekunden nach Internetverbindung deaktiviert',
+				'ru': 'AP отключается через XX секунд после подключения к интернету',
+				'pt': 'AP desabilitado após XX segundos após a conexão com a internet',
+				'nl': 'AP uitgeschakeld na XX seconden na internetverbinding',
+				'fr': 'AP désactivé après XX secondes après la connexion Internet',
+				'it': 'AP disabilitato dopo XX secondi dalla connessione a Internet',
+				'es': 'AP deshabilitado después de XX segundos después de la conexión a Internet',
+				'pl': 'AP wyłączony po XX sekundach od połączenia z internetem',
+				'zh-cn': '连接互联网 XX 秒后 AP 禁用'
+			}
+		},
 		levelRead: 'SERVICE',
 		levelWrite: 'SERVICE',
 		readCommand: 'get',
@@ -1289,6 +1315,32 @@ const DeviceParameters = {
 			native: {}
 		},
 		statePath: adapterChannels.DeviceSettings.path,
+		rangevalues: {
+			'0': {
+				'en': 'AP not disabled',
+				'de': 'AP nicht deaktiviert',
+				'ru': 'точка доступа не отключена',
+				'pt': 'AP não desativado',
+				'nl': 'AP niet uitgeschakeld',
+				'fr': 'AP non désactivé',
+				'it': 'AP non disabilitato',
+				'es': 'AP no deshabilitado',
+				'pl': 'AP nie jest wyłączony',
+				'zh-cn': 'AP 未禁用'
+			},
+			'1': {
+				'en': 'AP disabled',
+				'de': 'AP deaktiviert',
+				'ru': 'точка доступа отключена',
+				'pt': 'AP desativado',
+				'nl': 'AP uitgeschakeld',
+				'fr': 'PA désactivé',
+				'it': 'AP disabilitato',
+				'es': 'AP deshabilitado',
+				'pl': 'AP wyłączony',
+				'zh-cn': '已禁用 AP'
+			}
+		},
 		levelRead: 'SERVICE',
 		levelWrite: 'SERVICE',
 		readCommand: 'get',
@@ -1320,6 +1372,32 @@ const DeviceParameters = {
 			native: {}
 		},
 		statePath: adapterChannels.DeviceSettings.path,
+		rangevalues: {
+			'0': {
+				'en': 'AP not hidden (visible)',
+				'de': 'AP nicht versteckt (sichtbar)',
+				'ru': 'ТД не скрыта (видима)',
+				'pt': 'AP não oculto (visível)',
+				'nl': 'AP niet verborgen (zichtbaar)',
+				'fr': 'AP non caché (visible)',
+				'it': 'AP non nascosto (visibile)',
+				'es': 'AP no oculto (visible)',
+				'pl': 'AP nie jest ukryty (widoczny)',
+				'zh-cn': 'AP 未隐藏（可见）'
+			},
+			'1': {
+				'en': 'AP hidden',
+				'de': 'AP versteckt',
+				'ru': 'точка доступа скрыта',
+				'pt': 'AP oculto',
+				'nl': 'AP verborgen',
+				'fr': 'PA caché',
+				'it': 'AP nascosto',
+				'es': 'AP oculto',
+				'pl': 'AP ukryty',
+				'zh-cn': 'AP隐藏'
+			}
+		},
 		levelRead: 'SERVICE',
 		levelWrite: 'SERVICE',
 		readCommand: 'get',
@@ -2074,7 +2152,10 @@ const initStates = [
 	DeviceParameters.Language,
 	DeviceParameters.Units];
 
-const alarmPeriod = [DeviceParameters.CurrentAlarmStatus];
+const alarmPeriod = [
+	DeviceParameters.CurrentAlarmStatus,
+	DeviceParameters.CurrentValveStatus
+];
 
 const shortPeriod = [
 	DeviceParameters.WaterTemperature,
@@ -2085,7 +2166,6 @@ const shortPeriod = [
 	DeviceParameters.CurrentVolume];
 
 const longPeriode = [
-	DeviceParameters.CurrentValveStatus,
 	DeviceParameters.SystemTime,
 	DeviceParameters.FirmwareVersion,
 	DeviceParameters.IPAddress,
@@ -2301,9 +2381,9 @@ class wamo extends utils.Adapter {
 		//=================================================================================================
 		try {
 			const tmstarted = await this.timerStarts();
-			this.log.debug('Timers started - Result: ' + String(tmstarted));
+			this.log.debug('Timers started - result: ' + String(tmstarted));
 		} catch (err) {
-			this.log.error('device Timer start Error ... exit');
+			this.log.error('Timer start error ... exit');
 			// we throw an exception causing Adaper to restart
 			throw err;
 		}
@@ -2371,7 +2451,7 @@ class wamo extends utils.Adapter {
 		// reference to Adapter
 		myAdapter = this;
 
-		this.log.info('Adapter wurde gestartet');
+		this.log.info('Adapter is running');
 
 	}
 
@@ -2384,7 +2464,7 @@ class wamo extends utils.Adapter {
 		try {
 			schedule.gracefulShutdown();
 		} catch (err) {
-			this.log.error('Disable Cron Jobs' + err);
+			this.log.error('Error disabeling cron jobs' + err);
 		}
 
 		try {
@@ -2464,22 +2544,22 @@ class wamo extends utils.Adapter {
 				schedule.scheduleJob(cron_Week, cron_poll_week);
 				schedule.scheduleJob(cron_Month, cron_poll_month);
 				schedule.scheduleJob(cron_Year, cron_poll_year);
-				this.log.info('Cron Timer Started');
+				this.log.debug('Cron timer started');
 			} catch (err) {
-				this.log.error('Cron Start Error: ' + err);
+				this.log.error('Cron timer start error: ' + err);
 			}
 			try {
 
 				// Die Timer für das Polling starten
 				alarm_Intervall_ID = this.setInterval(alarm_poll, parseInt(this.config.device_alarm_poll_interval) * 1000);
-				this.log.info('Alarm timer initialized');
-				await sleep(5000); // Warten um einen Versatz zu erzeugen
+				this.log.debug('Alarm timer initialized');
+				await sleep(3000); // Warten um einen Versatz zu erzeugen
 				short_Intervall_ID = this.setInterval(short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
-				this.log.info('Short timer initialized');
-				await sleep(5000); // Warten um einen Versatz zu erzeugen
+				this.log.debug('Short timer initialized');
+				await sleep(3000); // Warten um einen Versatz zu erzeugen
 				long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
-				this.log.info('Long timer initialized');
-				resolve('Alarm Timer ID=' + alarm_Intervall_ID + ' / Short Timer ID=' + short_Intervall_ID + ' / Long Timer ID=' + long_Intervall_ID);
+				this.log.debug('Long timer initialized');
+				resolve('Alarm timer ID = ' + alarm_Intervall_ID + ' / Short timer ID = ' + short_Intervall_ID + ' / Long timer ID = ' + long_Intervall_ID);
 			} catch (err) {
 				reject(err);
 			}
@@ -3265,68 +3345,117 @@ class wamo extends utils.Adapter {
 						if (moreMessages) { await this.moremessages(DeviceParameters.CurrentValveStatus, finalValue); }
 						break;
 					case DeviceParameters.SystemTime.id:				// RTC - System Time
-						finalValue = (new Date(parseInt(value) * 1000)).toLocaleString();
+						finalValue = await this.getGlobalisedValue(DeviceParameters.SystemTime, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = (new Date(parseInt(value) * 1000)).toLocaleString();
+						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.SystemTime, finalValue); }
 						break;
 					case DeviceParameters.WaterTemperature.id:			// CEL - Water temperature
 						if (sensor_temperature_present) {
-							finalValue = parseFloat(value) / 10;
+							finalValue = await this.getGlobalisedValue(DeviceParameters.WaterTemperature, value);
+							if (finalValue === null) {	// did we get a globalised Value back?
+								finalValue = parseFloat(value) / 10;
+							}
 							if (moreMessages) { await this.moremessages(DeviceParameters.WaterTemperature, finalValue); }
 						}
 						break;
 					case DeviceParameters.WaterPressure.id:				// BAR Water pressure
 						if (sensor_pressure_present) {
-							finalValue = parseFloat(String(value).replace(',', '.'));
+							value = parseFloat(String(value).replace(',', '.'));
+							finalValue = await this.getGlobalisedValue(DeviceParameters.WaterPressure, value);
+							if (finalValue === null) {	// did we get a globalised Value back?
+								finalValue = parseFloat(value);
+							}
 							if (moreMessages) { await this.moremessages(DeviceParameters.WaterPressure, finalValue); }
 						}
 						break;
 					case DeviceParameters.WaterConductivity.id:			// CND - Water conductivity
 						if (sensor_conductivity_present) {
-							finalValue = parseFloat(String(value).replace(',', '.'));
+							finalValue = await this.getGlobalisedValue(DeviceParameters.WaterConductivity, value);
+							if (finalValue === null) {	// did we get a globalised Value back?
+								finalValue = parseFloat(String(value).replace(',', '.'));
+							}
 							if (moreMessages) { await this.moremessages(DeviceParameters.WaterConductivity, finalValue); }
 						}
 						break;
 					case DeviceParameters.BatteryVoltage.id:			// BAT Batterie voltage
-						finalValue = parseFloat(String(value).replace(',', '.'));
+						value = parseFloat(String(value).replace(',', '.'));
+						finalValue = await this.getGlobalisedValue(DeviceParameters.BatteryVoltage, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = parseFloat(value);
+						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.BatteryVoltage, finalValue); }
 						break;
 					case DeviceParameters.PowerAdapterVoltage.id:		// NET - DC voltage (power adaptor)
-						finalValue = parseFloat(String(value).replace(',', '.'));
+						value = parseFloat(String(value).replace(',', '.'));
+						finalValue = await this.getGlobalisedValue(DeviceParameters.PowerAdapterVoltage, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = parseFloat(value);
+						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.PowerAdapterVoltage, finalValue); }
 						break;
 					case DeviceParameters.LastTappedVolume.id:			// LTV - Last tapped Volume
-						finalValue = parseFloat(String(value).replace(',', '.'));
+						value = parseFloat(String(value).replace(',', '.'));
+						finalValue = await this.getGlobalisedValue(DeviceParameters.LastTappedVolume, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = parseFloat(value);
+						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.LastTappedVolume, finalValue); }
 						break;
 					case DeviceParameters.TotalVolume.id:				// VOL - total consumed water
-						finalValue = parseFloat(String(value).replace(',', '.').replace('Vol[L]', '')) / 1000;
+						value = parseFloat(String(value).replace(',', '.').replace('Vol[L]', '')) / 1000;
+						finalValue = await this.getGlobalisedValue(DeviceParameters.TotalVolume, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = parseFloat(value);
+						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.TotalVolume, finalValue); }
 						break;
 					case DeviceParameters.CurrentVolume.id:				// AVO - current water volume
-						finalValue = parseFloat(String(value).replace(',', '.').replace('mL', ''));
+						value = parseFloat(String(value).replace(',', '.').replace('mL', ''));
+						finalValue = await this.getGlobalisedValue(DeviceParameters.CurrentVolume, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = parseFloat(value);
+						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.CurrentVolume, finalValue); }
 						break;
 					case DeviceParameters.APHidden.id:					// WAH - WiFi AP hidden
-						if (parseInt(value) == 0) {
-							finalValue = 'AP not hidden (visible)';
-						} else {
-							finalValue = 'AP hidden';
+						finalValue = await this.getGlobalisedValue(DeviceParameters.APHidden, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							if (parseInt(value) == 0) {
+								finalValue = 'AP not hidden (visible)';
+							} else {
+								finalValue = 'AP hidden';
+							}
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.APHidden, finalValue); }
 						break;
 					case DeviceParameters.APDisabled.id:				// WAD - WiFi AP dissabled
-						if (parseInt(value) == 0) {
-							finalValue = 'AP not disabled';
-						} else {
-							finalValue = 'AP disabled';
+						finalValue = await this.getGlobalisedValue(DeviceParameters.APDisabled, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							if (parseInt(value) == 0) {
+								finalValue = 'AP not disabled';
+							} else {
+								finalValue = 'AP disabled';
+							}
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.APDisabled, finalValue); }
 						break;
 					case DeviceParameters.APTimeout.id:					// APT - WiFi AP timeout
 						if (parseInt(value) == 0) {
-							finalValue = 'AP timeout not active';
+							finalValue = await this.getGlobalisedValue(DeviceParameters.APTimeout, 0);
+							if (finalValue === null) {	// did we get a globalised Value back?
+								finalValue = 'AP timeout not active';
+							}
 						} else {
-							finalValue = 'AP disabled after ' + String(value) + ' seconds after internet connection';
+							finalValue = await this.getGlobalisedValue(DeviceParameters.APTimeout, 'else');
+							if (finalValue === null) {	// did we get a globalised Value back?
+								finalValue = 'AP disabled after ' + String(value) + ' seconds after internet connection';
+							}
+							else
+							{
+								finalValue = String(finalValue).replace('XX', String(value));
+							}
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.APTimeout, finalValue); }
 						break;
