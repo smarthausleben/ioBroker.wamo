@@ -2294,6 +2294,7 @@ class wamo extends utils.Adapter {
 			name: adapterName,
 		});
 
+		// test
 		this.on('ready', this.onReady.bind(this));
 		this.on('stateChange', this.onStateChange.bind(this));
 		// this.on('objectChange', this.onObjectChange.bind(this));
