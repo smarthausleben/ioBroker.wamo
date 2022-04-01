@@ -2251,29 +2251,16 @@ const shortPeriod = [
 	DeviceParameters.WaterTemperature,
 	DeviceParameters.WaterConductivity,
 	DeviceParameters.WaterPressure,
+	DeviceParameters.WaterPressure,
 	DeviceParameters.LastTappedVolume,
 	DeviceParameters.TotalVolume,
 	DeviceParameters.CurrentVolume];
 
 const longPeriode = [
 	DeviceParameters.SystemTime,
-	DeviceParameters.FirmwareVersion,
-	DeviceParameters.IPAddress,
-	DeviceParameters.MACAddress,
-	DeviceParameters.DefaultGateway,
-	DeviceParameters.SerialNumber,
-	DeviceParameters.CodeNumber,
 	DeviceParameters.WiFiRSSI,
-	DeviceParameters.WiFiSSID,
-	DeviceParameters.NextMaintenance,
-	DeviceParameters.APHidden,
-	DeviceParameters.APDisabled,
-	DeviceParameters.APTimeout,
-	DeviceParameters.WiFiDeaktivate,
-	DeviceParameters.WiFiState,
 	DeviceParameters.BatteryVoltage,
-	DeviceParameters.PowerAdapterVoltage,
-	DeviceParameters.DaylightSavingTime];
+	DeviceParameters.PowerAdapterVoltage];
 
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
