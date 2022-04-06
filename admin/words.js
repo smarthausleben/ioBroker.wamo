@@ -85,5 +85,17 @@ systemDictionary = {
 		'es': 'más mensajes de registro',
 		'pl': 'więcej wiadomości logowania',
 		'zh-cn': '更多日志信息'
+	},
+	'factor german water hardness': {
+		'en': 'factor german water hardness',
+		'de': 'Faktor deutsche Wasserhärte',
+		'ru': 'коэффициент жесткости воды по немецкому языку',
+		'pt': 'fator dureza da água alemã',
+		'nl': 'factor duitse waterhardheid',
+		'fr': "facteur de dureté de l'eau allemande",
+		'it': "fattore tedesco durezza dell'acqua",
+		'es': 'factor alemán dureza del agua',
+		'pl': 'współczynnik niemieckiej twardości wody',
+		'zh-cn': '德国水硬度系数'
 	}
 };

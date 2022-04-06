@@ -14,6 +14,8 @@ const { stringify } = require('querystring');
 
 const adapterName = require('./package.json').name.split('.').pop();
 
+/* cron definitions for the varius cron timers.
+(cron timers are for statistik data collection) */
 const cron_Year = '0 0 1 1 *';
 const cron_Month = '0 0 1 * *';
 const cron_Week = '0 0 * * 1';
@@ -377,6 +379,36 @@ const adapterChannels = {
 			},
 			native: {}
 		}
+	},
+};
+
+const calculatedStates = {
+	germanWaterHardness: {
+		id: 'GHARDNESS',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'German water hardness',
+					'de': 'Deutsche Wasserhärte',
+					'ru': 'Немецкая жесткость воды',
+					'pt': 'Dureza da água alemã',
+					'nl': 'Duitse waterhardheid',
+					'fr': "Dureté de l'eau allemande",
+					'it': "Durezza dell'acqua tedesca",
+					'es': 'Dureza del agua alemana',
+					'pl': 'Niemiecka twardość wody',
+					'zh-cn': '德国水质硬度'
+				},
+				type: 'number',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.WaterCondition.path,
 	},
 };
 
@@ -2969,7 +3001,6 @@ class wamo extends utils.Adapter {
 
 	//===================================================
 	// Alarm Timer: Get Values  (called on each Alarm Timer Tick)
-
 	async get_AlarmTimerValues(DeviceIP, DevicePort) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -3033,6 +3064,9 @@ class wamo extends utils.Adapter {
 	// Sets the Adapter State Objects
 	// stateID: object path
 	// value:	Value for Object
+	//===================================================
+	//======== OBSOLETE						=============
+	//===================================================
 	async UpdateState(stateID, value) {
 		return new Promise(async (resolve, reject) => {
 
@@ -3121,7 +3155,7 @@ class wamo extends utils.Adapter {
 	}
 
 	//=============================================================================
-	// Diese Funktion speichert das übergebene'vValue' im entsprechenden State
+	// Diese Funktion speichert das übergebene'Value' im entsprechenden State
 	// der in 'stateID' übergebenen Struktur
 	//=============================================================================
 	async updateState(stateID, value) {
@@ -3453,6 +3487,8 @@ class wamo extends utils.Adapter {
 							finalValue = await this.getGlobalisedValue(DeviceParameters.WaterConductivity, value);
 							if (finalValue === null) {	// did we get a globalised Value back?
 								finalValue = parseFloat(String(value).replace(',', '.'));
+								// updatig German water hardness
+								this.updateGermanWaterHardnes(finalValue);
 							}
 							if (moreMessages) { await this.moremessages(DeviceParameters.WaterConductivity, finalValue); }
 						}
@@ -3648,7 +3684,7 @@ class wamo extends utils.Adapter {
 	}
 
 	//=============================================================================
-	// here we generate the additional messages if this option is aktive in the 
+	// here we generate the additional messages if this option is aktive in the
 	// adapter settings
 	//=============================================================================
 	async moremessages(ParameterStruct, value) {
@@ -3742,6 +3778,25 @@ class wamo extends utils.Adapter {
 
 				resolve(true);
 			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	//=============================================================================
+	// here we calculate Water conductivity -> German water hardness
+	//=============================================================================
+	async updateGermanWaterHardnes(water_conductivity) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const german_hardnes = water_conductivity / parseFloat(this.config.factor_german_water_hardnes);
+				this.log.warn('calculated german water hardness = ' + String(german_hardnes));
+				// new last total
+				await this.setObjectNotExistsAsync(calculatedStates.germanWaterHardness.statePath + '.' + calculatedStates.germanWaterHardness.id, Object(calculatedStates.germanWaterHardness.objectdefinition));
+				await this.setStateAsync(calculatedStates.germanWaterHardness.statePath + '.' + calculatedStates.germanWaterHardness.id, { val: german_hardnes, ack: true });
+				resolve(true);
+			}
+			catch (err) {
 				reject(err);
 			}
 		});
@@ -4961,6 +5016,7 @@ const isObject = function (val) {
 
 //===================================================
 // Timer Event Handler
+//===================================================
 async function alarm_poll() {
 	try {
 		await myAdapter.alarm_TimerTick();
