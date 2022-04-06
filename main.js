@@ -3789,7 +3789,7 @@ class wamo extends utils.Adapter {
 	async updateGermanWaterHardnes(water_conductivity) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const german_hardnes = water_conductivity / parseFloat(this.config.factor_german_water_hardnes);
+				const german_hardnes = water_conductivity * parseFloat(this.config.factor_german_water_hardnes);
 				this.log.warn('calculated german water hardness = ' + String(german_hardnes));
 				// new last total
 				await this.setObjectNotExistsAsync(calculatedStates.germanWaterHardness.statePath + '.' + calculatedStates.germanWaterHardness.id, Object(calculatedStates.germanWaterHardness.objectdefinition));
