@@ -1107,10 +1107,12 @@ const DeviceParameters = {
 			native: {}
 		},
 		statePath: adapterChannels.WaterConumption.path,
-		levelRead: 'USER',
+		levelRead: 'SERVICE',
 		levelWrite: null,
+		levelClear: 'FACTORY',
 		readCommand: 'get',
-		writeCommand: null
+		writeCommand: null,
+		clearCommand: 'clr'
 	},
 	LastTappedVolume: {
 		id: 'LTV',
@@ -2406,7 +2408,7 @@ class wamo extends utils.Adapter {
 
 		try{
 			if(await this.set_FACTORY_Mode()){
-				this.log.warn('FACTORY Mode aktiv');
+				this.log.warn('Testing FACTORY Mode aktiv');
 			}
 		}catch(err){
 			this.log.error('ERROR setting FACTORY Mode: ' + err);
@@ -2414,7 +2416,7 @@ class wamo extends utils.Adapter {
 
 		try{
 			if(await this.clear_SERVICE_FACTORY_Mode()){
-				this.log.warn('SERVICE or FACTORY Mode cleared');
+				this.log.warn('Testing SERVICE or FACTORY Mode cleared');
 			}
 		}catch(err){
 			this.log.error('ERROR clearing SERVICE or FACTORY Mode: ' + err);
@@ -2422,7 +2424,7 @@ class wamo extends utils.Adapter {
 
 		try{
 			if(await this.set_SERVICE_Mode()){
-				this.log.warn('SERVICE Mode aktiv');
+				this.log.warn('Testing SERVICE Mode aktiv');
 			}
 		}catch(err){
 			this.log.error('ERROR setting SERVICE Mode: ' + err);
@@ -3807,7 +3809,7 @@ class wamo extends utils.Adapter {
 							await this.set_DevieParameter(DeviceParameters.ServiceMode.id, Parameter_SERVICE_Mode, this.config.device_ip, this.config.device_port);
 							interfaceBussy = false;	// CLEAR flag that device interface is bussy
 							device_responsive = true;
-							this.log.warn('FACTORY Mode aktiv');
+							this.log.warn('SERVICE Mode aktiv');
 							break;
 						}
 						catch (err) {
