@@ -4117,7 +4117,7 @@ class wamo extends utils.Adapter {
 			this.log.debug(`[set_DevieParameter(ParameterID)] ${ParameterID} Value: ${Value}`);
 
 			axios({
-				method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/set/' + String(ParameterID) + '/' + String(Value), timeout: 10000, responseType: 'json'
+				method: 'get', url: 'http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/set/' + String(ParameterID) + '/' + String(Value), timeout: 10000, responseType: 'json'
 			}
 			).then(async (response) => {
 				const content = response.data;
@@ -4158,7 +4158,7 @@ class wamo extends utils.Adapter {
 			this.log.debug(`[set_DevieParameter(ParameterID)] ${ParameterID} Value: ${Value}`);
 
 			axios({
-				method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/clr/' + String(ParameterID), timeout: 10000, responseType: 'json'
+				method: 'get', url: 'http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/clr/' + String(ParameterID), timeout: 10000, responseType: 'json'
 			}
 			).then(async (response) => {
 				const content = response.data;
