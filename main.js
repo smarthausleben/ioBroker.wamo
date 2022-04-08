@@ -22,7 +22,7 @@ const cron_Week = '0 0 * * 1';
 const cron_Day = '0 0 * * *';
 
 const Parameter_FACTORY_Mode = '(2)f';
-const Parameter_ADMIN_Mode = '(1)';
+const Parameter_SERVICE_Mode = '(1)';
 
 //Reference to my own adapter
 let myAdapter;
@@ -2413,19 +2413,19 @@ class wamo extends utils.Adapter {
 		}
 
 		try{
-			if(await this.clear_ADMIN_FACTORY_Mode()){
-				this.log.warn('ADMIN or FACTORY Mode cleared');
+			if(await this.clear_SERVICE_FACTORY_Mode()){
+				this.log.warn('SERVICE or FACTORY Mode cleared');
 			}
 		}catch(err){
-			this.log.error('ERROR clearing ADMIN or SERVICE Mode: ' + err);
+			this.log.error('ERROR clearing SERVICE or FACTORY Mode: ' + err);
 		}
 
 		try{
-			if(await this.set_ADMIN_Mode()){
-				this.log.warn('ADMIN Mode aktiv');
+			if(await this.set_SERVICE_Mode()){
+				this.log.warn('SERVICE Mode aktiv');
 			}
 		}catch(err){
-			this.log.error('ERROR setting ADMIN Mode: ' + err);
+			this.log.error('ERROR setting SERVICE Mode: ' + err);
 		}
 
 		//=================================================================================================
@@ -3793,7 +3793,7 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-	async set_ADMIN_Mode() {
+	async set_SERVICE_Mode() {
 		return new Promise(async (resolve, reject) => {
 			try {
 				if (!interfaceBussy) {
@@ -3805,14 +3805,14 @@ class wamo extends utils.Adapter {
 					while (connTrys < connectionRetrys) {
 						try {
 							interfaceBussy = true;	// SET flag that device interface is bussy
-							await this.set_DevieParameter(DeviceParameters.ServiceMode.id, Parameter_ADMIN_Mode, this.config.device_ip, this.config.device_port);
+							await this.set_DevieParameter(DeviceParameters.ServiceMode.id, Parameter_SERVICE_Mode, this.config.device_ip, this.config.device_port);
 							// await this.updateState(DeviceParameters.CurrentValveStatus, await this.get_DevieParameter(DeviceParameters.CurrentValveStatus.id, this.config.device_ip, this.config.device_port));
 							interfaceBussy = false;	// CLEAR flag that device interface is bussy
 							device_responsive = true;
 							break;
 						}
 						catch (err) {
-							this.log.error('[async set_ADMIN_Mode()] ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
+							this.log.error('[async set_SERVICE_Mode()] ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
 							this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
 							await sleep(connectionRetryPause);
 							this.log.warn('retry connection ...');
@@ -3833,7 +3833,7 @@ class wamo extends utils.Adapter {
 					}
 				}
 				else {
-					this.log.warn('[async set_ADMIN_Mode()] Device interface is bussy!');
+					this.log.warn('[async set_SERVICE_Mode()] Device interface is bussy!');
 				}
 				resolve(true);
 			} catch (err) {
@@ -3842,7 +3842,7 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-	async clear_ADMIN_FACTORY_Mode() {
+	async clear_SERVICE_FACTORY_Mode() {
 		return new Promise(async (resolve, reject) => {
 			try {
 				if (!interfaceBussy) {
@@ -3861,7 +3861,7 @@ class wamo extends utils.Adapter {
 							break;
 						}
 						catch (err) {
-							this.log.error('[async clear_ADMIN_FACTORY_Mode()] ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
+							this.log.error('[async clear_SERVICE_FACTORY_Mode()] ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
 							this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
 							await sleep(connectionRetryPause);
 							this.log.warn('retry connection ...');
@@ -3882,7 +3882,7 @@ class wamo extends utils.Adapter {
 					}
 				}
 				else {
-					this.log.warn('[async clear_ADMIN_FACTORY_Mode()] Device interface is bussy!');
+					this.log.warn('[async clear_SERVICE_FACTORY_Mode()] Device interface is bussy!');
 				}
 				resolve(true);
 			} catch (err) {
