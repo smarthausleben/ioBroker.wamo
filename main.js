@@ -2404,32 +2404,6 @@ class wamo extends utils.Adapter {
 			this.log.error('ERROR getting system config: ' + err);
 		}
 
-
-
-		try{
-			if(await this.set_FACTORY_Mode()){
-				this.log.warn('Testing FACTORY Mode aktiv');
-			}
-		}catch(err){
-			this.log.error('ERROR setting FACTORY Mode: ' + err);
-		}
-
-		try{
-			if(await this.clear_SERVICE_FACTORY_Mode()){
-				this.log.warn('Testing SERVICE or FACTORY Mode cleared');
-			}
-		}catch(err){
-			this.log.error('ERROR clearing SERVICE or FACTORY Mode: ' + err);
-		}
-
-		try{
-			if(await this.set_SERVICE_Mode()){
-				this.log.warn('Testing SERVICE Mode aktiv');
-			}
-		}catch(err){
-			this.log.error('ERROR setting SERVICE Mode: ' + err);
-		}
-
 		//=================================================================================================
 		//===  Create device object and all channel objects												===
 		//=================================================================================================
