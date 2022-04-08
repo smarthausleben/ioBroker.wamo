@@ -3758,6 +3758,7 @@ class wamo extends utils.Adapter {
 							await this.set_DevieParameter(DeviceParameters.ServiceMode, Parameter_FACTORY_Mode, this.config.device_ip, this.config.device_port);
 							interfaceBussy = false;	// CLEAR flag that device interface is bussy
 							device_responsive = true;
+							this.log.warn('FACTORY Mode aktiv');
 							break;
 						}
 						catch (err) {
@@ -3806,6 +3807,7 @@ class wamo extends utils.Adapter {
 							await this.set_DevieParameter(DeviceParameters.ServiceMode.id, Parameter_SERVICE_Mode, this.config.device_ip, this.config.device_port);
 							interfaceBussy = false;	// CLEAR flag that device interface is bussy
 							device_responsive = true;
+							this.log.warn('FACTORY Mode aktiv');
 							break;
 						}
 						catch (err) {
@@ -3854,6 +3856,7 @@ class wamo extends utils.Adapter {
 							await this.clr_DevieParameter(DeviceParameters.ServiceMode.id, this.config.device_ip, this.config.device_port);
 							interfaceBussy = false;	// CLEAR flag that device interface is bussy
 							device_responsive = true;
+							this.log.warn('SERVICE or FACTORY Mode cleared');
 							break;
 						}
 						catch (err) {
@@ -4064,7 +4067,29 @@ class wamo extends utils.Adapter {
 	async get_DevieParameter(Parameter, IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
 
+			// Flag indicating if we had to modifiy Admin Mode
+			let readModeChanged = false;
+
 			this.log.debug(`[getDevieParameter(ParameterID)] ${Parameter.id}`);
+
+			// is parameter readable?
+			if(Parameter.readCommand === null)
+			{
+				this.log.warn('[async get_DevieParameter(Parameter, IPadress, Port)] Parameter ID ' +  String(Parameter.id) + ' cant be read!');
+				reject('Parameter ID ' +  String(Parameter.id) + ' cant be read!');
+			}
+
+			// Do we need special permission to read this parameter?
+			if(Parameter.levelWrite === 'SERVICE')
+			{
+				this.set_SERVICE_Mode();
+				readModeChanged = true;
+			}
+			else if(Parameter.levelWrite === 'FACTORY')
+			{
+				this.set_FACTORY_Mode();
+				readModeChanged = true;
+			}
 
 			axios({
 				method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/' + String(Parameter.id), timeout: 10000, responseType: 'json'
@@ -4073,6 +4098,10 @@ class wamo extends utils.Adapter {
 				const content = response.data;
 				this.log.debug(`[getSensorData] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
 
+				if(readModeChanged)
+				{
+					this.clear_SERVICE_FACTORY_Mode();
+				}
 				resolve(response.data);
 			}
 			).catch(async (error) => {
