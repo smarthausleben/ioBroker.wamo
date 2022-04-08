@@ -21,6 +21,9 @@ const cron_Month = '0 0 1 * *';
 const cron_Week = '0 0 * * 1';
 const cron_Day = '0 0 * * *';
 
+const Parameter_Service_Mode = '(2)f';
+const Parameter_Admin_Mode = '(1)';
+
 //Reference to my own adapter
 let myAdapter;
 
@@ -695,6 +698,37 @@ const StatisticStates = {
 };
 // Object all possible device commands
 const DeviceParameters = {
+	ServiceMode: {
+		id: 'ADM',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Service Mode',
+					'de': 'Servicemodus',
+					'ru': 'Сервисный режим',
+					'pt': 'Modo de serviço',
+					'nl': 'Onderhoudsinstelling',
+					'fr': 'Mode de service',
+					'it': 'Modalità servizio',
+					'es': 'Modo de servicio',
+					'pl': 'Tryb serwisowy',
+					'zh-cn': '服务模式'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceConditions.path,
+		levelRead: null,
+		levelWrite: 'USER',
+		readCommand: null,
+		writeCommand: 'set'
+	},
 	Units: {
 		id: 'UNI',
 		objectdefinition: {
@@ -2367,6 +2401,12 @@ class wamo extends utils.Adapter {
 			SystemLanguage = String('en');
 			this.log.error('ERROR getting system config: ' + err);
 		}
+
+		try{
+			this.log.warn(await this.setServiceMode());
+		}catch(err){
+			this.log.error('ERROR setting Service Mode: ' + err);
+		}
 		//=================================================================================================
 		//===  Create device object and all channel objects												===
 		//=================================================================================================
@@ -3683,6 +3723,106 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	async setServiceMode() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				if (!interfaceBussy) {
+					// Verbindungsversuche zurücksetzen
+					let connTrys = 0;
+					// Verbindungsbestätigung zurücksetzen
+					device_responsive = false;
+
+					while (connTrys < connectionRetrys) {
+						try {
+							interfaceBussy = true;	// SET flag that device interface is bussy
+							await this.set_DevieParameter(DeviceParameters.ServiceMode.id, Parameter_Service_Mode, this.config.device_ip, this.config.device_port);
+							// await this.updateState(DeviceParameters.CurrentValveStatus, await this.get_DevieParameter(DeviceParameters.CurrentValveStatus.id, this.config.device_ip, this.config.device_port));
+							interfaceBussy = false;	// CLEAR flag that device interface is bussy
+							device_responsive = true;
+							this.log.warn('SERVICE Mode aktive');
+							break;
+						}
+						catch (err) {
+							this.log.error('[async setServiceMode()] ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
+							this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
+							await sleep(connectionRetryPause);
+							this.log.warn('retry connection ...');
+						}
+						finally {
+							connTrys++;
+							if (connTrys > 1) {
+								interfaceBussy = false;	// CLEAR flag that device interface is bussy
+								this.log.warn('connection attempt No. ' + connTrys);
+							}
+						}
+					}
+
+					if (!device_responsive) {
+						this.log.error('device NOT reachable');
+						// we throw an exception causing Adaper to restart
+						interfaceBussy = false;	// CLEAR flag that device interface is bussy
+					}
+				}
+				else {
+					this.log.warn('[async setServiceMode()] Device interface is bussy!');
+				}
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	async setAdminMode() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				if (!interfaceBussy) {
+					// Verbindungsversuche zurücksetzen
+					let connTrys = 0;
+					// Verbindungsbestätigung zurücksetzen
+					device_responsive = false;
+
+					while (connTrys < connectionRetrys) {
+						try {
+							interfaceBussy = true;	// SET flag that device interface is bussy
+							await this.set_DevieParameter(DeviceParameters.ServiceMode.id, Parameter_Admin_Mode, this.config.device_ip, this.config.device_port);
+							// await this.updateState(DeviceParameters.CurrentValveStatus, await this.get_DevieParameter(DeviceParameters.CurrentValveStatus.id, this.config.device_ip, this.config.device_port));
+							interfaceBussy = false;	// CLEAR flag that device interface is bussy
+							device_responsive = true;
+							this.log.warn('ADMIN Mode aktive');
+							break;
+						}
+						catch (err) {
+							this.log.error('[async setAdminMode()] ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
+							this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
+							await sleep(connectionRetryPause);
+							this.log.warn('retry connection ...');
+						}
+						finally {
+							connTrys++;
+							if (connTrys > 1) {
+								interfaceBussy = false;	// CLEAR flag that device interface is bussy
+								this.log.warn('connection attempt No. ' + connTrys);
+							}
+						}
+					}
+
+					if (!device_responsive) {
+						this.log.error('device NOT reachable');
+						// we throw an exception causing Adaper to restart
+						interfaceBussy = false;	// CLEAR flag that device interface is bussy
+					}
+				}
+				else {
+					this.log.warn('[async setAdminMode()] Device interface is bussy!');
+				}
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
 	//=============================================================================
 	// here we generate the additional messages if this option is aktive in the
 	// adapter settings
@@ -3868,6 +4008,47 @@ class wamo extends utils.Adapter {
 			).then(async (response) => {
 				const content = response.data;
 				this.log.debug(`[getSensorData] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
+
+				resolve(response.data);
+			}
+			).catch(async (error) => {
+				if (error.response) {
+					// The request was made and the server responded with a status code
+
+					this.log.warn(`Warnmeldung`);
+				} else if (error.request) {
+					// The request was made but no response was received
+					// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+					// http.ClientRequest in node.js<div></div>
+					this.log.info(error.message);
+				} else {
+					// Something happened in setting up the request that triggered an Error
+					this.log.info(error.message);
+				}
+				reject('http error');
+			});
+
+		});
+	}
+
+	//===================================================
+	// Pulls the Information from the Device
+	// ParameterID: API command Parameter (last instance of the State path)
+	// IPadress: Device IP Adress
+	// Port: Device Port
+	//===================================================
+	// Return: Readed Value from Device (JSON Format)
+	async set_DevieParameter(ParameterID, Value, IPadress, Port) {
+		return new Promise(async (resolve, reject) => {
+
+			this.log.debug(`[set_DevieParameter(ParameterID)] ${ParameterID} Value: ${Value}`);
+
+			axios({
+				method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/set/' + String(ParameterID) + '/' + String(Value), timeout: 10000, responseType: 'json'
+			}
+			).then(async (response) => {
+				const content = response.data;
+				this.log.debug(`[setDeviceParameter] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
 
 				resolve(response.data);
 			}
