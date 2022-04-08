@@ -3723,7 +3723,7 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 				await this.set_DevieParameter(DeviceParameters.ServiceMode, Parameter_FACTORY_Mode, this.config.device_ip, this.config.device_port);
-				this.log.warn('FACTORY Mode aktiv');
+				this.log.debug('FACTORY Mode aktiv');
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -3735,7 +3735,7 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 				await this.set_DevieParameter(DeviceParameters.ServiceMode.id, Parameter_SERVICE_Mode, this.config.device_ip, this.config.device_port);
-				this.log.warn('SERVICE Mode aktiv');
+				this.log.debug('SERVICE Mode aktiv');
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -3747,7 +3747,7 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 				await this.clr_DevieParameter(DeviceParameters.ServiceMode.id, this.config.device_ip, this.config.device_port);
-				this.log.warn('SERVICE or FACTORY Mode cleared');
+				this.log.debug('SERVICE or FACTORY Mode cleared');
 
 				resolve(true);
 			} catch (err) {
@@ -3995,8 +3995,26 @@ class wamo extends utils.Adapter {
 	// Return: Readed Value from Device (JSON Format)
 	async set_DevieParameter(Parameter, Value, IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
+			// Flag indicating if we had to modifiy Admin Mode
+			let writeModeChanged = false;
 
 			this.log.debug(`[set_DevieParameter(ParameterID)] ${Parameter.id} Value: ${Value}`);
+
+			// is parameter readable?
+			if (Parameter.writeCommand === null) {
+				this.log.warn('[async get_DevieParameter(Parameter, IPadress, Port)] Parameter ID ' + String(Parameter.id) + ' can not be written!');
+				reject('Parameter ID ' + String(Parameter.id) + ' can not be written!');
+			}
+
+			// Do we need special permission to read this parameter?
+			if (Parameter.levelWrite === 'SERVICE') {
+				await this.set_SERVICE_Mode();
+				writeModeChanged = true;
+			}
+			else if (Parameter.levelWrite === 'FACTORY') {
+				await this.set_FACTORY_Mode();
+				writeModeChanged = true;
+			}
 
 			axios({
 				method: 'get', url: 'http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/set/' + String(Parameter.id) + '/' + String(Value), timeout: 10000, responseType: 'json'
@@ -4004,6 +4022,10 @@ class wamo extends utils.Adapter {
 			).then(async (response) => {
 				const content = response.data;
 				this.log.debug(`[setDeviceParameter] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
+
+				if (writeModeChanged) {
+					await this.clear_SERVICE_FACTORY_Mode();
+				}
 
 				resolve(response.data);
 			}
