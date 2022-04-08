@@ -3945,11 +3945,11 @@ class wamo extends utils.Adapter {
 			}
 
 			// Do we need special permission to read this parameter?
-			if (Parameter.levelWrite === 'SERVICE') {
+			if (Parameter.levelRead === 'SERVICE') {
 				await this.set_SERVICE_Mode();
 				readModeChanged = true;
 			}
-			else if (Parameter.levelWrite === 'FACTORY') {
+			else if (Parameter.levelRead === 'FACTORY') {
 				await this.set_FACTORY_Mode();
 				readModeChanged = true;
 			}
