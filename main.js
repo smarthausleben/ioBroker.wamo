@@ -3722,45 +3722,8 @@ class wamo extends utils.Adapter {
 	async set_FACTORY_Mode() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				if (!interfaceBussy) {
-					// Verbindungsversuche zurücksetzen
-					let connTrys = 0;
-					// Verbindungsbestätigung zurücksetzen
-					device_responsive = false;
-
-					while (connTrys < connectionRetrys) {
-						try {
-							interfaceBussy = true;	// SET flag that device interface is bussy
-							await this.set_DevieParameter(DeviceParameters.ServiceMode, Parameter_FACTORY_Mode, this.config.device_ip, this.config.device_port);
-							interfaceBussy = false;	// CLEAR flag that device interface is bussy
-							device_responsive = true;
-							this.log.warn('FACTORY Mode aktiv');
-							break;
-						}
-						catch (err) {
-							this.log.error('[async set_FACTORY_Mode()] ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
-							this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
-							await sleep(connectionRetryPause);
-							this.log.warn('retry connection ...');
-						}
-						finally {
-							connTrys++;
-							if (connTrys > 1) {
-								interfaceBussy = false;	// CLEAR flag that device interface is bussy
-								this.log.warn('connection attempt No. ' + connTrys);
-							}
-						}
-					}
-
-					if (!device_responsive) {
-						this.log.error('device NOT reachable');
-						// we throw an exception causing Adaper to restart
-						interfaceBussy = false;	// CLEAR flag that device interface is bussy
-					}
-				}
-				else {
-					this.log.warn('[async set_FACTORY_Mode()] Device interface is bussy!');
-				}
+				await this.set_DevieParameter(DeviceParameters.ServiceMode, Parameter_FACTORY_Mode, this.config.device_ip, this.config.device_port);
+				this.log.warn('FACTORY Mode aktiv');
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -3771,45 +3734,8 @@ class wamo extends utils.Adapter {
 	async set_SERVICE_Mode() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				if (!interfaceBussy) {
-					// Verbindungsversuche zurücksetzen
-					let connTrys = 0;
-					// Verbindungsbestätigung zurücksetzen
-					device_responsive = false;
-
-					while (connTrys < connectionRetrys) {
-						try {
-							interfaceBussy = true;	// SET flag that device interface is bussy
-							await this.set_DevieParameter(DeviceParameters.ServiceMode.id, Parameter_SERVICE_Mode, this.config.device_ip, this.config.device_port);
-							interfaceBussy = false;	// CLEAR flag that device interface is bussy
-							device_responsive = true;
-							this.log.warn('SERVICE Mode aktiv');
-							break;
-						}
-						catch (err) {
-							this.log.error('[async set_SERVICE_Mode()] ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
-							this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
-							await sleep(connectionRetryPause);
-							this.log.warn('retry connection ...');
-						}
-						finally {
-							connTrys++;
-							if (connTrys > 1) {
-								interfaceBussy = false;	// CLEAR flag that device interface is bussy
-								this.log.warn('connection attempt No. ' + connTrys);
-							}
-						}
-					}
-
-					if (!device_responsive) {
-						this.log.error('device NOT reachable');
-						// we throw an exception causing Adaper to restart
-						interfaceBussy = false;	// CLEAR flag that device interface is bussy
-					}
-				}
-				else {
-					this.log.warn('[async set_SERVICE_Mode()] Device interface is bussy!');
-				}
+				await this.set_DevieParameter(DeviceParameters.ServiceMode.id, Parameter_SERVICE_Mode, this.config.device_ip, this.config.device_port);
+				this.log.warn('SERVICE Mode aktiv');
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -3820,45 +3746,9 @@ class wamo extends utils.Adapter {
 	async clear_SERVICE_FACTORY_Mode() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				if (!interfaceBussy) {
-					// Verbindungsversuche zurücksetzen
-					let connTrys = 0;
-					// Verbindungsbestätigung zurücksetzen
-					device_responsive = false;
+				await this.clr_DevieParameter(DeviceParameters.ServiceMode.id, this.config.device_ip, this.config.device_port);
+				this.log.warn('SERVICE or FACTORY Mode cleared');
 
-					while (connTrys < connectionRetrys) {
-						try {
-							interfaceBussy = true;	// SET flag that device interface is bussy
-							await this.clr_DevieParameter(DeviceParameters.ServiceMode.id, this.config.device_ip, this.config.device_port);
-							interfaceBussy = false;	// CLEAR flag that device interface is bussy
-							device_responsive = true;
-							this.log.warn('SERVICE or FACTORY Mode cleared');
-							break;
-						}
-						catch (err) {
-							this.log.error('[async clear_SERVICE_FACTORY_Mode()] ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
-							this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
-							await sleep(connectionRetryPause);
-							this.log.warn('retry connection ...');
-						}
-						finally {
-							connTrys++;
-							if (connTrys > 1) {
-								interfaceBussy = false;	// CLEAR flag that device interface is bussy
-								this.log.warn('connection attempt No. ' + connTrys);
-							}
-						}
-					}
-
-					if (!device_responsive) {
-						this.log.error('device NOT reachable');
-						// we throw an exception causing Adaper to restart
-						interfaceBussy = false;	// CLEAR flag that device interface is bussy
-					}
-				}
-				else {
-					this.log.warn('[async clear_SERVICE_FACTORY_Mode()] Device interface is bussy!');
-				}
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -4049,20 +3939,17 @@ class wamo extends utils.Adapter {
 			this.log.debug(`[getDevieParameter(ParameterID)] ${Parameter.id}`);
 
 			// is parameter readable?
-			if(Parameter.readCommand === null)
-			{
-				this.log.warn('[async get_DevieParameter(Parameter, IPadress, Port)] Parameter ID ' +  String(Parameter.id) + ' cant be read!');
-				reject('Parameter ID ' +  String(Parameter.id) + ' cant be read!');
+			if (Parameter.readCommand === null) {
+				this.log.warn('[async get_DevieParameter(Parameter, IPadress, Port)] Parameter ID ' + String(Parameter.id) + ' cant be read!');
+				reject('Parameter ID ' + String(Parameter.id) + ' cant be read!');
 			}
 
 			// Do we need special permission to read this parameter?
-			if(Parameter.levelWrite === 'SERVICE')
-			{
+			if (Parameter.levelWrite === 'SERVICE') {
 				this.set_SERVICE_Mode();
 				readModeChanged = true;
 			}
-			else if(Parameter.levelWrite === 'FACTORY')
-			{
+			else if (Parameter.levelWrite === 'FACTORY') {
 				this.set_FACTORY_Mode();
 				readModeChanged = true;
 			}
@@ -4074,8 +3961,7 @@ class wamo extends utils.Adapter {
 				const content = response.data;
 				this.log.debug(`[getSensorData] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
 
-				if(readModeChanged)
-				{
+				if (readModeChanged) {
 					this.clear_SERVICE_FACTORY_Mode();
 				}
 				resolve(response.data);
