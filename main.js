@@ -2918,8 +2918,7 @@ class wamo extends utils.Adapter {
 						while (connTrys < connectionRetrys) {
 							try {
 								interfaceBussy = true;	// SET flag that device interface is bussy
-								await this.updateState(statesToGet[i], await this.get_DevieParameter(statesToGet[i].id, this.config.device_ip, this.config.device_port));
-								// await this.updateState(DeviceParameters.CurrentValveStatus, await this.get_DevieParameter(DeviceParameters.CurrentValveStatus.id, this.config.device_ip, this.config.device_port));
+								await this.updateState(statesToGet[i], await this.get_DevieParameter(statesToGet[i], this.config.device_ip, this.config.device_port));
 								interfaceBussy = false;	// CLEAR flag that device interface is bussy
 								device_responsive = true;
 								break;
@@ -2962,7 +2961,7 @@ class wamo extends utils.Adapter {
 	async deviceCommcheck(DeviceIP, DevicePort) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				await this.get_DevieParameter('ALA', DeviceIP, DevicePort);
+				await this.get_DevieParameter(DeviceParameters.CurrentAlarmStatus, DeviceIP, DevicePort);
 				resolve(true);
 			} catch (err) {
 				this.log.warn('[async deviceCommcheck(DeviceIP, DevicePort)] Error:');
@@ -3756,8 +3755,7 @@ class wamo extends utils.Adapter {
 					while (connTrys < connectionRetrys) {
 						try {
 							interfaceBussy = true;	// SET flag that device interface is bussy
-							await this.set_DevieParameter(DeviceParameters.ServiceMode.id, Parameter_FACTORY_Mode, this.config.device_ip, this.config.device_port);
-							// await this.updateState(DeviceParameters.CurrentValveStatus, await this.get_DevieParameter(DeviceParameters.CurrentValveStatus.id, this.config.device_ip, this.config.device_port));
+							await this.set_DevieParameter(DeviceParameters.ServiceMode, Parameter_FACTORY_Mode, this.config.device_ip, this.config.device_port);
 							interfaceBussy = false;	// CLEAR flag that device interface is bussy
 							device_responsive = true;
 							break;
@@ -3806,7 +3804,6 @@ class wamo extends utils.Adapter {
 						try {
 							interfaceBussy = true;	// SET flag that device interface is bussy
 							await this.set_DevieParameter(DeviceParameters.ServiceMode.id, Parameter_SERVICE_Mode, this.config.device_ip, this.config.device_port);
-							// await this.updateState(DeviceParameters.CurrentValveStatus, await this.get_DevieParameter(DeviceParameters.CurrentValveStatus.id, this.config.device_ip, this.config.device_port));
 							interfaceBussy = false;	// CLEAR flag that device interface is bussy
 							device_responsive = true;
 							break;
@@ -3855,7 +3852,6 @@ class wamo extends utils.Adapter {
 						try {
 							interfaceBussy = true;	// SET flag that device interface is bussy
 							await this.clr_DevieParameter(DeviceParameters.ServiceMode.id, this.config.device_ip, this.config.device_port);
-							// await this.updateState(DeviceParameters.CurrentValveStatus, await this.get_DevieParameter(DeviceParameters.CurrentValveStatus.id, this.config.device_ip, this.config.device_port));
 							interfaceBussy = false;	// CLEAR flag that device interface is bussy
 							device_responsive = true;
 							break;
@@ -4065,13 +4061,13 @@ class wamo extends utils.Adapter {
 	// Port: Device Port
 	//===================================================
 	// Return: Readed Value from Device (JSON Format)
-	async get_DevieParameter(ParameterID, IPadress, Port) {
+	async get_DevieParameter(Parameter, IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
 
-			this.log.debug(`[getDevieParameter(ParameterID)] ${ParameterID}`);
+			this.log.debug(`[getDevieParameter(ParameterID)] ${Parameter.id}`);
 
 			axios({
-				method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/' + String(ParameterID), timeout: 10000, responseType: 'json'
+				method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/' + String(Parameter.id), timeout: 10000, responseType: 'json'
 			}
 			).then(async (response) => {
 				const content = response.data;
@@ -4082,7 +4078,6 @@ class wamo extends utils.Adapter {
 			).catch(async (error) => {
 				if (error.response) {
 					// The request was made and the server responded with a status code
-
 					this.log.warn(`Warnmeldung`);
 				} else if (error.request) {
 					// The request was made but no response was received
@@ -4106,13 +4101,13 @@ class wamo extends utils.Adapter {
 	// Port: Device Port
 	//===================================================
 	// Return: Readed Value from Device (JSON Format)
-	async set_DevieParameter(ParameterID, Value, IPadress, Port) {
+	async set_DevieParameter(Parameter, Value, IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
 
-			this.log.debug(`[set_DevieParameter(ParameterID)] ${ParameterID} Value: ${Value}`);
+			this.log.debug(`[set_DevieParameter(ParameterID)] ${Parameter.id} Value: ${Value}`);
 
 			axios({
-				method: 'get', url: 'http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/set/' + String(ParameterID) + '/' + String(Value), timeout: 10000, responseType: 'json'
+				method: 'get', url: 'http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/set/' + String(Parameter.id) + '/' + String(Value), timeout: 10000, responseType: 'json'
 			}
 			).then(async (response) => {
 				const content = response.data;
@@ -4147,13 +4142,13 @@ class wamo extends utils.Adapter {
 	// Port: Device Port
 	//===================================================
 	// Return: Readed Value from Device (JSON Format)
-	async clr_DevieParameter(ParameterID, IPadress, Port) {
+	async clr_DevieParameter(Parameter, IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
 
-			this.log.debug(`[set_DevieParameter(ParameterID)] ${ParameterID}`);
+			this.log.debug(`[set_DevieParameter(ParameterID)] ${Parameter.id}`);
 
 			axios({
-				method: 'get', url: 'http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/clr/' + String(ParameterID), timeout: 10000, responseType: 'json'
+				method: 'get', url: 'http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/clr/' + String(Parameter.id), timeout: 10000, responseType: 'json'
 			}
 			).then(async (response) => {
 				const content = response.data;
