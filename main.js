@@ -2402,11 +2402,21 @@ class wamo extends utils.Adapter {
 			this.log.error('ERROR getting system config: ' + err);
 		}
 
+
+
 		try{
 			this.log.warn(await this.setServiceMode());
 		}catch(err){
 			this.log.error('ERROR setting Service Mode: ' + err);
 		}
+
+
+		try{
+			this.log.warn(await this.setAdminMode());
+		}catch(err){
+			this.log.error('ERROR setting Admin Mode: ' + err);
+		}
+
 		//=================================================================================================
 		//===  Create device object and all channel objects												===
 		//=================================================================================================
@@ -3726,6 +3736,7 @@ class wamo extends utils.Adapter {
 	async setServiceMode() {
 		return new Promise(async (resolve, reject) => {
 			try {
+				let result = '';
 				if (!interfaceBussy) {
 					// Verbindungsversuche zurücksetzen
 					let connTrys = 0;
@@ -3735,7 +3746,7 @@ class wamo extends utils.Adapter {
 					while (connTrys < connectionRetrys) {
 						try {
 							interfaceBussy = true;	// SET flag that device interface is bussy
-							await this.set_DevieParameter(DeviceParameters.ServiceMode.id, Parameter_Service_Mode, this.config.device_ip, this.config.device_port);
+							result = await this.set_DevieParameter(DeviceParameters.ServiceMode.id, Parameter_Service_Mode, this.config.device_ip, this.config.device_port);
 							// await this.updateState(DeviceParameters.CurrentValveStatus, await this.get_DevieParameter(DeviceParameters.CurrentValveStatus.id, this.config.device_ip, this.config.device_port));
 							interfaceBussy = false;	// CLEAR flag that device interface is bussy
 							device_responsive = true;
@@ -3766,7 +3777,7 @@ class wamo extends utils.Adapter {
 				else {
 					this.log.warn('[async setServiceMode()] Device interface is bussy!');
 				}
-				resolve(true);
+				resolve(result);
 			} catch (err) {
 				reject(err);
 			}
@@ -3776,6 +3787,7 @@ class wamo extends utils.Adapter {
 	async setAdminMode() {
 		return new Promise(async (resolve, reject) => {
 			try {
+				let result = '';
 				if (!interfaceBussy) {
 					// Verbindungsversuche zurücksetzen
 					let connTrys = 0;
@@ -3785,7 +3797,7 @@ class wamo extends utils.Adapter {
 					while (connTrys < connectionRetrys) {
 						try {
 							interfaceBussy = true;	// SET flag that device interface is bussy
-							await this.set_DevieParameter(DeviceParameters.ServiceMode.id, Parameter_Admin_Mode, this.config.device_ip, this.config.device_port);
+							result = await this.set_DevieParameter(DeviceParameters.ServiceMode.id, Parameter_Admin_Mode, this.config.device_ip, this.config.device_port);
 							// await this.updateState(DeviceParameters.CurrentValveStatus, await this.get_DevieParameter(DeviceParameters.CurrentValveStatus.id, this.config.device_ip, this.config.device_port));
 							interfaceBussy = false;	// CLEAR flag that device interface is bussy
 							device_responsive = true;
@@ -3816,7 +3828,7 @@ class wamo extends utils.Adapter {
 				else {
 					this.log.warn('[async setAdminMode()] Device interface is bussy!');
 				}
-				resolve(true);
+				resolve(result);
 			} catch (err) {
 				reject(err);
 			}
