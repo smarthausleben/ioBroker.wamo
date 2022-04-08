@@ -3946,11 +3946,11 @@ class wamo extends utils.Adapter {
 
 			// Do we need special permission to read this parameter?
 			if (Parameter.levelRead === 'SERVICE') {
-				await this.set_SERVICE_Mode();
+				this.set_SERVICE_Mode();
 				readModeChanged = true;
 			}
 			else if (Parameter.levelRead === 'FACTORY') {
-				await this.set_FACTORY_Mode();
+				this.set_FACTORY_Mode();
 				readModeChanged = true;
 			}
 
@@ -3962,8 +3962,9 @@ class wamo extends utils.Adapter {
 				this.log.debug(`[getSensorData] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
 
 				if (readModeChanged) {
-					await this.clear_SERVICE_FACTORY_Mode();
+					this.clear_SERVICE_FACTORY_Mode();
 				}
+
 				resolve(response.data);
 			}
 			).catch(async (error) => {
