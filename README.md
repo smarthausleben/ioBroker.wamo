@@ -20,6 +20,8 @@ The adapter connects to your **SYR SafeTech Connect 2422** or **POLYGONVATRO** l
 
 ## Changelog
 
+### 0.1.2 (2022.04.08)
+* (smarthausleben) Automatic permission handling (USER, SERVICE and FACTORY) for reading parameters
 
 ### 0.1.1 (2022.04.05)
 * (smarthausleben) new State: Deutscher Härtegrad (German water hardness)
