@@ -2405,14 +2405,14 @@ class wamo extends utils.Adapter {
 
 
 		try{
-			this.log.warn(await this.setServiceMode());
+			this.log.warn(String(await this.setServiceMode()));
 		}catch(err){
 			this.log.error('ERROR setting Service Mode: ' + err);
 		}
 
 
 		try{
-			this.log.warn(await this.setAdminMode());
+			this.log.warn(String(await this.setAdminMode()));
 		}catch(err){
 			this.log.error('ERROR setting Admin Mode: ' + err);
 		}
