@@ -2405,28 +2405,23 @@ class wamo extends utils.Adapter {
 
 
 		try{
-			if(await this.set_FACTORY_Mode())
-			{
+			if(await this.set_FACTORY_Mode()){
 				this.log.warn('FACTORY Mode aktiv');
 			}
-
 		}catch(err){
 			this.log.error('ERROR setting FACTORY Mode: ' + err);
 		}
 
 		try{
-			if(await this.clear_ADMIN_FACTORY_Mode())
-			{
+			if(await this.clear_ADMIN_FACTORY_Mode()){
 				this.log.warn('ADMIN or FACTORY Mode cleared');
 			}
-
 		}catch(err){
 			this.log.error('ERROR clearing ADMIN or SERVICE Mode: ' + err);
 		}
 
 		try{
-			if(await this.set_ADMIN_Mode())
-			{
+			if(await this.set_ADMIN_Mode()){
 				this.log.warn('ADMIN Mode aktiv');
 			}
 		}catch(err){
@@ -4155,7 +4150,7 @@ class wamo extends utils.Adapter {
 	async clr_DevieParameter(ParameterID, IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
 
-			this.log.debug(`[set_DevieParameter(ParameterID)] ${ParameterID} Value: ${Value}`);
+			this.log.debug(`[set_DevieParameter(ParameterID)] ${ParameterID}`);
 
 			axios({
 				method: 'get', url: 'http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/clr/' + String(ParameterID), timeout: 10000, responseType: 'json'
