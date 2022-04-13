@@ -47,6 +47,27 @@ const connectionRetrys = 5;
 const connectionRetryPause = 3000;
 
 const adapterChannels = {
+	DeviceRawData: {
+		path: 'Device.RawData',
+		channel: {
+			type: 'channel',
+			common: {
+				name: {
+					'en': 'Raw data',
+					'de': 'Rohdaten',
+					'ru': 'Необработанные данные',
+					'pt': 'Dados não tratados',
+					'nl': 'Ruwe data',
+					'fr': 'Données brutes',
+					'it': 'Dati grezzi',
+					'es': 'Datos sin procesar',
+					'pl': 'Surowe dane',
+					'zh-cn': '原始数据'
+				},
+			},
+			native: {}
+		}
+	},
 	DeviceInfo: {
 		path: 'Device.Info',
 		channel: {
@@ -3183,7 +3204,10 @@ class wamo extends utils.Adapter {
 					throw String(stateID) + ' [async updateState(stateID, value)] has no id statePath';
 				}
 
+				// Path for state object
 				const state_ID = cur_StatePath + '.' + cur_ParameterID;
+				// Path for RAW state object
+				const state_ID_RAW = adapterChannels.DeviceRawData.path+ '.' + cur_ParameterID;
 
 				let skipp = false;
 
@@ -3199,6 +3223,17 @@ class wamo extends utils.Adapter {
 
 				await this.setObjectNotExistsAsync(state_ID, stateID.objectdefinition);
 				this.log.debug('stateID.objectdefinition.common.type = ' + stateID.objectdefinition.common.type);
+
+				await this.setObjectNotExistsAsync(state_ID_RAW, stateID.objectdefinition);
+				this.log.debug('RAW stateID.objectdefinition.common.type = ' + stateID.objectdefinition.common.type);
+
+				// save RAW State
+				try{
+					this.setStateAsync(state_ID_RAW, { val: value, ack: true });
+				}
+				catch(err){
+					this.log.error('[async updateState(stateID, value)] ERROR saving RAW state. State ID=' + String(state_ID_RAW) + ' Value=' + String(value));
+				}
 
 				// convert into final value
 				let finalValue;
