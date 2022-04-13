@@ -719,6 +719,63 @@ const StatisticStates = {
 };
 // Object all possible device commands
 const DeviceParameters = {
+	ValveTestOngoing: {
+		id: 'VTO',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Valve test ongoing',
+					'de': 'Ventiltest läuft',
+					'ru': 'Продолжается испытание клапана',
+					'pt': 'Teste de válvula em andamento',
+					'nl': 'Ventieltest aan de gang',
+					'fr': 'Test de soupape en cours',
+					'it': 'Test valvole in corso',
+					'es': 'Prueba de válvula en curso',
+					'pl': 'Trwa test zaworu',
+					'zh-cn': '阀门测试正在进行中'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceConditions.path,
+		rangevalues: {
+			'0': {
+				'en': 'inactive',
+				'de': 'inaktiv',
+				'ru': 'неактивный',
+				'pt': 'inativo',
+				'nl': 'inactief',
+				'fr': 'inactif',
+				'it': 'inattivo',
+				'es': 'inactivo',
+				'pl': 'nieaktywny',
+				'zh-cn': '不活跃'
+			},
+			'1': {
+				'en': 'active',
+				'de': 'aktiv',
+				'ru': 'активный',
+				'pt': 'ativo',
+				'nl': 'actief',
+				'fr': 'actif',
+				'it': 'attivo',
+				'es': 'activo',
+				'pl': 'aktywny',
+				'zh-cn': '积极的'
+			}
+		},
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
 	TurbineNoPulseTime: {
 		id: 'NPS',
 		objectdefinition: {
@@ -2840,7 +2897,8 @@ const longPeriode = [
 	DeviceParameters.MicroLeakageTest,
 	DeviceParameters.MicroLeakageTestPeriod,
 	DeviceParameters.BuzzerOnAlarm,
-	DeviceParameters.LeakageNotificationWarningThreshold];
+	DeviceParameters.LeakageNotificationWarningThreshold,
+	DeviceParameters.ValveTestOngoing];
 
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
@@ -4208,6 +4266,17 @@ class wamo extends utils.Adapter {
 							finalValue = value;
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.TurbineNoPulseTime, finalValue); }
+						break;
+					case DeviceParameters.ValveTestOngoing.id:			// VTO - Valve test ongoing
+						finalValue = await this.getGlobalisedValue(DeviceParameters.ValveTestOngoing, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							if (parseInt(value) == 0) {
+								finalValue = 'inactive';
+							} else {
+								finalValue = 'active';
+							}
+						}
+						if (moreMessages) { await this.moremessages(DeviceParameters.ValveTestOngoing, finalValue); }
 						break;
 					default:
 						this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
