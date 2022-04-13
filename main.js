@@ -719,6 +719,76 @@ const StatisticStates = {
 };
 // Object all possible device commands
 const DeviceParameters = {
+	MicroLeakageTest: {
+		id: 'DMA',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Micro leakage test',
+					'de': 'Mikrolecktest',
+					'ru': 'Тест на микроутечку',
+					'pt': 'Teste de micro vazamento',
+					'nl': 'Micro lekkage test',
+					'fr': 'Test de micro-fuite',
+					'it': 'Prova di microperdita',
+					'es': 'Prueba de microfugas',
+					'pl': 'Test mikroszczelności',
+					'zh-cn': '微量泄漏测试'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceSettings.path,
+		rangevalues: {
+			'0': {
+				'en': 'disabled',
+				'de': 'deaktiviert',
+				'ru': 'Отключено',
+				'pt': 'Desativado',
+				'nl': 'gehandicapt',
+				'fr': 'désactivé',
+				'it': 'Disabilitato',
+				'es': 'desactivado',
+				'pl': 'niepełnosprawny',
+				'zh-cn': '禁用'
+			},
+			'1': {
+				'en': 'Warning',
+				'de': 'Warnung',
+				'ru': 'Предупреждение',
+				'pt': 'Aviso',
+				'nl': 'Waarschuwing',
+				'fr': 'Avertissement',
+				'it': 'Avvertimento',
+				'es': 'Advertencia',
+				'pl': 'Ostrzeżenie',
+				'zh-cn': '警告'
+			},
+			'2': {
+				'en': 'shutoff',
+				'de': 'Abschaltung',
+				'ru': 'выключить',
+				'pt': 'desligar',
+				'nl': 'uitzetten',
+				'fr': 'éteindre',
+				'it': 'spegnimento',
+				'es': 'apagar',
+				'pl': 'wyłączyć',
+				'zh-cn': '关闭'
+			}
+
+		},
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
 	MaxFlowLeakageTime: {
 		id: 'T2',
 		objectdefinition: {
@@ -2507,7 +2577,8 @@ const initStates = [
 	DeviceParameters.Language,
 	DeviceParameters.Units,
 	DeviceParameters.FlorSensor,
-	DeviceParameters.MaxFlowLeakageTime];
+	DeviceParameters.MaxFlowLeakageTime,
+	DeviceParameters.MicroLeakageTest];
 
 const alarmPeriod = [
 	DeviceParameters.CurrentAlarmStatus,
@@ -2530,7 +2601,8 @@ const longPeriode = [
 	DeviceParameters.BatteryVoltage,
 	DeviceParameters.PowerAdapterVoltage,
 	DeviceParameters.LeakProtectionTemporaryDeactivation,
-	DeviceParameters.MaxFlowLeakageTime];
+	DeviceParameters.MaxFlowLeakageTime,
+	DeviceParameters.MicroLeakageTest];
 
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
@@ -3823,6 +3895,26 @@ class wamo extends utils.Adapter {
 							finalValue = value;
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.MaxFlowLeakageTime, finalValue); }
+						break;
+					case DeviceParameters.MicroLeakageTest.id:			// DMA - Micro leakage test
+						finalValue = await this.getGlobalisedValue(DeviceParameters.MicroLeakageTest, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							switch (String(value)) {
+								case '0':
+									finalValue = 'Disabled';
+									break;
+								case '1':
+									finalValue = 'Warning';
+									break;
+								case '2':
+									finalValue = 'Shutoff';
+									break;
+								default:
+									this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Value (' + String(value) + ') for Key (' + String(valueKey) + ') is not defined!');
+									finalValue = null;
+							}
+						}
+						if (moreMessages) { await this.moremessages(DeviceParameters.MicroLeakageTest, finalValue); }
 						break;
 					default:
 						this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
