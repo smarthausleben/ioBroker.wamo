@@ -720,7 +720,7 @@ const StatisticStates = {
 // Object all possible device commands
 const DeviceParameters = {
 	TurbineNoPulseTime: {
-		id: 'TNPS',
+		id: 'NPS',
 		objectdefinition: {
 			type: 'state',
 			common: {
@@ -745,7 +745,7 @@ const DeviceParameters = {
 			native: {}
 		},
 		statePath: adapterChannels.WaterConumption.path,
-		levelRead: 'USER',
+		levelRead: 'SERVICE',
 		levelWrite: null,
 		readCommand: 'get',
 		writeCommand: null
