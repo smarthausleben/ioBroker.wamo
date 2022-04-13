@@ -719,6 +719,37 @@ const StatisticStates = {
 };
 // Object all possible device commands
 const DeviceParameters = {
+	LeakageNotificationWarningThreshold: {
+		id: 'LWT',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Leakage notification (warning) threshold',
+					'de': 'Schwellenwert für Leckagebenachrichtigung (Warnung).',
+					'ru': 'Порог уведомления (предупреждения) об утечке',
+					'pt': 'Limite de notificação de vazamento (aviso)',
+					'nl': 'Lekkage melding (waarschuwing) drempel',
+					'fr': 'Seuil de notification de fuite (avertissement)',
+					'it': 'Soglia di notifica di perdita (avviso).',
+					'es': 'Umbral de notificación (advertencia) de fugas',
+					'pl': 'Próg powiadomienia o wycieku (ostrzeżenie)',
+					'zh-cn': '泄漏通知（警告）阈值'
+				},
+				type: 'number',
+				unit: '%',
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceSettings.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
 	BuzzerOnAlarm: {
 		id: 'BUZ',
 		objectdefinition: {
@@ -2717,7 +2748,8 @@ const initStates = [
 	DeviceParameters.MaxFlowLeakageTime,
 	DeviceParameters.MicroLeakageTest,
 	DeviceParameters.MicroLeakageTestPeriod,
-	DeviceParameters.BuzzerOnAlarm];
+	DeviceParameters.BuzzerOnAlarm,
+	DeviceParameters.LeakageNotificationWarningThreshold];
 
 const alarmPeriod = [
 	DeviceParameters.CurrentAlarmStatus,
@@ -2743,7 +2775,8 @@ const longPeriode = [
 	DeviceParameters.MaxFlowLeakageTime,
 	DeviceParameters.MicroLeakageTest,
 	DeviceParameters.MicroLeakageTestPeriod,
-	DeviceParameters.BuzzerOnAlarm];
+	DeviceParameters.BuzzerOnAlarm,
+	DeviceParameters.LeakageNotificationWarningThreshold];
 
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
@@ -4090,6 +4123,13 @@ class wamo extends utils.Adapter {
 							}
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.BuzzerOnAlarm, finalValue); }
+						break;
+					case DeviceParameters.LeakageNotificationWarningThreshold.id:	// LWT - Leakage notification (warning) threshold
+						finalValue = await this.getGlobalisedValue(DeviceParameters.LeakageNotificationWarningThreshold, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = value;
+						}
+						if (moreMessages) { await this.moremessages(DeviceParameters.LeakageNotificationWarningThreshold, finalValue); }
 						break;
 					default:
 						this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
