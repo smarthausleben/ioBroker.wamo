@@ -30,6 +30,7 @@ The adapter connects to your **SYR SafeTech Connect 2422** or **POLYGONVATRO** l
 * (smarthausleben) added state DRP (Micro leakage test period)
 * (smarthausleben) added state BUZ (Buzzer on alarm)
 * (smarthausleben) added state LWT (Leakage notification (warning) threshold)
+* (smarthausleben) added state FLO (Water flow)
 
 ### 0.1.2 (2022.04.08)
 * (smarthausleben) Automatic permission handling (USER, SERVICE and FACTORY) for reading parameters

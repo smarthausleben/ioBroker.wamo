@@ -719,6 +719,37 @@ const StatisticStates = {
 };
 // Object all possible device commands
 const DeviceParameters = {
+	WaterFlow: {
+		id: 'FLO',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Water flow',
+					'de': 'Wasserfluss',
+					'ru': 'Поток воды',
+					'pt': 'Fluxo de água',
+					'nl': 'Waterstroom',
+					'fr': "L'écoulement de l'eau",
+					'it': "Flusso d'acqua",
+					'es': 'Flujo de agua',
+					'pl': 'Przepływ wody',
+					'zh-cn': '水流'
+				},
+				type: 'number',
+				unit: 'l/h',
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.WaterConumption.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
 	LeakageNotificationWarningThreshold: {
 		id: 'LWT',
 		objectdefinition: {
@@ -2764,7 +2795,8 @@ const shortPeriod = [
 	DeviceParameters.WaterPressure,
 	DeviceParameters.LastTappedVolume,
 	DeviceParameters.TotalVolume,
-	DeviceParameters.CurrentVolume];
+	DeviceParameters.CurrentVolume,
+	DeviceParameters.WaterFlow];
 
 const longPeriode = [
 	DeviceParameters.SystemTime,
@@ -4130,6 +4162,13 @@ class wamo extends utils.Adapter {
 							finalValue = value;
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.LeakageNotificationWarningThreshold, finalValue); }
+						break;
+					case DeviceParameters.WaterFlow.id:					// FLO - Water flow
+						finalValue = await this.getGlobalisedValue(DeviceParameters.WaterFlow, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = value;
+						}
+						if (moreMessages) { await this.moremessages(DeviceParameters.WaterFlow, finalValue); }
 						break;
 					default:
 						this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
