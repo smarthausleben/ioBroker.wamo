@@ -719,6 +719,87 @@ const StatisticStates = {
 };
 // Object all possible device commands
 const DeviceParameters = {
+	MicroLeakageTestPeriod: {
+		id: 'DRP',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Micro leakage test period',
+					'de': 'Testzeitraum für Mikroleckagen',
+					'ru': 'Период испытания микроутечек',
+					'pt': 'Período de teste de micro vazamento',
+					'nl': 'Micro lekkage testperiode',
+					'fr': 'Période de test de micro-fuites',
+					'it': 'Periodo di prova di micro perdite',
+					'es': 'Período de prueba de microfugas',
+					'pl': 'Okres testu mikroprzecieków',
+					'zh-cn': '微漏测试期'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceSettings.path,
+		rangevalues: {
+			'0': {
+				'en': 'always',
+				'de': 'immer',
+				'ru': 'всегда',
+				'pt': 'sempre',
+				'nl': 'altijd',
+				'fr': 'toujours',
+				'it': 'sempre',
+				'es': 'siempre',
+				'pl': 'zawsze',
+				'zh-cn': '总是'
+			},
+			'1': {
+				'en': 'day',
+				'de': 'Tag',
+				'ru': 'день',
+				'pt': 'dia',
+				'nl': 'dag',
+				'fr': 'journée',
+				'it': 'giorno',
+				'es': 'día',
+				'pl': 'dzień',
+				'zh-cn': '天'
+			},
+			'2': {
+				'en': 'week',
+				'de': 'Woche',
+				'ru': 'неделю',
+				'pt': 'semana',
+				'nl': 'week',
+				'fr': 'la semaine',
+				'it': 'settimana',
+				'es': 'semana',
+				'pl': 'tydzień',
+				'zh-cn': '星期'
+			},
+			'3': {
+				'en': 'month',
+				'de': 'Monat',
+				'ru': 'месяц',
+				'pt': 'mês',
+				'nl': 'maand',
+				'fr': 'mois',
+				'it': 'mese',
+				'es': 'mes',
+				'pl': 'miesiąc',
+				'zh-cn': '月'
+			}
+		},
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
 	MicroLeakageTest: {
 		id: 'DMA',
 		objectdefinition: {
@@ -782,7 +863,6 @@ const DeviceParameters = {
 				'pl': 'wyłączyć',
 				'zh-cn': '关闭'
 			}
-
 		},
 		levelRead: 'USER',
 		levelWrite: 'USER',
@@ -2578,7 +2658,8 @@ const initStates = [
 	DeviceParameters.Units,
 	DeviceParameters.FlorSensor,
 	DeviceParameters.MaxFlowLeakageTime,
-	DeviceParameters.MicroLeakageTest];
+	DeviceParameters.MicroLeakageTest,
+	DeviceParameters.MicroLeakageTestPeriod];
 
 const alarmPeriod = [
 	DeviceParameters.CurrentAlarmStatus,
@@ -2602,7 +2683,8 @@ const longPeriode = [
 	DeviceParameters.PowerAdapterVoltage,
 	DeviceParameters.LeakProtectionTemporaryDeactivation,
 	DeviceParameters.MaxFlowLeakageTime,
-	DeviceParameters.MicroLeakageTest];
+	DeviceParameters.MicroLeakageTest,
+	DeviceParameters.MicroLeakageTestPeriod];
 
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
@@ -3915,6 +3997,29 @@ class wamo extends utils.Adapter {
 							}
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.MicroLeakageTest, finalValue); }
+						break;
+					case DeviceParameters.MicroLeakageTestPeriod.id:	// DRP - Micro leakage test period
+						finalValue = await this.getGlobalisedValue(DeviceParameters.MicroLeakageTestPeriod, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							switch (String(value)) {
+								case '0':
+									finalValue = 'always';
+									break;
+								case '1':
+									finalValue = 'day';
+									break;
+								case '2':
+									finalValue = 'week';
+									break;
+								case '3':
+									finalValue = 'month';
+									break;
+								default:
+									this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Value (' + String(value) + ') for Key (' + String(valueKey) + ') is not defined!');
+									finalValue = null;
+							}
+						}
+						if (moreMessages) { await this.moremessages(DeviceParameters.MicroLeakageTestPeriod, finalValue); }
 						break;
 					default:
 						this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');

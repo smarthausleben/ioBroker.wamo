@@ -27,6 +27,7 @@ The adapter connects to your **SYR SafeTech Connect 2422** or **POLYGONVATRO** l
 * (smarthausleben) added state TMP (Leackage protection temporary deactivation)
 * (smarthausleben) added state T2 (max flow leakage time)
 * (smarthausleben) added state DMA (Micro leakage test)
+* (smarthausleben) added state DRP (Micro leakage test period)
 
 ### 0.1.2 (2022.04.08)
 * (smarthausleben) Automatic permission handling (USER, SERVICE and FACTORY) for reading parameters
