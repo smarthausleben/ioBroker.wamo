@@ -24,6 +24,7 @@ The adapter connects to your **SYR SafeTech Connect 2422** or **POLYGONVATRO** l
 * (smarthausleben) added RawData channel (all device states how they are comming from the device in JSON format)
 * (smarthausleben) added state BSA (Floor Sensor)
 * (smarthausleben) added state AB (Shutoff)
+* (smarthausleben) added state TMP (Leackage protection temporary deactivation)
 
 ### 0.1.2 (2022.04.08)
 * (smarthausleben) Automatic permission handling (USER, SERVICE and FACTORY) for reading parameters

@@ -719,6 +719,37 @@ const StatisticStates = {
 };
 // Object all possible device commands
 const DeviceParameters = {
+	LeakProtectionTemporaryDeactivation: {
+		id: 'TMP',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Leakage protection temporary deactivation',
+					'de': 'Leckageschutz vorübergehende Deaktivierung',
+					'ru': 'Временное отключение защиты от протечек',
+					'pt': 'Desativação temporária de proteção contra vazamento',
+					'nl': 'Lekkagebescherming tijdelijke deactivering',
+					'fr': 'Désactivation temporaire de la protection contre les fuites',
+					'it': 'Disattivazione temporanea della protezione contro le perdite',
+					'es': 'Desactivación temporal de la protección contra fugas',
+					'pl': 'Tymczasowa dezaktywacja ochrony przed wyciekiem',
+					'zh-cn': '漏电保护暂时停用'
+				},
+				type: 'number',
+				unit: 's',
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceConditions.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
 	ShutOff: {
 		id: 'AB',
 		objectdefinition: {
@@ -2465,7 +2496,8 @@ const longPeriode = [
 	DeviceParameters.SystemTime,
 	DeviceParameters.WiFiRSSI,
 	DeviceParameters.BatteryVoltage,
-	DeviceParameters.PowerAdapterVoltage];
+	DeviceParameters.PowerAdapterVoltage,
+	DeviceParameters.LeakProtectionTemporaryDeactivation];
 
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
@@ -3744,6 +3776,13 @@ class wamo extends utils.Adapter {
 							}
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.ShutOff, finalValue); }
+						break;
+					case DeviceParameters.LeakProtectionTemporaryDeactivation.id:	// TMP Leackage protection temporary deactivation
+						finalValue = await this.getGlobalisedValue(DeviceParameters.LeakProtectionTemporaryDeactivation, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = value;
+						}
+						if (moreMessages) { await this.moremessages(DeviceParameters.LeakProtectionTemporaryDeactivation, finalValue); }
 						break;
 					default:
 						this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
