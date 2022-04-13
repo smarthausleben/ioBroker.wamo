@@ -3226,7 +3226,7 @@ class wamo extends utils.Adapter {
 
 				// RAW object handling
 				let raw_objectdefinition = stateID.objectdefinition;
-				raw_objectdefinition.common.type = 'object';
+				raw_objectdefinition.common.type = 'json';
 				await this.setObjectNotExistsAsync(state_ID_RAW, raw_objectdefinition);
 				this.log.debug('RAW stateID.objectdefinition.common.type = ' + raw_objectdefinition);
 
