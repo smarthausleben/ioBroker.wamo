@@ -3224,8 +3224,11 @@ class wamo extends utils.Adapter {
 				await this.setObjectNotExistsAsync(state_ID, stateID.objectdefinition);
 				this.log.debug('stateID.objectdefinition.common.type = ' + stateID.objectdefinition.common.type);
 
-				await this.setObjectNotExistsAsync(state_ID_RAW, stateID.objectdefinition);
-				this.log.debug('RAW stateID.objectdefinition.common.type = ' + stateID.objectdefinition.common.type);
+				// RAW object handling
+				let raw_objectdefinition = stateID.objectdefinition;
+				raw_objectdefinition.type = 'object';
+				await this.setObjectNotExistsAsync(state_ID_RAW, raw_objectdefinition);
+				this.log.debug('RAW stateID.objectdefinition.common.type = ' + raw_objectdefinition);
 
 				// save RAW State
 				try{
