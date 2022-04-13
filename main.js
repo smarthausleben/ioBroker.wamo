@@ -719,6 +719,63 @@ const StatisticStates = {
 };
 // Object all possible device commands
 const DeviceParameters = {
+	BuzzerOnAlarm: {
+		id: 'BUZ',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Buzzer on alarm',
+					'de': 'Summer bei Alarm',
+					'ru': 'Зуммер при тревоге',
+					'pt': 'Campainha em alarme',
+					'nl': 'Zoemer bij alarm',
+					'fr': 'Buzzer en alarme',
+					'it': 'Cicalino in allarme',
+					'es': 'Zumbador en alarma',
+					'pl': 'Brzęczyk alarmu',
+					'zh-cn': '蜂鸣器报警'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceSettings.path,
+		rangevalues: {
+			'0': {
+				'en': 'Buzzer disabled',
+				'de': 'Summer deaktiviert',
+				'ru': 'Зуммер отключен',
+				'pt': 'Campainha desabilitada',
+				'nl': 'Zoemer uitgeschakeld',
+				'fr': 'Buzzer désactivé',
+				'it': 'Cicalino disabilitato',
+				'es': 'Zumbador deshabilitado',
+				'pl': 'Brzęczyk wyłączony',
+				'zh-cn': '蜂鸣器已禁用'
+			},
+			'1': {
+				'en': 'Buzzer enabled',
+				'de': 'Summer aktiviert',
+				'ru': 'Зуммер включен',
+				'pt': 'Campainha ativada',
+				'nl': 'Zoemer ingeschakeld',
+				'fr': 'Buzzer activé',
+				'it': 'Buzzer abilitato',
+				'es': 'Zumbador habilitado',
+				'pl': 'Włączony brzęczyk',
+				'zh-cn': '启用蜂鸣器'
+			}
+		},
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
 	MicroLeakageTestPeriod: {
 		id: 'DRP',
 		objectdefinition: {
@@ -2659,7 +2716,8 @@ const initStates = [
 	DeviceParameters.FlorSensor,
 	DeviceParameters.MaxFlowLeakageTime,
 	DeviceParameters.MicroLeakageTest,
-	DeviceParameters.MicroLeakageTestPeriod];
+	DeviceParameters.MicroLeakageTestPeriod,
+	DeviceParameters.BuzzerOnAlarm];
 
 const alarmPeriod = [
 	DeviceParameters.CurrentAlarmStatus,
@@ -2684,7 +2742,8 @@ const longPeriode = [
 	DeviceParameters.LeakProtectionTemporaryDeactivation,
 	DeviceParameters.MaxFlowLeakageTime,
 	DeviceParameters.MicroLeakageTest,
-	DeviceParameters.MicroLeakageTestPeriod];
+	DeviceParameters.MicroLeakageTestPeriod,
+	DeviceParameters.BuzzerOnAlarm];
 
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
@@ -4020,6 +4079,17 @@ class wamo extends utils.Adapter {
 							}
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.MicroLeakageTestPeriod, finalValue); }
+						break;
+					case DeviceParameters.BuzzerOnAlarm.id:				// BUZ - Buzzer on alarm
+						finalValue = await this.getGlobalisedValue(DeviceParameters.BuzzerOnAlarm, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							if (parseInt(value) == 0) {
+								finalValue = 'Buzzer disabled';
+							} else {
+								finalValue = 'Buzzer enabled';
+							}
+						}
+						if (moreMessages) { await this.moremessages(DeviceParameters.BuzzerOnAlarm, finalValue); }
 						break;
 					default:
 						this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
