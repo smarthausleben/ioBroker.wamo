@@ -698,6 +698,63 @@ const StatisticStates = {
 };
 // Object all possible device commands
 const DeviceParameters = {
+	FlorSensor: {
+		id: 'BSA',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Floor sensor',
+					'de': 'Bodensensor',
+					'ru': 'Датчик пола',
+					'pt': 'Sensor de piso',
+					'nl': 'Vloersensor',
+					'fr': 'Capteur de sol',
+					'it': 'Sensore da pavimento',
+					'es': 'sensor de suelo',
+					'pl': 'Czujnik podłogowy',
+					'zh-cn': '地板传感器'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceSettings.path,
+		rangevalues: {
+			'0': {
+				'en': 'Floor sensor disabled',
+				'de': 'Bodensensor deaktiviert',
+				'ru': 'Датчик пола отключен',
+				'pt': 'Sensor de piso desativado',
+				'nl': 'Vloersensor uitgeschakeld',
+				'fr': 'Capteur de sol désactivé',
+				'it': 'Sensore pavimento disabilitato',
+				'es': 'Sensor de suelo desactivado',
+				'pl': 'Czujnik podłogowy wyłączony',
+				'zh-cn': '地板传感器禁用'
+			},
+			'1': {
+				'en': 'Floor sensor enabled',
+				'de': 'Bodensensor aktiviert',
+				'ru': 'Датчик пола включен',
+				'pt': 'Sensor de piso ativado',
+				'nl': 'Vloersensor ingeschakeld',
+				'fr': 'Capteur de sol activé',
+				'it': 'Sensore pavimento abilitato',
+				'es': 'Sensor de suelo habilitado',
+				'pl': 'Czujnik podłogowy włączony',
+				'zh-cn': '地板传感器启用'
+			}
+		},
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
 	ServiceMode: {
 		id: 'ADM',
 		objectdefinition: {
@@ -2308,7 +2365,8 @@ const initStates = [
 	DeviceParameters.SelectedProfile,
 	DeviceParameters.AvailableProfiles,
 	DeviceParameters.Language,
-	DeviceParameters.Units];
+	DeviceParameters.Units,
+	DeviceParameters.FlorSensor];
 
 const alarmPeriod = [
 	DeviceParameters.CurrentAlarmStatus,
@@ -3035,161 +3093,6 @@ class wamo extends utils.Adapter {
 	}
 	//===================================================
 
-	//===================================================
-	// Alarm Timer: Get Values  (called on each Alarm Timer Tick)
-	async get_AlarmTimerValues(DeviceIP, DevicePort) {
-		return new Promise(async (resolve, reject) => {
-			try {
-				if (false) {
-
-					const listOfParameter = [
-						'Conditions.ALA'];
-
-					this.log.debug(`[get_AlarmTimerValues(DeviceIP, DevicePort)]`);
-					let result;
-					for (const stateID of listOfParameter) {
-						const parameterIDs = stateID.split('.');
-						this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
-						result = await this.get_DevieParameter(parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
-						this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
-						await this.UpdateState(stateID, result);
-					}
-				}
-				resolve(true);
-			} catch (err) {
-				reject(err);
-			}
-		});
-	}
-	//===================================================
-
-	//===================================================
-	// Short Timer: Get Values  (called on each short Timer Tick)
-	async get_ShortTimerValues(DeviceIP, DevicePort) {
-		return new Promise(async (resolve, reject) => {
-			try {
-				if (false) {
-					const listOfParameter = [
-						'Conditions.CEL',	// Water temperatur
-						'Conditions.CND',	// Water conductivity
-						'Device.Info.BAT',
-						'Consumptions.AVO',
-						'Consumptions.LTV',
-						'Consumptions.VOL',
-						'Device.Info.NET'];
-
-					this.log.debug(`[get_ShortTimerValues(DeviceIP, DevicePort)]`);
-					let result;
-					for (const stateID of listOfParameter) {
-						const parameterIDs = stateID.split('.');
-						this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
-						result = await this.get_DevieParameter(parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
-						this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
-						await this.UpdateState(stateID, result);
-					}
-				}
-				resolve(true);
-			} catch (err) {
-				reject(err);
-			}
-		});
-	}
-	//===================================================
-
-	//===================================================
-	// Sets the Adapter State Objects
-	// stateID: object path
-	// value:	Value for Object
-	//===================================================
-	//======== OBSOLETE						=============
-	//===================================================
-	async UpdateState(stateID, value) {
-		return new Promise(async (resolve, reject) => {
-
-			// Parameter ID aus stateID ermitteln
-			const parameterIDs = stateID.split('.');
-			const parameter = (parameterIDs[parameterIDs.length - 1]).substr(0, parameterIDs[parameterIDs.length - 1].length);
-			this.log.debug('[UpdateState(stateID, value)] Parameter = ' + String(parameter));
-			try {
-				switch (parameter) {
-					case 'VER':
-						await this.state_VER(value);
-						break;
-					case 'WIP':
-						await this.state_WIP(value);
-						break;
-					case 'MAC':
-						await this.state_MAC(value);
-						break;
-					case 'WGW':
-						await this.state_WGW(value);
-						break;
-					case 'SRN':
-						await this.state_SRN(value);
-						break;
-					case 'CNO':
-						await this.state_CNO(value);
-						break;
-					case 'WFR':
-						await this.state_WFR(value);
-						break;
-					case 'WFC':
-						await this.state_WFC(value);
-						break;
-					case 'SRV':
-						await this.state_SRV(value);
-						break;
-					case 'WAH':
-						await this.state_WAH(value);
-						break;
-					case 'WAD':
-						await this.state_WAD(value);
-						break;
-					case 'APT':
-						await this.state_APT(value);
-						break;
-					case 'DWL':
-						await this.state_DWL(value);
-						break;
-					case 'WFS':
-						await this.state_WFS(value);
-						break;
-					case 'BAT':
-						await this.state_BAT(value);
-						break;
-					case 'IDS':
-						await this.state_IDS(value);
-						break;
-					case 'ALA':
-						await this.state_ALA(value);
-						break;
-					case 'AVO':
-						await this.state_AVO(value);
-						break;
-					case 'LTV':
-						await this.state_LTV(value);
-						break;
-					case 'VOL':
-						await this.state_VOL(value);
-						break;
-					case 'NET':
-						await this.state_NET(value);
-						break;
-					case 'CEL':
-						await this.state_CEL(value);
-						break;
-					case 'CND':
-						await this.state_CND(value);
-						break;
-				}
-
-				resolve(true);
-			} catch (err) {
-				reject(err);
-			}
-		});
-	}
-
 	//=============================================================================
 	// Diese Funktion speichert das übergebene'Value' im entsprechenden State
 	// der in 'stateID' übergebenen Struktur
@@ -3707,6 +3610,17 @@ class wamo extends utils.Adapter {
 							finalValue = value;
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.NextMaintenance, finalValue); }
+						break;
+					case DeviceParameters.FlorSensor.id:				// WAD - WiFi AP dissabled
+						finalValue = await this.getGlobalisedValue(DeviceParameters.FlorSensor, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							if (parseInt(value) == 0) {
+								finalValue = 'Floor sensor disabled';
+							} else {
+								finalValue = 'Floor sensor enabled';
+							}
+						}
+						if (moreMessages) { await this.moremessages(DeviceParameters.FlorSensor, finalValue); }
 						break;
 					default:
 						this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
