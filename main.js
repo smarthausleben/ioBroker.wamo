@@ -719,6 +719,37 @@ const StatisticStates = {
 };
 // Object all possible device commands
 const DeviceParameters = {
+	TurbineNoPulseTime: {
+		id: 'TNPS',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Turbine no pulse time',
+					'de': 'Keine Impulse von Turbine',
+					'ru': 'Турбина без импульса',
+					'pt': 'Turbina sem tempo de pulso',
+					'nl': 'Turbine geen pulstijd',
+					'fr': "Turbine sans temps d'impulsion",
+					'it': 'Turbina senza tempo di impulso',
+					'es': 'Turbina sin tiempo de pulso',
+					'pl': 'Turbina bez czasu impulsu',
+					'zh-cn': '涡轮无脉冲时间'
+				},
+				type: 'number',
+				unit: 's',
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.WaterConumption.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
 	WaterFlow: {
 		id: 'FLO',
 		objectdefinition: {
@@ -2796,7 +2827,8 @@ const shortPeriod = [
 	DeviceParameters.LastTappedVolume,
 	DeviceParameters.TotalVolume,
 	DeviceParameters.CurrentVolume,
-	DeviceParameters.WaterFlow];
+	DeviceParameters.WaterFlow,
+	DeviceParameters.TurbineNoPulseTime];
 
 const longPeriode = [
 	DeviceParameters.SystemTime,
@@ -4169,6 +4201,13 @@ class wamo extends utils.Adapter {
 							finalValue = value;
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.WaterFlow, finalValue); }
+						break;
+					case DeviceParameters.TurbineNoPulseTime.id:		// NPS - Turbine no pulse time
+						finalValue = await this.getGlobalisedValue(DeviceParameters.TurbineNoPulseTime, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = value;
+						}
+						if (moreMessages) { await this.moremessages(DeviceParameters.TurbineNoPulseTime, finalValue); }
 						break;
 					default:
 						this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
