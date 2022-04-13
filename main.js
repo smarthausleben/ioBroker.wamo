@@ -698,6 +698,63 @@ const StatisticStates = {
 };
 // Object all possible device commands
 const DeviceParameters = {
+	ShutOff: {
+		id: 'AB',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Shutoff',
+					'de': 'Absperrung',
+					'ru': 'Выключить',
+					'pt': 'Desligar',
+					'nl': 'Uitzetten',
+					'fr': 'Éteindre',
+					'it': 'Spegnimento',
+					'es': 'Apagar',
+					'pl': 'Wyłączyć',
+					'zh-cn': '关闭'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceConditions.path,
+		rangevalues: {
+			'1': {
+				'en': 'Shutoff opened',
+				'de': 'Absperrung geöffnet',
+				'ru': 'Отключение открыто',
+				'pt': 'Desligamento aberto',
+				'nl': 'Afsluiting geopend',
+				'fr': 'Arrêt ouvert',
+				'it': 'Chiusura aperta',
+				'es': 'Cierre abierto',
+				'pl': 'Odcięcie otwarte',
+				'zh-cn': '关闭已打开'
+			},
+			'2': {
+				'en': 'Shutoff closed',
+				'de': 'Absperrung geschlossen',
+				'ru': 'Отключение закрыто',
+				'pt': 'Desligamento fechado',
+				'nl': 'Afsluiting gesloten',
+				'fr': 'Arrêt fermé',
+				'it': 'Chiusura chiusa',
+				'es': 'Cierre cerrado',
+				'pl': 'Odcięcie zamknięte',
+				'zh-cn': '关闭关闭'
+			}
+		},
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
 	FlorSensor: {
 		id: 'BSA',
 		objectdefinition: {
@@ -2370,7 +2427,8 @@ const initStates = [
 
 const alarmPeriod = [
 	DeviceParameters.CurrentAlarmStatus,
-	DeviceParameters.CurrentValveStatus
+	DeviceParameters.CurrentValveStatus,
+	DeviceParameters.ShutOff
 ];
 
 const shortPeriod = [
@@ -3611,7 +3669,7 @@ class wamo extends utils.Adapter {
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.NextMaintenance, finalValue); }
 						break;
-					case DeviceParameters.FlorSensor.id:				// WAD - WiFi AP dissabled
+					case DeviceParameters.FlorSensor.id:				// BSA - Floor Sensor
 						finalValue = await this.getGlobalisedValue(DeviceParameters.FlorSensor, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
 							if (parseInt(value) == 0) {
@@ -3621,6 +3679,20 @@ class wamo extends utils.Adapter {
 							}
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.FlorSensor, finalValue); }
+						break;
+					case DeviceParameters.ShutOff.id:					// AB - Shutoff state
+						finalValue = await this.getGlobalisedValue(DeviceParameters.ShutOff, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							if (parseInt(value) == 1) {
+								finalValue = 'Shutoff opened';
+							}else if (parseInt(value) == 2) {
+								finalValue = 'Shutoff closed';
+							}
+							else {
+								finalValue = 'Shutoff undefined';
+							}
+						}
+						if (moreMessages) { await this.moremessages(DeviceParameters.ShutOff, finalValue); }
 						break;
 					default:
 						this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
