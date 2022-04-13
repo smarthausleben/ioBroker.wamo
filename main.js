@@ -3206,8 +3206,6 @@ class wamo extends utils.Adapter {
 
 				// Path for state object
 				const state_ID = cur_StatePath + '.' + cur_ParameterID;
-				// Path for RAW state object
-				const state_ID_RAW = adapterChannels.DeviceRawData.path+ '.' + cur_ParameterID;
 
 				let skipp = false;
 
@@ -3224,8 +3222,11 @@ class wamo extends utils.Adapter {
 				await this.setObjectNotExistsAsync(state_ID, stateID.objectdefinition);
 				this.log.debug('stateID.objectdefinition.common.type = ' + stateID.objectdefinition.common.type);
 
+				// Path for RAW state object
+				const state_ID_RAW = adapterChannels.DeviceRawData.path + '.' + cur_ParameterID;
+
 				// RAW object handling
-				const raw_objectdefinition = stateID.objectdefinition;
+				const raw_objectdefinition = new stateID.objectdefinition;
 				raw_objectdefinition.common.type = 'json';
 				raw_objectdefinition.common.role = 'state';
 				raw_objectdefinition.common.unit = null;
@@ -3236,10 +3237,10 @@ class wamo extends utils.Adapter {
 				this.log.debug('RAW stateID.objectdefinition.common.type = ' + raw_objectdefinition);
 
 				// save RAW State
-				try{
+				try {
 					this.setStateAsync(state_ID_RAW, { val: JSON.stringify(value), ack: true });
 				}
-				catch(err){
+				catch (err) {
 					this.log.error('[async updateState(stateID, value)] ERROR saving RAW state. State ID=' + String(state_ID_RAW) + ' Value=' + String(value));
 				}
 
@@ -3728,7 +3729,7 @@ class wamo extends utils.Adapter {
 						if (finalValue === null) {	// did we get a globalised Value back?
 							if (parseInt(value) == 1) {
 								finalValue = 'Shutoff opened';
-							}else if (parseInt(value) == 2) {
+							} else if (parseInt(value) == 2) {
 								finalValue = 'Shutoff closed';
 							}
 							else {
