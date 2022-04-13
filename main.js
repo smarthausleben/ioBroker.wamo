@@ -719,6 +719,37 @@ const StatisticStates = {
 };
 // Object all possible device commands
 const DeviceParameters = {
+	MaxFlowLeakageTime: {
+		id: 'T2',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'max flow leakage time',
+					'de': 'maximale Leckagezeit',
+					'ru': 'максимальное время утечки потока',
+					'pt': 'tempo máximo de vazamento de fluxo',
+					'nl': 'max. stroomlekkagetijd:',
+					'fr': 'temps de fuite de débit max',
+					'it': 'tempo massimo di perdita di flusso',
+					'es': 'tiempo máximo de fuga de flujo',
+					'pl': 'maksymalny czas wycieku przepływu',
+					'zh-cn': '最大流量泄漏时间'
+				},
+				type: 'number',
+				unit: 'min',
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceSettings.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
 	LeakProtectionTemporaryDeactivation: {
 		id: 'TMP',
 		objectdefinition: {
@@ -2475,7 +2506,8 @@ const initStates = [
 	DeviceParameters.AvailableProfiles,
 	DeviceParameters.Language,
 	DeviceParameters.Units,
-	DeviceParameters.FlorSensor];
+	DeviceParameters.FlorSensor,
+	DeviceParameters.MaxFlowLeakageTime];
 
 const alarmPeriod = [
 	DeviceParameters.CurrentAlarmStatus,
@@ -2497,7 +2529,8 @@ const longPeriode = [
 	DeviceParameters.WiFiRSSI,
 	DeviceParameters.BatteryVoltage,
 	DeviceParameters.PowerAdapterVoltage,
-	DeviceParameters.LeakProtectionTemporaryDeactivation];
+	DeviceParameters.LeakProtectionTemporaryDeactivation,
+	DeviceParameters.MaxFlowLeakageTime];
 
 //============================================================================
 //=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
@@ -3783,6 +3816,13 @@ class wamo extends utils.Adapter {
 							finalValue = value;
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.LeakProtectionTemporaryDeactivation, finalValue); }
+						break;
+					case DeviceParameters.MaxFlowLeakageTime.id:		// T2 - Max flow leakage time
+						finalValue = await this.getGlobalisedValue(DeviceParameters.MaxFlowLeakageTime, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = value;
+						}
+						if (moreMessages) { await this.moremessages(DeviceParameters.MaxFlowLeakageTime, finalValue); }
 						break;
 					default:
 						this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
