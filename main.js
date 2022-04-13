@@ -3232,7 +3232,7 @@ class wamo extends utils.Adapter {
 
 				// save RAW State
 				try{
-					this.setStateAsync(state_ID_RAW, { val: value, ack: true });
+					this.setStateAsync(state_ID_RAW, { val: JSON.stringify(value), ack: true });
 				}
 				catch(err){
 					this.log.error('[async updateState(stateID, value)] ERROR saving RAW state. State ID=' + String(state_ID_RAW) + ' Value=' + String(value));
