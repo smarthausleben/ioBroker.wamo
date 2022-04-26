@@ -719,6 +719,63 @@ const StatisticStates = {
 };
 // Object all possible device commands
 const DeviceParameters = {
+	FirmwareCheck: {
+		id: 'SFV',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Firmware check',
+					'de': 'Firmware-Check',
+					'ru': 'Проверка прошивки',
+					'pt': 'Verificação de firmware',
+					'nl': 'Firmwarecontrole',
+					'fr': 'Vérification du micrologiciel',
+					'it': 'Verifica del firmware',
+					'es': 'Comprobación de firmware',
+					'pl': 'Sprawdzanie oprogramowania',
+					'zh-cn': '固件检查'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceConditions.path,
+		rangevalues: {
+			'0': {
+				'en': 'new firmware not available',
+				'de': 'neue Firmware nicht verfügbar',
+				'ru': 'новая прошивка недоступна',
+				'pt': 'novo firmware não disponível',
+				'nl': 'nieuwe firmware niet beschikbaar',
+				'fr': 'nouveau firmware non disponible',
+				'it': 'nuovo firmware non disponibile',
+				'es': 'nuevo firmware no disponible',
+				'pl': 'nowe oprogramowanie nie jest dostępne',
+				'zh-cn': '新固件不可用'
+			},
+			'1': {
+				'en': 'new firmware available',
+				'de': 'neue Firmware verfügbar',
+				'ru': 'доступна новая прошивка',
+				'pt': 'novo firmware disponível',
+				'nl': 'nieuwe firmware beschikbaar',
+				'fr': 'nouveau firmware disponible',
+				'it': 'nuovo firmware disponibile',
+				'es': 'nuevo firmware disponible',
+				'pl': 'dostępne nowe oprogramowanie',
+				'zh-cn': '新固件可用'
+			}
+		},
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
 	ValveTestOngoing: {
 		id: 'VTO',
 		objectdefinition: {
@@ -2888,6 +2945,7 @@ const shortPeriod = [
 	DeviceParameters.TurbineNoPulseTime];
 
 const longPeriode = [
+	DeviceParameters.FirmwareCheck,
 	DeviceParameters.SystemTime,
 	DeviceParameters.WiFiRSSI,
 	DeviceParameters.BatteryVoltage,
@@ -4277,6 +4335,17 @@ class wamo extends utils.Adapter {
 							}
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.ValveTestOngoing, finalValue); }
+						break;
+					case DeviceParameters.FirmwareCheck.id:				// SFV - Check if new firmware is available
+						finalValue = await this.getGlobalisedValue(DeviceParameters.FirmwareCheck, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							if (parseInt(value) == 0) {
+								finalValue = 'new firmware not available';
+							} else {
+								finalValue = 'new firmware available';
+							}
+						}
+						if (moreMessages) { await this.moremessages(DeviceParameters.FirmwareCheck, finalValue); }
 						break;
 					default:
 						this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');

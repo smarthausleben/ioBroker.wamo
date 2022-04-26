@@ -20,6 +20,9 @@ The adapter connects to your **SYR SafeTech Connect 2422** or **POLYGONVATRO** l
 
 ## Changelog
 
+### 0.1.5 (----.--.--)
+* (smarthausleben) added state SFV (Flag if new firmware is available)
+
 ### 0.1.4 (2022.04.13)
 * (smarthausleben) added RawData channel (all device states how they are comming from the device in JSON format)
 * (smarthausleben) added state BSA (Floor Sensor)
