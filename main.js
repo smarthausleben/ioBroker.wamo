@@ -719,6 +719,37 @@ const StatisticStates = {
 };
 // Object all possible device commands
 const DeviceParameters = {
+	ScreenRotation: {
+		id: 'SRO',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Screen rotation',
+					'de': 'Bildschirm Rotation',
+					'ru': 'Поворот экрана',
+					'pt': 'Rotação da tela',
+					'nl': 'Schermrotatie',
+					'fr': "Rotation de l'écran",
+					'it': 'Rotazione dello schermo',
+					'es': 'Rotacion de pantalla',
+					'pl': 'Obrót ekranu',
+					'zh-cn': '屏幕旋转'
+				},
+				type: 'number',
+				unit: '°',
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DeviceSettings.path,
+		levelRead: 'SERVICE',
+		levelWrite: 'SERVICE',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
 	FirmwareCheck: {
 		id: 'SFV',
 		objectdefinition: {
@@ -744,7 +775,7 @@ const DeviceParameters = {
 			},
 			native: {}
 		},
-		statePath: adapterChannels.DeviceConditions.path,
+		statePath: adapterChannels.DeviceInfo.path,
 		rangevalues: {
 			'0': {
 				'en': 'new firmware not available',
@@ -2945,6 +2976,7 @@ const shortPeriod = [
 	DeviceParameters.TurbineNoPulseTime];
 
 const longPeriode = [
+	DeviceParameters.ScreenRotation,
 	DeviceParameters.FirmwareCheck,
 	DeviceParameters.SystemTime,
 	DeviceParameters.WiFiRSSI,
@@ -4346,6 +4378,13 @@ class wamo extends utils.Adapter {
 							}
 						}
 						if (moreMessages) { await this.moremessages(DeviceParameters.FirmwareCheck, finalValue); }
+						break;
+					case DeviceParameters.ScreenRotation.id:			// SRO - Screen rotation
+						finalValue = await this.getGlobalisedValue(DeviceParameters.ScreenRotation, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = value;
+						}
+						if (moreMessages) { await this.moremessages(DeviceParameters.ScreenRotation, finalValue); }
 						break;
 					default:
 						this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
