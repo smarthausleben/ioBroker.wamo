@@ -3087,7 +3087,12 @@ class wamo extends utils.Adapter {
 			catch (err) {
 				this.log.error(String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
 				this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
-				await sleep(connectionRetryPause);
+				try{
+					await sleep(connectionRetryPause);
+				}
+				catch(err){
+					this.log.warn('ERROR await sleep() ' + err);
+				}
 				connTrys++;
 				if (connTrys > 1) {
 					this.log.warn('connection attempt No. ' + connTrys);
@@ -3128,7 +3133,12 @@ class wamo extends utils.Adapter {
 			catch (err) {
 				this.log.error(String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
 				this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
-				await sleep(connectionRetryPause);
+				try{
+					await sleep(connectionRetryPause);
+				}
+				catch(err){
+					this.log.warn('ERROR await sleep() ' + err);
+				}
 				this.log.warn('retry connection ...');
 				connTrys++;
 				if (connTrys > 1) {
@@ -3563,7 +3573,12 @@ class wamo extends utils.Adapter {
 								device_responsive = false;
 								this.log.error('[async getData(statesToGet)] ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
 								this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
-								await sleep(connectionRetryPause);
+								try{
+									await sleep(connectionRetryPause);
+								}
+								catch(err){
+									this.log.warn('ERROR await sleep() ' + err);
+								}
 								this.log.warn('retry connection ...');
 								connTrys++;
 								if (connTrys > 1) {
