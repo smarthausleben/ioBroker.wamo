@@ -3088,13 +3088,11 @@ class wamo extends utils.Adapter {
 				this.log.error(String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
 				this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
 				await sleep(connectionRetryPause);
-				this.log.warn('retry connection ...');
-			}
-			finally {
 				connTrys++;
 				if (connTrys > 1) {
 					this.log.warn('connection attempt No. ' + connTrys);
 				}
+				this.log.warn('retry connection ...');
 			}
 		}
 		if (!device_responsive) {
@@ -3132,8 +3130,6 @@ class wamo extends utils.Adapter {
 				this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
 				await sleep(connectionRetryPause);
 				this.log.warn('retry connection ...');
-			}
-			finally {
 				connTrys++;
 				if (connTrys > 1) {
 					this.log.warn('connection attempt No. ' + connTrys);
@@ -3544,31 +3540,33 @@ class wamo extends utils.Adapter {
 	async getData(statesToGet) {
 		return new Promise(async (resolve, reject) => {
 			try {
+
+				interfaceBussy = false;	// CLEAR flag that device interface is bussy
+
 				for (let i = 0; i < statesToGet.length; i++) {
 					if (!interfaceBussy) {
 						// Verbindungsversuche zurücksetzen
 						let connTrys = 0;
 						// Verbindungsbestätigung zurücksetzen
 						device_responsive = false;
+						interfaceBussy = true;	// SET flag that device interface is bussy
 
 						while (connTrys < connectionRetrys) {
 							try {
-								interfaceBussy = true;	// SET flag that device interface is bussy
 								await this.updateState(statesToGet[i], await this.get_DevieParameter(statesToGet[i], this.config.device_ip, this.config.device_port));
 								interfaceBussy = false;	// CLEAR flag that device interface is bussy
 								device_responsive = true;
-								break;
+								break;	// WHILE Schleife vorzeitig beenden
 							}
 							catch (err) {
+								interfaceBussy = false;	// CLEAR flag that device interface is bussy
+								device_responsive = false;
 								this.log.error('[async getData(statesToGet)] ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
 								this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
 								await sleep(connectionRetryPause);
 								this.log.warn('retry connection ...');
-							}
-							finally {
 								connTrys++;
 								if (connTrys > 1) {
-									interfaceBussy = false;	// CLEAR flag that device interface is bussy
 									this.log.warn('connection attempt No. ' + connTrys);
 								}
 							}
@@ -3576,8 +3574,6 @@ class wamo extends utils.Adapter {
 
 						if (!device_responsive) {
 							this.log.error('device NOT reachable');
-							// we throw an exception causing Adaper to restart
-							interfaceBussy = false;	// CLEAR flag that device interface is bussy
 						}
 					}
 					else {
