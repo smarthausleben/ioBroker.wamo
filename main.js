@@ -3108,7 +3108,7 @@ class wamo extends utils.Adapter {
 		if (!device_responsive) {
 			try{
 				this.log.error('device NOT connected ... exit');
-				await this.setForeignState('system.adapter.' + adapterName + '0' + '.alive', false);
+				await this.setForeignState('system.adapter.' + adapterName + '0' + 'common.enabled', false);
 			}
 			// we throw an exception causing Adaper to restart
 			catch(err){
