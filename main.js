@@ -3072,6 +3072,7 @@ class wamo extends utils.Adapter {
 		} catch (err) {
 			this.log.error('Error from initStatesAndChanels : ' + err);
 		}
+
 		let connTrys = 0;
 
 		//=================================================================================================
@@ -3085,6 +3086,7 @@ class wamo extends utils.Adapter {
 				break;
 			}
 			catch (err) {
+				device_responsive = false;
 				this.log.error(String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
 				this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
 				try{
@@ -3097,22 +3099,35 @@ class wamo extends utils.Adapter {
 				if (connTrys > 1) {
 					this.log.warn('connection attempt No. ' + connTrys);
 				}
-				this.log.warn('retry connection ...');
+				else
+				{
+					this.log.warn('retry connection ...');
+				}
 			}
 		}
 		if (!device_responsive) {
-			this.log.error('device NOT connected ... exit');
+			try{
+				this.log.error('device NOT connected ... exit');
+				await this.setForeignState('system.adapter.' + adapterName + '0' + '.alive', false);
+			}
 			// we throw an exception causing Adaper to restart
-			throw 'exit not OK';
+			catch(err){
+				throw 'exit not OK -> Error:' + err;
+			}
 		}
 
 
 		//=================================================================================================
 		//===  Connection LED to Green																	===
 		//=================================================================================================
-		await this.setStateAsync('info.connection', { val: true, ack: true });
-		this.log.debug('info.connection gesetzt');
 
+		try{
+			await this.setStateAsync('info.connection', { val: true, ack: true });
+			this.log.debug('info.connection gesetzt');
+		}
+		catch (err) {
+			this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: '+ err);
+		}
 		//=================================================================================================
 		//===  Getting device data																		===
 		//=================================================================================================
