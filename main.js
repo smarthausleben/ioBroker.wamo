@@ -4660,7 +4660,6 @@ class wamo extends utils.Adapter {
 
 			// Flag indicating if we had to modifiy Admin Mode
 			let readModeChanged = false;
-
 			this.log.debug(`[getDevieParameter(ParameterID)] ${Parameter.id}`);
 
 			// is parameter readable?
@@ -4679,37 +4678,58 @@ class wamo extends utils.Adapter {
 				readModeChanged = true;
 			}
 
-			axios({method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/' + String(Parameter.id), timeout: 10000, responseType: 'json'}
-			).then(async (response) => {
-				const content = response.data;
-				this.log.debug(`[getSensorData] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
+			const trysMax = 5;
+			let trys = 0;
+			let success = false;
 
-				if (readModeChanged) {
-					try{
-						await this.clear_SERVICE_FACTORY_Mode();
+			while(!success)
+			{
+				try {
+					const ResData = await axios({ method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/' + String(Parameter.id), timeout: 10000, responseType: 'json' }
+					).then(async (response) => {
+						const content = response.data;
+						this.log.debug(`[getSensorData] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
+
+						if (readModeChanged) {
+							try {
+								await this.clear_SERVICE_FACTORY_Mode();
+							}
+							catch (err) {
+								this.log.error('async get_DevieParameter(Parameter, IPadress, Port) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err);
+							}
+						}
+						resolve(response.data);
 					}
-					catch(err){
-						this.log.error('async get_DevieParameter(Parameter, IPadress, Port) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err);
+					).catch(async (error) => {
+						if (error.response) {
+							// The request was made and the server responded with a status code
+							this.log.error('async get_DevieParameter(Parameter, IPadress, Port): Response Code: ' + String(error.message));
+						} else if (error.request) {
+							// The request was made but no response was received
+							// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+							// http.ClientRequest in node.js<div></div>
+							this.log.error('async get_DevieParameter(Parameter, IPadress, Port): Request got no response: ' + error.message);
+						} else {
+							// Something happened in setting up the request that triggered an Error
+							this.log.error('async get_DevieParameter(Parameter, IPadress, Port): Error: ' + error.message);
+						}
+						reject(null);
+					});
+					if (ResData != null){
+						success = true;
+						resolve(ResData);
+					}
+					else if(trys >= trysMax){
+						reject(null);
+					}
+					else{
+						trys++;
 					}
 				}
-				resolve(response.data);
+				catch (err) {
+					this.log.error('axios Error: ' + err);
+				}
 			}
-			).catch(async (error) => {
-				if (error.response) {
-					// The request was made and the server responded with a status code
-					this.log.error('async get_DevieParameter(Parameter, IPadress, Port): Response Code: ' + String(error.message));
-				} else if (error.request) {
-					// The request was made but no response was received
-					// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-					// http.ClientRequest in node.js<div></div>
-					this.log.error('async get_DevieParameter(Parameter, IPadress, Port): Request got no response: ' + error.message);
-				} else {
-					// Something happened in setting up the request that triggered an Error
-					this.log.error('async get_DevieParameter(Parameter, IPadress, Port): Error: ' + error.message);
-				}
-				reject('http error: '+ error.message);
-			});
-
 		});
 	}
 
