@@ -3082,37 +3082,37 @@ class wamo extends utils.Adapter {
 			try {
 				await this.deviceCommcheck(this.config.device_ip, this.config.device_port);
 				device_responsive = true;
-				this.log.info('Device at ' + this.config.device_ip + ':' + this.config.device_port + ' is connected');
+				this.log.info('async onReady() - deviceCommckeck -> Device at ' + this.config.device_ip + ':' + this.config.device_port + ' is connected');
 				break;
 			}
 			catch (err) {
 				device_responsive = false;
-				this.log.error(String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + ' is not responding');
-				this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
+				this.log.error('async onReady() - deviceCommckeck -> ' +String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + ' is not responding');
+				this.log.warn('async onReady() - deviceCommckeck -> Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
 				try{
 					await sleep(connectionRetryPause);
 				}
 				catch(err){
-					this.log.warn('ERROR await sleep() ' + err);
+					this.log.warn('async onReady() - deviceCommckeck -> rERROR await sleep() ' + err);
 				}
 				connTrys++;
 				if (connTrys > 1) {
-					this.log.warn('connection attempt No. ' + connTrys);
+					this.log.warn('async onReady() - deviceCommckeck -> connection attempt No. ' + connTrys);
 				}
 				else
 				{
-					this.log.warn('retry connection ...');
+					this.log.warn('async onReady() - deviceCommckeck -> retry connection ...');
 				}
 			}
 		}
 		if (!device_responsive) {
 			try{
-				this.log.error('device NOT connected ... exit');
+				this.log.error('async onReady() - deviceCommckeck -> rdevice NOT connected ... exit');
 				await this.setForeignState('system.adapter.' + adapterName + '0' + 'common.enabled', false);
 			}
 			// we throw an exception causing Adaper to restart
 			catch(err){
-				throw 'exit not OK -> Error: ' + err;
+				throw 'async onReady() - deviceCommckeck -> exit not OK -> Error: ' + err;
 			}
 		}
 
@@ -3139,32 +3139,32 @@ class wamo extends utils.Adapter {
 
 		while (connTrys < connectionRetrys) {
 			try {
-				this.log.info('Getting data from device at ' + this.config.device_ip + ':' + this.config.device_port);
+				this.log.info('async onReady() - initComckeck -> Getting data from device at ' + this.config.device_ip + ':' + this.config.device_port);
 				const responseInit = await this.initDevice();
-				this.log.debug(`[initDevice] Response:  ${responseInit}`);
+				this.log.debug(`[async onReady() - initComckeck -> initDevice] Response:  ${responseInit}`);
 				device_responsive = true;
 				break;
 			}
 			catch (err) {
 				this.log.error(String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + ' is not responding');
-				this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
+				this.log.warn('async onReady() - initComckeck -> Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
 				try{
 					await sleep(connectionRetryPause);
 				}
 				catch(err){
-					this.log.warn('ERROR await sleep() ' + err);
+					this.log.warn('async onReady() - initComckeck -> ERROR await sleep() ' + err);
 				}
-				this.log.warn('retry connection ...');
+				this.log.warn('async onReady() - initComckeck -> retry connection ...');
 				connTrys++;
 				if (connTrys > 1) {
-					this.log.warn('connection attempt No. ' + connTrys);
+					this.log.warn('async onReady() - initComckeck -> connection attempt No. ' + connTrys);
 				}
 			}
 		}
 		if (!device_responsive) {
-			this.log.error('device NOT connected ... exit');
+			this.log.error('async onReady() - initComckeck -> device NOT connected ... exit');
 			// we throw an exception causing Adaper to restart
-			throw 'exit not OK';
+			throw 'async onReady() - initComckeck -> exit not OK';
 		}
 
 		//=================================================================================================
@@ -3179,29 +3179,29 @@ class wamo extends utils.Adapter {
 		while (connTrys < connectionRetrys) {
 			try {
 				// Device Profiles Initialisation
-				this.log.info('Getting Profiles data from device at ' + this.config.device_ip + ':' + this.config.device_port);
+				this.log.info('async onReady() - initDeviceProfiles -> Getting Profiles data from device at ' + this.config.device_ip + ':' + this.config.device_port);
 				const responseInitProfiles = await this.initDeviceProfiles(this.config.device_ip, this.config.device_port);
-				this.log.debug(`[initDeviceProfiles] Response:  ${responseInitProfiles}`);
+				this.log.debug(`[async onReady() - initDeviceProfiles -> initDeviceProfiles] Response:  ${responseInitProfiles}`);
 				device_responsive = true;
 				break;
 			}
 			catch (err) {
 				this.log.error(String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + ' is not responding');
-				this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
+				this.log.warn('async onReady() - initDeviceProfiles -> Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
 				await sleep(connectionRetryPause);
-				this.log.warn('retry connection ...');
+				this.log.warn('sync onReady() - initDeviceProfiles -> retry connection ...');
 			}
 			finally {
 				connTrys++;
 				if (connTrys > 1) {
-					this.log.warn('connection attempt No. ' + connTrys);
+					this.log.warn('async onReady() - initDeviceProfiles -> connection attempt No. ' + connTrys);
 				}
 			}
 		}
 		if (!device_responsive) {
-			this.log.error('device NOT connected ... exit');
+			this.log.error('async onReady() - initDeviceProfiles -> device NOT connected ... exit');
 			// we throw an exception causing Adaper to restart
-			throw 'exit not OK';
+			throw 'async onReady() - initDeviceProfiles -> exit not OK';
 		}
 
 		//=================================================================================================
@@ -3608,27 +3608,27 @@ class wamo extends utils.Adapter {
 								interfaceBussy = false;	// CLEAR flag that device interface is bussy
 								device_responsive = false;
 								this.log.error('async getData(statesToGet) ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + ' is not responding');
-								this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
+								this.log.warn('async getData(statesToGet) -> Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
 								try{
 									await sleep(connectionRetryPause);
 								}
 								catch(err){
-									this.log.warn('ERROR await sleep() ' + err);
+									this.log.warn('async getData(statesToGet) -> ERROR await sleep() ' + err);
 								}
-								this.log.warn('retry connection ...');
+								this.log.warn('async getData(statesToGet) -> retry connection ...');
 								connTrys++;
 								if (connTrys > 1) {
-									this.log.warn('connection attempt No. ' + connTrys);
+									this.log.warn('async getData(statesToGet) -> connection attempt No. ' + connTrys);
 								}
 							}
 						}
 
 						if (!device_responsive) {
-							this.log.error('device NOT reachable');
+							this.log.error('async getData(statesToGet) -> device NOT reachable');
 						}
 					}
 					else {
-						this.log.warn('[async getData(statesToGet)] Device interface is bussy!');
+						this.log.warn('async getData(statesToGet) -> Device interface is bussy!');
 					}
 				}
 				resolve(true);
