@@ -3087,7 +3087,7 @@ class wamo extends utils.Adapter {
 			}
 			catch (err) {
 				device_responsive = false;
-				this.log.error(String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
+				this.log.error(String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + ' is not responding');
 				this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
 				try{
 					await sleep(connectionRetryPause);
@@ -3112,7 +3112,7 @@ class wamo extends utils.Adapter {
 			}
 			// we throw an exception causing Adaper to restart
 			catch(err){
-				throw 'exit not OK -> Error:' + err;
+				throw 'exit not OK -> Error: ' + err;
 			}
 		}
 
@@ -3186,7 +3186,7 @@ class wamo extends utils.Adapter {
 				break;
 			}
 			catch (err) {
-				this.log.error(String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
+				this.log.error(String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + ' is not responding');
 				this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
 				await sleep(connectionRetryPause);
 				this.log.warn('retry connection ...');
@@ -3519,8 +3519,15 @@ class wamo extends utils.Adapter {
 			try {
 				this.log.debug('Alarm Timer tick');
 				// get alarmPeriode data
-				await this.getData(alarmPeriod);
-				resolve(true);
+				if(device_responsive)
+				{
+					await this.getData(alarmPeriod);
+					resolve(true);
+				}
+				else{
+					this.log.warn('Interface bussy during ALARM TIMER data request');
+					resolve(false);
+				}
 			} catch (err) {
 				interfaceBussy = false;	// CLEAR flag that device interface is bussy
 				reject(err);
@@ -3586,7 +3593,7 @@ class wamo extends utils.Adapter {
 							catch (err) {
 								interfaceBussy = false;	// CLEAR flag that device interface is bussy
 								device_responsive = false;
-								this.log.error('[async getData(statesToGet)] ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
+								this.log.error('async getData(statesToGet) ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + ' is not responding');
 								this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
 								try{
 									await sleep(connectionRetryPause);
