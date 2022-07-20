@@ -3594,15 +3594,21 @@ class wamo extends utils.Adapter {
 						// Verbindungsversuche zurücksetzen
 						let connTrys = 0;
 						// Verbindungsbestätigung zurücksetzen
-						device_responsive = false;
-						interfaceBussy = true;	// SET flag that device interface is bussy
 
 						while (connTrys < connectionRetrys) {
+							device_responsive = false;
 							try {
-								await this.updateState(statesToGet[i], await this.get_DevieParameter(statesToGet[i], this.config.device_ip, this.config.device_port));
-								interfaceBussy = false;	// CLEAR flag that device interface is bussy
-								device_responsive = true;
-								break;	// WHILE Schleife vorzeitig beenden
+								interfaceBussy = true;	// SET flag that device interface is bussy
+								const DeviceParameterReturn = await this.get_DevieParameter(statesToGet[i], this.config.device_ip, this.config.device_port);
+								try{
+									await this.updateState(statesToGet[i], DeviceParameterReturn);
+									interfaceBussy = false;	// CLEAR flag that device interface is bussy
+									device_responsive = true;
+									break;	// WHILE Schleife vorzeitig beenden
+								}
+								catch(err){
+									this.log.error('Error [updateState] within [getData] ERROR: ' + err);
+								}
 							}
 							catch (err) {
 								interfaceBussy = false;	// CLEAR flag that device interface is bussy
