@@ -3519,7 +3519,7 @@ class wamo extends utils.Adapter {
 			try {
 				this.log.debug('Alarm Timer tick');
 				// get alarmPeriode data
-				if(device_responsive)
+				if(!interfaceBussy)
 				{
 					await this.getData(alarmPeriod);
 					resolve(true);
@@ -3540,15 +3540,22 @@ class wamo extends utils.Adapter {
 			try {
 				this.log.debug('Short Timer tick');
 				// get longPeriode data
-				await this.getData(shortPeriod);
-
-				try {
-					await this.updateStatistics();
-				} catch (err) {
-					this.log.error('Statistics Error: ' + err);
+				if(!interfaceBussy)
+				{
+					await this.getData(shortPeriod);
+					try {
+						await this.updateStatistics();
+					} catch (err) {
+						this.log.error('Statistics Error: ' + err);
+					}
+					resolve(true);
 				}
-				resolve(true);
-			} catch (err) {
+				else{
+					this.log.warn('Interface bussy during SHORT TIMER data request');
+					resolve(false);
+				}
+			}
+			catch (err) {
 				interfaceBussy = false;	// CLEAR flag that device interface is bussy
 				reject(err);
 			}
@@ -3560,8 +3567,15 @@ class wamo extends utils.Adapter {
 			try {
 				this.log.debug('Long Timer tick');
 				// get longPeriode data
-				await this.getData(longPeriode);
-				resolve(true);
+				if(!interfaceBussy)
+				{
+					await this.getData(longPeriode);
+					resolve(true);
+				}
+				else{
+					this.log.warn('Interface bussy during LONG TIMER data request');
+					resolve(false);
+				}
 			} catch (err) {
 				interfaceBussy = false;	// CLEAR flag that device interface is bussy
 				reject(err);
