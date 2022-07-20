@@ -7,7 +7,7 @@
 // The adapter-core module gives you access to the core ioBroker functions
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
-const axios = require('axios');
+const axios = require('axios').default;
 const schedule = require('node-schedule');
 const { join } = require('path');
 const { stringify } = require('querystring');
@@ -3146,7 +3146,7 @@ class wamo extends utils.Adapter {
 				break;
 			}
 			catch (err) {
-				this.log.error(String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + 'is not responding');
+				this.log.error(String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + ' is not responding');
 				this.log.warn('Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
 				try{
 					await sleep(connectionRetryPause);
@@ -3626,7 +3626,7 @@ class wamo extends utils.Adapter {
 				await this.get_DevieParameter(DeviceParameters.CurrentAlarmStatus, DeviceIP, DevicePort);
 				resolve(true);
 			} catch (err) {
-				this.log.warn('[async deviceCommcheck(DeviceIP, DevicePort)] Error:');
+				this.log.warn('[async deviceCommcheck(DeviceIP, DevicePort)] Error: ' + err);
 				reject(false);
 			}
 		});
@@ -4658,33 +4658,35 @@ class wamo extends utils.Adapter {
 				readModeChanged = true;
 			}
 
-			axios({
-				method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/' + String(Parameter.id), timeout: 10000, responseType: 'json'
-			}
+			axios({method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/' + String(Parameter.id), timeout: 10000, responseType: 'json'}
 			).then(async (response) => {
 				const content = response.data;
 				this.log.debug(`[getSensorData] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
 
 				if (readModeChanged) {
-					await this.clear_SERVICE_FACTORY_Mode();
+					try{
+						await this.clear_SERVICE_FACTORY_Mode();
+					}
+					catch(err){
+						this.log.error('async get_DevieParameter(Parameter, IPadress, Port) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err);
+					}
 				}
-
 				resolve(response.data);
 			}
 			).catch(async (error) => {
 				if (error.response) {
 					// The request was made and the server responded with a status code
-					this.log.warn(`Warnmeldung`);
+					this.log.error('async get_DevieParameter(Parameter, IPadress, Port): Response Code: ' + String(error.message));
 				} else if (error.request) {
 					// The request was made but no response was received
 					// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
 					// http.ClientRequest in node.js<div></div>
-					this.log.info(error.message);
+					this.log.error('async get_DevieParameter(Parameter, IPadress, Port): Request got no response: ' + error.message);
 				} else {
 					// Something happened in setting up the request that triggered an Error
-					this.log.info(error.message);
+					this.log.error('async get_DevieParameter(Parameter, IPadress, Port): Error: ' + error.message);
 				}
-				reject('http error');
+				reject('http error: '+ error.message);
 			});
 
 		});
@@ -4728,7 +4730,12 @@ class wamo extends utils.Adapter {
 				this.log.debug(`[setDeviceParameter] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
 
 				if (writeModeChanged) {
-					await this.clear_SERVICE_FACTORY_Mode();
+					try{
+						await this.clear_SERVICE_FACTORY_Mode();
+					}
+					catch(err){
+						this.log.error('async set_DevieParameter(Parameter, Value, IPadress, Port) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err);
+					}
 				}
 
 				resolve(response.data);
