@@ -3083,7 +3083,7 @@ class wamo extends utils.Adapter {
 			try {
 				await this.devicePing(this.config.device_ip, this.config.device_port);
 				device_responsive = true;	// global flag if device is responsive
-				pingOK= true;
+				pingOK = true;
 			}
 			catch (err) {
 				this.log.error(err);
@@ -3113,7 +3113,7 @@ class wamo extends utils.Adapter {
 				gotDeviceData = true;
 			}
 			catch (err) {
-				this.log.error('initDevice() ERROR: ' +err);
+				this.log.error('initDevice() ERROR: ' + err);
 
 				//=================================================================================================
 				// Waiting till device is responding again
@@ -3145,7 +3145,7 @@ class wamo extends utils.Adapter {
 				gotDeviceProfileData = true;
 			}
 			catch (err) {
-				this.log.error('initDeviceProfiles() ERROR: ' +err);
+				this.log.error('initDeviceProfiles() ERROR: ' + err);
 
 				//=================================================================================================
 				// Waiting till device is responding again
@@ -3173,7 +3173,7 @@ class wamo extends utils.Adapter {
 		} catch (err) {
 			this.log.error('Timer start error ... exit');
 			// we throw an exception causing Adaper to restart
-			throw err;
+			throw 'timerStarts() ERROR;' + err;
 		}
 
 		/*
@@ -3230,11 +3230,21 @@ class wamo extends utils.Adapter {
 		//await this.setStateAsync('testVariable', { val: true, ack: true, expire: 30 });
 
 		// examples for the checkPassword/checkGroup functions
-		let result = await this.checkPasswordAsync('admin', 'iobroker');
-		this.log.debug('check user admin pw iobroker: ' + result);
+		try {
+			const result = await this.checkPasswordAsync('admin', 'iobroker');
+			this.log.debug('check user admin pw iobroker: ' + result);
+		}
+		catch (err) {
+			this.log.error('checkPasswordAsync -> ERROR: ' + err);
+		}
 
-		result = await this.checkGroupAsync('admin', 'admin');
-		this.log.debug('check group user admin group admin: ' + result);
+		try {
+			const result = await this.checkGroupAsync('admin', 'admin');
+			this.log.debug('check group user admin group admin: ' + result);
+		}
+		catch (err) {
+			this.log.error('checkGroupAsync -> ERROR: ' + err);
+		}
 
 		// reference to Adapter
 		myAdapter = this;
@@ -3341,19 +3351,19 @@ class wamo extends utils.Adapter {
 				// Die Timer für das Polling starten
 				alarm_Intervall_ID = this.setInterval(alarm_poll, parseInt(this.config.device_alarm_poll_interval) * 1000);
 				this.log.debug('Alarm timer initialized');
-				try{
+				try {
 					await sleep(3000); // Warten um einen Versatz zu erzeugen
 				}
-				catch(err){
+				catch (err) {
 					this.log.error('await sleep(3000) ERROR: ' + err);
 				}
 				short_Intervall_ID = this.setInterval(short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
 				this.log.debug('Short timer initialized');
 
-				try{
+				try {
 					await sleep(3000); // Warten um einen Versatz zu erzeugen
 				}
-				catch(err){
+				catch (err) {
 					this.log.error('await sleep(3000) ERROR: ' + err);
 				}
 				long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
@@ -3378,16 +3388,43 @@ class wamo extends utils.Adapter {
 				// here we save the sumary and the we reset it to 0
 				// ================================================
 
-				// getting saved Total state
-				const TotalDayState = await this.getStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id);
+				let TotalDayState = null;
+
+				try {
+					// getting saved Total state
+					TotalDayState = await this.getStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id);
+				}
+				catch (err) {
+					this.log.error('await this.getStateAsync(' + StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id + ') ERROR: ' + err);
+				}
 
 				// saving sum to "past" State
-				await this.setObjectNotExistsAsync(StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id, StatisticStates.TotalPastDay.objectdefinition);
-				await this.setStateAsync(StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id, { val: parseFloat(TotalDayState.val), ack: true });
+				try {
+					await this.setObjectNotExistsAsync(StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id, StatisticStates.TotalPastDay.objectdefinition);
+				}
+				catch (err) {
+					this.log.error('await this.setObjectNotExistsAsync(' + StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id + ',' + StatisticStates.TotalPastDay.objectdefinition + ' ) ERROR: ' + err);
+				}
+				try {
+					await this.setStateAsync(StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id, { val: parseFloat(TotalDayState.val), ack: true });
+				}
+				catch (err) {
+					this.log.error('setStateAsync(' + StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id + ',' + '{ val: parseFloat(' + TotalDayState.val + '), ack: true }) ERROR: ' + err);
+				}
 
 				// resetting sum to 0
-				await this.setObjectNotExistsAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, StatisticStates.TotalDay.objectdefinition);
-				await this.setStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, { val: 0, ack: true });
+				try {
+					await this.setObjectNotExistsAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, StatisticStates.TotalDay.objectdefinition);
+				}
+				catch (err) {
+					this.log.error('await this.setObjectNotExistsAsync(' + StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id + ',' + StatisticStates.TotalDay.objectdefinition + ' ) ERROR: ' + err);
+				}
+				try {
+					await this.setStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, { val: 0, ack: true });
+				}
+				catch (err) {
+					this.log.error('setStateAsync(' + StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id + ',' + '{ val: 0, ack: true }) ERROR: ' + err);
+				}
 
 				resolve(true);
 			} catch (err) {
@@ -3553,7 +3590,7 @@ class wamo extends utils.Adapter {
 
 	//===================================================
 	// testing if device ist responding
-	async devicePing(IPadress, Port){
+	async devicePing(IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
 			axios({ method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/', responseType: 'json' }
 			).then(async (response) => {
@@ -3605,40 +3642,46 @@ class wamo extends utils.Adapter {
 			try {
 				// iterate through all requested Parameters
 				for (let i = 0; i < statesToGet.length; i++) {
-					try {
-						await this.deviceNotBussy();
-					}
-					catch (err) {
-						// goto next state and try that one
-						break;
-					}
 
-					try {
-						interfaceBussy = true;	// SET flag that device interface is bussy
+					let DeviceParameterReturn = null;
+					let gotDeviceParameter = false;
+					while (!gotDeviceParameter) {
 						// Read out parameter from device
-						const DeviceParameterReturn = await this.get_DevieParameter(statesToGet[i], this.config.device_ip, this.config.device_port);
-						interfaceBussy = false;	// CLEAR flag that device interface is bussy
-
-						// Update object states
 						try {
-							await this.updateState(statesToGet[i], DeviceParameterReturn);
+							DeviceParameterReturn = await this.get_DevieParameter(statesToGet[i], this.config.device_ip, this.config.device_port);
+							gotDeviceParameter = true;
 						}
 						catch (err) {
-							// something went wrong during state update
-							this.log.error('Error [updateState] within [getData] ERROR: ' + err);
+							this.log.error('async getData('+ statesToGet[i] + ', ' + this.config.device_ip + ':' + this.config.device_port + ' ERROR: ' + err);
+							//=================================================================================================
+							// Waiting till device is responding again
+							//=================================================================================================
+							pingOK = false;
+							while (!pingOK) {
+								try {
+									await this.devicePing(this.config.device_ip, this.config.device_port);
+									device_responsive = true;	// global flag if device is responsive
+									pingOK = true;
+								}
+								catch (err) {
+									this.log.error(err);
+								}
+							}
 						}
 					}
+					// Update object states
+					try {
+						await this.updateState(statesToGet[i], DeviceParameterReturn);
+					}
 					catch (err) {
-						// somthing went wrong during parameter read out
-						interfaceBussy = false;	// CLEAR flag that device interface is bussy
-						this.log.error('async getData(statesToGet) Error from get_DeviceParameter from ' + this.config.device_ip + ':' + this.config.device_port + ' ERROR: ' + err);
+						// something went wrong during state update
+						this.log.error('Error [updateState] within [getData] ERROR: ' + err);
 					}
 				}
 				resolve(true);
 			} catch (err) {
-				// something unhandled else went wrong
-				this.log.error('async isDeviceNotBussy() -> somthing else went wrong! ERROR: ' + err);
-				interfaceBussy = false;	// CLEAR flag that device interface is bussy
+				// something else and unhandled went wrong
+				this.log.error('getData(statesToGet) -> somthing else went wrong! ERROR: ' + err);
 				reject(err);
 			}
 		});
@@ -3724,12 +3767,12 @@ class wamo extends utils.Adapter {
 						catch (err) {
 							this.log.error('initDeviceProfiles -> Error from get_DevieProfileParameter Profile Number:' + String(ProfileNumber) + ' ParameterID:' + String(parameterIDs[parameterIDs.length - 1]));
 						}
-						try{
+						try {
 							await this.UpdateProfileState(ProfileNumber, stateID, result);
 							this.log.debug('Profil ' + ProfileNumber + ' Parameter ' + parameterIDs[parameterIDs.length - 1]);
 						}
-						catch(err){
-							this.log.error('initDeviceProfiles -> Error from UpdateProfileState -> Profile Number:' + String(ProfileNumber) + ' stateID:' +String(stateID) + ' ParameterID:' + String(parameterIDs[parameterIDs.length - 1]));
+						catch (err) {
+							this.log.error('initDeviceProfiles -> Error from UpdateProfileState -> Profile Number:' + String(ProfileNumber) + ' stateID:' + String(stateID) + ' ParameterID:' + String(parameterIDs[parameterIDs.length - 1]));
 						}
 					}
 				}
@@ -3789,11 +3832,11 @@ class wamo extends utils.Adapter {
 					return;
 				}
 
-				try{
+				try {
 					await this.setObjectNotExistsAsync(state_ID, stateID.objectdefinition);
 					this.log.debug('stateID.objectdefinition.common.type = ' + stateID.objectdefinition.common.type);
 				}
-				catch(err){
+				catch (err) {
 					this.log.error('updateState -> await this.setObjectNotExistsAsync(state_ID, stateID.objectdefinition) returned ERROR: ' + err);
 				}
 				// Path for RAW state object
@@ -3814,12 +3857,11 @@ class wamo extends utils.Adapter {
 					native: {}
 				};
 				raw_objectdefinition.common.name = stateID.objectdefinition.common.name;
-				try{
+				try {
 					await this.setObjectNotExistsAsync(state_ID_RAW, Object(raw_objectdefinition));
 					this.log.debug('RAW stateID.objectdefinition.common.type = ' + raw_objectdefinition);
 				}
-				catch(err)
-				{
+				catch (err) {
 					this.log.error('updateState -> await this.setObjectNotExistsAsync(state_ID_RAW, Object(raw_objectdefinition) returned ERROR: ' + err);
 				}
 				// save RAW State
@@ -4541,7 +4583,7 @@ class wamo extends utils.Adapter {
 				let current_Year_valueState = null;
 
 				// getting states
-				try{
+				try {
 					lastTotalvalueState = await this.getStateAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id);
 					// pulling values from state if state already existed
 					lastTotalValue = parseFloat(lastTotalvalueState.val);
@@ -4562,7 +4604,8 @@ class wamo extends utils.Adapter {
 				try {
 					current_Day_valueState = await this.getStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id);
 					// pulling values from state if state already existed
-					current_Day = parseFloat(current_Day_valueState.val);}
+					current_Day = parseFloat(current_Day_valueState.val);
+				}
 				catch (err) {
 					this.log.error('async updateStatistics() -> current_Day_valueState = await this.getStateAsync(StatisticStates.TotalDay.statePath + \'.\' + StatisticStates.TotalDay.id) -> returned ERROR: ' + err);
 				}
@@ -4615,7 +4658,7 @@ class wamo extends utils.Adapter {
 					catch (err) {
 						this.log.error('updateStatistics() -> await this.setObjectNotExistsAsync(StatisticStates.TotalLastValue.statePath + \'.\' + StatisticStates.TotalLastValue.id, Object(StatisticStates.TotalLastValue.objectdefinition)) returned ERROR: ' + err);
 					}
-					try{
+					try {
 						await this.setStateAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id, { val: currentTotalValue, ack: true });
 					}
 					catch (err) {
@@ -4623,13 +4666,13 @@ class wamo extends utils.Adapter {
 					}
 
 					// new day total
-					try{
+					try {
 						await this.setObjectNotExistsAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, Object(StatisticStates.TotalDay.objectdefinition));
 					}
 					catch (err) {
 						this.log.error('updateStatistics() -> await this.setObjectNotExistsAsync(StatisticStates.TotalDay.statePath + \'.\' + StatisticStates.TotalDay.id, Object(StatisticStates.TotalDay.objectdefinition)) returned ERROR: ' + err);
 					}
-					try{
+					try {
 						await this.setStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, { val: current_Day, ack: true });
 					}
 					catch (err) {
@@ -4637,13 +4680,13 @@ class wamo extends utils.Adapter {
 					}
 
 					// new week total
-					try{
+					try {
 						await this.setObjectNotExistsAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id, Object(StatisticStates.TotalWeek.objectdefinition));
 					}
 					catch (err) {
 						this.log.error('updateStatistics() -> await this.setObjectNotExistsAsync(StatisticStates.TotalWeek.statePath + \'.\' + StatisticStates.TotalWeek.id, Object(StatisticStates.TotalWeek.objectdefinition)) returned ERROR: ' + err);
 					}
-					try{
+					try {
 						await this.setStateAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id, { val: current_Week, ack: true });
 					}
 					catch (err) {
@@ -4651,13 +4694,13 @@ class wamo extends utils.Adapter {
 					}
 
 					// new month total
-					try{
+					try {
 						await this.setObjectNotExistsAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id, Object(StatisticStates.TotalMonth.objectdefinition));
 					}
 					catch (err) {
 						this.log.error('updateStatistics() -> await this.setObjectNotExistsAsync(StatisticStates.TotalMonth.statePath + \'.\' + StatisticStates.TotalMonth.id, Object(StatisticStates.TotalMonth.objectdefinition)) returned ERROR: ' + err);
 					}
-					try{
+					try {
 						await this.setStateAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id, { val: current_Month, ack: true });
 					}
 					catch (err) {
@@ -4665,13 +4708,13 @@ class wamo extends utils.Adapter {
 					}
 
 					// new year total
-					try{
+					try {
 						await this.setObjectNotExistsAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id, Object(StatisticStates.TotalYear.objectdefinition));
 					}
 					catch (err) {
 						this.log.error('updateStatistics() -> await this.setObjectNotExistsAsync(StatisticStates.TotalYear.statePath + \'.\' + StatisticStates.TotalYear.id, Object(StatisticStates.TotalYear.objectdefinition)) returned ERROR: ' + err);
 					}
-					try{
+					try {
 						await this.setStateAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id, { val: current_Year, ack: true });
 					}
 					catch (err) {
@@ -4699,14 +4742,14 @@ class wamo extends utils.Adapter {
 					await this.setObjectNotExistsAsync(calculatedStates.germanWaterHardness.statePath + '.' + calculatedStates.germanWaterHardness.id, Object(calculatedStates.germanWaterHardness.objectdefinition));
 				}
 				catch (err) {
-					this.log.error('updateGermanWaterHardnes -> setObjectNotExistsAsync(calculatedStates.germanWaterHardness.statePath + \'.\' + calculatedStates.germanWaterHardness.id, Object(calculatedStates.germanWaterHardness.objectdefinition)) -> ERROR: '+ err);
+					this.log.error('updateGermanWaterHardnes -> setObjectNotExistsAsync(calculatedStates.germanWaterHardness.statePath + \'.\' + calculatedStates.germanWaterHardness.id, Object(calculatedStates.germanWaterHardness.objectdefinition)) -> ERROR: ' + err);
 				}
 
-				try{
+				try {
 					await this.setStateAsync(calculatedStates.germanWaterHardness.statePath + '.' + calculatedStates.germanWaterHardness.id, { val: german_hardnes, ack: true });
 				}
 				catch (err) {
-					this.log.error('updateGermanWaterHardnes -> setStateAsync(calculatedStates.germanWaterHardness.statePath + \'.\' + calculatedStates.germanWaterHardness.id, { val: german_hardnes, ack: true }) -> ERROR: '+ err);
+					this.log.error('updateGermanWaterHardnes -> setStateAsync(calculatedStates.germanWaterHardness.statePath + \'.\' + calculatedStates.germanWaterHardness.id, { val: german_hardnes, ack: true }) -> ERROR: ' + err);
 				}
 				resolve(true);
 			}
