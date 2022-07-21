@@ -3583,62 +3583,78 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	//===========================================================
+	// checks for a defined amount of trys if the Device is bussy
+	// resolves if device is not bussy within given trys
+	// reject if device is still bussy after given trys
+	//===========================================================
+	async deviceNotBussy(){
+		return new Promise(async (resolve, reject) => {
+			let connTrys = 0;
+			while((interfaceBussy) && (connTrys < connectionRetrys))
+			{
+				this.log.warn('async deviceNotBussy() -> Device interface is bussy!');
+				this.log.warn('async deviceNotBussy() -> Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
+				try {
+					await sleep(connectionRetryPause);
+				}
+				catch (err) {
+					this.log.warn('async deviceNotBussy() -> ERROR await sleep() ' + err);
+				}
+				this.log.warn('async deviceNotBussy() -> retry connection ...');
+				connTrys++;
+				if (connTrys > 1) {
+					this.log.warn('async deviceNotBussy() -> connection attempt No. ' + connTrys);
+				}
+				// maximum retrys reached?
+				if(connTrys == connectionRetrys){
+					// reject DataGet() request
+					reject('async deviceNotBussy() -> Max connection retrys reached -> device still bussy');
+				}
+			}
+			this.log.debug('async deviceNotBussy() -> device not bussy');
+			resolve(true);
+		});
+	}
+
 	async getData(statesToGet) {
 		return new Promise(async (resolve, reject) => {
 			try {
-
-				interfaceBussy = false;	// CLEAR flag that device interface is bussy
-
+				// iterate through all requested Parameters
 				for (let i = 0; i < statesToGet.length; i++) {
-					if (!interfaceBussy) {
-						// Verbindungsversuche zurücksetzen
-						let connTrys = 0;
-						// Verbindungsbestätigung zurücksetzen
+					try {
+						await this.deviceNotBussy();
+					}
+					catch (err) {
+						// goto next state and try that one
+						break;
+					}
 
-						while (connTrys < connectionRetrys) {
-							device_responsive = false;
-							try {
-								interfaceBussy = true;	// SET flag that device interface is bussy
-								const DeviceParameterReturn = await this.get_DevieParameter(statesToGet[i], this.config.device_ip, this.config.device_port);
-								try{
-									await this.updateState(statesToGet[i], DeviceParameterReturn);
-									interfaceBussy = false;	// CLEAR flag that device interface is bussy
-									device_responsive = true;
-									break;	// WHILE Schleife vorzeitig beenden
-								}
-								catch(err){
-									this.log.error('Error [updateState] within [getData] ERROR: ' + err);
-								}
-							}
-							catch (err) {
-								interfaceBussy = false;	// CLEAR flag that device interface is bussy
-								device_responsive = false;
-								this.log.error('async getData(statesToGet) ' + String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + ' is not responding');
-								this.log.warn('async getData(statesToGet) -> Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
-								try{
-									await sleep(connectionRetryPause);
-								}
-								catch(err){
-									this.log.warn('async getData(statesToGet) -> ERROR await sleep() ' + err);
-								}
-								this.log.warn('async getData(statesToGet) -> retry connection ...');
-								connTrys++;
-								if (connTrys > 1) {
-									this.log.warn('async getData(statesToGet) -> connection attempt No. ' + connTrys);
-								}
-							}
+					try {
+						interfaceBussy = true;	// SET flag that device interface is bussy
+						// Read out parameter from device
+						const DeviceParameterReturn = await this.get_DevieParameter(statesToGet[i], this.config.device_ip, this.config.device_port);
+						interfaceBussy = false;	// CLEAR flag that device interface is bussy
+
+						// Update object states
+						try {
+							await this.updateState(statesToGet[i], DeviceParameterReturn);
 						}
-
-						if (!device_responsive) {
-							this.log.error('async getData(statesToGet) -> device NOT reachable');
+						catch (err) {
+							// something went wrong during state update
+							this.log.error('Error [updateState] within [getData] ERROR: ' + err);
 						}
 					}
-					else {
-						this.log.warn('async getData(statesToGet) -> Device interface is bussy!');
+					catch (err) {
+						// somthing went wrong during parameter read out
+						interfaceBussy = false;	// CLEAR flag that device interface is bussy
+						this.log.error('async getData(statesToGet) Error from get_DeviceParameter from ' + this.config.device_ip + ':' + this.config.device_port + ' ERROR: ' + err);
 					}
 				}
 				resolve(true);
 			} catch (err) {
+				// something unhandled else went wrong
+				this.log.error('async isDeviceNotBussy() -> somthing else went wrong! ERROR: '+ err);
 				interfaceBussy = false;	// CLEAR flag that device interface is bussy
 				reject(err);
 			}
@@ -4670,8 +4686,8 @@ class wamo extends utils.Adapter {
 
 			// is parameter readable?
 			if (Parameter.readCommand === null) {
-				this.log.warn('[async get_DevieParameter(Parameter, IPadress, Port)] Parameter ID ' + String(Parameter.id) + ' cant be read!');
-				reject('Parameter ID ' + String(Parameter.id) + ' cant be read!');
+				this.log.warn('[async get_DevieParameter(Parameter, IPadress, Port)] Parameter ID ' + String(Parameter.id) + ' can\'t be read!');
+				reject('Parameter ID ' + String(Parameter.id) + ' can\'t be read!');
 			}
 
 			// Do we need special permission to read this parameter?
