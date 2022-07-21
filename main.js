@@ -4829,12 +4829,22 @@ class wamo extends utils.Adapter {
 
 			// Do we need special permission to read this parameter?
 			if (Parameter.levelRead === 'SERVICE') {
-				await this.set_SERVICE_Mode();
-				readModeChanged = true;
+				try{
+					await this.set_SERVICE_Mode();
+					readModeChanged = true;
+				}
+				catch(err){
+					this.log.error('get_DevieParameter -> set_SERVICE_Mode() ERROR: ' + err);
+				}
 			}
 			else if (Parameter.levelRead === 'FACTORY') {
-				await this.set_FACTORY_Mode();
-				readModeChanged = true;
+				try{
+					await this.set_FACTORY_Mode();
+					readModeChanged = true;
+				}
+				catch(err){
+					this.log.error('get_DevieParameter -> set_FACTORY_Mode() ERROR: ' + err);
+				}
 			}
 
 			axios({ method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/' + String(Parameter.id), timeout: 10000, responseType: 'json' }
