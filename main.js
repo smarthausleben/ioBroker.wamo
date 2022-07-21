@@ -3075,6 +3075,21 @@ class wamo extends utils.Adapter {
 
 		let connTrys = 0;
 
+		let pingOK = false;
+
+		//=================================================================================================
+		// Test if Device is responding
+		//=================================================================================================
+		while (!pingOK) {
+			try {
+				this.devicePing(this.config.device_ip, this.config.device_port);
+				pingOK= true;
+			}
+			catch (err) {
+				this.log.error(err);
+			}
+		}
+
 		//=================================================================================================
 		//===  Connecting to device																		===
 		//=================================================================================================
@@ -3579,6 +3594,19 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	async devicePing(IPadress, Port){
+		return new Promise(async (resolve, reject) => {
+			axios({ method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/', responseType: 'json' }
+			).then(async (response) => {
+				this.log.debug('Device http://' + String(IPadress) + ':' + String(Port) + 'is reachable');
+				resolve(response);
+			}
+			).catch(async (error) => {
+				this.log.error('devicePing -> Device http://' + String(IPadress) + ':' + String(Port) + 'is NOT reachable');
+				reject(error);
+			});
+		});
+	}
 	//===========================================================
 	// checks for a defined amount of trys if the Device is bussy
 	// resolves if device is not bussy within given trys
