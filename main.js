@@ -3082,7 +3082,7 @@ class wamo extends utils.Adapter {
 		//=================================================================================================
 		while (!pingOK) {
 			try {
-				this.devicePing(this.config.device_ip, this.config.device_port);
+				await this.devicePing(this.config.device_ip, this.config.device_port);
 				pingOK= true;
 			}
 			catch (err) {
