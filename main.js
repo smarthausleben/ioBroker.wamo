@@ -38,6 +38,7 @@ let sensor_conductivity_present = false;
 
 let moreMessages = true;
 
+let pingOK = false;
 let device_responsive = false;
 let interfaceBussy;
 let SystemLanguage;
@@ -3073,16 +3074,15 @@ class wamo extends utils.Adapter {
 			this.log.error('Error from initStatesAndChanels : ' + err);
 		}
 
-		let connTrys = 0;
-
-		let pingOK = false;
 
 		//=================================================================================================
 		// Test if Device is responding
 		//=================================================================================================
+		pingOK = false;
 		while (!pingOK) {
 			try {
 				await this.devicePing(this.config.device_ip, this.config.device_port);
+				device_responsive = true;	// global flag if device is responsive
 				pingOK= true;
 			}
 			catch (err) {
@@ -3091,50 +3091,8 @@ class wamo extends utils.Adapter {
 		}
 
 		//=================================================================================================
-		//===  Connecting to device																		===
-		//=================================================================================================
-		while (connTrys < connectionRetrys) {
-			try {
-				await this.deviceCommcheck(this.config.device_ip, this.config.device_port);
-				device_responsive = true;
-				this.log.info('async onReady() - deviceCommckeck -> Device at ' + this.config.device_ip + ':' + this.config.device_port + ' is connected');
-				break;
-			}
-			catch (err) {
-				device_responsive = false;
-				this.log.error('async onReady() - deviceCommckeck -> ' + String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + ' is not responding');
-				this.log.warn('async onReady() - deviceCommckeck -> Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
-				try {
-					await sleep(connectionRetryPause);
-				}
-				catch (err) {
-					this.log.warn('async onReady() - deviceCommckeck -> rERROR await sleep() ' + err);
-				}
-				connTrys++;
-				if (connTrys > 1) {
-					this.log.warn('async onReady() - deviceCommckeck -> connection attempt No. ' + connTrys);
-				}
-				else {
-					this.log.warn('async onReady() - deviceCommckeck -> retry connection ...');
-				}
-			}
-		}
-		if (!device_responsive) {
-			try {
-				this.log.error('async onReady() - deviceCommckeck -> rdevice NOT connected ... exit');
-				await this.setForeignState('system.adapter.' + adapterName + '0' + 'common.enabled', false);
-			}
-			// we throw an exception causing Adaper to restart
-			catch (err) {
-				throw 'async onReady() - deviceCommckeck -> exit not OK -> Error: ' + err;
-			}
-		}
-
-
-		//=================================================================================================
 		//===  Connection LED to Green																	===
 		//=================================================================================================
-
 		try {
 			await this.setStateAsync('info.connection', { val: true, ack: true });
 			this.log.debug('info.connection gesetzt');
@@ -3142,80 +3100,68 @@ class wamo extends utils.Adapter {
 		catch (err) {
 			this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
 		}
+
 		//=================================================================================================
 		//===  Getting device data																		===
 		//=================================================================================================
-
-		// Verbindungsversuche zurücksetzen
-		connTrys = 0;
-		// Verbindungsbestätigung zurücksetzen
-		device_responsive = false;
-
-		while (connTrys < connectionRetrys) {
+		let gotDeviceData = false;
+		while (!gotDeviceData) {
 			try {
 				this.log.info('async onReady() - initComckeck -> Getting data from device at ' + this.config.device_ip + ':' + this.config.device_port);
 				const responseInit = await this.initDevice();
 				this.log.debug(`[async onReady() - initComckeck -> initDevice] Response:  ${responseInit}`);
-				device_responsive = true;
-				break;
+				gotDeviceData = true;
 			}
 			catch (err) {
-				this.log.error(String(connTrys + 1) + ' try Device at ' + this.config.device_ip + ':' + this.config.device_port + ' is not responding');
-				this.log.warn('async onReady() - initComckeck -> Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
-				try {
-					await sleep(connectionRetryPause);
-				}
-				catch (err) {
-					this.log.warn('async onReady() - initComckeck -> ERROR await sleep() ' + err);
-				}
-				this.log.warn('async onReady() - initComckeck -> retry connection ...');
-				connTrys++;
-				if (connTrys > 1) {
-					this.log.warn('async onReady() - initComckeck -> connection attempt No. ' + connTrys);
+				this.log.error('initDevice() ERROR: ' +err);
+
+				//=================================================================================================
+				// Waiting till device is responding again
+				//=================================================================================================
+				pingOK = false;
+				while (!pingOK) {
+					try {
+						await this.devicePing(this.config.device_ip, this.config.device_port);
+						device_responsive = true;	// global flag if device is responsive
+						pingOK = true;
+					}
+					catch (err) {
+						this.log.error(err);
+					}
 				}
 			}
-		}
-		if (!device_responsive) {
-			this.log.error('async onReady() - initComckeck -> device NOT connected ... exit');
-			// we throw an exception causing Adaper to restart
-			throw 'async onReady() - initComckeck -> exit not OK';
 		}
 
 		//=================================================================================================
 		//===  Getting device Profiles data																===
 		//=================================================================================================
-
-		// Verbindungsversuche zurücksetzen
-		connTrys = 0;
-		// Verbindungsbestätigung zurücksetzen
-		device_responsive = false;
-
-		while (connTrys < connectionRetrys) {
+		let gotDeviceProfileData = false;
+		while (!gotDeviceProfileData) {
 			try {
 				// Device Profiles Initialisation
 				this.log.info('async onReady() - initDeviceProfiles -> Getting Profiles data from device at ' + this.config.device_ip + ':' + this.config.device_port);
 				const responseInitProfiles = await this.initDeviceProfiles(this.config.device_ip, this.config.device_port);
 				this.log.debug(`[async onReady() - initDeviceProfiles -> initDeviceProfiles] Response:  ${responseInitProfiles}`);
-				device_responsive = true;
-				break;
+				gotDeviceProfileData = true;
 			}
 			catch (err) {
-				this.log.error(String(connTrys + 1) + ' try / Device at ' + this.config.device_ip + ':' + this.config.device_port + ' is not responding');
-				this.log.warn('async onReady() - initDeviceProfiles -> Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
-				await sleep(connectionRetryPause);
-				this.log.warn('sync onReady() - initDeviceProfiles -> retry connection ...');
-			}
-			finally {
-				connTrys++;
-				if (connTrys > 1) {
-					this.log.warn('async onReady() - initDeviceProfiles -> connection attempt No. ' + connTrys);
+				this.log.error('initDeviceProfiles() ERROR: ' +err);
+
+				//=================================================================================================
+				// Waiting till device is responding again
+				//=================================================================================================
+				pingOK = false;
+				while (!pingOK) {
+					try {
+						await this.devicePing(this.config.device_ip, this.config.device_port);
+						device_responsive = true;	// global flag if device is responsive
+						pingOK = true;
+					}
+					catch (err) {
+						this.log.error(err);
+					}
 				}
 			}
-		}
-		if (!device_responsive) {
-			this.log.error('async onReady() - initDeviceProfiles -> device NOT connected ... exit');
-			// we throw an exception causing Adaper to restart
-			throw 'async onReady() - initDeviceProfiles -> exit not OK';
 		}
 
 		//=================================================================================================
@@ -3395,10 +3341,21 @@ class wamo extends utils.Adapter {
 				// Die Timer für das Polling starten
 				alarm_Intervall_ID = this.setInterval(alarm_poll, parseInt(this.config.device_alarm_poll_interval) * 1000);
 				this.log.debug('Alarm timer initialized');
-				await sleep(3000); // Warten um einen Versatz zu erzeugen
+				try{
+					await sleep(3000); // Warten um einen Versatz zu erzeugen
+				}
+				catch(err){
+					this.log.error('await sleep(3000) ERROR: ' + err);
+				}
 				short_Intervall_ID = this.setInterval(short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
 				this.log.debug('Short timer initialized');
-				await sleep(3000); // Warten um einen Versatz zu erzeugen
+
+				try{
+					await sleep(3000); // Warten um einen Versatz zu erzeugen
+				}
+				catch(err){
+					this.log.error('await sleep(3000) ERROR: ' + err);
+				}
 				long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
 				this.log.debug('Long timer initialized');
 				resolve('Alarm timer ID = ' + alarm_Intervall_ID + ' / Short timer ID = ' + short_Intervall_ID + ' / Long timer ID = ' + long_Intervall_ID);
@@ -3594,19 +3551,22 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	//===================================================
+	// testing if device ist responding
 	async devicePing(IPadress, Port){
 		return new Promise(async (resolve, reject) => {
 			axios({ method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/', responseType: 'json' }
 			).then(async (response) => {
-				this.log.debug('Device http://' + String(IPadress) + ':' + String(Port) + 'is reachable');
+				this.log.debug('Device http://' + String(IPadress) + ':' + String(Port) + ' OK');
 				resolve(response);
 			}
 			).catch(async (error) => {
-				this.log.error('devicePing -> Device http://' + String(IPadress) + ':' + String(Port) + 'is NOT reachable');
+				this.log.error('devicePing -> Device http://' + String(IPadress) + ':' + String(Port) + ' is NOT reachable');
 				reject(error);
 			});
 		});
 	}
+
 	//===========================================================
 	// checks for a defined amount of trys if the Device is bussy
 	// resolves if device is not bussy within given trys
@@ -3682,21 +3642,6 @@ class wamo extends utils.Adapter {
 				reject(err);
 			}
 		});
-	}
-
-	//===================================================
-	// reading ALA (Alarm) status from device to test if the device is present and responding
-	async deviceCommcheck(DeviceIP, DevicePort) {
-		return new Promise(async (resolve, reject) => {
-			try {
-				await this.get_DevieParameter(DeviceParameters.CurrentAlarmStatus, DeviceIP, DevicePort);
-				resolve(true);
-			} catch (err) {
-				this.log.warn('[async deviceCommcheck(DeviceIP, DevicePort)] Error: ' + err);
-				reject(err);
-			}
-		});
-
 	}
 
 	//===================================================
