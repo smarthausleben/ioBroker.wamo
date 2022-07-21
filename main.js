@@ -3121,7 +3121,6 @@ class wamo extends utils.Adapter {
 				pingOK = false;
 				while (!pingOK) {
 					try {
-						
 						await this.devicePing(this.config.device_ip, this.config.device_port);
 						device_responsive = true;	// global flag if device is responsive
 						pingOK = true;
@@ -3602,7 +3601,7 @@ class wamo extends utils.Adapter {
 			}
 			).catch(async (err) => {
 				interfaceBussy = false;
-				this.log.error('devicePing -> Device http://' + String(IPadress) + ':' + String(Port) + ' is NOT reachable -> ERROR: ' + err);
+				this.log.error('devicePing() -> Device http://' + String(IPadress) + ':' + String(Port) + ' is NOT reachable -> ERROR: ' + err);
 				reject(err);
 			});
 		});
@@ -3611,10 +3610,11 @@ class wamo extends utils.Adapter {
 
 	async getData(statesToGet) {
 		return new Promise(async (resolve, reject) => {
+			let parnumber = 0;
 			try {
 				// iterate through all requested Parameters
 				for (let i = 0; i < statesToGet.length; i++) {
-
+					parnumber = i;
 					let DeviceParameterReturn = null;
 					let gotDeviceParameter = false;
 					while (!gotDeviceParameter) {
@@ -3624,7 +3624,7 @@ class wamo extends utils.Adapter {
 							gotDeviceParameter = true;
 						}
 						catch (err) {
-							this.log.error('async getData('+ statesToGet[i] + ', ' + this.config.device_ip + ':' + this.config.device_port + ' ERROR: ' + err);
+							this.log.error('async getData('+ statesToGet[i].id + ', ' + this.config.device_ip + ':' + this.config.device_port + ' ERROR: ' + err);
 							//=================================================================================================
 							// Waiting till device is responding again
 							//=================================================================================================
@@ -3647,13 +3647,13 @@ class wamo extends utils.Adapter {
 					}
 					catch (err) {
 						// something went wrong during state update
-						this.log.error('Error [updateState] within [getData] ERROR: ' + err);
+						this.log.error('Error [updateState] ('+ statesToGet[i].id +', ' + DeviceParameterReturn + ') within [getData] ERROR: ' + err);
 					}
 				}
 				resolve(true);
 			} catch (err) {
 				// something else and unhandled went wrong
-				this.log.error('getData(statesToGet) -> somthing else went wrong! ERROR: ' + err);
+				this.log.error('getData(statesToGet) -> somthing else went wrong at ID '+ statesToGet[parnumber].id +'! ERROR: ' + err);
 				reject(err);
 			}
 		});

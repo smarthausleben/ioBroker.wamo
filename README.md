@@ -20,7 +20,8 @@ The adapter connects to your **SYR SafeTech Connect 2422** or **POLYGONVATRO** l
 
 ## Changelog
 
-### 0.1.5 (----.--.--)
+### 0.1.5 (2022.07.21)
+* (smarthausleben) fixed adapter crash (Issue #1, #4, #7, #9)
 * (smarthausleben) added state SFV (Flag if new firmware is available)
 * (smarthausleben) added state SRO (Screen rotation)
 
