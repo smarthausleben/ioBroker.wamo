@@ -3121,6 +3121,7 @@ class wamo extends utils.Adapter {
 				pingOK = false;
 				while (!pingOK) {
 					try {
+						
 						await this.devicePing(this.config.device_ip, this.config.device_port);
 						device_responsive = true;	// global flag if device is responsive
 						pingOK = true;
@@ -3592,12 +3593,15 @@ class wamo extends utils.Adapter {
 	// testing if device ist responding
 	async devicePing(IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
-			axios({ method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/', responseType: 'json' }
+			interfaceBussy = true;
+			axios({ method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/', timeout: 10000, responseType: 'json' }
 			).then(async (response) => {
+				interfaceBussy = false;
 				this.log.debug('Device http://' + String(IPadress) + ':' + String(Port) + ' OK');
 				resolve(response);
 			}
 			).catch(async (error) => {
+				interfaceBussy = false;
 				this.log.error('devicePing -> Device http://' + String(IPadress) + ':' + String(Port) + ' is NOT reachable');
 				reject(error);
 			});
@@ -4846,9 +4850,10 @@ class wamo extends utils.Adapter {
 					this.log.error('get_DevieParameter -> set_FACTORY_Mode() ERROR: ' + err);
 				}
 			}
-
+			interfaceBussy = true;
 			axios({ method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/' + String(Parameter.id), timeout: 10000, responseType: 'json' }
 			).then(async (response) => {
+				interfaceBussy = false;
 				const content = response.data;
 				this.log.debug(`[getSensorData] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
 
@@ -4875,6 +4880,7 @@ class wamo extends utils.Adapter {
 					// Something happened in setting up the request that triggered an Error
 					this.log.error('async get_DevieParameter(Parameter, IPadress, Port): Error: ' + error.message);
 				}
+				interfaceBussy = false;
 				reject('axios ERROR: ' + error.message);
 			});
 		});
