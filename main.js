@@ -3600,46 +3600,14 @@ class wamo extends utils.Adapter {
 				this.log.debug('Device http://' + String(IPadress) + ':' + String(Port) + ' OK');
 				resolve(response);
 			}
-			).catch(async (error) => {
+			).catch(async (err) => {
 				interfaceBussy = false;
-				this.log.error('devicePing -> Device http://' + String(IPadress) + ':' + String(Port) + ' is NOT reachable');
-				reject(error);
+				this.log.error('devicePing -> Device http://' + String(IPadress) + ':' + String(Port) + ' is NOT reachable -> ERROR: ' + err);
+				reject(err);
 			});
 		});
 	}
 
-	//===========================================================
-	// checks for a defined amount of trys if the Device is bussy
-	// resolves if device is not bussy within given trys
-	// reject if device is still bussy after given trys
-	//===========================================================
-	async deviceNotBussy() {
-		return new Promise(async (resolve, reject) => {
-			let connTrys = 0;
-			while ((interfaceBussy) && (connTrys < connectionRetrys)) {
-				this.log.warn('async deviceNotBussy() -> Device interface is bussy!');
-				this.log.warn('async deviceNotBussy() -> Waiting for ' + String(connectionRetryPause / 1000) + ' seconds ...');
-				try {
-					await sleep(connectionRetryPause);
-				}
-				catch (err) {
-					this.log.warn('async deviceNotBussy() -> ERROR await sleep() ' + err);
-				}
-				this.log.warn('async deviceNotBussy() -> retry connection ...');
-				connTrys++;
-				if (connTrys > 1) {
-					this.log.warn('async deviceNotBussy() -> connection attempt No. ' + connTrys);
-				}
-				// maximum retrys reached?
-				if (connTrys == connectionRetrys) {
-					// reject DataGet() request
-					reject('async deviceNotBussy() -> Max connection retrys reached -> device still bussy');
-				}
-			}
-			this.log.debug('async deviceNotBussy() -> device not bussy');
-			resolve(true);
-		});
-	}
 
 	async getData(statesToGet) {
 		return new Promise(async (resolve, reject) => {
