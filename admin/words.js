@@ -62,6 +62,18 @@ systemDictionary = {
 		'pl': 'powolny czas odpytywania w sekundach',
 		'zh-cn': '以秒为单位的慢轮询时间'
 	},
+	'very slow polling time in seconds': {
+		'en': 'very slow polling time in seconds',
+		'de': 'sehr langsame abfragezeit in sekunden',
+		'ru': 'очень медленное время опроса в секундах',
+		'pt': 'tempo de votação muito lento em segundos',
+		'nl': 'heel traag pollen in seconden',
+		'fr': 'temps de vote très lent en quelques secondes',
+		'it': 'tempo di inquinamento molto lento in secondi',
+		'es': 'tiempo de encuesta muy lento en segundos',
+		'pl': 'czas zanieczyszczeń w sekundach',
+		'zh-cn': '第二次投票时间非常缓慢'
+	},
 	'alarm polling time in seconds': {
 		'en': 'alarm polling time in seconds',
 		'de': 'Alarmabfragezeit in Sekunden',

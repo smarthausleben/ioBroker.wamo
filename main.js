@@ -3409,12 +3409,12 @@ class wamo extends utils.Adapter {
 				this.log.debug('Long timer initialized');
 
 				try {
-					await sleep(3000); // Warten um einen Versatz zu erzeugen
+					await sleep(2000); // Warten um einen Versatz zu erzeugen
 				}
 				catch (err) {
 					this.log.error('await sleep(3000) ERROR: ' + err);
 				}
-				very_long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_very_long_poll_interval) * 1000);
+				very_long_Intervall_ID = this.setInterval(very_long_poll, parseInt(this.config.device_very_long_poll_interval) * 1000);
 				this.log.debug('Very Long timer initialized');
 				resolve('Alarm timer ID = ' + alarm_Intervall_ID + ' / Short timer ID = ' + short_Intervall_ID + ' / Long timer ID = ' + long_Intervall_ID+ ' / Very long timer ID = ' + very_long_Intervall_ID);
 			} catch (err) {
