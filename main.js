@@ -3642,7 +3642,10 @@ class wamo extends utils.Adapter {
 				this.log.debug('Very Long Timer tick');
 				// get longPeriode data
 				if (!interfaceBussy) {
+					this.log.debug('Get initStates');
 					await this.getData(initStates);
+					this.log.debug('Get Device Profiles');
+					await this.initDeviceProfiles(this.config.device_ip, this.config.device_port);
 					resolve(true);
 				}
 				else {
@@ -3653,6 +3656,7 @@ class wamo extends utils.Adapter {
 				interfaceBussy = false;	// CLEAR flag that device interface is bussy
 				reject(err);
 			}
+
 		});
 	}
 	//===================================================
