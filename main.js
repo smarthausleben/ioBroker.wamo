@@ -24,6 +24,12 @@ const cron_Day = '0 0 * * *';
 const Parameter_FACTORY_Mode = '(2)f';
 const Parameter_SERVICE_Mode = '(1)';
 
+// Values for further calculations
+let _WaterTemperature = 0;
+let _WaterPressure = 0;
+let _WaterConductivity = 0;
+let _WaterConductivity_EC25 = 0;
+
 //Reference to my own adapter
 let myAdapter;
 
@@ -424,6 +430,33 @@ const calculatedStates = {
 					'es': 'Dureza del agua alemana',
 					'pl': 'Niemiecka twardość wody',
 					'zh-cn': '德国水质硬度'
+				},
+				type: 'number',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.WaterCondition.path,
+	},
+	conductivityEC25: {
+		id: 'CONEC25',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'EC25 conductivity',
+					'de': 'EC25 Leitfähigkeit',
+					'ru': 'ЕЦ25 проводимость',
+					'pt': 'EC25 condutividade',
+					'nl': 'EC25 gedrag',
+					'fr': 'Conductivité EC25',
+					'it': 'EC25 conducibilità',
+					'es': 'Conductividad EC25',
+					'pl': 'EC25',
+					'zh-cn': 'C25 活动'
 				},
 				type: 'number',
 				unit: null,
@@ -4109,6 +4142,7 @@ class wamo extends utils.Adapter {
 							finalValue = await this.getGlobalisedValue(DeviceParameters.WaterTemperature, value);
 							if (finalValue === null) {	// did we get a globalised Value back?
 								finalValue = parseFloat(value) / 10;
+								_WaterTemperature = finalValue;
 							}
 							if (moreMessages) { await this.moremessages(DeviceParameters.WaterTemperature, finalValue); }
 						}
@@ -4119,19 +4153,30 @@ class wamo extends utils.Adapter {
 							finalValue = await this.getGlobalisedValue(DeviceParameters.WaterPressure, value);
 							if (finalValue === null) {	// did we get a globalised Value back?
 								finalValue = parseFloat(value);
+								_WaterPressure = finalValue;
 							}
 							if (moreMessages) { await this.moremessages(DeviceParameters.WaterPressure, finalValue); }
 						}
 						break;
 					case DeviceParameters.WaterConductivity.id:			// CND - Water conductivity
 						if (sensor_conductivity_present) {
-							finalValue = await this.getGlobalisedValue(DeviceParameters.WaterConductivity, value);
-							if (finalValue === null) {	// did we get a globalised Value back?
-								finalValue = parseFloat(String(value).replace(',', '.'));
-								// updatig German water hardness
-								this.updateGermanWaterHardnes(finalValue);
+							try {
+								finalValue = await this.getGlobalisedValue(DeviceParameters.WaterConductivity, value);
+								if (finalValue === null) {	// did we get a globalised Value back?
+									finalValue = parseFloat(String(value).replace(',', '.'));
+									_WaterConductivity = finalValue;
+									// updatig German water hardness
+									if (sensor_temperature_present) {
+										try {await this.updateEC25conductivity();}catch (err) {this.log.error('convertDeviceReturnValue -> WaterConductivity -> updateEC25conductivity ERROR: ' + err);}
+									}
+									else {
+										try{await this.updateGermanWaterHardnes();}catch (err) {this.log.error('convertDeviceReturnValue -> WaterConductivity -> updateGermanWaterHardnes ERROR: ' + err);}
+									}
+								}
+								if (moreMessages) { try{await this.moremessages(DeviceParameters.WaterConductivity, finalValue);}catch(err){this.log.error('convertDeviceReturnValue -> WaterConductivity -> moremessages ERROR: '+ err);} }
+							}catch(err) {
+								this.log.error('convertDeviceReturnValue -> WaterConductivity -> getGlobalisedValue ERROR: ' + err);
 							}
-							if (moreMessages) { await this.moremessages(DeviceParameters.WaterConductivity, finalValue); }
 						}
 						break;
 					case DeviceParameters.BatteryVoltage.id:			// BAT Batterie voltage
@@ -4704,10 +4749,20 @@ class wamo extends utils.Adapter {
 	//=============================================================================
 	// here we calculate Water conductivity -> German water hardness
 	//=============================================================================
-	async updateGermanWaterHardnes(water_conductivity) {
+	async updateGermanWaterHardnes() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const german_hardnes = parseFloat((water_conductivity * parseFloat(this.config.factor_german_water_hardnes)).toFixed(2));
+				if((_WaterConductivity === 0) || _WaterConductivity === null){reject('updateGermanWaterHardnes -> No valid water conductivity value');}
+				let german_hardnes = 0;
+				if(_WaterConductivity_EC25 === 0)
+				{
+					// Water hardnes NOT temperatur compensated
+					german_hardnes = parseFloat((_WaterConductivity * parseFloat(this.config.factor_german_water_hardnes)).toFixed(2));
+				}else{
+					// Water hardnes temperatur compensated
+					german_hardnes = parseFloat((_WaterConductivity_EC25 * parseFloat(this.config.factor_german_water_hardnes)).toFixed(2));
+				}
+
 				this.log.debug('calculated german water hardness = ' + String(german_hardnes));
 				// new last total
 				try {
@@ -4731,6 +4786,42 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	async updateEC25conductivity(){
+		return new Promise(async (resolve, reject) => {
+			// The formula is:
+			// EC25 = EC / (1 + 0.020 * (t - 25))
+			// EC25: COnductivity at 25°C
+			// EC: Measured conductivity at Temperature t
+			// t: Temperature in °C
+			try {
+				if((_WaterConductivity === 0) || _WaterConductivity === null){reject('updateEC25conductivity -> No valid water conductivity value');}
+				if((_WaterTemperature === 0) || _WaterTemperature === null){reject('updateEC25conductivity -> No valid water temperature value');}
+
+				_WaterConductivity_EC25 = parseFloat((_WaterConductivity / (1 + 0.02 * (_WaterTemperature -25)) ).toFixed(2));
+
+				this.log.debug('EC25 conductivity = ' + String(_WaterConductivity_EC25));
+
+				// Save Value
+				try {
+					await this.setObjectNotExistsAsync(calculatedStates.conductivityEC25.statePath + '.' + calculatedStates.conductivityEC25.id, Object(calculatedStates.conductivityEC25.objectdefinition));
+				}
+				catch (err) {
+					this.log.error('updateEC25conductivity -> setObjectNotExistsAsync(calculatedStates.conductivityEC25.statePath + \'.\' + calculatedStates.conductivityEC25.id, Object(calculatedStates.conductivityEC25.objectdefinition)) -> ERROR: ' + err);
+				}
+
+				try {
+					await this.setStateAsync(calculatedStates.conductivityEC25.statePath + '.' + calculatedStates.conductivityEC25.id, { val: _WaterConductivity_EC25, ack: true });
+				}
+				catch (err) {
+					this.log.error('updateEC25conductivity -> setStateAsync(calculatedStates.conductivityEC25.statePath + \'.\' + calculatedStates.conductivityEC25.id, { val: EC25conductivity, ack: true }) -> ERROR: ' + err);
+				}
+				resolve(true);
+			}
+			catch (err) {
+				reject(err);
+			}
+		});
+	}
 	//#########################################################################
 	// OBSOLETE ?
 	//#########################################################################

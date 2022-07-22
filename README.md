@@ -19,6 +19,8 @@ The adapter connects to your **SYR SafeTech Connect 2422** or **POLYGONVATRO** l
 
 
 ## Changelog
+### developing (----.--.--)
+* (smarthausleben) added calculated state CONEC25 (temperature compensated water conductivity)
 
 ### 0.1.5 (2022.07.21)
 * (smarthausleben) fixed adapter crash (Issue #1, #4, #7, #9)
