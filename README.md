@@ -20,8 +20,10 @@ The adapter connects to your **SYR SafeTech Connect 2422** or **POLYGONVATRO** l
 
 ## Changelog
 ### developing (----.--.--)
-* (smarthausleben) added German water hardness will be calculated unsing CONEC25 (temperature compensated water conductivity) if conductivity sensor AND temperature sensor is present
-* (smarthausleben) added calculated state CNDEC25 (temperature compensated water conductivity)
+* (smarthausleben) added very long timer where values from initial start will be updated (Issue #5)
+* (smarthausleben) fixed water pressure unit (bar changed to mbar) (Issue #3)
+* (smarthausleben) added German water hardness will be calculated unsing CONEC25 (temperature compensated water conductivity) if conductivity sensor AND temperature sensor is present (Issue #6)
+* (smarthausleben) added calculated state CNDEC25 (temperature compensated water conductivity) (Issue #6)
 
 ### 0.1.5 (2022.07.21)
 * (smarthausleben) fixed adapter crash (Issue #1, #4, #7, #9)

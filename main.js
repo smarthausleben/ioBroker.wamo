@@ -37,6 +37,7 @@ let myAdapter;
 let alarm_Intervall_ID;
 let short_Intervall_ID;
 let long_Intervall_ID;
+let very_long_Intervall_ID;
 
 let sensor_temperature_present = false;
 let sensor_pressure_present = false;
@@ -2600,7 +2601,7 @@ const DeviceParameters = {
 					'zh-cn': '水压'
 				},
 				type: 'number',
-				unit: 'bar',
+				unit: 'mbar',
 				role: 'value.pressure',
 				read: true,
 				write: false
@@ -3311,6 +3312,7 @@ class wamo extends utils.Adapter {
 			clearInterval(alarm_Intervall_ID);
 			clearInterval(short_Intervall_ID);
 			clearInterval(long_Intervall_ID);
+			clearInterval(very_long_Intervall_ID);
 
 			callback();
 		} catch (e) {
@@ -3405,7 +3407,16 @@ class wamo extends utils.Adapter {
 				}
 				long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
 				this.log.debug('Long timer initialized');
-				resolve('Alarm timer ID = ' + alarm_Intervall_ID + ' / Short timer ID = ' + short_Intervall_ID + ' / Long timer ID = ' + long_Intervall_ID);
+
+				try {
+					await sleep(3000); // Warten um einen Versatz zu erzeugen
+				}
+				catch (err) {
+					this.log.error('await sleep(3000) ERROR: ' + err);
+				}
+				very_long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_very_long_poll_interval) * 1000);
+				this.log.debug('Very Long timer initialized');
+				resolve('Alarm timer ID = ' + alarm_Intervall_ID + ' / Short timer ID = ' + short_Intervall_ID + ' / Long timer ID = ' + long_Intervall_ID+ ' / Very long timer ID = ' + very_long_Intervall_ID);
 			} catch (err) {
 				reject(err);
 			}
@@ -3625,6 +3636,25 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	async very_long_TimerTick() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				this.log.debug('Very Long Timer tick');
+				// get longPeriode data
+				if (!interfaceBussy) {
+					await this.getData(initStates);
+					resolve(true);
+				}
+				else {
+					this.log.warn('Interface bussy during VERY LONG TIMER data request');
+					resolve(false);
+				}
+			} catch (err) {
+				interfaceBussy = false;	// CLEAR flag that device interface is bussy
+				reject(err);
+			}
+		});
+	}
 	//===================================================
 	// testing if device ist responding
 	async devicePing(IPadress, Port) {
@@ -4754,7 +4784,7 @@ class wamo extends utils.Adapter {
 	async updateGermanWaterHardnes() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				if (moreMessages){this.log.info('calculating german water hardness ...');}
+				this.log.debug('calculating german water hardness ...');
 				if((_WaterConductivity === 0) || _WaterConductivity === null){reject('updateGermanWaterHardnes -> No valid water conductivity value');}
 				let german_hardnes = 0;
 
@@ -5480,6 +5510,14 @@ async function short_poll() {
 async function long_poll() {
 	try {
 		await myAdapter.long_TimerTick();
+	} catch (err) {
+		//throw new Error(err);
+	}
+}
+
+async function very_long_poll() {
+	try {
+		await myAdapter.very_long_TimerTick();
 	} catch (err) {
 		//throw new Error(err);
 	}
