@@ -3573,7 +3573,7 @@ class wamo extends utils.Adapter {
 	async alarm_TimerTick() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				this.log.debug('Alarm Timer tick');
+				if(moreMessages){this.log.info('Alarm Timer tick')};
 				// get alarmPeriode data
 				if (!interfaceBussy) {
 					await this.getData(alarmPeriod);
@@ -3593,7 +3593,7 @@ class wamo extends utils.Adapter {
 	async short_TimerTick() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				this.log.debug('Short Timer tick');
+				if(moreMessages){this.log.info('Short Timer tick');}
 				// get longPeriode data
 				if (!interfaceBussy) {
 					await this.getData(shortPeriod);
@@ -3619,7 +3619,7 @@ class wamo extends utils.Adapter {
 	async long_TimerTick() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				this.log.debug('Long Timer tick');
+				if(moreMessages){this.log.info('Long Timer tick');}
 				// get longPeriode data
 				if (!interfaceBussy) {
 					await this.getData(longPeriode);
@@ -3639,12 +3639,12 @@ class wamo extends utils.Adapter {
 	async very_long_TimerTick() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				this.log.debug('Very Long Timer tick');
+				if(moreMessages){this.log.info('Very Long Timer tick');}
 				// get longPeriode data
 				if (!interfaceBussy) {
-					this.log.debug('Get initStates');
+					if(moreMessages){this.log.info('Get initStates');}
 					await this.getData(initStates);
-					this.log.debug('Get Device Profiles');
+					if(moreMessages){this.log.info('Get Device Profiles');}
 					await this.initDeviceProfiles(this.config.device_ip, this.config.device_port);
 					resolve(true);
 				}
