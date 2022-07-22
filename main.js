@@ -447,26 +447,30 @@ const calculatedStates = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'EC25 conductivity',
-					'de': 'EC25 Leitfähigkeit',
-					'ru': 'ЕЦ25 проводимость',
-					'pt': 'EC25 condutividade',
-					'nl': 'EC25 gedrag',
-					'fr': 'Conductivité EC25',
-					'it': 'EC25 conducibilità',
-					'es': 'Conductividad EC25',
-					'pl': 'EC25',
-					'zh-cn': 'C25 活动'
+					'en': 'EC25 Water conductivity',
+					'de': 'EC25 Wasserleitfähigkeit',
+					'ru': 'EC25 Проводимость воды',
+					'pt': 'Condutividade da água EC25',
+					'nl': 'EC25 Water geleidbaarheid',
+					'fr': "Conductivité de l'eau EC25",
+					'it': "EC25 Conducibilità dell'acqua",
+					'es': 'Conductividad del agua EC25',
+					'pl': 'EC25 Przewodność wody',
+					'zh-cn': 'EC25 水电导率'
 				},
 				type: 'number',
-				unit: null,
-				role: 'state',
+				unit: 'µS/cm',
+				role: 'value.conductivity',
 				read: true,
 				write: false
 			},
 			native: {}
 		},
 		statePath: adapterChannels.WaterCondition.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
 	},
 };
 
@@ -4758,9 +4762,11 @@ class wamo extends utils.Adapter {
 				{
 					// Water hardnes NOT temperatur compensated
 					german_hardnes = parseFloat((_WaterConductivity * parseFloat(this.config.factor_german_water_hardnes)).toFixed(2));
+					if(moreMessages){this.log.info('German water hardness: ' + german_hardnes + ' (NOT temperature compensated)');}
 				}else{
 					// Water hardnes temperatur compensated
 					german_hardnes = parseFloat((_WaterConductivity_EC25 * parseFloat(this.config.factor_german_water_hardnes)).toFixed(2));
+					if(moreMessages){this.log.info('German water hardness: ' + german_hardnes + ' (Temperature compensated)');}
 				}
 
 				this.log.debug('calculated german water hardness = ' + String(german_hardnes));
