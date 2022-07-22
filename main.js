@@ -4173,11 +4173,9 @@ class wamo extends utils.Adapter {
 									if (sensor_temperature_present) {
 										try {await this.updateEC25conductivity();}catch (err) {this.log.error('convertDeviceReturnValue -> WaterConductivity -> updateEC25conductivity ERROR: ' + err);}
 									}
-									else {
-										try{await this.updateGermanWaterHardnes();}catch (err) {this.log.error('convertDeviceReturnValue -> WaterConductivity -> updateGermanWaterHardnes ERROR: ' + err);}
-									}
+									try{await this.updateGermanWaterHardnes();}catch (err) {this.log.error('convertDeviceReturnValue -> WaterConductivity -> updateGermanWaterHardnes ERROR: ' + err);}
 								}
-								if (moreMessages) { try{await this.moremessages(DeviceParameters.WaterConductivity, finalValue);}catch(err){this.log.error('convertDeviceReturnValue -> WaterConductivity -> moremessages ERROR: '+ err);} }
+								if (moreMessages) { try{await this.moremessages(DeviceParameters.WaterConductivity, _WaterConductivity);}catch(err){this.log.error('convertDeviceReturnValue -> WaterConductivity -> moremessages ERROR: '+ err);} }
 							}catch(err) {
 								this.log.error('convertDeviceReturnValue -> WaterConductivity -> getGlobalisedValue ERROR: ' + err);
 							}
@@ -4756,8 +4754,10 @@ class wamo extends utils.Adapter {
 	async updateGermanWaterHardnes() {
 		return new Promise(async (resolve, reject) => {
 			try {
+				if (moreMessages){this.log.info('calculating german water hardness ...');}
 				if((_WaterConductivity === 0) || _WaterConductivity === null){reject('updateGermanWaterHardnes -> No valid water conductivity value');}
 				let german_hardnes = 0;
+
 				if(_WaterConductivity_EC25 === 0)
 				{
 					// Water hardnes NOT temperatur compensated
