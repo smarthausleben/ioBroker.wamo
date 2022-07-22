@@ -442,7 +442,7 @@ const calculatedStates = {
 		statePath: adapterChannels.WaterCondition.path,
 	},
 	conductivityEC25: {
-		id: 'CONEC25',
+		id: 'CNDEC25',
 		objectdefinition: {
 			type: 'state',
 			common: {
