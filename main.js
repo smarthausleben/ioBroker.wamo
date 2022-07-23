@@ -4206,6 +4206,7 @@ class wamo extends utils.Adapter {
 									// updatig German water hardness
 									if (sensor_temperature_present) {
 										try {await this.updateEC25conductivity();}catch (err) {this.log.error('convertDeviceReturnValue -> WaterConductivity -> updateEC25conductivity ERROR: ' + err);}
+										if (moreMessages) { try{await this.moremessages(calculatedStates.conductivityEC25, _WaterConductivity_EC25);}catch(err){this.log.error('convertDeviceReturnValue -> WaterConductivity -> moremessages ERROR: '+ err);} }
 									}
 									try{await this.updateGermanWaterHardnes();}catch (err) {this.log.error('convertDeviceReturnValue -> WaterConductivity -> updateGermanWaterHardnes ERROR: ' + err);}
 								}
@@ -4826,6 +4827,9 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	//=============================================================================
+	// here we calculate Water temperature kompensated conductivity
+	//=============================================================================
 	async updateEC25conductivity(){
 		return new Promise(async (resolve, reject) => {
 			// The formula is:
