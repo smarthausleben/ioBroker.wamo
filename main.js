@@ -1853,7 +1853,7 @@ const DeviceParameters = {
 			native: {}
 		},
 		statePath: adapterChannels.DeviceConditions.path,
-		levelRead: 'USER',
+		levelRead: 'SERVICE',
 		levelWrite: null,
 		readCommand: 'get',
 		writeCommand: null
