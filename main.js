@@ -1283,7 +1283,7 @@ const DeviceParameters = {
 					'pl': 'Wyłączyć',
 					'zh-cn': '关闭'
 				},
-				type: 'string',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
@@ -1292,32 +1292,6 @@ const DeviceParameters = {
 			native: {}
 		},
 		statePath: adapterChannels.DeviceConditions.path,
-		rangevalues: {
-			'1': {
-				'en': 'Shutoff opened',
-				'de': 'Absperrung geöffnet',
-				'ru': 'Отключение открыто',
-				'pt': 'Desligamento aberto',
-				'nl': 'Afsluiting geopend',
-				'fr': 'Arrêt ouvert',
-				'it': 'Chiusura aperta',
-				'es': 'Cierre abierto',
-				'pl': 'Odcięcie otwarte',
-				'zh-cn': '关闭已打开'
-			},
-			'2': {
-				'en': 'Shutoff closed',
-				'de': 'Absperrung geschlossen',
-				'ru': 'Отключение закрыто',
-				'pt': 'Desligamento fechado',
-				'nl': 'Afsluiting gesloten',
-				'fr': 'Arrêt fermé',
-				'it': 'Chiusura chiusa',
-				'es': 'Cierre cerrado',
-				'pl': 'Odcięcie zamknięte',
-				'zh-cn': '关闭关闭'
-			}
-		},
 		levelRead: 'USER',
 		levelWrite: 'USER',
 		readCommand: 'get',
@@ -3327,14 +3301,37 @@ class wamo extends utils.Adapter {
 							this.log.info('[SRO] Screen rotation changed to ' + String(state.val) + '°');
 						}
 						catch(err){
-							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.ScreenRotation.statePath ... ERROR: ' + err);
+							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.ScreenRotation ... ERROR: ' + err);
 						}
 						break;
 					default:
 						this.log.error('Screen rotation value of ' + String(state.val) + '° is not a valid angle!');
 						break;
 				}
-
+			}
+			else if((id == this.name + '.' + String(this.instance) +'.' + DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id) && state.ack == false)
+			{
+				switch (state.val) {
+					case 1:
+					case 2:
+						try{
+							await this.set_DevieParameter(DeviceParameters.ShutOff, state.val, this.config.device_ip, this.config.device_port);
+							if(state.val == 1)
+							{
+								this.log.info('Command: [AB] Shutoff OPENED');
+							}
+							else{
+								this.log.info('Command: [AB] Shutoff CLOSED');
+							}
+						}
+						catch(err){
+							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.ShutOff ... ERROR: ' + err);
+						}
+						break;
+					default:
+						this.log.error(String(state.val) + ' is not valid for ' + String(DeviceParameters.ScreenRotation.id + ' Valid values: 1=open 2=closed'));
+						break;
+				}
 			}
 		} else {
 			// The state was deleted
@@ -3830,24 +3827,24 @@ class wamo extends utils.Adapter {
 				let cur_StatePath;		// State Path
 
 				// Parameter ID ermitteln, wenn nciht vorhanden, Error auslösen und abbrechen
-				if (stateID == null) { throw '[async updateState(stateID, value)] stateID is null'; }
+				if (stateID == null) { reject('[async updateState(stateID, value)] stateID is null'); }
 
 
 				if ('id' in stateID) {
-					if (stateID.id == null || stateID.id == '') { throw String(stateID) + ' [async updateState(stateID, value)] has no valid [id] key (null or empty)'; }
+					if (stateID.id == null || stateID.id == '') { reject(String(stateID) + ' [async updateState(stateID, value)] has no valid [id] key (null or empty)'); }
 					cur_ParameterID = stateID.id;
 					this.log.debug('id key Value is: ' + cur_ParameterID);
 				} else {
-					throw String(stateID) + ' [async updateState(stateID, value)] has no [id] key';
+					reject(String(stateID) + ' [async updateState(stateID, value)] has no [id] key');
 				}
 
 				// Den Pafad des States ermittlen -> wenn nicht vorhanden, Error auslösen und abbrechen
 				if ('statePath' in stateID) {
-					if (stateID.statePath == null || stateID.statePath == '') { throw String(stateID) + ' [async updateState(stateID, value)] has no valid (statePath) key'; }
+					if (stateID.statePath == null || stateID.statePath == '') { reject(String(stateID) + ' [async updateState(stateID, value)] has no valid (statePath) key'); }
 					cur_StatePath = stateID.statePath;
 					this.log.debug('(statePath) key Value is: ' + cur_StatePath);
 				} else {
-					throw String(stateID) + ' [async updateState(stateID, value)] has no id statePath';
+					reject(String(stateID) + ' [async updateState(stateID, value)] has no id statePath');
 				}
 
 				// Path for state object
@@ -4400,9 +4397,9 @@ class wamo extends utils.Adapter {
 						finalValue = await this.getGlobalisedValue(DeviceParameters.ShutOff, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
 							if (parseInt(value) == 1) {
-								finalValue = 'Shutoff opened';
+								finalValue = 1;
 							} else if (parseInt(value) == 2) {
-								finalValue = 'Shutoff closed';
+								finalValue = 2;
 							}
 							else {
 								finalValue = 'Shutoff undefined';

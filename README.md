@@ -20,6 +20,8 @@ The adapter connects to your **SYR SafeTech Connect 2422** or **POLYGONVATRO** l
 
 ## Changelog
 ### developing (----.--.--)
+* (smarthausleben) added SRO - Screen rotation angel is changeable
+* (smarthausleben) fixed SERVICE and FACTORY mode failure (Issue #10)
 * (smarthausleben) added profiles read out at very long timer (Issue #5)
 * (smarthausleben) added very long timer where values from initial start will be updated (Issue #5)
 * (smarthausleben) fixed water pressure unit (bar changed to mbar) (Issue #3)
