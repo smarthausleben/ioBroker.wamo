@@ -1494,7 +1494,7 @@ const DeviceParameters = {
 				unit: null,
 				role: 'state',
 				read: true,
-				write: false
+				write: true
 			},
 			native: {}
 		},
@@ -3334,6 +3334,31 @@ class wamo extends utils.Adapter {
 						break;
 				}
 			}
+			else if((id == statePrefix + DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id) && state.ack == false)
+			{
+				switch (state.val) {
+					case 1:
+					case 2:
+					case 3:
+					case 4:
+					case 5:
+					case 6:
+					case 7:
+					case 8:
+						try {
+							await this.set_DevieParameter(DeviceParameters.SelectedProfile, state.val, this.config.device_ip, this.config.device_port);
+							this.log.info('Selected profile changed to umbeer ' + String(state.val));
+						}
+						catch(err){
+							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.SelectedProfile ... ERROR: ' + err);
+						}
+						break;
+					default:
+						this.log.error(String(state.val) + ' is not valid for ' + String(DeviceParameters.SelectedProfile.id + ' Valid values: 1...8'));
+						break;
+				}
+			}
+
 		} else {
 			// The state was deleted
 			this.log.info(`state ${id} deleted`);
