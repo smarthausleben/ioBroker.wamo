@@ -21,8 +21,9 @@ const cron_Month = '0 0 1 * *';
 const cron_Week = '0 0 * * 1';
 const cron_Day = '0 0 * * *';
 
-const Parameter_FACTORY_Mode = '(2)f';
-const Parameter_SERVICE_Mode = '(1)';
+const Parameter_FACTORY_Mode = 'ADM(2)f';
+const Parameter_SERVICE_Mode = 'ADM(1)';
+const Parameter_Clear_SERVICE_FACTORY_Mode = 'ADM';
 
 // Values for further calculations
 let _WaterTemperature = 0;
@@ -1377,37 +1378,6 @@ const DeviceParameters = {
 		levelRead: 'USER',
 		levelWrite: 'USER',
 		readCommand: 'get',
-		writeCommand: 'set'
-	},
-	ServiceMode: {
-		id: 'ADM',
-		objectdefinition: {
-			type: 'state',
-			common: {
-				name: {
-					'en': 'Service Mode',
-					'de': 'Servicemodus',
-					'ru': 'Сервисный режим',
-					'pt': 'Modo de serviço',
-					'nl': 'Onderhoudsinstelling',
-					'fr': 'Mode de service',
-					'it': 'Modalità servizio',
-					'es': 'Modo de servicio',
-					'pl': 'Tryb serwisowy',
-					'zh-cn': '服务模式'
-				},
-				type: 'boolean',
-				unit: null,
-				role: 'state',
-				read: true,
-				write: false
-			},
-			native: {}
-		},
-		statePath: adapterChannels.DeviceConditions.path,
-		levelRead: null,
-		levelWrite: 'USER',
-		readCommand: null,
 		writeCommand: 'set'
 	},
 	Units: {
@@ -4563,7 +4533,30 @@ class wamo extends utils.Adapter {
 	async set_FACTORY_Mode() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				await this.set_DevieParameter(DeviceParameters.ServiceMode, Parameter_FACTORY_Mode, this.config.device_ip, this.config.device_port);
+				axios({
+					method: 'get', url: 'http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/set/' + Parameter_FACTORY_Mode, timeout: 10000, responseType: 'json'
+				}
+				).then(async (response) => {
+					const content = response.data;
+					this.log.debug(`[setDeviceParameter] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
+					resolve(response.data);
+				}
+				).catch(async (error) => {
+					if (error.response) {
+						// The request was made and the server responded with a status code
+
+						this.log.warn(`Warnmeldung`);
+					} else if (error.request) {
+						// The request was made but no response was received
+						// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+						// http.ClientRequest in node.js<div></div>
+						this.log.info(error.message);
+					} else {
+						// Something happened in setting up the request that triggered an Error
+						this.log.info(error.message);
+					}
+					reject(error);
+				});
 				this.log.debug('FACTORY Mode aktiv');
 				resolve(true);
 			} catch (err) {
@@ -4575,7 +4568,31 @@ class wamo extends utils.Adapter {
 	async set_SERVICE_Mode() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				await this.set_DevieParameter(DeviceParameters.ServiceMode.id, Parameter_SERVICE_Mode, this.config.device_ip, this.config.device_port);
+
+				axios({
+					method: 'get', url: 'http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/set/' + Parameter_SERVICE_Mode, timeout: 10000, responseType: 'json'
+				}
+				).then(async (response) => {
+					const content = response.data;
+					this.log.debug(`[setDeviceParameter] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
+					resolve(response.data);
+				}
+				).catch(async (error) => {
+					if (error.response) {
+						// The request was made and the server responded with a status code
+
+						this.log.warn(`Warnmeldung`);
+					} else if (error.request) {
+						// The request was made but no response was received
+						// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+						// http.ClientRequest in node.js<div></div>
+						this.log.info(error.message);
+					} else {
+						// Something happened in setting up the request that triggered an Error
+						this.log.info(error.message);
+					}
+					reject(error);
+				});
 				this.log.debug('SERVICE Mode aktiv');
 				resolve(true);
 			} catch (err) {
@@ -4587,9 +4604,31 @@ class wamo extends utils.Adapter {
 	async clear_SERVICE_FACTORY_Mode() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				await this.clr_DevieParameter(DeviceParameters.ServiceMode.id, this.config.device_ip, this.config.device_port);
-				this.log.debug('SERVICE or FACTORY Mode cleared');
+				axios({
+					method: 'get', url: 'http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/clr/' + Parameter_Clear_SERVICE_FACTORY_Mode, timeout: 10000, responseType: 'json'
+				}
+				).then(async (response) => {
+					const content = response.data;
+					this.log.debug(`[setDeviceParameter] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
+					resolve(response.data);
+				}
+				).catch(async (error) => {
+					if (error.response) {
+						// The request was made and the server responded with a status code
 
+						this.log.warn(`Warnmeldung`);
+					} else if (error.request) {
+						// The request was made but no response was received
+						// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+						// http.ClientRequest in node.js<div></div>
+						this.log.info(error.message);
+					} else {
+						// Something happened in setting up the request that triggered an Error
+						this.log.info(error.message);
+					}
+					reject(error);
+				});
+				this.log.debug('FACTORY Mode aktiv');
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -5022,12 +5061,22 @@ class wamo extends utils.Adapter {
 
 			// Do we need special permission to read this parameter?
 			if (Parameter.levelWrite === 'SERVICE') {
-				await this.set_SERVICE_Mode();
-				writeModeChanged = true;
+				try{
+					await this.set_SERVICE_Mode();
+					writeModeChanged = true;
+				}
+				catch(err){
+					this.log.error('async set_DevieParameter(Parameter, Value, IPadress, Port) -> await this.set_SERVICE_Mode() ERROR: ' + err);
+				}
 			}
 			else if (Parameter.levelWrite === 'FACTORY') {
-				await this.set_FACTORY_Mode();
-				writeModeChanged = true;
+				try{
+					await this.set_FACTORY_Mode();
+					writeModeChanged = true;
+				}
+				catch(err){
+					this.log.error('async set_DevieParameter(Parameter, Value, IPadress, Port) -> await this.set_FACTORY_Mode() ERROR: ' + err);
+				}
 			}
 
 			axios({
