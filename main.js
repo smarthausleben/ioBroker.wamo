@@ -5088,7 +5088,7 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			// Flag indicating if we had to modifiy Admin Mode
 			let writeModeChanged = false;
-
+			let SetError = false;
 			this.log.debug(`[set_DevieParameter(ParameterID)] ${Parameter.id} Value: ${Value}`);
 
 			// is parameter writable?
@@ -5127,6 +5127,7 @@ class wamo extends utils.Adapter {
 
 				if((JSON.stringify(content)).includes('ERROR')){
 					this.log.error('Error modifiing device parameter: ' + JSON.stringify(content));
+					SetError = true;
 				}
 				if (writeModeChanged) {
 					try {
@@ -5138,10 +5139,13 @@ class wamo extends utils.Adapter {
 				}
 
 				// writing value ACKNOWLAGED back into state
-				try{
-					await this.setStateAsync(Parameter.statePath + '.' + Parameter.id, { val: Value, ack: true });
-				}catch(err){
-					this.log.error('async set_DevieParameter(Parameter, Value, IPadress, Port) -> await this.setStateAsync(Parameter.statePath + \'.\' + Parameter.id, { val: Value, ack: true }) ERROR: ' + err);
+				if(!SetError)
+				{
+					try {
+						await this.setStateAsync(Parameter.statePath + '.' + Parameter.id, { val: Value, ack: true });
+					} catch (err) {
+						this.log.error('async set_DevieParameter(Parameter, Value, IPadress, Port) -> await this.setStateAsync(Parameter.statePath + \'.\' + Parameter.id, { val: Value, ack: true }) ERROR: ' + err);
+					}
 				}
 				resolve(response.data);
 			}
