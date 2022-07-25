@@ -5138,12 +5138,14 @@ class wamo extends utils.Adapter {
 				if((JSON.stringify(content)).includes('ERROR')){
 					reject('Error modifiing device parameter: ' + JSON.stringify(content));
 				}
-
+				else
+				{
 				// writing value ACKNOWLAGED back into state
-				try {
-					await this.setStateAsync(Parameter.statePath + '.' + Parameter.id, { val: Value, ack: true });
-				} catch (err) {
-					this.log.error('async set_DevieParameter(Parameter, Value, IPadress, Port) -> await this.setStateAsync(Parameter.statePath + \'.\' + Parameter.id, { val: Value, ack: true }) ERROR: ' + err);
+					try {
+						await this.setStateAsync(Parameter.statePath + '.' + Parameter.id, { val: Value, ack: true });
+					} catch (err) {
+						this.log.error('async set_DevieParameter(Parameter, Value, IPadress, Port) -> await this.setStateAsync(Parameter.statePath + \'.\' + Parameter.id, { val: Value, ack: true }) ERROR: ' + err);
+					}
 				}
 				resolve(response.data);
 			}
