@@ -3346,7 +3346,8 @@ class wamo extends utils.Adapter {
 		if (state) {
 			// The state was changed
 			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-			if((id == DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id) && state.ack == false)
+			this.log.warn('Name: ' + this.name +' Instanz: ' + String(this.instance));
+			if((id == this.name + '.' + String(this.instance) +'.' + DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id) && state.ack == false)
 			{
 				this.log.warn('Screen rotation has changed to ' + String(state.val) + '°');
 				try{
