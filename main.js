@@ -21,8 +21,8 @@ const cron_Month = '0 0 1 * *';
 const cron_Week = '0 0 * * 1';
 const cron_Day = '0 0 * * *';
 
-const Parameter_FACTORY_Mode = 'ADM(2)f';
-const Parameter_SERVICE_Mode = 'ADM(1)';
+const Parameter_FACTORY_Mode = 'ADM/(2)f';
+const Parameter_SERVICE_Mode = 'ADM/(1)';
 const Parameter_Clear_SERVICE_FACTORY_Mode = 'ADM';
 
 // Values for further calculations
