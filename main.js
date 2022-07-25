@@ -5089,7 +5089,7 @@ class wamo extends utils.Adapter {
 
 			let oldParameter = await this.get_DevieParameter(Parameter,IPadress,Port);
 
-			this.log.warn(String(oldParameter));
+			this.log.warn('Parameter old content: ' + String(oldParameter['get' + Parameter.id]));
 
 			// Flag indicating if we had to modifiy Admin Mode
 			let writeModeChanged = false;
