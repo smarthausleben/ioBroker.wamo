@@ -5089,8 +5089,6 @@ class wamo extends utils.Adapter {
 
 			let oldParameter = await this.get_DevieParameter(Parameter,IPadress,Port);
 
-			this.log.warn('Parameter old content: ' + String(oldParameter['get' + Parameter.id]));
-
 			// Flag indicating if we had to modifiy Admin Mode
 			let writeModeChanged = false;
 
@@ -5140,7 +5138,13 @@ class wamo extends utils.Adapter {
 				}
 
 				// did we have a problem?
-				if((JSON.stringify(content)).includes('ERROR')){
+				if ((JSON.stringify(content)).includes('ERROR')) {
+					try {
+						this.log.warn('Restoring old content: ' + String(oldParameter['get' + Parameter.id]));
+						await this.setStateAsync(Parameter.statePath + '.' + Parameter.id, { val: oldParameter, ack: true });
+					} catch (err) {
+						this.log.error('async set_DevieParameter(Parameter, Value, IPadress, Port) -> await this.setStateAsync(Parameter.statePath + \'.\' + Parameter.id, { val: oldParameter, ack: true }); ERROR: ' + err);
+					}
 					reject('Error modifiing device parameter: ' + JSON.stringify(content));
 				}
 				else
