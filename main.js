@@ -3349,7 +3349,7 @@ class wamo extends utils.Adapter {
 					case 8:
 						try {
 							await this.set_DevieParameter(DeviceParameters.SelectedProfile, state.val, this.config.device_ip, this.config.device_port);
-							this.log.info('Selected profile changed to umbeer ' + String(state.val));
+							this.log.info('Selected profile changed to number ' + String(state.val));
 						}
 						catch(err){
 							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.SelectedProfile ... ERROR: ' + err);
@@ -5125,10 +5125,6 @@ class wamo extends utils.Adapter {
 				const content = response.data;
 				this.log.debug(`[setDeviceParameter] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
 
-				if((JSON.stringify(content)).includes('ERROR')){
-					this.log.error('Error modifiing device parameter: ' + JSON.stringify(content));
-					SetError = true;
-				}
 				if (writeModeChanged) {
 					try {
 						await this.clear_SERVICE_FACTORY_Mode();
@@ -5138,14 +5134,16 @@ class wamo extends utils.Adapter {
 					}
 				}
 
+				// did we have a problem?
+				if((JSON.stringify(content)).includes('ERROR')){
+					reject('Error modifiing device parameter: ' + JSON.stringify(content));
+				}
+
 				// writing value ACKNOWLAGED back into state
-				if(!SetError)
-				{
-					try {
-						await this.setStateAsync(Parameter.statePath + '.' + Parameter.id, { val: Value, ack: true });
-					} catch (err) {
-						this.log.error('async set_DevieParameter(Parameter, Value, IPadress, Port) -> await this.setStateAsync(Parameter.statePath + \'.\' + Parameter.id, { val: Value, ack: true }) ERROR: ' + err);
-					}
+				try {
+					await this.setStateAsync(Parameter.statePath + '.' + Parameter.id, { val: Value, ack: true });
+				} catch (err) {
+					this.log.error('async set_DevieParameter(Parameter, Value, IPadress, Port) -> await this.setStateAsync(Parameter.statePath + \'.\' + Parameter.id, { val: Value, ack: true }) ERROR: ' + err);
 				}
 				resolve(response.data);
 			}
