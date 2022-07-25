@@ -5086,9 +5086,14 @@ class wamo extends utils.Adapter {
 	// Return: Readed Value from Device (JSON Format)
 	async set_DevieParameter(Parameter, Value, IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
+
+			let oldParameter = await this.get_DevieParameter(Parameter,IPadress,Port);
+
+			this.log.warn(String(oldParameter));
+
 			// Flag indicating if we had to modifiy Admin Mode
 			let writeModeChanged = false;
-			let SetError = false;
+
 			this.log.debug(`[set_DevieParameter(ParameterID)] ${Parameter.id} Value: ${Value}`);
 
 			// is parameter writable?
