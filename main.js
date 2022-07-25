@@ -3247,7 +3247,7 @@ class wamo extends utils.Adapter {
 		*/
 
 		// In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
-		// this.subscribeStates('info.connection');
+		this.subscribeStates(DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation);
 		// You can also add a subscription for multiple states. The following line watches all states starting with "lights."
 		// this.subscribeStates('lights.*');
 		// Or, if you really must, you can also watch all states. Don't do this if you don't need to. Otherwise this will cause a lot of unnecessary load on the system:
@@ -3346,6 +3346,10 @@ class wamo extends utils.Adapter {
 		if (state) {
 			// The state was changed
 			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+			if(id == DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation)
+			{
+				this.log.warn('Screen rotation has changed');
+			}
 		} else {
 			// The state was deleted
 			this.log.info(`state ${id} deleted`);
