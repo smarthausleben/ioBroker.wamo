@@ -4533,7 +4533,7 @@ class wamo extends utils.Adapter {
 	async set_FACTORY_Mode() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				this.log.warn('async set_FACTORY_Mode() -> url: http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/set/' + Parameter_FACTORY_Mode);
+				this.log.debug('async set_FACTORY_Mode() -> url: http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/set/' + Parameter_FACTORY_Mode);
 
 				axios({
 					method: 'get', url: 'http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/set/' + Parameter_FACTORY_Mode, timeout: 10000, responseType: 'json'
@@ -4570,7 +4570,7 @@ class wamo extends utils.Adapter {
 	async set_SERVICE_Mode() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				this.log.warn('async set_SERVICE_Mode() -> url: http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/set/' + Parameter_SERVICE_Mode);
+				this.log.debug('async set_SERVICE_Mode() -> url: http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/set/' + Parameter_SERVICE_Mode);
 
 				axios({
 					method: 'get', url: 'http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/set/' + Parameter_SERVICE_Mode, timeout: 10000, responseType: 'json'
@@ -4607,7 +4607,7 @@ class wamo extends utils.Adapter {
 	async clear_SERVICE_FACTORY_Mode() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				this.log.warn('async clear_SERVICE_FACTORY_Mode() -> url: http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/clr/' + Parameter_Clear_SERVICE_FACTORY_Mode);
+				this.log.debug('async clear_SERVICE_FACTORY_Mode() -> url: http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/clr/' + Parameter_Clear_SERVICE_FACTORY_Mode);
 				axios({
 					method: 'get', url: 'http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/clr/' + Parameter_Clear_SERVICE_FACTORY_Mode, timeout: 10000, responseType: 'json'
 				}
@@ -5099,6 +5099,12 @@ class wamo extends utils.Adapter {
 					}
 				}
 
+				// writing value ACKNOWLAGED back into state
+				try{
+					await this.setStateAsync(Parameter.statePath + '.' + Parameter.id, { val: Value, ack: true });
+				}catch(err){
+					this.log.error('async set_DevieParameter(Parameter, Value, IPadress, Port) -> await this.setStateAsync(Parameter.statePath + \'.\' + Parameter.id, { val: Value, ack: true }) ERROR: ' + err);
+				}
 				resolve(response.data);
 			}
 			).catch(async (error) => {
