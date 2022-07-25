@@ -20,6 +20,7 @@ The adapter connects to your **SYR SafeTech Connect 2422** or **POLYGONVATRO** l
 
 ## Changelog
 ### developing (----.--.--)
+* (smarthausleben) added State PRF - Selected profiler is now changeable (part of Issue #8)
 * (smarthausleben) change Profile States data type changes - All old Profile state objects need to be deleted first
 * (smarthausleben) added State AB - Shutoff valve is now changeable (part of Issue #8)
 * (smarthausleben) added State SRO - Screen rotation angel is now changeable (part of Issue #8)

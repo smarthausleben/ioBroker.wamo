@@ -5097,7 +5097,7 @@ class wamo extends utils.Adapter {
 				reject('Parameter ID ' + String(Parameter.id) + ' can not be written!');
 			}
 
-			// Do we need special permission to read this parameter?
+			// Do we need special permission to write this parameter?
 			if (Parameter.levelWrite === 'SERVICE') {
 				try{
 					await this.set_SERVICE_Mode();
@@ -5117,6 +5117,7 @@ class wamo extends utils.Adapter {
 				}
 			}
 			this.log.debug('set_DevieParameter -> url: http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/set/' + String(Parameter.id) + '/' + String(Value));
+
 			axios({
 				method: 'get', url: 'http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/set/' + String(Parameter.id) + '/' + String(Value), timeout: 10000, responseType: 'json'
 			}
@@ -5124,6 +5125,9 @@ class wamo extends utils.Adapter {
 				const content = response.data;
 				this.log.debug(`[setDeviceParameter] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
 
+				if((JSON.stringify(content)).includes('ERROR')){
+					this.log.error('Error modifiing device parameter: ' + JSON.stringify(content));
+				}
 				if (writeModeChanged) {
 					try {
 						await this.clear_SERVICE_FACTORY_Mode();
