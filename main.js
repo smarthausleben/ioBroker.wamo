@@ -3342,13 +3342,19 @@ class wamo extends utils.Adapter {
 	 * @param {string} id
 	 * @param {ioBroker.State | null | undefined} state
 	 */
-	onStateChange(id, state) {
+	async onStateChange(id, state) {
 		if (state) {
 			// The state was changed
 			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-			if(id == DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation)
+			if((id == DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id) && state.ack == false)
 			{
-				this.log.warn('Screen rotation has changed');
+				this.log.warn('Screen rotation has changed to ' + String(state.val) + '°');
+				try{
+					await this.set_DevieParameter(DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id, state.val, this.config.device_ip, this.config.device_port);
+				}
+				catch(err){
+					this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.ScreenRotation.statePath ... ERROR: ' + err);
+				}
 			}
 		} else {
 			// The state was deleted
@@ -5007,7 +5013,7 @@ class wamo extends utils.Adapter {
 
 			this.log.debug(`[set_DevieParameter(ParameterID)] ${Parameter.id} Value: ${Value}`);
 
-			// is parameter readable?
+			// is parameter writable?
 			if (Parameter.writeCommand === null) {
 				this.log.warn('[async set_DevieParameter(Parameter, IPadress, Port)] Parameter ID ' + String(Parameter.id) + ' can not be written!');
 				reject('Parameter ID ' + String(Parameter.id) + ' can not be written!');
