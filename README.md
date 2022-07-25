@@ -20,12 +20,14 @@ The adapter connects to your **SYR SafeTech Connect 2422** or **POLYGONVATRO** l
 
 ## Changelog
 ### developing (----.--.--)
-* (smarthausleben) added SRO - Screen rotation angel is changeable
-* (smarthausleben) fixed SERVICE and FACTORY mode failure (Issue #10)
+* (smarthausleben) added State AB - Shutoff valve is now changeable (part of Issue #8)
+* (smarthausleben) added State SRO - Screen rotation angel is now changeable (part of Issue #8)
 * (smarthausleben) added profiles read out at very long timer (Issue #5)
 * (smarthausleben) added very long timer where values from initial start will be updated (Issue #5)
+* (smarthausleben) added German water hardness will be calculated unsing CONEC25 (temperature compensated water conductivity) if conductivity sensor AND temperature sensor is present * (smarthausleben) fixed State NET - needs to be red in SERVICE mode (Issue #11)
+* (smarthausleben) fixed SERVICE and FACTORY mode failure (Issue #10)
 * (smarthausleben) fixed water pressure unit (bar changed to mbar) (Issue #3)
-* (smarthausleben) added German water hardness will be calculated unsing CONEC25 (temperature compensated water conductivity) if conductivity sensor AND temperature sensor is present (Issue #6)
+(Issue #6)
 * (smarthausleben) added calculated state CNDEC25 (temperature compensated water conductivity) (Issue #6)
 
 ### 0.1.5 (2022.07.21)

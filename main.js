@@ -3288,8 +3288,9 @@ class wamo extends utils.Adapter {
 	 */
 	async onStateChange(id, state) {
 		if (state) {
+			const statePrefix = this.name + '.' + String(this.instance) +'.';
 			// The state was changed
-			if((id == this.name + '.' + String(this.instance) +'.' + DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id) && state.ack == false)
+			if((id == statePrefix + DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id) && state.ack == false)
 			{
 				switch (state.val) {
 					case 0:
@@ -3309,7 +3310,7 @@ class wamo extends utils.Adapter {
 						break;
 				}
 			}
-			else if((id == this.name + '.' + String(this.instance) +'.' + DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id) && state.ack == false)
+			else if((id == statePrefix + DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id) && state.ack == false)
 			{
 				switch (state.val) {
 					case 1:
@@ -3318,10 +3319,10 @@ class wamo extends utils.Adapter {
 							await this.set_DevieParameter(DeviceParameters.ShutOff, state.val, this.config.device_ip, this.config.device_port);
 							if(state.val == 1)
 							{
-								this.log.info('Command: [AB] Shutoff OPENED');
+								this.log.info('Command: [AB] Shutoff valve OPENED');
 							}
 							else{
-								this.log.info('Command: [AB] Shutoff CLOSED');
+								this.log.info('Command: [AB] Shutoff valve CLOSED');
 							}
 						}
 						catch(err){
@@ -5169,6 +5170,9 @@ class wamo extends utils.Adapter {
 	}
 	//===================================================
 
+	//===================================================
+	//Profile X AVAILABLE
+	//===================================================
 	async state_profile_PA(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -5196,10 +5200,10 @@ class wamo extends utils.Adapter {
 					native: {}
 				});
 				if (parseFloat(value['getPA' + String(ProfileNumber)]) == 0) {
-					this.setStateAsync(state_ID, { val: false, ack: true });
+					await this.setStateAsync(state_ID, { val: false, ack: true });
 				}
 				else {
-					this.setStateAsync(state_ID, { val: true, ack: true });
+					await this.setStateAsync(state_ID, { val: true, ack: true });
 				}
 				resolve(true);
 			} catch (err) {
@@ -5210,6 +5214,9 @@ class wamo extends utils.Adapter {
 
 	}
 
+	//===================================================
+	//Profile X NAME
+	//===================================================
 	async state_profile_PN(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -5236,7 +5243,9 @@ class wamo extends utils.Adapter {
 					},
 					native: {}
 				});
-				this.setStateAsync(state_ID, { val: value['getPN' + String(ProfileNumber)], ack: true });
+
+				await this.setStateAsync(state_ID, { val: value['getPN' + String(ProfileNumber)], ack: true });
+
 				this.log.info('Profile ' + String(ProfileNumber) + ' Name is ' + value['getPN' + String(ProfileNumber)]);
 				resolve(true);
 			} catch (err) {
@@ -5247,6 +5256,9 @@ class wamo extends utils.Adapter {
 
 	}
 
+	//===================================================
+	//Profile X QUANTITY LIMITATION
+	//===================================================
 	async state_profile_PV(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -5274,7 +5286,7 @@ class wamo extends utils.Adapter {
 					},
 					native: {}
 				});
-				this.setStateAsync(state_ID, { val: parseFloat(value['getPV' + String(ProfileNumber)]), ack: true });
+				await this.setStateAsync(state_ID, { val: parseFloat(value['getPV' + String(ProfileNumber)]), ack: true });
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
@@ -5284,6 +5296,9 @@ class wamo extends utils.Adapter {
 
 	}
 
+	//===================================================
+	//Profile X TIME LIMITATION
+	//===================================================
 	async state_profile_PT(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -5311,7 +5326,7 @@ class wamo extends utils.Adapter {
 					},
 					native: {}
 				});
-				this.setStateAsync(state_ID, { val: parseFloat(value['getPT' + String(ProfileNumber)]), ack: true });
+				await this.setStateAsync(state_ID, { val: parseFloat(value['getPT' + String(ProfileNumber)]), ack: true });
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
@@ -5321,6 +5336,9 @@ class wamo extends utils.Adapter {
 
 	}
 
+	//===================================================
+	//Profile X MAXIMUM FLOW
+	//===================================================
 	async state_profile_PF(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -5348,7 +5366,7 @@ class wamo extends utils.Adapter {
 					},
 					native: {}
 				});
-				this.setStateAsync(state_ID, { val: parseFloat(value['getPF' + String(ProfileNumber)]), ack: true });
+				await this.setStateAsync(state_ID, { val: parseFloat(value['getPF' + String(ProfileNumber)]), ack: true });
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
@@ -5358,6 +5376,9 @@ class wamo extends utils.Adapter {
 
 	}
 
+	//===================================================
+	//Profile X MICROLEAK DETECTION
+	//===================================================
 	async state_profile_PM(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -5377,7 +5398,7 @@ class wamo extends utils.Adapter {
 							'pl': 'Profil ' + String(ProfileNumber) + ' wykrywanie mikroprzecieków',
 							'zh-cn': '轮廓 ' + String(ProfileNumber) + ' 微泄漏检测'
 						},
-						type: 'string',
+						type: 'boolean',
 						role: 'info.status',
 						read: true,
 						write: false
@@ -5385,11 +5406,11 @@ class wamo extends utils.Adapter {
 					native: {}
 				});
 				if (parseFloat(value['getPM' + String(ProfileNumber)]) == 0) {
-					this.setStateAsync(state_ID, { val: 'disabled', ack: true });
+					await this.setStateAsync(state_ID, { val: false, ack: true });
 					this.log.info('Profile ' + String(ProfileNumber) + ' Microleak Detektion is disabled');
 				}
 				else {
-					this.setStateAsync(state_ID, { val: 'enabled', ack: true });
+					await this.setStateAsync(state_ID, { val: true, ack: true });
 					this.log.info('Profile ' + String(ProfileNumber) + ' Microleak Detektion is enabled');
 				}
 				resolve(true);
@@ -5401,6 +5422,9 @@ class wamo extends utils.Adapter {
 
 	}
 
+	//===================================================
+	//Profile [X] RETURNE TIME TO STANDARD PROFILE
+	//===================================================
 	async state_profile_PR(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -5412,7 +5436,7 @@ class wamo extends utils.Adapter {
 							en: 'Profile ' + String(ProfileNumber) + ' Return Time to standard Profile (1...720h (30 Days))',
 							de: 'Profil ' + String(ProfileNumber) + ' Zeit bis zur Rückkehr zum Standardprofil (1...720h (30 Tage))'
 						},
-						type: 'string',
+						type: 'number',
 						role: 'value.info',
 						unit: 'h',
 						read: true,
@@ -5420,7 +5444,7 @@ class wamo extends utils.Adapter {
 					},
 					native: {}
 				});
-				this.setStateAsync(state_ID, { val: value['getPR' + String(ProfileNumber)], ack: true });
+				await this.setStateAsync(state_ID, { val: parseInt(value['getPR' + String(ProfileNumber)]), ack: true });
 				this.log.info('Profile ' + String(ProfileNumber) + ' return time ' + String(value['getPR' + String(ProfileNumber)]));
 				resolve(true);
 			} catch (err) {
@@ -5431,6 +5455,9 @@ class wamo extends utils.Adapter {
 
 	}
 
+	//===================================================
+	//Profile [X] BUZZER
+	//===================================================
 	async state_profile_PB(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -5450,7 +5477,7 @@ class wamo extends utils.Adapter {
 							'pl': 'Profil ' + String(ProfileNumber) + ' Brzęczyk',
 							'zh-cn': '配置文件 ' + String(ProfileNumber) + ' 蜂鸣器'
 						},
-						type: 'string',
+						type: 'boolean',
 						role: 'info.status',
 						read: true,
 						write: false
@@ -5458,11 +5485,11 @@ class wamo extends utils.Adapter {
 					native: {}
 				});
 				if (parseFloat(value['getPB' + String(ProfileNumber)]) == 0) {
-					this.setStateAsync(state_ID, { val: 'disabled', ack: true });
+					await this.setStateAsync(state_ID, { val: false, ack: true });
 					this.log.info('Profile ' + String(ProfileNumber) + ' Busser is disabled');
 				}
 				else {
-					this.setStateAsync(state_ID, { val: 'enabled', ack: true });
+					await this.setStateAsync(state_ID, { val: true, ack: true });
 					this.log.info('Profile ' + String(ProfileNumber) + ' Busser is enabled');
 				}
 				resolve(true);
@@ -5474,6 +5501,9 @@ class wamo extends utils.Adapter {
 
 	}
 
+	//===================================================
+	//Profile [X] LEACKAGE WARNING
+	//===================================================
 	async state_profile_PW(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -5493,7 +5523,7 @@ class wamo extends utils.Adapter {
 							'pl': 'Ostrzeżenie o wycieku profilu ' + String(ProfileNumber),
 							'zh-cn': 'Profile ' + String(ProfileNumber) + ' 泄漏警告'
 						},
-						type: 'string',
+						type: 'boolean',
 						role: 'info.status',
 						read: true,
 						write: false
@@ -5501,11 +5531,11 @@ class wamo extends utils.Adapter {
 					native: {}
 				});
 				if (parseFloat(value['getPW' + String(ProfileNumber)]) == 0) {
-					this.setStateAsync(state_ID, { val: 'disabled', ack: true });
+					await this.setStateAsync(state_ID, { val: false, ack: true });
 					this.log.info('Profile ' + String(ProfileNumber) + ' Leakage Warning disabled');
 				}
 				else {
-					this.setStateAsync(state_ID, { val: 'enabled', ack: true });
+					await this.setStateAsync(state_ID, { val: true, ack: true });
 					this.log.info('Profile ' + String(ProfileNumber) + ' Leakage Warning is enabled');
 				}
 				resolve(true);
