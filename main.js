@@ -3351,7 +3351,7 @@ class wamo extends utils.Adapter {
 			{
 				this.log.warn('Screen rotation has changed to ' + String(state.val) + '°');
 				try{
-					await this.set_DevieParameter(DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id, state.val, this.config.device_ip, this.config.device_port);
+					await this.set_DevieParameter(DeviceParameters.ScreenRotation, state.val, this.config.device_ip, this.config.device_port);
 				}
 				catch(err){
 					this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.ScreenRotation.statePath ... ERROR: ' + err);
