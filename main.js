@@ -3315,17 +3315,26 @@ class wamo extends utils.Adapter {
 	async onStateChange(id, state) {
 		if (state) {
 			// The state was changed
-			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-			this.log.warn('Name: ' + this.name +' Instanz: ' + String(this.instance));
 			if((id == this.name + '.' + String(this.instance) +'.' + DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id) && state.ack == false)
 			{
-				this.log.warn('Screen rotation has changed to ' + String(state.val) + '°');
-				try{
-					await this.set_DevieParameter(DeviceParameters.ScreenRotation, state.val, this.config.device_ip, this.config.device_port);
+				switch (state.val) {
+					case 0:
+					case 90:
+					case 180:
+					case 270:
+						try{
+							await this.set_DevieParameter(DeviceParameters.ScreenRotation, state.val, this.config.device_ip, this.config.device_port);
+							this.log.info('[SRO] Screen rotation changed to ' + String(state.val) + '°');
+						}
+						catch(err){
+							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.ScreenRotation.statePath ... ERROR: ' + err);
+						}
+						break;
+					default:
+						this.log.error('Screen rotation value of ' + String(state.val) + '° is not a valid angle!');
+						break;
 				}
-				catch(err){
-					this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.ScreenRotation.statePath ... ERROR: ' + err);
-				}
+
 			}
 		} else {
 			// The state was deleted
@@ -5082,7 +5091,7 @@ class wamo extends utils.Adapter {
 					this.log.error('async set_DevieParameter(Parameter, Value, IPadress, Port) -> await this.set_FACTORY_Mode() ERROR: ' + err);
 				}
 			}
-			this.log.warn('set_DevieParameter -> url: http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/set/' + String(Parameter.id) + '/' + String(Value));
+			this.log.debug('set_DevieParameter -> url: http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/set/' + String(Parameter.id) + '/' + String(Value));
 			axios({
 				method: 'get', url: 'http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/set/' + String(Parameter.id) + '/' + String(Value), timeout: 10000, responseType: 'json'
 			}
