@@ -4533,6 +4533,8 @@ class wamo extends utils.Adapter {
 	async set_FACTORY_Mode() {
 		return new Promise(async (resolve, reject) => {
 			try {
+				this.log.warn('async set_FACTORY_Mode() -> url: http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/set/' + Parameter_FACTORY_Mode);
+
 				axios({
 					method: 'get', url: 'http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/set/' + Parameter_FACTORY_Mode, timeout: 10000, responseType: 'json'
 				}
@@ -4568,6 +4570,7 @@ class wamo extends utils.Adapter {
 	async set_SERVICE_Mode() {
 		return new Promise(async (resolve, reject) => {
 			try {
+				this.log.warn('async set_SERVICE_Mode() -> url: http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/set/' + Parameter_SERVICE_Mode);
 
 				axios({
 					method: 'get', url: 'http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/set/' + Parameter_SERVICE_Mode, timeout: 10000, responseType: 'json'
@@ -4604,6 +4607,7 @@ class wamo extends utils.Adapter {
 	async clear_SERVICE_FACTORY_Mode() {
 		return new Promise(async (resolve, reject) => {
 			try {
+				this.log.warn('async clear_SERVICE_FACTORY_Mode() -> url: http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/clr/' + Parameter_Clear_SERVICE_FACTORY_Mode);
 				axios({
 					method: 'get', url: 'http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/clr/' + Parameter_Clear_SERVICE_FACTORY_Mode, timeout: 10000, responseType: 'json'
 				}
@@ -4628,7 +4632,7 @@ class wamo extends utils.Adapter {
 					}
 					reject(error);
 				});
-				this.log.debug('FACTORY Mode aktiv');
+				this.log.debug('Cleared SERVICE or FACTORY mode.');
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -5078,7 +5082,7 @@ class wamo extends utils.Adapter {
 					this.log.error('async set_DevieParameter(Parameter, Value, IPadress, Port) -> await this.set_FACTORY_Mode() ERROR: ' + err);
 				}
 			}
-
+			this.log.warn('set_DevieParameter -> url: http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/set/' + String(Parameter.id) + '/' + String(Value));
 			axios({
 				method: 'get', url: 'http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/set/' + String(Parameter.id) + '/' + String(Value), timeout: 10000, responseType: 'json'
 			}
@@ -5111,52 +5115,12 @@ class wamo extends utils.Adapter {
 					// Something happened in setting up the request that triggered an Error
 					this.log.info(error.message);
 				}
-				reject('http error');
+				reject(error);
 			});
 
 		});
 	}
 
-	//===================================================
-	// Pulls the Information from the Device
-	// ParameterID: API command Parameter (last instance of the State path)
-	// IPadress: Device IP Adress
-	// Port: Device Port
-	//===================================================
-	// Return: Readed Value from Device (JSON Format)
-	async clr_DevieParameter(Parameter, IPadress, Port) {
-		return new Promise(async (resolve, reject) => {
-
-			this.log.debug(`[set_DevieParameter(ParameterID)] ${Parameter.id}`);
-
-			axios({
-				method: 'get', url: 'http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/clr/' + String(Parameter.id), timeout: 10000, responseType: 'json'
-			}
-			).then(async (response) => {
-				const content = response.data;
-				this.log.debug(`[setDeviceParameter] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
-
-				resolve(response.data);
-			}
-			).catch(async (error) => {
-				if (error.response) {
-					// The request was made and the server responded with a status code
-
-					this.log.warn(`Warnmeldung`);
-				} else if (error.request) {
-					// The request was made but no response was received
-					// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-					// http.ClientRequest in node.js<div></div>
-					this.log.info(error.message);
-				} else {
-					// Something happened in setting up the request that triggered an Error
-					this.log.info(error.message);
-				}
-				reject('http error');
-			});
-
-		});
-	}
 
 	async get_DevieProfileParameter(Profile, ParameterID, IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
