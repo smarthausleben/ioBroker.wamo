@@ -5603,7 +5603,7 @@ class wamo extends utils.Adapter {
 							let newProfileName = String(state.val);
 							if(newProfileName.length > 31){
 								newProfileName = newProfileName.substring(0,30);
-								this.log.warn('Profile name \'' + String(state.val) + '\' is to long and will be cut to \'' + String(newProfileName) + '\' Mmax. 31 characters allowed!');
+								this.log.warn('Profile 1 name \'' + String(state.val) + '\' is to long and will be cut to \'' + String(newProfileName) + '\' Mmax. 31 characters allowed!');
 							}
 							await this.set_DevieParameter(DeviceParameters.Profile_PN1, newProfileName, this.config.device_ip, this.config.device_port);
 							this.log.info('Profile 1 name changed to \'' + String(newProfileName) + '\'');
@@ -5625,13 +5625,13 @@ class wamo extends utils.Adapter {
 					// Profile available
 					case 'PA3':
 						try {
-							let newProfileName = String(state.val);
-							if(newProfileName.length > 31){
-								newProfileName = newProfileName.substring(0,30);
-								this.log.warn('Profile name \'' + String(state.val) + '\' is to long and will be cut to \'' + String(newProfileName) + '\' Mmax. 31 characters allowed!');
+							let profileOnOff = parseInt(String(state.val));
+							if(profileOnOff > 1){
+								profileOnOff = 1;
+								this.log.warn('Profile 3 available value \'' + String(state.val) + '\' is is not valid! Poril will be set to \'available\'! (1)');
 							}
-							await this.set_DevieParameter(DeviceParameters.Profile_PA3, newProfileName, this.config.device_ip, this.config.device_port);
-							this.log.info('Profile 3 available changed to \'' + String(newProfileName) + '\'');
+							await this.set_DevieParameter(DeviceParameters.Profile_PA3, profileOnOff, this.config.device_ip, this.config.device_port);
+							this.log.info('Profile 3 available changed to \'' + String(profileOnOff) + '\'');
 						}
 						catch (err) {
 							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.Profile_PA3 ... ERROR: ' + err);
@@ -5640,7 +5640,12 @@ class wamo extends utils.Adapter {
 					// Profile Name
 					case 'PN3':
 						try {
-							await this.set_DevieParameter(DeviceParameters.Profile_PN3, state.val, this.config.device_ip, this.config.device_port);
+							let newProfileName = String(state.val);
+							if(newProfileName.length > 31){
+								newProfileName = newProfileName.substring(0,30);
+								this.log.warn('Profile name \'' + String(state.val) + '\' is to long and will be cut to \'' + String(newProfileName) + '\' Mmax. 31 characters allowed!');
+							}
+							await this.set_DevieParameter(DeviceParameters.Profile_PN3, newProfileName, this.config.device_ip, this.config.device_port);
 							this.log.info('Profile 3 name changed to \'' + String(state.val) + '\'');
 						}
 						catch (err) {
@@ -7267,9 +7272,9 @@ class wamo extends utils.Adapter {
 			}
 		});
 	}
-	//#########################################################################
-	// OBSOLETE ?
-	//#########################################################################
+	//=========================================================================
+	// Reads out all Profiles, generates and/ore updates state objects
+	//=========================================================================
 	async UpdateProfileState(ProfileNumber, stateID, value) {
 		return new Promise(async (resolve, reject) => {
 
