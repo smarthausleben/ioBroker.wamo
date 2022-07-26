@@ -7323,7 +7323,7 @@ class wamo extends utils.Adapter {
 	async UpdateProfileState(ProfileNumber, stateID, value) {
 		return new Promise(async (resolve, reject) => {
 
-			this.log.warn('async UpdateProfileState(ProfileNumber, stateID, value) stateID: ' + String(stateID) + ' Profile Nr.: ' + String(ProfileNumber) + ' value: ' + String(value));
+			this.log.warn('async UpdateProfileState(ProfileNumber, stateID, value) stateID: ' + String(stateID) + ' Profile Nr.: ' + String(ProfileNumber) + ' value: ' + JSON.stringify(value));
 			const parameterIDs = stateID.split('.');
 			const parameter = (parameterIDs[parameterIDs.length - 1]).substr(0, parameterIDs[parameterIDs.length - 1].length - 1);
 			this.log.debug('[UpdateProfileState(ProfileNumber, stateID, value)] Profilparameter =' + parameter);
@@ -7585,6 +7585,7 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 
+				this.log.warn('async state_profile_PA(ProfileNumber, value) value: ' + JSON.stringify(value) + ' Profilnummer: ' + String(ProfileNumber));
 				const profileAvailable = parseFloat(String(value['getPA' + String(ProfileNumber)]));
 				this.log.warn('async state_profile_PA(ProfileNumber, value) -> const profileAvailable = parseFloat(String(value[\'getPA\' + String(ProfileNumber)])); = ' + String(profileAvailable));
 
