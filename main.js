@@ -3361,28 +3361,28 @@ class wamo extends utils.Adapter {
 						break;
 				}
 			}
-			else if((id.includes(statePrefix + adapterChannels.DevicePofiles1.path)) && (state.ack == false)){
+			else if((id.includes('Device.Profiles.1')) && (state.ack == false)){
 				this.log.warn('Profile 1 State Change: ' + String(id));
 			}
-			else if((id.includes(statePrefix + adapterChannels.DevicePofiles2.path)) && (state.ack == false)){
+			else if((id.includes('Device.Profiles.2')) && (state.ack == false)){
 				this.log.warn('Profile 2 State Change: ' + String(id));
 			}
-			else if((id.includes(statePrefix + adapterChannels.DevicePofiles3.path)) && (state.ack == false)){
+			else if((id.includes('Device.Profiles.3')) && (state.ack == false)){
 				this.log.warn('Profile 3 State Change: ' + String(id));
 			}
-			else if((id.includes(statePrefix + adapterChannels.DevicePofiles4.path)) && (state.ack == false)){
+			else if((id.includes('Device.Profiles.4')) && (state.ack == false)){
 				this.log.warn('Profile 4 State Change: ' + String(id));
 			}
-			else if((id.includes(statePrefix + adapterChannels.DevicePofiles5.path)) && (state.ack == false)){
+			else if((id.includes('Device.Profiles.5')) && (state.ack == false)){
 				this.log.warn('Profile 5 State Change: ' + String(id));
 			}
-			else if((id.includes(statePrefix + adapterChannels.DevicePofiles6.path)) && (state.ack == false)){
+			else if((id.includes('Device.Profiles.6')) && (state.ack == false)){
 				this.log.warn('Profile 6 State Change: ' + String(id));
 			}
-			else if((id.includes(statePrefix + adapterChannels.DevicePofiles7.path)) && (state.ack == false)){
+			else if((id.includes('Device.Profiles.7')) && (state.ack == false)){
 				this.log.warn('Profile 7 State Change: ' + String(id));
 			}
-			else if((id.includes(statePrefix + adapterChannels.DevicePofiles8.path)) && (state.ack == false)){
+			else if((id.includes('Device.Profiles.8')) && (state.ack == false)){
 				this.log.warn('Profile 8 State Change: ' + String(id));
 			}
 			else{
