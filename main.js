@@ -5524,6 +5524,7 @@ class wamo extends utils.Adapter {
 	 */
 	async onStateChange(id, state) {
 		if (state) {
+			const skipp = true;
 			const statePrefix = this.name + '.' + String(this.instance) +'.';
 			// The state was changed
 			if((id == statePrefix + DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id) && state.ack == false)
@@ -5598,24 +5599,25 @@ class wamo extends utils.Adapter {
 			// Profile 1
 			//============================================================================
 			else if((id.includes('Device.Profiles.1')) && (state.ack == false)){
-				switch(id.substring(id.lastIndexOf('.') + 1))
-				{
-					// Profile Name
-					case 'PN1':
-						try {
-							let newProfileName = String(state.val);
-							if(newProfileName.length > 31){
-								newProfileName = newProfileName.substring(0,30);
-								this.log.warn('Profile 1 name \'' + String(state.val) + '\' is to long and will be cut to \'' + String(newProfileName) + '\' Mmax. 31 characters allowed!');
+				if (!skipp) {
+					switch (id.substring(id.lastIndexOf('.') + 1)) {
+						// Profile Name
+						case 'PN1':
+							try {
+								let newProfileName = String(state.val);
+								if (newProfileName.length > 31) {
+									newProfileName = newProfileName.substring(0, 30);
+									this.log.warn('Profile 1 name \'' + String(state.val) + '\' is to long and will be cut to \'' + String(newProfileName) + '\' Mmax. 31 characters allowed!');
+								}
+								await this.set_DevieParameter(DeviceParameters.Profile_PN1, newProfileName, this.config.device_ip, this.config.device_port);
+								this.log.info('Profile 1 name changed to \'' + String(newProfileName) + '\'');
 							}
-							await this.set_DevieParameter(DeviceParameters.Profile_PN1, newProfileName, this.config.device_ip, this.config.device_port);
-							this.log.info('Profile 1 name changed to \'' + String(newProfileName) + '\'');
-						}
-						catch (err) {
-							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.Profile_PN1 ... ERROR: ' + err);
-						}
-						break;
-					default:
+							catch (err) {
+								this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.Profile_PN1 ... ERROR: ' + err);
+							}
+							break;
+						default:
+					}
 				}
 			}
 			//============================================================================
@@ -5629,60 +5631,60 @@ class wamo extends utils.Adapter {
 			// Profile 3
 			//============================================================================
 			else if((id.includes('Device.Profiles.3')) && (state.ack == false)){
-				switch(id.substring(id.lastIndexOf('.') + 1))
-				{
-					// Profile available
-					case 'PA3':
-						try {
-							const AktiveProfileNumber = await this.getStateAsync(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id);
-							if((AktiveProfileNumber != null) && (parseInt(String(AktiveProfileNumber.val)) == 3) )
-							{
-								this.log.error('You can\'t disable the aktive profile! You ned to aktivate an other profile first!');
-								break;
+				if (!skipp) {
+					switch (id.substring(id.lastIndexOf('.') + 1)) {
+						// Profile available
+						case 'PA3':
+							try {
+								const AktiveProfileNumber = await this.getStateAsync(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id);
+								if ((AktiveProfileNumber != null) && (parseInt(String(AktiveProfileNumber.val)) == 3)) {
+									this.log.error('You can\'t disable the aktive profile! You ned to aktivate an other profile first!');
+									break;
+								}
+								let profileOnOff = parseFloat(String(state.val));
+								if (profileOnOff > 1) {
+									profileOnOff = 1;
+									this.log.warn('Profile 3 available value \'' + String(state.val) + '\' is is not valid! Profile will be set to \'available\'! (1)');
+								}
+								await this.set_DevieParameter(DeviceParameters.Profile_PA3, profileOnOff, this.config.device_ip, this.config.device_port);
+								this.log.info('Profile 3 available changed to \'' + String(profileOnOff) + '\'');
 							}
-							let profileOnOff = parseFloat(String(state.val));
-							if(profileOnOff > 1){
-								profileOnOff = 1;
-								this.log.warn('Profile 3 available value \'' + String(state.val) + '\' is is not valid! Profile will be set to \'available\'! (1)');
+							catch (err) {
+								this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.Profile_PA3 ... ERROR: ' + err);
 							}
-							await this.set_DevieParameter(DeviceParameters.Profile_PA3, profileOnOff, this.config.device_ip, this.config.device_port);
-							this.log.info('Profile 3 available changed to \'' + String(profileOnOff) + '\'');
-						}
-						catch (err) {
-							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.Profile_PA3 ... ERROR: ' + err);
-						}
-						break;
-					// Profile Name
-					case 'PN3':
-						try {
-							let newProfileName = String(state.val);
-							if(newProfileName.length > 31){
-								newProfileName = newProfileName.substring(0,30);
-								this.log.warn('Profile name \'' + String(state.val) + '\' is to long and will be cut to \'' + String(newProfileName) + '\' Mmax. 31 characters allowed!');
+							break;
+						// Profile Name
+						case 'PN3':
+							try {
+								let newProfileName = String(state.val);
+								if (newProfileName.length > 31) {
+									newProfileName = newProfileName.substring(0, 30);
+									this.log.warn('Profile name \'' + String(state.val) + '\' is to long and will be cut to \'' + String(newProfileName) + '\' Mmax. 31 characters allowed!');
+								}
+								await this.set_DevieParameter(DeviceParameters.Profile_PN3, newProfileName, this.config.device_ip, this.config.device_port);
+								this.log.info('Profile 3 name changed to \'' + String(newProfileName) + '\'');
 							}
-							await this.set_DevieParameter(DeviceParameters.Profile_PN3, newProfileName, this.config.device_ip, this.config.device_port);
-							this.log.info('Profile 3 name changed to \'' + String(newProfileName) + '\'');
-						}
-						catch (err) {
-							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.Profile_PN3 ... ERROR: ' + err);
-						}
-						break;
-					// Profile Buzzer
-					case 'PB3':
-						try{
-							let profileBuzzer = parseFloat(String(state.val));
-							if(profileBuzzer > 1){
-								profileBuzzer = 1;
-								this.log.warn('Profile 3 buzzer value \'' + String(state.val) + '\' is is not valid! Buzzer will be set to \'ON\'! (1)');
+							catch (err) {
+								this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.Profile_PN3 ... ERROR: ' + err);
 							}
-							await this.set_DevieParameter(DeviceParameters.Profile_PB3, profileBuzzer, this.config.device_ip, this.config.device_port);
-							this.log.info('Profile 3 buzzer changed to \'' + String(profileBuzzer) + '\'');
-						}
-						catch (err) {
-							this.log.warn('onStateChange(id, state) -> set_DevieParameter(DeviceParameters.Profile_PB3 ... ERROR: ' + err);
-						}
-						break;
-					default:
+							break;
+						// Profile Buzzer
+						case 'PB3':
+							try {
+								let profileBuzzer = parseFloat(String(state.val));
+								if (profileBuzzer > 1) {
+									profileBuzzer = 1;
+									this.log.warn('Profile 3 buzzer value \'' + String(state.val) + '\' is is not valid! Buzzer will be set to \'ON\'! (1)');
+								}
+								await this.set_DevieParameter(DeviceParameters.Profile_PB3, profileBuzzer, this.config.device_ip, this.config.device_port);
+								this.log.info('Profile 3 buzzer changed to \'' + String(profileBuzzer) + '\'');
+							}
+							catch (err) {
+								this.log.warn('onStateChange(id, state) -> set_DevieParameter(DeviceParameters.Profile_PB3 ... ERROR: ' + err);
+							}
+							break;
+						default:
+					}
 				}
 			}
 			//============================================================================
