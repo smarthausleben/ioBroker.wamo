@@ -5595,21 +5595,19 @@ class wamo extends utils.Adapter {
 				}
 			}
 			else if((id.includes('Device.Profiles.1')) && (state.ack == false)){
-				this.log.warn('Profile 1 State Change: ' + String(id));
-				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
 				switch(id.substring(id.lastIndexOf('.') + 1))
 				{
+					// Profile Name
 					case 'PN1':
 						try {
 							await this.set_DevieParameter(DeviceParameters.Profile_PN1, state.val, this.config.device_ip, this.config.device_port);
 							this.log.info('Profile 1 name changed to \'' + String(state.val) + '\'');
 						}
 						catch (err) {
-							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.SelectedProfile ... ERROR: ' + err);
+							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.Profile_PN1 ... ERROR: ' + err);
 						}
 						break;
 					default:
-
 				}
 			}
 			else if((id.includes('Device.Profiles.2')) && (state.ack == false)){
@@ -5617,8 +5615,30 @@ class wamo extends utils.Adapter {
 				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
 			}
 			else if((id.includes('Device.Profiles.3')) && (state.ack == false)){
-				this.log.warn('Profile 3 State Change: ' + String(id));
-				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
+				switch(id.substring(id.lastIndexOf('.') + 1))
+				{
+					// Profile available
+					case 'PA3':
+						try {
+							await this.set_DevieParameter(DeviceParameters.Profile_PA3, state.val, this.config.device_ip, this.config.device_port);
+							this.log.info('Profile 3 available changed to \'' + String(state.val) + '\'');
+						}
+						catch (err) {
+							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.Profile_PA3 ... ERROR: ' + err);
+						}
+						break;
+					// Profile Name
+					case 'PN3':
+						try {
+							await this.set_DevieParameter(DeviceParameters.Profile_PN3, state.val, this.config.device_ip, this.config.device_port);
+							this.log.info('Profile 3 name changed to \'' + String(state.val) + '\'');
+						}
+						catch (err) {
+							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.Profile_PN3 ... ERROR: ' + err);
+						}
+						break;
+					default:
+				}
 			}
 			else if((id.includes('Device.Profiles.4')) && (state.ack == false)){
 				this.log.warn('Profile 4 State Change: ' + String(id));
