@@ -3361,7 +3361,7 @@ class wamo extends utils.Adapter {
 						break;
 				}
 			}
-			else if((id.includes(statePrefix + '.' + adapterChannels.DevicePofile1.path + '.') && (state.ack == false)){
+			else if((id.includes(statePrefix + '.' + adapterChannels.DevicePofile1.path + '.')) && (state.ack == false)){
 				this.log.warn('StateChange: ' + String(id));
 			}
 
