@@ -2924,7 +2924,7 @@ const DeviceParameters = {
 					'pl': 'Profil na stronie 0 = no, 1 = yes',
 					'zh-cn': '简介,0.=无,1='
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
@@ -2955,7 +2955,7 @@ const DeviceParameters = {
 					'pl': 'Profil na stronie 0 = no, 1 = yes',
 					'zh-cn': '简介,0.=无,1='
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
@@ -2986,7 +2986,7 @@ const DeviceParameters = {
 					'pl': 'Profil na stronie 0 = no, 1 = yes',
 					'zh-cn': '简介,0.=无,1='
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
@@ -3017,7 +3017,7 @@ const DeviceParameters = {
 					'pl': 'Profil na stronie 0 = no, 1 = yes',
 					'zh-cn': '简介,0.=无,1='
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
@@ -3048,7 +3048,7 @@ const DeviceParameters = {
 					'pl': 'Profil na stronie 0 = no, 1 = yes',
 					'zh-cn': '简介,0.=无,1='
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
@@ -3079,7 +3079,7 @@ const DeviceParameters = {
 					'pl': 'Profil na stronie 0 = no, 1 = yes',
 					'zh-cn': '简介,0.=无,1='
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
@@ -3110,7 +3110,7 @@ const DeviceParameters = {
 					'pl': 'Profil na stronie 0 = no, 1 = yes',
 					'zh-cn': '简介,0.=无,1='
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
@@ -3141,7 +3141,7 @@ const DeviceParameters = {
 					'pl': 'Profil na stronie 0 = no, 1 = yes',
 					'zh-cn': '简介,0.=无,1='
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
@@ -7523,37 +7523,54 @@ class wamo extends utils.Adapter {
 	async state_profile_PA(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const state_ID = 'Device.Profiles.' + String(ProfileNumber) + '.PA' + String(ProfileNumber);
-				await this.setObjectNotExistsAsync(state_ID, {
-					type: 'state',
-					common: {
-						name: {
-							'en': 'Profile ' + String(ProfileNumber) + ' available',
-							'de': 'Profil ' + String(ProfileNumber) + ' verfügbar',
-							'ru': 'Профиль ' + String(ProfileNumber) + ' доступен',
-							'pt': 'Perfil ' + String(ProfileNumber) + ' disponível',
-							'nl': 'Profiel ' + String(ProfileNumber) + ' beschikbaar',
-							'fr': 'Profil ' + String(ProfileNumber) + ' disponible',
-							'it': 'Profilo ' + String(ProfileNumber) + ' disponibile',
-							'es': 'Perfil ' + String(ProfileNumber) + ' disponible',
-							'pl': 'Profil ' + String(ProfileNumber) + ' dostępny',
-							'zh-cn': '配置文件 ' + String(ProfileNumber) + ' 可用'
-						},
-						type: 'boolean',
-						role: 'indicator.available',
-						read: true,
-						write: false
-					},
-					native: {}
-				});
-				if (parseFloat(value['getPA' + String(ProfileNumber)]) == 0) {
-					await this.setStateAsync(state_ID, { val: false, ack: true });
-					this.log.info('Profile ' + String(ProfileNumber) + ' is not available');
+
+				const profileAvailable = parseFloat(value['getPA' + String(ProfileNumber)]);
+
+				switch (ProfileNumber) {
+					case 1:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA1.statePath + '.' + DeviceParameters.Profile_PA1.id, Object(DeviceParameters.Profile_PA1.objectdefinition));
+						if (profileAvailable == 0) {await this.setStateAsync(DeviceParameters.Profile_PA1.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: false, ack: true });}
+						else {await this.setStateAsync(DeviceParameters.Profile_PA1.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: true, ack: true });}
+						break;
+					case 2:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA2.statePath + '.' + DeviceParameters.Profile_PA2.id, Object(DeviceParameters.Profile_PA2.objectdefinition));
+						if (profileAvailable == 0) {await this.setStateAsync(DeviceParameters.Profile_PA2.statePath + '.' + DeviceParameters.Profile_PA2.id, { val: false, ack: true });}
+						else {await this.setStateAsync(DeviceParameters.Profile_PA2.statePath + '.' + DeviceParameters.Profile_PA2.id, { val: true, ack: true });}
+						break;
+					case 3:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA3.statePath + '.' + DeviceParameters.Profile_PA3.id, Object(DeviceParameters.Profile_PA3.objectdefinition));
+						if (profileAvailable == 0) { await this.setStateAsync(DeviceParameters.Profile_PA3.statePath + '.' + DeviceParameters.Profile_PA3.id, { val: false, ack: true }); }
+						else { await this.setStateAsync(DeviceParameters.Profile_PA3.statePath + '.' + DeviceParameters.Profile_PA3.id, { val: true, ack: true }); }
+						break;
+					case 4:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA4.statePath + '.' + DeviceParameters.Profile_PA4.id, Object(DeviceParameters.Profile_PA4.objectdefinition));
+						if (profileAvailable == 0) { await this.setStateAsync(DeviceParameters.Profile_PA4.statePath + '.' + DeviceParameters.Profile_PA4.id, { val: false, ack: true }); }
+						else { await this.setStateAsync(DeviceParameters.Profile_PA4.statePath + '.' + DeviceParameters.Profile_PA4.id, { val: true, ack: true }); }
+						break;
+					case 5:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA5.statePath + '.' + DeviceParameters.Profile_PA5.id, Object(DeviceParameters.Profile_PA5.objectdefinition));
+						if (profileAvailable == 0) { await this.setStateAsync(DeviceParameters.Profile_PA5.statePath + '.' + DeviceParameters.Profile_PA5.id, { val: false, ack: true }); }
+						else { await this.setStateAsync(DeviceParameters.Profile_PA5.statePath + '.' + DeviceParameters.Profile_PA5.id, { val: true, ack: true }); }
+						break;
+					case 6:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA6.statePath + '.' + DeviceParameters.Profile_PA6.id, Object(DeviceParameters.Profile_PA6.objectdefinition));
+						if (profileAvailable == 0) { await this.setStateAsync(DeviceParameters.Profile_PA6.statePath + '.' + DeviceParameters.Profile_PA6.id, { val: false, ack: true }); }
+						else { await this.setStateAsync(DeviceParameters.Profile_PA6.statePath + '.' + DeviceParameters.Profile_PA6.id, { val: true, ack: true }); }
+						break;
+					case 7:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA7.statePath + '.' + DeviceParameters.Profile_PA7.id, Object(DeviceParameters.Profile_PA7.objectdefinition));
+						if (profileAvailable == 0) { await this.setStateAsync(DeviceParameters.Profile_PA7.statePath + '.' + DeviceParameters.Profile_PA7.id, { val: false, ack: true }); }
+						else { await this.setStateAsync(DeviceParameters.Profile_PA7.statePath + '.' + DeviceParameters.Profile_PA7.id, { val: true, ack: true }); }
+						break;
+					case 8:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA8.statePath + '.' + DeviceParameters.Profile_PA8.id, Object(DeviceParameters.Profile_PA8.objectdefinition));
+						if (profileAvailable == 0) { await this.setStateAsync(DeviceParameters.Profile_PA8.statePath + '.' + DeviceParameters.Profile_PA8.id, { val: false, ack: true }); }
+						else { await this.setStateAsync(DeviceParameters.Profile_PA8.statePath + '.' + DeviceParameters.Profile_PA8.id, { val: true, ack: true }); }
+						break;
 				}
-				else {
-					this.log.info('Profile ' + String(ProfileNumber) + ' is available');
-					await this.setStateAsync(state_ID, { val: true, ack: true });
-				}
+
+				if(profileAvailable){this.log.info('Profile ' + String(ProfileNumber) + ' is available');}
+				else{this.log.info('Profile ' + String(ProfileNumber) + ' is not available');}
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
