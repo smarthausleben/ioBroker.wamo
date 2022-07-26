@@ -5594,6 +5594,19 @@ class wamo extends utils.Adapter {
 						break;
 				}
 			}
+			else if((id == statePrefix + DeviceParameters.AvailableProfiles.statePath + '.' + DeviceParameters.AvailableProfiles.id) && state.ack == false)
+			{
+				if((state.val != null) && (parseInt(String(state.val)) > 1)&& (parseInt(String(state.val)) <= 8))
+				{
+					try {
+						await this.set_DevieParameter(DeviceParameters.AvailableProfiles, state.val, this.config.device_ip, this.config.device_port);
+						this.log.info('Available profiles changed to ' + String(state.val));
+					}
+					catch (err) {
+						this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.AvailableProfiles ... ERROR: ' + err);
+					}
+				}
+			}
 			else if((id.includes('Device.Profiles.1')) && (state.ack == false)){
 				switch(id.substring(id.lastIndexOf('.') + 1))
 				{
@@ -5661,7 +5674,7 @@ class wamo extends utils.Adapter {
 				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
 			}
 			else{
-				this.log.warn('StateChange: ' + String(id) + ' Value: ' + String(state.val) + ' acknowledged: ' + String(state.ack));
+				this.log.debug('StateChange: ' + String(id) + ' Value: ' + String(state.val) + ' acknowledged: ' + String(state.ack));
 			}
 
 		} else {
