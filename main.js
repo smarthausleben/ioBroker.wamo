@@ -3291,6 +3291,7 @@ class wamo extends utils.Adapter {
 	 */
 	async onStateChange(id, state) {
 		if (state) {
+			this.log.warn('StateChange: ' + String(id));
 			const statePrefix = this.name + '.' + String(this.instance) +'.';
 			// The state was changed
 			if((id == statePrefix + DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id) && state.ack == false)
