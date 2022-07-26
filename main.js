@@ -5600,8 +5600,13 @@ class wamo extends utils.Adapter {
 					// Profile Name
 					case 'PN1':
 						try {
-							await this.set_DevieParameter(DeviceParameters.Profile_PN1, state.val, this.config.device_ip, this.config.device_port);
-							this.log.info('Profile 1 name changed to \'' + String(state.val) + '\'');
+							let newProfileName = String(state.val);
+							if(newProfileName.length > 31){
+								newProfileName = newProfileName.substring(0,30);
+								this.log.warn('Profile name \'' + String(state.val) + '\' is to long and will be cut to \'' + String(newProfileName) + '\' Mmax. 31 characters allowed!');
+							}
+							await this.set_DevieParameter(DeviceParameters.Profile_PN1, newProfileName, this.config.device_ip, this.config.device_port);
+							this.log.info('Profile 1 name changed to \'' + String(newProfileName) + '\'');
 						}
 						catch (err) {
 							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.Profile_PN1 ... ERROR: ' + err);
@@ -5620,8 +5625,13 @@ class wamo extends utils.Adapter {
 					// Profile available
 					case 'PA3':
 						try {
-							await this.set_DevieParameter(DeviceParameters.Profile_PA3, state.val, this.config.device_ip, this.config.device_port);
-							this.log.info('Profile 3 available changed to \'' + String(state.val) + '\'');
+							let newProfileName = String(state.val);
+							if(newProfileName.length > 31){
+								newProfileName = newProfileName.substring(0,30);
+								this.log.warn('Profile name \'' + String(state.val) + '\' is to long and will be cut to \'' + String(newProfileName) + '\' Mmax. 31 characters allowed!');
+							}
+							await this.set_DevieParameter(DeviceParameters.Profile_PA3, newProfileName, this.config.device_ip, this.config.device_port);
+							this.log.info('Profile 3 available changed to \'' + String(newProfileName) + '\'');
 						}
 						catch (err) {
 							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.Profile_PA3 ... ERROR: ' + err);
@@ -7578,33 +7588,45 @@ class wamo extends utils.Adapter {
 	async state_profile_PN(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const state_ID = 'Device.Profiles.' + String(ProfileNumber) + '.PN' + String(ProfileNumber);
-				await this.setObjectNotExistsAsync(state_ID, {
-					type: 'state',
-					common: {
-						name: {
-							'en': 'Profile ' + String(ProfileNumber) + ' name',
-							'de': 'Profil ' + String(ProfileNumber) + ' Name',
-							'ru': 'Имя профиля ' + String(ProfileNumber) + '',
-							'pt': 'Nome do perfil ' + String(ProfileNumber) + '',
-							'nl': 'Profiel ' + String(ProfileNumber) + ' naam',
-							'fr': 'Nom du profil ' + String(ProfileNumber) + '',
-							'it': 'Nome del profilo ' + String(ProfileNumber) + '',
-							'es': 'Perfil ' + String(ProfileNumber) + ' nombre',
-							'pl': 'Nazwa profilu ' + String(ProfileNumber) + '',
-							'zh-cn': '配置文件 ' + String(ProfileNumber) + ' 名称'
-						},
-						type: 'string',
-						role: 'info.name',
-						read: true,
-						write: false
-					},
-					native: {}
-				});
+				const profileName = String(value['getPN' + String(ProfileNumber)]);
 
-				await this.setStateAsync(state_ID, { val: value['getPN' + String(ProfileNumber)], ack: true });
 
-				this.log.info('Profile ' + String(ProfileNumber) + ' Name is ' + value['getPN' + String(ProfileNumber)]);
+				switch (ProfileNumber) {
+					case 1:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PN1.statePath + '.' + DeviceParameters.Profile_PN1.id, Object(DeviceParameters.Profile_PN1.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PN1.statePath + '.' + DeviceParameters.Profile_PN1.id, { val: profileName, ack: true });
+						break;
+					case 2:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PN2.statePath + '.' + DeviceParameters.Profile_PN2.id, Object(DeviceParameters.Profile_PN2.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PN2.statePath + '.' + DeviceParameters.Profile_PN2.id, { val: profileName, ack: true });
+						break;
+					case 3:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PN3.statePath + '.' + DeviceParameters.Profile_PN3.id, Object(DeviceParameters.Profile_PN3.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PN3.statePath + '.' + DeviceParameters.Profile_PN3.id, { val: profileName, ack: true });
+						break;
+					case 4:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PN4.statePath + '.' + DeviceParameters.Profile_PN4.id, Object(DeviceParameters.Profile_PN4.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PN4.statePath + '.' + DeviceParameters.Profile_PN4.id, { val: profileName, ack: true });
+						break;
+					case 5:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PN5.statePath + '.' + DeviceParameters.Profile_PN5.id, Object(DeviceParameters.Profile_PN5.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PN5.statePath + '.' + DeviceParameters.Profile_PN5.id, { val: profileName, ack: true });
+						break;
+					case 6:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PN6.statePath + '.' + DeviceParameters.Profile_PN6.id, Object(DeviceParameters.Profile_PN6.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PN6.statePath + '.' + DeviceParameters.Profile_PN6.id, { val: profileName, ack: true });
+						break;
+					case 7:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PN7.statePath + '.' + DeviceParameters.Profile_PN7.id, Object(DeviceParameters.Profile_PN7.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PN7.statePath + '.' + DeviceParameters.Profile_PN7.id, { val: profileName, ack: true });
+						break;
+					case 8:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PN8.statePath + '.' + DeviceParameters.Profile_PN8.id, Object(DeviceParameters.Profile_PN8.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PN8.statePath + '.' + DeviceParameters.Profile_PN8.id, { val: profileName, ack: true });
+						break;
+				}
+
+				this.log.info('Profile ' + String(ProfileNumber) + ' name is ' + profileName);
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
