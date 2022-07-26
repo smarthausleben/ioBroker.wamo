@@ -5594,6 +5594,9 @@ class wamo extends utils.Adapter {
 						break;
 				}
 			}
+			//============================================================================
+			// Profile 1
+			//============================================================================
 			else if((id.includes('Device.Profiles.1')) && (state.ack == false)){
 				switch(id.substring(id.lastIndexOf('.') + 1))
 				{
@@ -5615,20 +5618,32 @@ class wamo extends utils.Adapter {
 					default:
 				}
 			}
+			//============================================================================
+			// Profile 2
+			//============================================================================
 			else if((id.includes('Device.Profiles.2')) && (state.ack == false)){
 				this.log.warn('Profile 2 State Change: ' + String(id));
 				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
 			}
+			//============================================================================
+			// Profile 3
+			//============================================================================
 			else if((id.includes('Device.Profiles.3')) && (state.ack == false)){
 				switch(id.substring(id.lastIndexOf('.') + 1))
 				{
 					// Profile available
 					case 'PA3':
 						try {
+							const AktiveProfileNumber = await this.getStateAsync(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id);
+							if((AktiveProfileNumber != null) && (parseInt(String(AktiveProfileNumber.val)) == 3) )
+							{
+								this.log.error('You can\'t disable the aktive profile! You ned to aktivate an other profile first!');
+								break;
+							}
 							let profileOnOff = parseInt(String(state.val));
 							if(profileOnOff > 1){
 								profileOnOff = 1;
-								this.log.warn('Profile 3 available value \'' + String(state.val) + '\' is is not valid! Poril will be set to \'available\'! (1)');
+								this.log.warn('Profile 3 available value \'' + String(state.val) + '\' is is not valid! Profile will be set to \'available\'! (1)');
 							}
 							await this.set_DevieParameter(DeviceParameters.Profile_PA3, profileOnOff, this.config.device_ip, this.config.device_port);
 							this.log.info('Profile 3 available changed to \'' + String(profileOnOff) + '\'');
@@ -5646,31 +5661,61 @@ class wamo extends utils.Adapter {
 								this.log.warn('Profile name \'' + String(state.val) + '\' is to long and will be cut to \'' + String(newProfileName) + '\' Mmax. 31 characters allowed!');
 							}
 							await this.set_DevieParameter(DeviceParameters.Profile_PN3, newProfileName, this.config.device_ip, this.config.device_port);
-							this.log.info('Profile 3 name changed to \'' + String(state.val) + '\'');
+							this.log.info('Profile 3 name changed to \'' + String(newProfileName) + '\'');
 						}
 						catch (err) {
 							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.Profile_PN3 ... ERROR: ' + err);
 						}
 						break;
+					// Profile Buzzer
+					case 'PB3':
+						try{
+							let profileBuzzer = parseInt(String(state.val));
+							if(profileBuzzer > 1){
+								profileBuzzer = 1;
+								this.log.warn('Profile 3 buzzer value \'' + String(state.val) + '\' is is not valid! Buzzer will be set to \'ON\'! (1)');
+							}
+							await this.set_DevieParameter(DeviceParameters.Profile_PB3, profileBuzzer, this.config.device_ip, this.config.device_port);
+							this.log.info('Profile 3 buzzer changed to \'' + String(profileBuzzer) + '\'');
+						}
+						catch (err) {
+							this.log.warn('onStateChange(id, state) -> set_DevieParameter(DeviceParameters.Profile_PB3 ... ERROR: ' + err);
+						}
+						break;
 					default:
 				}
 			}
+			//============================================================================
+			// Profile 4
+			//============================================================================
 			else if((id.includes('Device.Profiles.4')) && (state.ack == false)){
 				this.log.warn('Profile 4 State Change: ' + String(id));
 				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
 			}
+			//============================================================================
+			// Profile 5
+			//============================================================================
 			else if((id.includes('Device.Profiles.5')) && (state.ack == false)){
 				this.log.warn('Profile 5 State Change: ' + String(id));
 				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
 			}
+			//============================================================================
+			// Profile 6
+			//============================================================================
 			else if((id.includes('Device.Profiles.6')) && (state.ack == false)){
 				this.log.warn('Profile 6 State Change: ' + String(id));
 				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
 			}
+			//============================================================================
+			// Profile 7
+			//============================================================================
 			else if((id.includes('Device.Profiles.7')) && (state.ack == false)){
 				this.log.warn('Profile 7 State Change: ' + String(id));
 				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
 			}
+			//============================================================================
+			// Profile 8
+			//============================================================================
 			else if((id.includes('Device.Profiles.8')) && (state.ack == false)){
 				this.log.warn('Profile 8 State Change: ' + String(id));
 				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
@@ -7539,7 +7584,7 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 
-				const profileAvailable = parseFloat(value['getPA' + String(ProfileNumber)]);
+				const profileAvailable = parseInt(value['getPA' + String(ProfileNumber)]);
 
 				switch (ProfileNumber) {
 					case 1:
@@ -7595,7 +7640,6 @@ class wamo extends utils.Adapter {
 			try {
 				const profileName = String(value['getPN' + String(ProfileNumber)]);
 
-
 				switch (ProfileNumber) {
 					case 1:
 						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PN1.statePath + '.' + DeviceParameters.Profile_PN1.id, Object(DeviceParameters.Profile_PN1.objectdefinition));
@@ -7647,32 +7691,45 @@ class wamo extends utils.Adapter {
 	async state_profile_PV(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const state_ID = 'Device.Profiles.' + String(ProfileNumber) + '.PV' + String(ProfileNumber);
-				await this.setObjectNotExistsAsync(state_ID, {
-					type: 'state',
-					common: {
-						name: {
-							'en': 'Profile ' + String(ProfileNumber) + ' quantity limitation (0 = disabled 1...1900l)',
-							'de': 'Profil ' + String(ProfileNumber) + ' Mengenbegrenzung (0 = deaktiviert 1...1900l)',
-							'ru': 'Ограничение количества профиля ' + String(ProfileNumber) + ' (0 = отключено 1...1900l)',
-							'pt': 'Limitação de quantidade do perfil ' + String(ProfileNumber) + ' (0 = desabilitado 1...1900l)',
-							'nl': 'Profiel ' + String(ProfileNumber) + ' hoeveelheidsbeperking (0 = uitgeschakeld 1...1900l)',
-							'fr': 'Limitation de quantité profil ' + String(ProfileNumber) + ' (0 = désactivé 1...1900l)',
-							'it': 'Limitazione quantità profilo ' + String(ProfileNumber) + ' (0 = disabilitato 1...1900l)',
-							'es': 'Limitación de cantidad perfil ' + String(ProfileNumber) + ' (0 = deshabilitado 1...1900l)',
-							'pl': 'Ograniczenie ilości profilu ' + String(ProfileNumber) + ' (0 = wyłączone 1...1900l)',
-							'zh-cn': '配置文件 ' + String(ProfileNumber) + ' 数量限制（0 = 禁用 1...1900l）'
-						},
-						type: 'number',
-						role: 'value.info',
-						unit: 'l',
-						read: true,
-						write: false
-					},
-					native: {}
-				});
-				await this.setStateAsync(state_ID, { val: parseFloat(value['getPV' + String(ProfileNumber)]), ack: true });
-				this.log.info('Profile ' + String(ProfileNumber) + ' quantity limitation is ' + String(value['getPV' + String(ProfileNumber)]));
+
+				const profileQuantityLimitation = parseInt(String(value['getPV' + String(ProfileNumber)]));
+
+				switch (ProfileNumber) {
+					case 1:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PV1.statePath + '.' + DeviceParameters.Profile_PV1.id, Object(DeviceParameters.Profile_PV1.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PV1.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: profileQuantityLimitation, ack: true });
+						break;
+					case 2:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PV2.statePath + '.' + DeviceParameters.Profile_PV2.id, Object(DeviceParameters.Profile_PV2.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PV2.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: profileQuantityLimitation, ack: true });
+						break;
+					case 3:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PV3.statePath + '.' + DeviceParameters.Profile_PV3.id, Object(DeviceParameters.Profile_PV3.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PV3.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: profileQuantityLimitation, ack: true });
+						break;
+					case 4:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PV4.statePath + '.' + DeviceParameters.Profile_PV4.id, Object(DeviceParameters.Profile_PV4.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PV4.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: profileQuantityLimitation, ack: true });
+						break;
+					case 5:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PV5.statePath + '.' + DeviceParameters.Profile_PV5.id, Object(DeviceParameters.Profile_PV5.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PV5.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: profileQuantityLimitation, ack: true });
+						break;
+					case 6:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PV6.statePath + '.' + DeviceParameters.Profile_PV6.id, Object(DeviceParameters.Profile_PV6.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PV6.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: profileQuantityLimitation, ack: true });
+						break;
+					case 7:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PV7.statePath + '.' + DeviceParameters.Profile_PV7.id, Object(DeviceParameters.Profile_PV7.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PV7.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: profileQuantityLimitation, ack: true });
+						break;
+					case 8:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PV8.statePath + '.' + DeviceParameters.Profile_PV8.id, Object(DeviceParameters.Profile_PV8.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PV8.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: profileQuantityLimitation, ack: true });
+						break;
+				}
+
+				this.log.info('Profile ' + String(ProfileNumber) + ' quantity limitation is ' + String(profileQuantityLimitation) + 'l');
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
@@ -7849,37 +7906,45 @@ class wamo extends utils.Adapter {
 	async state_profile_PB(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const state_ID = 'Device.Profiles.' + String(ProfileNumber) + '.PB' + String(ProfileNumber);
-				await this.setObjectNotExistsAsync(state_ID, {
-					type: 'state',
-					common: {
-						name: {
-							'en': 'Profile ' + String(ProfileNumber) + ' Buzzer',
-							'de': 'Profil ' + String(ProfileNumber) + ' Summer',
-							'ru': 'Профиль ' + String(ProfileNumber) + ' Зуммер',
-							'pt': 'Campainha do Perfil ' + String(ProfileNumber),
-							'nl': 'Profiel ' + String(ProfileNumber) + ' zoemer',
-							'fr': 'Profil ' + String(ProfileNumber) + ' Buzzer',
-							'it': 'Cicalino di profilo ' + String(ProfileNumber),
-							'es': 'Perfil ' + String(ProfileNumber) + ' Zumbador',
-							'pl': 'Profil ' + String(ProfileNumber) + ' Brzęczyk',
-							'zh-cn': '配置文件 ' + String(ProfileNumber) + ' 蜂鸣器'
-						},
-						type: 'boolean',
-						role: 'info.status',
-						read: true,
-						write: false
-					},
-					native: {}
-				});
-				if (parseFloat(value['getPB' + String(ProfileNumber)]) == 0) {
-					await this.setStateAsync(state_ID, { val: false, ack: true });
-					this.log.info('Profile ' + String(ProfileNumber) + ' Busser is disabled');
+
+				const profileBuzzer = parseInt(value['getPB' + String(ProfileNumber)]);
+
+				switch (ProfileNumber) {
+					case 1:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PB1.statePath + '.' + DeviceParameters.Profile_PB1.id, Object(DeviceParameters.Profile_PB1.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PB1.statePath + '.' + DeviceParameters.Profile_PB1.id, { val: profileBuzzer, ack: true });
+						break;
+					case 2:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PB2.statePath + '.' + DeviceParameters.Profile_PB2.id, Object(DeviceParameters.Profile_PB2.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PB2.statePath + '.' + DeviceParameters.Profile_PB2.id, { val: profileBuzzer, ack: true });
+						break;
+					case 3:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PB3.statePath + '.' + DeviceParameters.Profile_PB3.id, Object(DeviceParameters.Profile_PB3.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PB3.statePath + '.' + DeviceParameters.Profile_PB3.id, { val: profileBuzzer, ack: true });
+						break;
+					case 4:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PB4.statePath + '.' + DeviceParameters.Profile_PB4.id, Object(DeviceParameters.Profile_PB4.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PB4.statePath + '.' + DeviceParameters.Profile_PB4.id, { val: profileBuzzer, ack: true });
+						break;
+					case 5:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PB5.statePath + '.' + DeviceParameters.Profile_PB5.id, Object(DeviceParameters.Profile_PB5.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PB5.statePath + '.' + DeviceParameters.Profile_PB5.id, { val: profileBuzzer, ack: true });
+						break;
+					case 6:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PB6.statePath + '.' + DeviceParameters.Profile_PB6.id, Object(DeviceParameters.Profile_PB6.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PB6.statePath + '.' + DeviceParameters.Profile_PB6.id, { val: profileBuzzer, ack: true });
+						break;
+					case 7:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PB7.statePath + '.' + DeviceParameters.Profile_PB7.id, Object(DeviceParameters.Profile_PB7.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PB7.statePath + '.' + DeviceParameters.Profile_PB7.id, { val: profileBuzzer, ack: true });
+						break;
+					case 8:
+						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PB8.statePath + '.' + DeviceParameters.Profile_PB8.id, Object(DeviceParameters.Profile_PB8.objectdefinition));
+						await this.setStateAsync(DeviceParameters.Profile_PB8.statePath + '.' + DeviceParameters.Profile_PB8.id, { val: profileBuzzer, ack: true });
+						break;
 				}
-				else {
-					await this.setStateAsync(state_ID, { val: true, ack: true });
-					this.log.info('Profile ' + String(ProfileNumber) + ' Busser is enabled');
-				}
+				if(profileBuzzer == 1){this.log.info('Profile ' + String(ProfileNumber) + ' buzzer is on');}
+				else{this.log.info('Profile ' + String(ProfileNumber) + ' buzzer is not on');}
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
