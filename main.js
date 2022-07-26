@@ -7323,6 +7323,7 @@ class wamo extends utils.Adapter {
 	async UpdateProfileState(ProfileNumber, stateID, value) {
 		return new Promise(async (resolve, reject) => {
 
+			this.log.warn('async UpdateProfileState(ProfileNumber, stateID, value) stateID: ' + String(stateID) + ' Profile Nr.: ' + String(ProfileNumber) + ' value: ' + String(value));
 			const parameterIDs = stateID.split('.');
 			const parameter = (parameterIDs[parameterIDs.length - 1]).substr(0, parameterIDs[parameterIDs.length - 1].length - 1);
 			this.log.debug('[UpdateProfileState(ProfileNumber, stateID, value)] Profilparameter =' + parameter);
