@@ -7585,6 +7585,7 @@ class wamo extends utils.Adapter {
 			try {
 
 				const profileAvailable = parseFloat(String(value['getPA' + String(ProfileNumber)]));
+				this.log.warn('async state_profile_PA(ProfileNumber, value) -> const profileAvailable = parseFloat(String(value[\'getPA\' + String(ProfileNumber)])); = ' + String(profileAvailable));
 
 				switch (ProfileNumber) {
 					case 1:
@@ -7625,7 +7626,7 @@ class wamo extends utils.Adapter {
 				else{this.log.info('Profile ' + String(ProfileNumber) + ' is not available');}
 				resolve(true);
 			} catch (err) {
-				this.log.error(err.message);
+				this.log.error('async state_profile_PA(ProfileNumber, value) ERROR: '+ err);
 				reject(err);
 			}
 		});
@@ -7693,6 +7694,7 @@ class wamo extends utils.Adapter {
 			try {
 
 				const profileQuantityLimitation = parseInt(String(value['getPV' + String(ProfileNumber)]));
+				this.log.warn('async state_profile_PV(ProfileNumber, value) -> const profileAvailable = const profileQuantityLimitation = parseInt(String(value[\'getPV\' + String(ProfileNumber)])) = ' + String(profileQuantityLimitation));
 
 				switch (ProfileNumber) {
 					case 1:
@@ -7732,7 +7734,7 @@ class wamo extends utils.Adapter {
 				this.log.info('Profile ' + String(ProfileNumber) + ' quantity limitation is ' + String(profileQuantityLimitation) + 'l');
 				resolve(true);
 			} catch (err) {
-				this.log.error(err.message);
+				this.log.error('async state_profile_PV(ProfileNumber, value) ERROR: ' + err);
 				reject(err);
 			}
 		});
