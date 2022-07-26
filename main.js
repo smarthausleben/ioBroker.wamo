@@ -3194,6 +3194,7 @@ class wamo extends utils.Adapter {
 		this.subscribeStates(DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id);
 		this.subscribeStates(DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id);
 		this.subscribeStates(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id);
+		this.subscribeStates(adapterChannels.DevicePofiles.path + '.*');
 		// You can also add a subscription for multiple states. The following line watches all states starting with "lights."
 		// this.subscribeStates('lights.*');
 		// Or, if you really must, you can also watch all states. Don't do this if you don't need to. Otherwise this will cause a lot of unnecessary load on the system:
@@ -3359,6 +3360,9 @@ class wamo extends utils.Adapter {
 						this.log.error(String(state.val) + ' is not valid for ' + String(DeviceParameters.SelectedProfile.id + ' Valid values: 1...8'));
 						break;
 				}
+			}
+			else if((id.includes(statePrefix + '.' + adapterChannels.DevicePofile1.path + '.') && (state.ack == false)){
+				this.log.warn('StateChange: ' + String(id));
 			}
 
 		} else {
