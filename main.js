@@ -5640,7 +5640,7 @@ class wamo extends utils.Adapter {
 								this.log.error('You can\'t disable the aktive profile! You ned to aktivate an other profile first!');
 								break;
 							}
-							let profileOnOff = parseInt(String(state.val));
+							let profileOnOff = parseFloat(String(state.val));
 							if(profileOnOff > 1){
 								profileOnOff = 1;
 								this.log.warn('Profile 3 available value \'' + String(state.val) + '\' is is not valid! Profile will be set to \'available\'! (1)');
@@ -7584,7 +7584,7 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 
-				const profileAvailable = parseInt(value['getPA' + String(ProfileNumber)]);
+				const profileAvailable = parseInt(String(value['getPA' + String(ProfileNumber)]));
 
 				switch (ProfileNumber) {
 					case 1:
@@ -7907,7 +7907,7 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 
-				const profileBuzzer = parseInt(value['getPB' + String(ProfileNumber)]);
+				const profileBuzzer = parseInt(String(value['getPB' + String(ProfileNumber)]));
 
 				switch (ProfileNumber) {
 					case 1:
