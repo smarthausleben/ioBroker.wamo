@@ -5670,7 +5670,7 @@ class wamo extends utils.Adapter {
 					// Profile Buzzer
 					case 'PB3':
 						try{
-							let profileBuzzer = parseInt(String(state.val));
+							let profileBuzzer = parseFloat(String(state.val));
 							if(profileBuzzer > 1){
 								profileBuzzer = 1;
 								this.log.warn('Profile 3 buzzer value \'' + String(state.val) + '\' is is not valid! Buzzer will be set to \'ON\'! (1)');
@@ -7584,7 +7584,7 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 
-				const profileAvailable = parseInt(String(value['getPA' + String(ProfileNumber)]));
+				const profileAvailable = parseFloat(String(value['getPA' + String(ProfileNumber)]));
 
 				switch (ProfileNumber) {
 					case 1:
@@ -7907,7 +7907,7 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 
-				const profileBuzzer = parseInt(String(value['getPB' + String(ProfileNumber)]));
+				const profileBuzzer = parseFloat(String(value['getPB' + String(ProfileNumber)]));
 
 				switch (ProfileNumber) {
 					case 1:
