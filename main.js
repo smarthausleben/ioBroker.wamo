@@ -1442,68 +1442,6 @@ const DeviceParameters = {
 		readCommand: 'get',
 		writeCommand: 'set'
 	},
-	AvailableProfiles: {
-		id: 'PRN',
-		objectdefinition: {
-			type: 'state',
-			common: {
-				name: {
-					'en': 'Amount available profiles',
-					'de': 'Anzahl verfügbarer Profile',
-					'ru': 'Количество доступных профилей',
-					'pt': 'Quantidade de perfis disponíveis',
-					'nl': 'Aantal beschikbare profielen',
-					'fr': 'Montant des profils disponibles',
-					'it': 'Quantità profili disponibili',
-					'es': 'Cantidad perfiles disponibles',
-					'pl': 'Ilość dostępnych profili',
-					'zh-cn': '可用配置文件数量'
-				},
-				type: 'number',
-				unit: null,
-				role: 'state',
-				read: true,
-				write: false
-			},
-			native: {}
-		},
-		statePath: adapterChannels.DevicePofiles.path,
-		levelRead: 'USER',
-		levelWrite: null,
-		readCommand: 'get',
-		writeCommand: null
-	},
-	SelectedProfile: {
-		id: 'PRF',
-		objectdefinition: {
-			type: 'state',
-			common: {
-				name: {
-					'en': 'Selected profile number',
-					'de': 'Ausgewählte Profilnummer',
-					'ru': 'Выбранный номер профиля',
-					'pt': 'Número do perfil selecionado',
-					'nl': 'Geselecteerd profielnummer',
-					'fr': 'Numéro de profil sélectionné',
-					'it': 'Numero di profilo selezionato',
-					'es': 'Número de perfil seleccionado',
-					'pl': 'Wybrany numer profilu',
-					'zh-cn': '选择的个人资料编号'
-				},
-				type: 'number',
-				unit: null,
-				role: 'state',
-				read: true,
-				write: true
-			},
-			native: {}
-		},
-		statePath: adapterChannels.DevicePofiles.path,
-		levelRead: 'USER',
-		levelWrite: 'USER',
-		readCommand: 'get',
-		writeCommand: 'set'
-	},
 	DeactivateConductivitySensor: {
 		id: 'CSD',
 		objectdefinition: {
@@ -2907,7 +2845,2302 @@ const DeviceParameters = {
 		readCommand: 'get',
 		writeCommand: 'set'
 	},
+	AvailableProfiles: {
+		id: 'PRN',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Amount available profiles',
+					'de': 'Anzahl verfügbarer Profile',
+					'ru': 'Количество доступных профилей',
+					'pt': 'Quantidade de perfis disponíveis',
+					'nl': 'Aantal beschikbare profielen',
+					'fr': 'Montant des profils disponibles',
+					'it': 'Quantità profili disponibili',
+					'es': 'Cantidad perfiles disponibles',
+					'pl': 'Ilość dostępnych profili',
+					'zh-cn': '可用配置文件数量'
+				},
+				type: 'number',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: false
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofiles.path,
+		levelRead: 'USER',
+		levelWrite: null,
+		readCommand: 'get',
+		writeCommand: null
+	},
+	SelectedProfile: {
+		id: 'PRF',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Selected profile number',
+					'de': 'Ausgewählte Profilnummer',
+					'ru': 'Выбранный номер профиля',
+					'pt': 'Número do perfil selecionado',
+					'nl': 'Geselecteerd profielnummer',
+					'fr': 'Numéro de profil sélectionné',
+					'it': 'Numero di profilo selezionato',
+					'es': 'Número de perfil seleccionado',
+					'pl': 'Wybrany numer profilu',
+					'zh-cn': '选择的个人资料编号'
+				},
+				type: 'number',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofiles.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PA1: {
+		id: 'PA1',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Profile available, 0 = no, 1 = yes',
+					'de': 'Profil verfügbar, 0 = nein, 1 = ja',
+					'ru': 'Профиль доступен, 0 = нет, 1 = да',
+					'pt': 'Perfil disponível, 0 = não, 1 = sim',
+					'nl': 'Profile beschikbaar, 0, 1, ja',
+					'fr': 'Profil disponible, 0 = non, 1 = oui',
+					'it': 'Profilo disponibile, 0 = no, 1 = sì',
+					'es': 'Perfil disponible, 0 = no, 1 = sí',
+					'pl': 'Profil na stronie 0 = no, 1 = yes',
+					'zh-cn': '简介,0.=无,1='
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile1.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PA2: {
+		id: 'PA2',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Profile available, 0 = no, 1 = yes',
+					'de': 'Profil verfügbar, 0 = nein, 1 = ja',
+					'ru': 'Профиль доступен, 0 = нет, 1 = да',
+					'pt': 'Perfil disponível, 0 = não, 1 = sim',
+					'nl': 'Profile beschikbaar, 0, 1, ja',
+					'fr': 'Profil disponible, 0 = non, 1 = oui',
+					'it': 'Profilo disponibile, 0 = no, 1 = sì',
+					'es': 'Perfil disponible, 0 = no, 1 = sí',
+					'pl': 'Profil na stronie 0 = no, 1 = yes',
+					'zh-cn': '简介,0.=无,1='
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile2.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PA3: {
+		id: 'PA3',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Profile available, 0 = no, 1 = yes',
+					'de': 'Profil verfügbar, 0 = nein, 1 = ja',
+					'ru': 'Профиль доступен, 0 = нет, 1 = да',
+					'pt': 'Perfil disponível, 0 = não, 1 = sim',
+					'nl': 'Profile beschikbaar, 0, 1, ja',
+					'fr': 'Profil disponible, 0 = non, 1 = oui',
+					'it': 'Profilo disponibile, 0 = no, 1 = sì',
+					'es': 'Perfil disponible, 0 = no, 1 = sí',
+					'pl': 'Profil na stronie 0 = no, 1 = yes',
+					'zh-cn': '简介,0.=无,1='
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile3.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PA4: {
+		id: 'PA4',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Profile available, 0 = no, 1 = yes',
+					'de': 'Profil verfügbar, 0 = nein, 1 = ja',
+					'ru': 'Профиль доступен, 0 = нет, 1 = да',
+					'pt': 'Perfil disponível, 0 = não, 1 = sim',
+					'nl': 'Profile beschikbaar, 0, 1, ja',
+					'fr': 'Profil disponible, 0 = non, 1 = oui',
+					'it': 'Profilo disponibile, 0 = no, 1 = sì',
+					'es': 'Perfil disponible, 0 = no, 1 = sí',
+					'pl': 'Profil na stronie 0 = no, 1 = yes',
+					'zh-cn': '简介,0.=无,1='
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile4.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PA5: {
+		id: 'PA5',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Profile available, 0 = no, 1 = yes',
+					'de': 'Profil verfügbar, 0 = nein, 1 = ja',
+					'ru': 'Профиль доступен, 0 = нет, 1 = да',
+					'pt': 'Perfil disponível, 0 = não, 1 = sim',
+					'nl': 'Profile beschikbaar, 0, 1, ja',
+					'fr': 'Profil disponible, 0 = non, 1 = oui',
+					'it': 'Profilo disponibile, 0 = no, 1 = sì',
+					'es': 'Perfil disponible, 0 = no, 1 = sí',
+					'pl': 'Profil na stronie 0 = no, 1 = yes',
+					'zh-cn': '简介,0.=无,1='
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile5.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PA6: {
+		id: 'PA6',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Profile available, 0 = no, 1 = yes',
+					'de': 'Profil verfügbar, 0 = nein, 1 = ja',
+					'ru': 'Профиль доступен, 0 = нет, 1 = да',
+					'pt': 'Perfil disponível, 0 = não, 1 = sim',
+					'nl': 'Profile beschikbaar, 0, 1, ja',
+					'fr': 'Profil disponible, 0 = non, 1 = oui',
+					'it': 'Profilo disponibile, 0 = no, 1 = sì',
+					'es': 'Perfil disponible, 0 = no, 1 = sí',
+					'pl': 'Profil na stronie 0 = no, 1 = yes',
+					'zh-cn': '简介,0.=无,1='
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile6.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PA7: {
+		id: 'PA7',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Profile available, 0 = no, 1 = yes',
+					'de': 'Profil verfügbar, 0 = nein, 1 = ja',
+					'ru': 'Профиль доступен, 0 = нет, 1 = да',
+					'pt': 'Perfil disponível, 0 = não, 1 = sim',
+					'nl': 'Profile beschikbaar, 0, 1, ja',
+					'fr': 'Profil disponible, 0 = non, 1 = oui',
+					'it': 'Profilo disponibile, 0 = no, 1 = sì',
+					'es': 'Perfil disponible, 0 = no, 1 = sí',
+					'pl': 'Profil na stronie 0 = no, 1 = yes',
+					'zh-cn': '简介,0.=无,1='
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile7.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PA8: {
+		id: 'PA8',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Profile available, 0 = no, 1 = yes',
+					'de': 'Profil verfügbar, 0 = nein, 1 = ja',
+					'ru': 'Профиль доступен, 0 = нет, 1 = да',
+					'pt': 'Perfil disponível, 0 = não, 1 = sim',
+					'nl': 'Profile beschikbaar, 0, 1, ja',
+					'fr': 'Profil disponible, 0 = non, 1 = oui',
+					'it': 'Profilo disponibile, 0 = no, 1 = sì',
+					'es': 'Perfil disponible, 0 = no, 1 = sí',
+					'pl': 'Profil na stronie 0 = no, 1 = yes',
+					'zh-cn': '简介,0.=无,1='
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile8.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PB1: {
+		id: 'PB1',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'buzzer, 0 = disabled, 1 = enabled',
+					'de': 'Summer, 0 = deaktiviert, 1 = aktiviert',
+					'ru': 'buzzer, 0 = отключен, 1 = включен',
+					'pt': 'buzzer, 0 = desativado, 1 = habilitado',
+					'nl': 'buzzer, 0 = gehandicapt, 1 gehandicapten',
+					'fr': 'Bourdonneur, 0 = désactivé, 1 = activé',
+					'it': 'buzzer, 0 = disabilitato, 1 = abilitato',
+					'es': 'Zumbido, 0 = discapacitado, 1 = activado',
+					'pl': 'buzzer, 0 = niepełnosprawny, 1 = umożliwiany',
+					'zh-cn': '导 言'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile1.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PB2: {
+		id: 'PB2',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'buzzer, 0 = disabled, 1 = enabled',
+					'de': 'Summer, 0 = deaktiviert, 1 = aktiviert',
+					'ru': 'buzzer, 0 = отключен, 1 = включен',
+					'pt': 'buzzer, 0 = desativado, 1 = habilitado',
+					'nl': 'buzzer, 0 = gehandicapt, 1 gehandicapten',
+					'fr': 'Bourdonneur, 0 = désactivé, 1 = activé',
+					'it': 'buzzer, 0 = disabilitato, 1 = abilitato',
+					'es': 'Zumbido, 0 = discapacitado, 1 = activado',
+					'pl': 'buzzer, 0 = niepełnosprawny, 1 = umożliwiany',
+					'zh-cn': '导 言'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile2.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PB3: {
+		id: 'PB3',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'buzzer, 0 = disabled, 1 = enabled',
+					'de': 'Summer, 0 = deaktiviert, 1 = aktiviert',
+					'ru': 'buzzer, 0 = отключен, 1 = включен',
+					'pt': 'buzzer, 0 = desativado, 1 = habilitado',
+					'nl': 'buzzer, 0 = gehandicapt, 1 gehandicapten',
+					'fr': 'Bourdonneur, 0 = désactivé, 1 = activé',
+					'it': 'buzzer, 0 = disabilitato, 1 = abilitato',
+					'es': 'Zumbido, 0 = discapacitado, 1 = activado',
+					'pl': 'buzzer, 0 = niepełnosprawny, 1 = umożliwiany',
+					'zh-cn': '导 言'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile3.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PB4: {
+		id: 'PB4',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'buzzer, 0 = disabled, 1 = enabled',
+					'de': 'Summer, 0 = deaktiviert, 1 = aktiviert',
+					'ru': 'buzzer, 0 = отключен, 1 = включен',
+					'pt': 'buzzer, 0 = desativado, 1 = habilitado',
+					'nl': 'buzzer, 0 = gehandicapt, 1 gehandicapten',
+					'fr': 'Bourdonneur, 0 = désactivé, 1 = activé',
+					'it': 'buzzer, 0 = disabilitato, 1 = abilitato',
+					'es': 'Zumbido, 0 = discapacitado, 1 = activado',
+					'pl': 'buzzer, 0 = niepełnosprawny, 1 = umożliwiany',
+					'zh-cn': '导 言'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile4.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PB5: {
+		id: 'PB5',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'buzzer, 0 = disabled, 1 = enabled',
+					'de': 'Summer, 0 = deaktiviert, 1 = aktiviert',
+					'ru': 'buzzer, 0 = отключен, 1 = включен',
+					'pt': 'buzzer, 0 = desativado, 1 = habilitado',
+					'nl': 'buzzer, 0 = gehandicapt, 1 gehandicapten',
+					'fr': 'Bourdonneur, 0 = désactivé, 1 = activé',
+					'it': 'buzzer, 0 = disabilitato, 1 = abilitato',
+					'es': 'Zumbido, 0 = discapacitado, 1 = activado',
+					'pl': 'buzzer, 0 = niepełnosprawny, 1 = umożliwiany',
+					'zh-cn': '导 言'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile5.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PB6: {
+		id: 'PB6',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'buzzer, 0 = disabled, 1 = enabled',
+					'de': 'Summer, 0 = deaktiviert, 1 = aktiviert',
+					'ru': 'buzzer, 0 = отключен, 1 = включен',
+					'pt': 'buzzer, 0 = desativado, 1 = habilitado',
+					'nl': 'buzzer, 0 = gehandicapt, 1 gehandicapten',
+					'fr': 'Bourdonneur, 0 = désactivé, 1 = activé',
+					'it': 'buzzer, 0 = disabilitato, 1 = abilitato',
+					'es': 'Zumbido, 0 = discapacitado, 1 = activado',
+					'pl': 'buzzer, 0 = niepełnosprawny, 1 = umożliwiany',
+					'zh-cn': '导 言'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile6.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PB7: {
+		id: 'PB7',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'buzzer, 0 = disabled, 1 = enabled',
+					'de': 'Summer, 0 = deaktiviert, 1 = aktiviert',
+					'ru': 'buzzer, 0 = отключен, 1 = включен',
+					'pt': 'buzzer, 0 = desativado, 1 = habilitado',
+					'nl': 'buzzer, 0 = gehandicapt, 1 gehandicapten',
+					'fr': 'Bourdonneur, 0 = désactivé, 1 = activé',
+					'it': 'buzzer, 0 = disabilitato, 1 = abilitato',
+					'es': 'Zumbido, 0 = discapacitado, 1 = activado',
+					'pl': 'buzzer, 0 = niepełnosprawny, 1 = umożliwiany',
+					'zh-cn': '导 言'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile7.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PB8: {
+		id: 'PB8',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'buzzer, 0 = disabled, 1 = enabled',
+					'de': 'Summer, 0 = deaktiviert, 1 = aktiviert',
+					'ru': 'buzzer, 0 = отключен, 1 = включен',
+					'pt': 'buzzer, 0 = desativado, 1 = habilitado',
+					'nl': 'buzzer, 0 = gehandicapt, 1 gehandicapten',
+					'fr': 'Bourdonneur, 0 = désactivé, 1 = activé',
+					'it': 'buzzer, 0 = disabilitato, 1 = abilitato',
+					'es': 'Zumbido, 0 = discapacitado, 1 = activado',
+					'pl': 'buzzer, 0 = niepełnosprawny, 1 = umożliwiany',
+					'zh-cn': '导 言'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile8.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PF1: {
+		id: 'PF1',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'maximum flow (0 = deactivated 1...5000l/h)',
+					'de': 'maximaler durchfluss (0 = deaktiviert 1...5000l/h)',
+					'ru': 'максимальный поток (0 = деактивирован 1...5000л/ч)',
+					'pt': 'fluxo máximo (0 = desativado 1...5000l/h)',
+					'nl': 'maximale stroom (0) gedeactiveerd 1...5000/h ♪',
+					'fr': 'débit maximal (0 = désactivé 1...5000l/h)',
+					'it': 'flusso massimo (0 = disattivato 1...5000l/h)',
+					'es': 'flujo máximo (0 = desactivado 1...5000l/h)',
+					'pl': 'maksymalny przepływ (0 = deaktywowany 1..5000l/h)',
+					'zh-cn': '最大流量 (0 = 失职 1...5000l/h)'
+				},
+				type: 'number',
+				role: 'value.max',
+				unit: 'l/h',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile1.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PF2: {
+		id: 'PF2',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'maximum flow (0 = deactivated 1...5000l/h)',
+					'de': 'maximaler durchfluss (0 = deaktiviert 1...5000l/h)',
+					'ru': 'максимальный поток (0 = деактивирован 1...5000л/ч)',
+					'pt': 'fluxo máximo (0 = desativado 1...5000l/h)',
+					'nl': 'maximale stroom (0) gedeactiveerd 1...5000/h ♪',
+					'fr': 'débit maximal (0 = désactivé 1...5000l/h)',
+					'it': 'flusso massimo (0 = disattivato 1...5000l/h)',
+					'es': 'flujo máximo (0 = desactivado 1...5000l/h)',
+					'pl': 'maksymalny przepływ (0 = deaktywowany 1..5000l/h)',
+					'zh-cn': '最大流量 (0 = 失职 1...5000l/h)'
+				},
+				type: 'number',
+				role: 'value.max',
+				unit: 'l/h',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile2.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PF3: {
+		id: 'PF3',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'maximum flow (0 = deactivated 1...5000l/h)',
+					'de': 'maximaler durchfluss (0 = deaktiviert 1...5000l/h)',
+					'ru': 'максимальный поток (0 = деактивирован 1...5000л/ч)',
+					'pt': 'fluxo máximo (0 = desativado 1...5000l/h)',
+					'nl': 'maximale stroom (0) gedeactiveerd 1...5000/h ♪',
+					'fr': 'débit maximal (0 = désactivé 1...5000l/h)',
+					'it': 'flusso massimo (0 = disattivato 1...5000l/h)',
+					'es': 'flujo máximo (0 = desactivado 1...5000l/h)',
+					'pl': 'maksymalny przepływ (0 = deaktywowany 1..5000l/h)',
+					'zh-cn': '最大流量 (0 = 失职 1...5000l/h)'
+				},
+				type: 'number',
+				role: 'value.max',
+				unit: 'l/h',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile3.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PF4: {
+		id: 'PF4',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'maximum flow (0 = deactivated 1...5000l/h)',
+					'de': 'maximaler durchfluss (0 = deaktiviert 1...5000l/h)',
+					'ru': 'максимальный поток (0 = деактивирован 1...5000л/ч)',
+					'pt': 'fluxo máximo (0 = desativado 1...5000l/h)',
+					'nl': 'maximale stroom (0) gedeactiveerd 1...5000/h ♪',
+					'fr': 'débit maximal (0 = désactivé 1...5000l/h)',
+					'it': 'flusso massimo (0 = disattivato 1...5000l/h)',
+					'es': 'flujo máximo (0 = desactivado 1...5000l/h)',
+					'pl': 'maksymalny przepływ (0 = deaktywowany 1..5000l/h)',
+					'zh-cn': '最大流量 (0 = 失职 1...5000l/h)'
+				},
+				type: 'number',
+				role: 'value.max',
+				unit: 'l/h',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile4.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PF5: {
+		id: 'PF5',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'maximum flow (0 = deactivated 1...5000l/h)',
+					'de': 'maximaler durchfluss (0 = deaktiviert 1...5000l/h)',
+					'ru': 'максимальный поток (0 = деактивирован 1...5000л/ч)',
+					'pt': 'fluxo máximo (0 = desativado 1...5000l/h)',
+					'nl': 'maximale stroom (0) gedeactiveerd 1...5000/h ♪',
+					'fr': 'débit maximal (0 = désactivé 1...5000l/h)',
+					'it': 'flusso massimo (0 = disattivato 1...5000l/h)',
+					'es': 'flujo máximo (0 = desactivado 1...5000l/h)',
+					'pl': 'maksymalny przepływ (0 = deaktywowany 1..5000l/h)',
+					'zh-cn': '最大流量 (0 = 失职 1...5000l/h)'
+				},
+				type: 'number',
+				role: 'value.max',
+				unit: 'l/h',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile5.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PF6: {
+		id: 'PF6',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'maximum flow (0 = deactivated 1...5000l/h)',
+					'de': 'maximaler durchfluss (0 = deaktiviert 1...5000l/h)',
+					'ru': 'максимальный поток (0 = деактивирован 1...5000л/ч)',
+					'pt': 'fluxo máximo (0 = desativado 1...5000l/h)',
+					'nl': 'maximale stroom (0) gedeactiveerd 1...5000/h ♪',
+					'fr': 'débit maximal (0 = désactivé 1...5000l/h)',
+					'it': 'flusso massimo (0 = disattivato 1...5000l/h)',
+					'es': 'flujo máximo (0 = desactivado 1...5000l/h)',
+					'pl': 'maksymalny przepływ (0 = deaktywowany 1..5000l/h)',
+					'zh-cn': '最大流量 (0 = 失职 1...5000l/h)'
+				},
+				type: 'number',
+				role: 'value.max',
+				unit: 'l/h',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile6.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PF7: {
+		id: 'PF7',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'maximum flow (0 = deactivated 1...5000l/h)',
+					'de': 'maximaler durchfluss (0 = deaktiviert 1...5000l/h)',
+					'ru': 'максимальный поток (0 = деактивирован 1...5000л/ч)',
+					'pt': 'fluxo máximo (0 = desativado 1...5000l/h)',
+					'nl': 'maximale stroom (0) gedeactiveerd 1...5000/h ♪',
+					'fr': 'débit maximal (0 = désactivé 1...5000l/h)',
+					'it': 'flusso massimo (0 = disattivato 1...5000l/h)',
+					'es': 'flujo máximo (0 = desactivado 1...5000l/h)',
+					'pl': 'maksymalny przepływ (0 = deaktywowany 1..5000l/h)',
+					'zh-cn': '最大流量 (0 = 失职 1...5000l/h)'
+				},
+				type: 'number',
+				role: 'value.max',
+				unit: 'l/h',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile7.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PF8: {
+		id: 'PF8',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'maximum flow (0 = deactivated 1...5000l/h)',
+					'de': 'maximaler durchfluss (0 = deaktiviert 1...5000l/h)',
+					'ru': 'максимальный поток (0 = деактивирован 1...5000л/ч)',
+					'pt': 'fluxo máximo (0 = desativado 1...5000l/h)',
+					'nl': 'maximale stroom (0) gedeactiveerd 1...5000/h ♪',
+					'fr': 'débit maximal (0 = désactivé 1...5000l/h)',
+					'it': 'flusso massimo (0 = disattivato 1...5000l/h)',
+					'es': 'flujo máximo (0 = desactivado 1...5000l/h)',
+					'pl': 'maksymalny przepływ (0 = deaktywowany 1..5000l/h)',
+					'zh-cn': '最大流量 (0 = 失职 1...5000l/h)'
+				},
+				type: 'number',
+				role: 'value.max',
+				unit: 'l/h',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile8.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PM1: {
+		id: 'PM1',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'micro leakage detection',
+					'de': 'Mikroleckerkennung',
+					'ru': 'обнаружение микро утечки',
+					'pt': 'micro detecção de vazamento',
+					'nl': 'microlekage detectie',
+					'fr': 'micro détection des fuites',
+					'it': 'rilevamento micro perdite',
+					'es': 'detección de micro fugas',
+					'pl': 'wykrywanie mikroszczelności',
+					'zh-cn': '微额泄露'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile1.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PM2: {
+		id: 'PM2',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'micro leakage detection',
+					'de': 'Mikroleckerkennung',
+					'ru': 'обнаружение микро утечки',
+					'pt': 'micro detecção de vazamento',
+					'nl': 'microlekage detectie',
+					'fr': 'micro détection des fuites',
+					'it': 'rilevamento micro perdite',
+					'es': 'detección de micro fugas',
+					'pl': 'wykrywanie mikroszczelności',
+					'zh-cn': '微额泄露'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile2.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PM3: {
+		id: 'PM3',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'micro leakage detection',
+					'de': 'Mikroleckerkennung',
+					'ru': 'обнаружение микро утечки',
+					'pt': 'micro detecção de vazamento',
+					'nl': 'microlekage detectie',
+					'fr': 'micro détection des fuites',
+					'it': 'rilevamento micro perdite',
+					'es': 'detección de micro fugas',
+					'pl': 'wykrywanie mikroszczelności',
+					'zh-cn': '微额泄露'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile3.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PM4: {
+		id: 'PM4',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'micro leakage detection',
+					'de': 'Mikroleckerkennung',
+					'ru': 'обнаружение микро утечки',
+					'pt': 'micro detecção de vazamento',
+					'nl': 'microlekage detectie',
+					'fr': 'micro détection des fuites',
+					'it': 'rilevamento micro perdite',
+					'es': 'detección de micro fugas',
+					'pl': 'wykrywanie mikroszczelności',
+					'zh-cn': '微额泄露'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile4.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PM5: {
+		id: 'PM5',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'micro leakage detection',
+					'de': 'Mikroleckerkennung',
+					'ru': 'обнаружение микро утечки',
+					'pt': 'micro detecção de vazamento',
+					'nl': 'microlekage detectie',
+					'fr': 'micro détection des fuites',
+					'it': 'rilevamento micro perdite',
+					'es': 'detección de micro fugas',
+					'pl': 'wykrywanie mikroszczelności',
+					'zh-cn': '微额泄露'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile5.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PM6: {
+		id: 'PM6',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'micro leakage detection',
+					'de': 'Mikroleckerkennung',
+					'ru': 'обнаружение микро утечки',
+					'pt': 'micro detecção de vazamento',
+					'nl': 'microlekage detectie',
+					'fr': 'micro détection des fuites',
+					'it': 'rilevamento micro perdite',
+					'es': 'detección de micro fugas',
+					'pl': 'wykrywanie mikroszczelności',
+					'zh-cn': '微额泄露'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile6.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PM7: {
+		id: 'PM7',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'micro leakage detection',
+					'de': 'Mikroleckerkennung',
+					'ru': 'обнаружение микро утечки',
+					'pt': 'micro detecção de vazamento',
+					'nl': 'microlekage detectie',
+					'fr': 'micro détection des fuites',
+					'it': 'rilevamento micro perdite',
+					'es': 'detección de micro fugas',
+					'pl': 'wykrywanie mikroszczelności',
+					'zh-cn': '微额泄露'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile7.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PM8: {
+		id: 'PM8',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'micro leakage detection',
+					'de': 'Mikroleckerkennung',
+					'ru': 'обнаружение микро утечки',
+					'pt': 'micro detecção de vazamento',
+					'nl': 'microlekage detectie',
+					'fr': 'micro détection des fuites',
+					'it': 'rilevamento micro perdite',
+					'es': 'detección de micro fugas',
+					'pl': 'wykrywanie mikroszczelności',
+					'zh-cn': '微额泄露'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile8.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PN1: {
+		id: 'PN1',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Profile name',
+					'de': 'Profilname',
+					'ru': 'Имя профиля',
+					'pt': 'Nome do perfil',
+					'nl': 'Profile naam',
+					'fr': 'Nom du profil',
+					'it': 'Nome del profilo',
+					'es': 'Nombre del perfil',
+					'pl': 'Profil',
+					'zh-cn': '导 言'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile1.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PN2: {
+		id: 'PN2',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Profile name',
+					'de': 'Profilname',
+					'ru': 'Имя профиля',
+					'pt': 'Nome do perfil',
+					'nl': 'Profile naam',
+					'fr': 'Nom du profil',
+					'it': 'Nome del profilo',
+					'es': 'Nombre del perfil',
+					'pl': 'Profil',
+					'zh-cn': '导 言'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile2.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PN3: {
+		id: 'PN3',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Profile name',
+					'de': 'Profilname',
+					'ru': 'Имя профиля',
+					'pt': 'Nome do perfil',
+					'nl': 'Profile naam',
+					'fr': 'Nom du profil',
+					'it': 'Nome del profilo',
+					'es': 'Nombre del perfil',
+					'pl': 'Profil',
+					'zh-cn': '导 言'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile3.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PN4: {
+		id: 'PN4',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Profile name',
+					'de': 'Profilname',
+					'ru': 'Имя профиля',
+					'pt': 'Nome do perfil',
+					'nl': 'Profile naam',
+					'fr': 'Nom du profil',
+					'it': 'Nome del profilo',
+					'es': 'Nombre del perfil',
+					'pl': 'Profil',
+					'zh-cn': '导 言'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile4.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PN5: {
+		id: 'PN5',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Profile name',
+					'de': 'Profilname',
+					'ru': 'Имя профиля',
+					'pt': 'Nome do perfil',
+					'nl': 'Profile naam',
+					'fr': 'Nom du profil',
+					'it': 'Nome del profilo',
+					'es': 'Nombre del perfil',
+					'pl': 'Profil',
+					'zh-cn': '导 言'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile5.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PN6: {
+		id: 'PN6',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Profile name',
+					'de': 'Profilname',
+					'ru': 'Имя профиля',
+					'pt': 'Nome do perfil',
+					'nl': 'Profile naam',
+					'fr': 'Nom du profil',
+					'it': 'Nome del profilo',
+					'es': 'Nombre del perfil',
+					'pl': 'Profil',
+					'zh-cn': '导 言'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile6.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PN7: {
+		id: 'PN7',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Profile name',
+					'de': 'Profilname',
+					'ru': 'Имя профиля',
+					'pt': 'Nome do perfil',
+					'nl': 'Profile naam',
+					'fr': 'Nom du profil',
+					'it': 'Nome del profilo',
+					'es': 'Nombre del perfil',
+					'pl': 'Profil',
+					'zh-cn': '导 言'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile7.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PN8: {
+		id: 'PN8',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Profile name',
+					'de': 'Profilname',
+					'ru': 'Имя профиля',
+					'pt': 'Nome do perfil',
+					'nl': 'Profile naam',
+					'fr': 'Nom du profil',
+					'it': 'Nome del profilo',
+					'es': 'Nombre del perfil',
+					'pl': 'Profil',
+					'zh-cn': '导 言'
+				},
+				type: 'string',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile8.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PR1: {
+		id: 'PR1',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Time back to standard profile 1 - 720 h (30 days)',
+					'de': 'Zurück zum Standardprofil 1 - 720 h (30 Tage)',
+					'ru': 'Время обратно в стандартный профиль 1 - 720 ч (30 дней)',
+					'pt': 'Tempo de volta ao perfil padrão 1 - 720 h (30 dias)',
+					'nl': 'Terug naar standaard profiel 1 - 720 h (30 dagen)',
+					'fr': 'Retour au profil standard 1 - 720 h (30 jours)',
+					'it': 'Tempo di ritorno al profilo standard 1 - 720 h (30 giorni)',
+					'es': 'Tiempo de regreso al perfil estándar 1 - 720 h (30 días)',
+					'pl': 'Time back to standard profile 1 – 720 h (30 dni)',
+					'zh-cn': 'B. 标准概况的及时性 1 - 720 h(30天)'
+				},
+				type: 'number',
+				unit: 'h',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile1.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PR2: {
+		id: 'PR2',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Time back to standard profile 1 - 720 h (30 days)',
+					'de': 'Zurück zum Standardprofil 1 - 720 h (30 Tage)',
+					'ru': 'Время обратно в стандартный профиль 1 - 720 ч (30 дней)',
+					'pt': 'Tempo de volta ao perfil padrão 1 - 720 h (30 dias)',
+					'nl': 'Terug naar standaard profiel 1 - 720 h (30 dagen)',
+					'fr': 'Retour au profil standard 1 - 720 h (30 jours)',
+					'it': 'Tempo di ritorno al profilo standard 1 - 720 h (30 giorni)',
+					'es': 'Tiempo de regreso al perfil estándar 1 - 720 h (30 días)',
+					'pl': 'Time back to standard profile 1 – 720 h (30 dni)',
+					'zh-cn': 'B. 标准概况的及时性 1 - 720 h(30天)'
+				},
+				type: 'number',
+				unit: 'h',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile2.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PR3: {
+		id: 'PR3',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Time back to standard profile 1 - 720 h (30 days)',
+					'de': 'Zurück zum Standardprofil 1 - 720 h (30 Tage)',
+					'ru': 'Время обратно в стандартный профиль 1 - 720 ч (30 дней)',
+					'pt': 'Tempo de volta ao perfil padrão 1 - 720 h (30 dias)',
+					'nl': 'Terug naar standaard profiel 1 - 720 h (30 dagen)',
+					'fr': 'Retour au profil standard 1 - 720 h (30 jours)',
+					'it': 'Tempo di ritorno al profilo standard 1 - 720 h (30 giorni)',
+					'es': 'Tiempo de regreso al perfil estándar 1 - 720 h (30 días)',
+					'pl': 'Time back to standard profile 1 – 720 h (30 dni)',
+					'zh-cn': 'B. 标准概况的及时性 1 - 720 h(30天)'
+				},
+				type: 'number',
+				unit: 'h',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile3.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PR4: {
+		id: 'PR4',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Time back to standard profile 1 - 720 h (30 days)',
+					'de': 'Zurück zum Standardprofil 1 - 720 h (30 Tage)',
+					'ru': 'Время обратно в стандартный профиль 1 - 720 ч (30 дней)',
+					'pt': 'Tempo de volta ao perfil padrão 1 - 720 h (30 dias)',
+					'nl': 'Terug naar standaard profiel 1 - 720 h (30 dagen)',
+					'fr': 'Retour au profil standard 1 - 720 h (30 jours)',
+					'it': 'Tempo di ritorno al profilo standard 1 - 720 h (30 giorni)',
+					'es': 'Tiempo de regreso al perfil estándar 1 - 720 h (30 días)',
+					'pl': 'Time back to standard profile 1 – 720 h (30 dni)',
+					'zh-cn': 'B. 标准概况的及时性 1 - 720 h(30天)'
+				},
+				type: 'number',
+				unit: 'h',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile4.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PR5: {
+		id: 'PR5',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Time back to standard profile 1 - 720 h (30 days)',
+					'de': 'Zurück zum Standardprofil 1 - 720 h (30 Tage)',
+					'ru': 'Время обратно в стандартный профиль 1 - 720 ч (30 дней)',
+					'pt': 'Tempo de volta ao perfil padrão 1 - 720 h (30 dias)',
+					'nl': 'Terug naar standaard profiel 1 - 720 h (30 dagen)',
+					'fr': 'Retour au profil standard 1 - 720 h (30 jours)',
+					'it': 'Tempo di ritorno al profilo standard 1 - 720 h (30 giorni)',
+					'es': 'Tiempo de regreso al perfil estándar 1 - 720 h (30 días)',
+					'pl': 'Time back to standard profile 1 – 720 h (30 dni)',
+					'zh-cn': 'B. 标准概况的及时性 1 - 720 h(30天)'
+				},
+				type: 'number',
+				unit: 'h',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile5.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PR6: {
+		id: 'PR6',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Time back to standard profile 1 - 720 h (30 days)',
+					'de': 'Zurück zum Standardprofil 1 - 720 h (30 Tage)',
+					'ru': 'Время обратно в стандартный профиль 1 - 720 ч (30 дней)',
+					'pt': 'Tempo de volta ao perfil padrão 1 - 720 h (30 dias)',
+					'nl': 'Terug naar standaard profiel 1 - 720 h (30 dagen)',
+					'fr': 'Retour au profil standard 1 - 720 h (30 jours)',
+					'it': 'Tempo di ritorno al profilo standard 1 - 720 h (30 giorni)',
+					'es': 'Tiempo de regreso al perfil estándar 1 - 720 h (30 días)',
+					'pl': 'Time back to standard profile 1 – 720 h (30 dni)',
+					'zh-cn': 'B. 标准概况的及时性 1 - 720 h(30天)'
+				},
+				type: 'number',
+				unit: 'h',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile6.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PR7: {
+		id: 'PR7',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Time back to standard profile 1 - 720 h (30 days)',
+					'de': 'Zurück zum Standardprofil 1 - 720 h (30 Tage)',
+					'ru': 'Время обратно в стандартный профиль 1 - 720 ч (30 дней)',
+					'pt': 'Tempo de volta ao perfil padrão 1 - 720 h (30 dias)',
+					'nl': 'Terug naar standaard profiel 1 - 720 h (30 dagen)',
+					'fr': 'Retour au profil standard 1 - 720 h (30 jours)',
+					'it': 'Tempo di ritorno al profilo standard 1 - 720 h (30 giorni)',
+					'es': 'Tiempo de regreso al perfil estándar 1 - 720 h (30 días)',
+					'pl': 'Time back to standard profile 1 – 720 h (30 dni)',
+					'zh-cn': 'B. 标准概况的及时性 1 - 720 h(30天)'
+				},
+				type: 'number',
+				unit: 'h',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile7.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PR8: {
+		id: 'PR8',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Time back to standard profile 1 - 720 h (30 days)',
+					'de': 'Zurück zum Standardprofil 1 - 720 h (30 Tage)',
+					'ru': 'Время обратно в стандартный профиль 1 - 720 ч (30 дней)',
+					'pt': 'Tempo de volta ao perfil padrão 1 - 720 h (30 dias)',
+					'nl': 'Terug naar standaard profiel 1 - 720 h (30 dagen)',
+					'fr': 'Retour au profil standard 1 - 720 h (30 jours)',
+					'it': 'Tempo di ritorno al profilo standard 1 - 720 h (30 giorni)',
+					'es': 'Tiempo de regreso al perfil estándar 1 - 720 h (30 días)',
+					'pl': 'Time back to standard profile 1 – 720 h (30 dni)',
+					'zh-cn': 'B. 标准概况的及时性 1 - 720 h(30天)'
+				},
+				type: 'number',
+				unit: 'h',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile8.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PT1: {
+		id: 'PT1',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Time limit  (0 = deactivated 1...1500min (25h))',
+					'de': 'Zeitlimit (0 = deaktiviert 1...1500min (25h))',
+					'ru': 'Ограничение по времени (0 = деактивирован 1...1500min (25h))',
+					'pt': 'Limite de tempo (0 = desativado 1...1500min (25h))',
+					'nl': 'Tijdslimiet (0 = gedeactiveerd 1...1500min (25h))',
+					'fr': 'Délai  (0 = désactivé 1...1500min (25h))',
+					'it': 'Limiti di tempo  (0 = disattivato 1...1500min (25h))',
+					'es': 'Plazo límite (0 = desactivado 1...1500min (25h))',
+					'pl': 'Limit czasowy (0 = deaktywowany 1...1500min (25h))',
+					'zh-cn': '时限 (0 = 失职 1...1500min (25h))'
+				},
+				type: 'number',
+				unit: 'min',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile1.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PT2: {
+		id: 'PT2',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Time limit  (0 = deactivated 1...1500min (25h))',
+					'de': 'Zeitlimit (0 = deaktiviert 1...1500min (25h))',
+					'ru': 'Ограничение по времени (0 = деактивирован 1...1500min (25h))',
+					'pt': 'Limite de tempo (0 = desativado 1...1500min (25h))',
+					'nl': 'Tijdslimiet (0 = gedeactiveerd 1...1500min (25h))',
+					'fr': 'Délai  (0 = désactivé 1...1500min (25h))',
+					'it': 'Limiti di tempo  (0 = disattivato 1...1500min (25h))',
+					'es': 'Plazo límite (0 = desactivado 1...1500min (25h))',
+					'pl': 'Limit czasowy (0 = deaktywowany 1...1500min (25h))',
+					'zh-cn': '时限 (0 = 失职 1...1500min (25h))'
+				},
+				type: 'number',
+				unit: 'min',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile2.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PT3: {
+		id: 'PT3',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Time limit  (0 = deactivated 1...1500min (25h))',
+					'de': 'Zeitlimit (0 = deaktiviert 1...1500min (25h))',
+					'ru': 'Ограничение по времени (0 = деактивирован 1...1500min (25h))',
+					'pt': 'Limite de tempo (0 = desativado 1...1500min (25h))',
+					'nl': 'Tijdslimiet (0 = gedeactiveerd 1...1500min (25h))',
+					'fr': 'Délai  (0 = désactivé 1...1500min (25h))',
+					'it': 'Limiti di tempo  (0 = disattivato 1...1500min (25h))',
+					'es': 'Plazo límite (0 = desactivado 1...1500min (25h))',
+					'pl': 'Limit czasowy (0 = deaktywowany 1...1500min (25h))',
+					'zh-cn': '时限 (0 = 失职 1...1500min (25h))'
+				},
+				type: 'number',
+				unit: 'min',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile3.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PT4: {
+		id: 'PT4',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Time limit  (0 = deactivated 1...1500min (25h))',
+					'de': 'Zeitlimit (0 = deaktiviert 1...1500min (25h))',
+					'ru': 'Ограничение по времени (0 = деактивирован 1...1500min (25h))',
+					'pt': 'Limite de tempo (0 = desativado 1...1500min (25h))',
+					'nl': 'Tijdslimiet (0 = gedeactiveerd 1...1500min (25h))',
+					'fr': 'Délai  (0 = désactivé 1...1500min (25h))',
+					'it': 'Limiti di tempo  (0 = disattivato 1...1500min (25h))',
+					'es': 'Plazo límite (0 = desactivado 1...1500min (25h))',
+					'pl': 'Limit czasowy (0 = deaktywowany 1...1500min (25h))',
+					'zh-cn': '时限 (0 = 失职 1...1500min (25h))'
+				},
+				type: 'number',
+				unit: 'min',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile4.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PT5: {
+		id: 'PT5',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Time limit  (0 = deactivated 1...1500min (25h))',
+					'de': 'Zeitlimit (0 = deaktiviert 1...1500min (25h))',
+					'ru': 'Ограничение по времени (0 = деактивирован 1...1500min (25h))',
+					'pt': 'Limite de tempo (0 = desativado 1...1500min (25h))',
+					'nl': 'Tijdslimiet (0 = gedeactiveerd 1...1500min (25h))',
+					'fr': 'Délai  (0 = désactivé 1...1500min (25h))',
+					'it': 'Limiti di tempo  (0 = disattivato 1...1500min (25h))',
+					'es': 'Plazo límite (0 = desactivado 1...1500min (25h))',
+					'pl': 'Limit czasowy (0 = deaktywowany 1...1500min (25h))',
+					'zh-cn': '时限 (0 = 失职 1...1500min (25h))'
+				},
+				type: 'number',
+				unit: 'min',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile5.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PT6: {
+		id: 'PT6',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Time limit  (0 = deactivated 1...1500min (25h))',
+					'de': 'Zeitlimit (0 = deaktiviert 1...1500min (25h))',
+					'ru': 'Ограничение по времени (0 = деактивирован 1...1500min (25h))',
+					'pt': 'Limite de tempo (0 = desativado 1...1500min (25h))',
+					'nl': 'Tijdslimiet (0 = gedeactiveerd 1...1500min (25h))',
+					'fr': 'Délai  (0 = désactivé 1...1500min (25h))',
+					'it': 'Limiti di tempo  (0 = disattivato 1...1500min (25h))',
+					'es': 'Plazo límite (0 = desactivado 1...1500min (25h))',
+					'pl': 'Limit czasowy (0 = deaktywowany 1...1500min (25h))',
+					'zh-cn': '时限 (0 = 失职 1...1500min (25h))'
+				},
+				type: 'number',
+				unit: 'min',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile6.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PT7: {
+		id: 'PT7',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Time limit  (0 = deactivated 1...1500min (25h))',
+					'de': 'Zeitlimit (0 = deaktiviert 1...1500min (25h))',
+					'ru': 'Ограничение по времени (0 = деактивирован 1...1500min (25h))',
+					'pt': 'Limite de tempo (0 = desativado 1...1500min (25h))',
+					'nl': 'Tijdslimiet (0 = gedeactiveerd 1...1500min (25h))',
+					'fr': 'Délai  (0 = désactivé 1...1500min (25h))',
+					'it': 'Limiti di tempo  (0 = disattivato 1...1500min (25h))',
+					'es': 'Plazo límite (0 = desactivado 1...1500min (25h))',
+					'pl': 'Limit czasowy (0 = deaktywowany 1...1500min (25h))',
+					'zh-cn': '时限 (0 = 失职 1...1500min (25h))'
+				},
+				type: 'number',
+				unit: 'min',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile7.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PT8: {
+		id: 'PT8',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Time limit  (0 = deactivated 1...1500min (25h))',
+					'de': 'Zeitlimit (0 = deaktiviert 1...1500min (25h))',
+					'ru': 'Ограничение по времени (0 = деактивирован 1...1500min (25h))',
+					'pt': 'Limite de tempo (0 = desativado 1...1500min (25h))',
+					'nl': 'Tijdslimiet (0 = gedeactiveerd 1...1500min (25h))',
+					'fr': 'Délai  (0 = désactivé 1...1500min (25h))',
+					'it': 'Limiti di tempo  (0 = disattivato 1...1500min (25h))',
+					'es': 'Plazo límite (0 = desactivado 1...1500min (25h))',
+					'pl': 'Limit czasowy (0 = deaktywowany 1...1500min (25h))',
+					'zh-cn': '时限 (0 = 失职 1...1500min (25h))'
+				},
+				type: 'number',
+				unit: 'min',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile8.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PV1: {
+		id: 'PV1',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Quantity limitation (0 = deaktivated 1 - 1900l)',
+					'de': 'Mengenbegrenzung (0 = deaktiviert 1 - 1900l)',
+					'ru': 'Ограничение количества (0 = deaktivated 1 - 1900l)',
+					'pt': 'Limitação de quantidade (0 = descativado 1 - 1900l)',
+					'nl': 'Quantity beperking (0 = Deaktivatie 1 - 1900l)',
+					'fr': 'Limite de la quantité (0 = daktivated 1 - 1900l)',
+					'it': 'Limiti di quantità (0 = deaktivated 1 - 1900l)',
+					'es': 'Limitación de la cantidad (0 = deaktivada 1 - 1900l)',
+					'pl': 'Granica graniczna (0 = deaktivated 1 – 1900l)',
+					'zh-cn': '资格限制(0 = 减少1-1900l)'
+				},
+				type: 'number',
+				unit: 'l',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile1.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PV2: {
+		id: 'PV2',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Quantity limitation (0 = deaktivated 1 - 1900l)',
+					'de': 'Mengenbegrenzung (0 = deaktiviert 1 - 1900l)',
+					'ru': 'Ограничение количества (0 = deaktivated 1 - 1900l)',
+					'pt': 'Limitação de quantidade (0 = descativado 1 - 1900l)',
+					'nl': 'Quantity beperking (0 = Deaktivatie 1 - 1900l)',
+					'fr': 'Limite de la quantité (0 = daktivated 1 - 1900l)',
+					'it': 'Limiti di quantità (0 = deaktivated 1 - 1900l)',
+					'es': 'Limitación de la cantidad (0 = deaktivada 1 - 1900l)',
+					'pl': 'Granica graniczna (0 = deaktivated 1 – 1900l)',
+					'zh-cn': '资格限制(0 = 减少1-1900l)'
+				},
+				type: 'number',
+				unit: 'l',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile2.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PV3: {
+		id: 'PV3',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Quantity limitation (0 = deaktivated 1 - 1900l)',
+					'de': 'Mengenbegrenzung (0 = deaktiviert 1 - 1900l)',
+					'ru': 'Ограничение количества (0 = deaktivated 1 - 1900l)',
+					'pt': 'Limitação de quantidade (0 = descativado 1 - 1900l)',
+					'nl': 'Quantity beperking (0 = Deaktivatie 1 - 1900l)',
+					'fr': 'Limite de la quantité (0 = daktivated 1 - 1900l)',
+					'it': 'Limiti di quantità (0 = deaktivated 1 - 1900l)',
+					'es': 'Limitación de la cantidad (0 = deaktivada 1 - 1900l)',
+					'pl': 'Granica graniczna (0 = deaktivated 1 – 1900l)',
+					'zh-cn': '资格限制(0 = 减少1-1900l)'
+				},
+				type: 'number',
+				unit: 'l',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile3.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PV4: {
+		id: 'PV4',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Quantity limitation (0 = deaktivated 1 - 1900l)',
+					'de': 'Mengenbegrenzung (0 = deaktiviert 1 - 1900l)',
+					'ru': 'Ограничение количества (0 = deaktivated 1 - 1900l)',
+					'pt': 'Limitação de quantidade (0 = descativado 1 - 1900l)',
+					'nl': 'Quantity beperking (0 = Deaktivatie 1 - 1900l)',
+					'fr': 'Limite de la quantité (0 = daktivated 1 - 1900l)',
+					'it': 'Limiti di quantità (0 = deaktivated 1 - 1900l)',
+					'es': 'Limitación de la cantidad (0 = deaktivada 1 - 1900l)',
+					'pl': 'Granica graniczna (0 = deaktivated 1 – 1900l)',
+					'zh-cn': '资格限制(0 = 减少1-1900l)'
+				},
+				type: 'number',
+				unit: 'l',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile4.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PV5: {
+		id: 'PV5',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Quantity limitation (0 = deaktivated 1 - 1900l)',
+					'de': 'Mengenbegrenzung (0 = deaktiviert 1 - 1900l)',
+					'ru': 'Ограничение количества (0 = deaktivated 1 - 1900l)',
+					'pt': 'Limitação de quantidade (0 = descativado 1 - 1900l)',
+					'nl': 'Quantity beperking (0 = Deaktivatie 1 - 1900l)',
+					'fr': 'Limite de la quantité (0 = daktivated 1 - 1900l)',
+					'it': 'Limiti di quantità (0 = deaktivated 1 - 1900l)',
+					'es': 'Limitación de la cantidad (0 = deaktivada 1 - 1900l)',
+					'pl': 'Granica graniczna (0 = deaktivated 1 – 1900l)',
+					'zh-cn': '资格限制(0 = 减少1-1900l)'
+				},
+				type: 'number',
+				unit: 'l',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile5.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PV6: {
+		id: 'PV6',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Quantity limitation (0 = deaktivated 1 - 1900l)',
+					'de': 'Mengenbegrenzung (0 = deaktiviert 1 - 1900l)',
+					'ru': 'Ограничение количества (0 = deaktivated 1 - 1900l)',
+					'pt': 'Limitação de quantidade (0 = descativado 1 - 1900l)',
+					'nl': 'Quantity beperking (0 = Deaktivatie 1 - 1900l)',
+					'fr': 'Limite de la quantité (0 = daktivated 1 - 1900l)',
+					'it': 'Limiti di quantità (0 = deaktivated 1 - 1900l)',
+					'es': 'Limitación de la cantidad (0 = deaktivada 1 - 1900l)',
+					'pl': 'Granica graniczna (0 = deaktivated 1 – 1900l)',
+					'zh-cn': '资格限制(0 = 减少1-1900l)'
+				},
+				type: 'number',
+				unit: 'l',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile6.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PV7: {
+		id: 'PV7',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Quantity limitation (0 = deaktivated 1 - 1900l)',
+					'de': 'Mengenbegrenzung (0 = deaktiviert 1 - 1900l)',
+					'ru': 'Ограничение количества (0 = deaktivated 1 - 1900l)',
+					'pt': 'Limitação de quantidade (0 = descativado 1 - 1900l)',
+					'nl': 'Quantity beperking (0 = Deaktivatie 1 - 1900l)',
+					'fr': 'Limite de la quantité (0 = daktivated 1 - 1900l)',
+					'it': 'Limiti di quantità (0 = deaktivated 1 - 1900l)',
+					'es': 'Limitación de la cantidad (0 = deaktivada 1 - 1900l)',
+					'pl': 'Granica graniczna (0 = deaktivated 1 – 1900l)',
+					'zh-cn': '资格限制(0 = 减少1-1900l)'
+				},
+				type: 'number',
+				unit: 'l',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile7.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PV8: {
+		id: 'PV8',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'Quantity limitation (0 = deaktivated 1 - 1900l)',
+					'de': 'Mengenbegrenzung (0 = deaktiviert 1 - 1900l)',
+					'ru': 'Ограничение количества (0 = deaktivated 1 - 1900l)',
+					'pt': 'Limitação de quantidade (0 = descativado 1 - 1900l)',
+					'nl': 'Quantity beperking (0 = Deaktivatie 1 - 1900l)',
+					'fr': 'Limite de la quantité (0 = daktivated 1 - 1900l)',
+					'it': 'Limiti di quantità (0 = deaktivated 1 - 1900l)',
+					'es': 'Limitación de la cantidad (0 = deaktivada 1 - 1900l)',
+					'pl': 'Granica graniczna (0 = deaktivated 1 – 1900l)',
+					'zh-cn': '资格限制(0 = 减少1-1900l)'
+				},
+				type: 'number',
+				unit: 'l',
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile8.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PW1: {
+		id: 'PW1',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'leakage warning',
+					'de': 'Leckagewarnung',
+					'ru': 'предупреждение утечки',
+					'pt': 'aviso de fuga',
+					'nl': 'vertaling:',
+					'fr': 'avertissement de fuite',
+					'it': 'avvertimento perdite',
+					'es': 'advertencia de fugas',
+					'pl': 'ostrzeżenie',
+					'zh-cn': '泄漏警告'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile1.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PW2: {
+		id: 'PW2',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'leakage warning',
+					'de': 'Leckagewarnung',
+					'ru': 'предупреждение утечки',
+					'pt': 'aviso de fuga',
+					'nl': 'vertaling:',
+					'fr': 'avertissement de fuite',
+					'it': 'avvertimento perdite',
+					'es': 'advertencia de fugas',
+					'pl': 'ostrzeżenie',
+					'zh-cn': '泄漏警告'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile2.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PW3: {
+		id: 'PW3',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'leakage warning',
+					'de': 'Leckagewarnung',
+					'ru': 'предупреждение утечки',
+					'pt': 'aviso de fuga',
+					'nl': 'vertaling:',
+					'fr': 'avertissement de fuite',
+					'it': 'avvertimento perdite',
+					'es': 'advertencia de fugas',
+					'pl': 'ostrzeżenie',
+					'zh-cn': '泄漏警告'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile3.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PW4: {
+		id: 'PW4',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'leakage warning',
+					'de': 'Leckagewarnung',
+					'ru': 'предупреждение утечки',
+					'pt': 'aviso de fuga',
+					'nl': 'vertaling:',
+					'fr': 'avertissement de fuite',
+					'it': 'avvertimento perdite',
+					'es': 'advertencia de fugas',
+					'pl': 'ostrzeżenie',
+					'zh-cn': '泄漏警告'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile4.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PW5: {
+		id: 'PW5',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'leakage warning',
+					'de': 'Leckagewarnung',
+					'ru': 'предупреждение утечки',
+					'pt': 'aviso de fuga',
+					'nl': 'vertaling:',
+					'fr': 'avertissement de fuite',
+					'it': 'avvertimento perdite',
+					'es': 'advertencia de fugas',
+					'pl': 'ostrzeżenie',
+					'zh-cn': '泄漏警告'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile5.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PW6: {
+		id: 'PW6',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'leakage warning',
+					'de': 'Leckagewarnung',
+					'ru': 'предупреждение утечки',
+					'pt': 'aviso de fuga',
+					'nl': 'vertaling:',
+					'fr': 'avertissement de fuite',
+					'it': 'avvertimento perdite',
+					'es': 'advertencia de fugas',
+					'pl': 'ostrzeżenie',
+					'zh-cn': '泄漏警告'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile6.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PW7: {
+		id: 'PW7',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'leakage warning',
+					'de': 'Leckagewarnung',
+					'ru': 'предупреждение утечки',
+					'pt': 'aviso de fuga',
+					'nl': 'vertaling:',
+					'fr': 'avertissement de fuite',
+					'it': 'avvertimento perdite',
+					'es': 'advertencia de fugas',
+					'pl': 'ostrzeżenie',
+					'zh-cn': '泄漏警告'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile7.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
+	Profile_PW8: {
+		id: 'PW8',
+		objectdefinition: {
+			type: 'state',
+			common: {
+				name: {
+					'en': 'leakage warning',
+					'de': 'Leckagewarnung',
+					'ru': 'предупреждение утечки',
+					'pt': 'aviso de fuga',
+					'nl': 'vertaling:',
+					'fr': 'avertissement de fuite',
+					'it': 'avvertimento perdite',
+					'es': 'advertencia de fugas',
+					'pl': 'ostrzeżenie',
+					'zh-cn': '泄漏警告'
+				},
+				type: 'boolean',
+				unit: null,
+				role: 'state',
+				read: true,
+				write: true
+			},
+			native: {}
+		},
+		statePath: adapterChannels.DevicePofile8.path,
+		levelRead: 'USER',
+		levelWrite: 'USER',
+		readCommand: 'get',
+		writeCommand: 'set'
+	},
 };
+
 
 const initStates = [
 	DeviceParameters.FirmwareVersion,
@@ -3363,35 +5596,49 @@ class wamo extends utils.Adapter {
 			}
 			else if((id.includes('Device.Profiles.1')) && (state.ack == false)){
 				this.log.warn('Profile 1 State Change: ' + String(id));
-				this.log.warn(id.substring(id.lastIndexOf('.')));
+				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
+				switch(id.substring(id.lastIndexOf('.') + 1))
+				{
+					case 'PN1':
+						try {
+							await this.set_DevieParameter(DeviceParameters.Profile_PN1, state.val, this.config.device_ip, this.config.device_port);
+							this.log.info('Profile 1 name changed to \'' + String(state.val) + '\'');
+						}
+						catch (err) {
+							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.SelectedProfile ... ERROR: ' + err);
+						}
+						break;
+					default:
+
+				}
 			}
 			else if((id.includes('Device.Profiles.2')) && (state.ack == false)){
 				this.log.warn('Profile 2 State Change: ' + String(id));
-				this.log.warn(id.substring(id.lastIndexOf('.')));
+				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
 			}
 			else if((id.includes('Device.Profiles.3')) && (state.ack == false)){
 				this.log.warn('Profile 3 State Change: ' + String(id));
-				this.log.warn(id.substring(id.lastIndexOf('.')));
+				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
 			}
 			else if((id.includes('Device.Profiles.4')) && (state.ack == false)){
 				this.log.warn('Profile 4 State Change: ' + String(id));
-				this.log.warn(id.substring(id.lastIndexOf('.')));
+				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
 			}
 			else if((id.includes('Device.Profiles.5')) && (state.ack == false)){
 				this.log.warn('Profile 5 State Change: ' + String(id));
-				this.log.warn(id.substring(id.lastIndexOf('.')));
+				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
 			}
 			else if((id.includes('Device.Profiles.6')) && (state.ack == false)){
 				this.log.warn('Profile 6 State Change: ' + String(id));
-				this.log.warn(id.substring(id.lastIndexOf('.')));
+				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
 			}
 			else if((id.includes('Device.Profiles.7')) && (state.ack == false)){
 				this.log.warn('Profile 7 State Change: ' + String(id));
-				this.log.warn(id.substring(id.lastIndexOf('.')));
+				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
 			}
 			else if((id.includes('Device.Profiles.8')) && (state.ack == false)){
 				this.log.warn('Profile 8 State Change: ' + String(id));
-				this.log.warn(id.substring(id.lastIndexOf('.')));
+				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
 			}
 			else{
 				this.log.warn('StateChange: ' + String(id) + ' Value: ' + String(state.val) + ' acknowledged: ' + String(state.ack));
@@ -5123,7 +7370,7 @@ class wamo extends utils.Adapter {
 	async set_DevieParameter(Parameter, Value, IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
 
-			let oldParameter = await this.get_DevieParameter(Parameter,IPadress,Port);
+			const oldParameter = await this.get_DevieParameter(Parameter,IPadress,Port);
 
 			// Flag indicating if we had to modifiy Admin Mode
 			let writeModeChanged = false;
