@@ -5594,19 +5594,6 @@ class wamo extends utils.Adapter {
 						break;
 				}
 			}
-			else if((id == statePrefix + DeviceParameters.AvailableProfiles.statePath + '.' + DeviceParameters.AvailableProfiles.id) && state.ack == false)
-			{
-				if((state.val != null) && (parseInt(String(state.val)) > 1)&& (parseInt(String(state.val)) <= 8))
-				{
-					try {
-						await this.set_DevieParameter(DeviceParameters.AvailableProfiles, state.val, this.config.device_ip, this.config.device_port);
-						this.log.info('Available profiles changed to ' + String(state.val));
-					}
-					catch (err) {
-						this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.AvailableProfiles ... ERROR: ' + err);
-					}
-				}
-			}
 			else if((id.includes('Device.Profiles.1')) && (state.ack == false)){
 				switch(id.substring(id.lastIndexOf('.') + 1))
 				{
@@ -7498,7 +7485,7 @@ class wamo extends utils.Adapter {
 	async get_DevieProfileParameter(Profile, ParameterID, IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
 
-			this.log.debug(`[getDevieParameter(ParameterID)] ${ParameterID}${Profile}`);
+			this.log.debug(`[getDevieParameter(ParameterID)] ${ParameterID} Profile ${Profile}`);
 
 			axios({
 				method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/' + String(ParameterID) + String(Profile), timeout: 10000, responseType: 'json'
@@ -7561,8 +7548,10 @@ class wamo extends utils.Adapter {
 				});
 				if (parseFloat(value['getPA' + String(ProfileNumber)]) == 0) {
 					await this.setStateAsync(state_ID, { val: false, ack: true });
+					this.log.info('Profile ' + String(ProfileNumber) + ' is not available');
 				}
 				else {
+					this.log.info('Profile ' + String(ProfileNumber) + ' is available');
 					await this.setStateAsync(state_ID, { val: true, ack: true });
 				}
 				resolve(true);
@@ -7647,6 +7636,7 @@ class wamo extends utils.Adapter {
 					native: {}
 				});
 				await this.setStateAsync(state_ID, { val: parseFloat(value['getPV' + String(ProfileNumber)]), ack: true });
+				this.log.info('Profile ' + String(ProfileNumber) + ' quantity limitation is ' + String(value['getPV' + String(ProfileNumber)]));
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
@@ -7687,6 +7677,7 @@ class wamo extends utils.Adapter {
 					native: {}
 				});
 				await this.setStateAsync(state_ID, { val: parseFloat(value['getPT' + String(ProfileNumber)]), ack: true });
+				this.log.info('Profile ' + String(ProfileNumber) + ' time limitation is ' + String(value['getPT' + String(ProfileNumber)]));
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
@@ -7727,6 +7718,7 @@ class wamo extends utils.Adapter {
 					native: {}
 				});
 				await this.setStateAsync(state_ID, { val: parseFloat(value['getPF' + String(ProfileNumber)]), ack: true });
+				this.log.info('Profile ' + String(ProfileNumber) + ' maximum flow is ' + String(value['getPF' + String(ProfileNumber)]));
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
