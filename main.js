@@ -7602,49 +7602,54 @@ class wamo extends utils.Adapter {
 				const profileAvailable = parseInt(String(value['getPA' + String(ProfileNumber)]));
 				let currentStatePath  = '';
 				let crStaResult = null;
+				let currentstateObject = new Object();
 				this.log.warn('async state_profile_PA(ProfileNumber, value) -> const profileAvailable = value[\'getPA\' + String(ProfileNumber)]; = ' + String(profileAvailable));
 
 				switch (ProfileNumber){
 					case 1:
 						currentStatePath = String(DeviceParameters.Profile_PA1.statePath) + '.' + String(DeviceParameters.Profile_PA1.id);
-						crStaResult = await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA1.statePath + '.' + DeviceParameters.Profile_PA1.id, Object(DeviceParameters.Profile_PA1.objectdefinition));
+						currentstateObject = Object(DeviceParameters.Profile_PA1.objectdefinition);
 						break;
 					case 2:
 						currentStatePath = String(DeviceParameters.Profile_PA2.statePath) + '.' + String(DeviceParameters.Profile_PA2.id);
-						crStaResult = await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA2.statePath + '.' + DeviceParameters.Profile_PA2.id, Object(DeviceParameters.Profile_PA2.objectdefinition));
+						currentstateObject = Object(DeviceParameters.Profile_PA2.objectdefinition);
 						break;
 					case 3:
 						currentStatePath = String(DeviceParameters.Profile_PA3.statePath) + '.' + String(DeviceParameters.Profile_PA3.id);
-						crStaResult = await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA3.statePath + '.' + DeviceParameters.Profile_PA3.id, Object(DeviceParameters.Profile_PA3.objectdefinition));
+						currentstateObject = Object(DeviceParameters.Profile_PA3.objectdefinition);
 						break;
 					case 4:
 						currentStatePath = String(DeviceParameters.Profile_PA4.statePath) + '.' + String(DeviceParameters.Profile_PA4.id);
-						crStaResult = await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA4.statePath + '.' + DeviceParameters.Profile_PA4.id, Object(DeviceParameters.Profile_PA4.objectdefinition));
+						currentstateObject = Object(DeviceParameters.Profile_PA4.objectdefinition);
 						break;
 					case 5:
 						currentStatePath = String(DeviceParameters.Profile_PA5.statePath) + '.' + String(DeviceParameters.Profile_PA5.id);
-						crStaResult = await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA5.statePath + '.' + DeviceParameters.Profile_PA5.id, Object(DeviceParameters.Profile_PA5.objectdefinition));
+						currentstateObject = Object(DeviceParameters.Profile_PA5.objectdefinition);
 						break;
 					case 6:
 						currentStatePath = String(DeviceParameters.Profile_PA6.statePath) + '.' + String(DeviceParameters.Profile_PA6.id);
-						crStaResult = await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA6.statePath + '.' + DeviceParameters.Profile_PA6.id, Object(DeviceParameters.Profile_PA6.objectdefinition));
+						currentstateObject = Object(DeviceParameters.Profile_PA6.objectdefinition);
 						break;
 					case 7:
 						currentStatePath = String(DeviceParameters.Profile_PA7.statePath) + '.' + String(DeviceParameters.Profile_PA7.id);
-						crStaResult = await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA7.statePath + '.' + DeviceParameters.Profile_PA7.id, Object(DeviceParameters.Profile_PA7.objectdefinition));
+						currentstateObject = Object(DeviceParameters.Profile_PA7.objectdefinition);
 						break;
 					case 8:
 						currentStatePath = String(DeviceParameters.Profile_PA8.statePath) + '.' + String(DeviceParameters.Profile_PA8.id);
-						crStaResult = await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA8.statePath + '.' + DeviceParameters.Profile_PA8.id, Object(DeviceParameters.Profile_PA8.objectdefinition));
+						currentstateObject = Object(DeviceParameters.Profile_PA8.objectdefinition);
 						break;
 					default:
 						this.log.error('async state_profile_PA(ProfileNumber, value) -> switch (ProfileNumber) hit \'default:\'');
 						break;
 				}
-				this.log.warn('result from setObjectNotExistsAsync = ' + String(crStaResult));
 				this.log.warn('State path before setStateAsync = ' + currentStatePath);
 				this.log.warn('Value before setStateAsync = ' + String(value['getPA' + String(ProfileNumber)]));
+
+				crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
 				await this.setStateAsync(currentStatePath, { val: parseInt(String(value['getPA' + String(ProfileNumber)])), ack: true });
+
+				this.log.warn('result from setObjectNotExistsAsync = ' + String(crStaResult));
+
 				if(profileAvailable == 1){this.log.info('Profile ' + String(ProfileNumber) + ' is available');}
 				else{this.log.info('Profile ' + String(ProfileNumber) + ' is not available');}
 				resolve(true);
