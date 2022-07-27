@@ -7602,41 +7602,42 @@ class wamo extends utils.Adapter {
 				const profileAvailable = parseInt(String(value['getPA' + String(ProfileNumber)]));
 				let currentStatePath  = '';
 				let crStaResult = null;
-				let currentstateObject = new Object();
+				let stStaResult = null;
+				let currentstateObject = '';
 				this.log.warn('async state_profile_PA(ProfileNumber, value) -> const profileAvailable = value[\'getPA\' + String(ProfileNumber)]; = ' + String(profileAvailable));
 
 				switch (ProfileNumber){
 					case 1:
 						currentStatePath = String(DeviceParameters.Profile_PA1.statePath) + '.' + String(DeviceParameters.Profile_PA1.id);
-						currentstateObject = Object(DeviceParameters.Profile_PA1.objectdefinition);
+						currentstateObject = JSON.stringify(DeviceParameters.Profile_PA1.objectdefinition);
 						break;
 					case 2:
 						currentStatePath = String(DeviceParameters.Profile_PA2.statePath) + '.' + String(DeviceParameters.Profile_PA2.id);
-						currentstateObject = Object(DeviceParameters.Profile_PA2.objectdefinition);
+						currentstateObject = JSON.stringify(DeviceParameters.Profile_PA2.objectdefinition);
 						break;
 					case 3:
 						currentStatePath = String(DeviceParameters.Profile_PA3.statePath) + '.' + String(DeviceParameters.Profile_PA3.id);
-						currentstateObject = Object(DeviceParameters.Profile_PA3.objectdefinition);
+						currentstateObject = JSON.stringify(DeviceParameters.Profile_PA3.objectdefinition);
 						break;
 					case 4:
 						currentStatePath = String(DeviceParameters.Profile_PA4.statePath) + '.' + String(DeviceParameters.Profile_PA4.id);
-						currentstateObject = Object(DeviceParameters.Profile_PA4.objectdefinition);
+						currentstateObject = JSON.stringify(DeviceParameters.Profile_PA4.objectdefinition);
 						break;
 					case 5:
 						currentStatePath = String(DeviceParameters.Profile_PA5.statePath) + '.' + String(DeviceParameters.Profile_PA5.id);
-						currentstateObject = Object(DeviceParameters.Profile_PA5.objectdefinition);
+						currentstateObject = JSON.stringify(DeviceParameters.Profile_PA5.objectdefinition);
 						break;
 					case 6:
 						currentStatePath = String(DeviceParameters.Profile_PA6.statePath) + '.' + String(DeviceParameters.Profile_PA6.id);
-						currentstateObject = Object(DeviceParameters.Profile_PA6.objectdefinition);
+						currentstateObject = JSON.stringify(DeviceParameters.Profile_PA6.objectdefinition);
 						break;
 					case 7:
 						currentStatePath = String(DeviceParameters.Profile_PA7.statePath) + '.' + String(DeviceParameters.Profile_PA7.id);
-						currentstateObject = Object(DeviceParameters.Profile_PA7.objectdefinition);
+						currentstateObject = JSON.stringify(DeviceParameters.Profile_PA7.objectdefinition);
 						break;
 					case 8:
 						currentStatePath = String(DeviceParameters.Profile_PA8.statePath) + '.' + String(DeviceParameters.Profile_PA8.id);
-						currentstateObject = Object(DeviceParameters.Profile_PA8.objectdefinition);
+						currentstateObject = JSON.stringify(DeviceParameters.Profile_PA8.objectdefinition);
 						break;
 					default:
 						this.log.error('async state_profile_PA(ProfileNumber, value) -> switch (ProfileNumber) hit \'default:\'');
@@ -7646,9 +7647,11 @@ class wamo extends utils.Adapter {
 				this.log.warn('Value before setStateAsync = ' + String(value['getPA' + String(ProfileNumber)]));
 
 				crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
-				await this.setStateAsync(currentStatePath, { val: parseInt(String(value['getPA' + String(ProfileNumber)])), ack: true });
+				this.log.warn('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
 
-				this.log.warn('result from setObjectNotExistsAsync = ' + String(crStaResult));
+				stStaResult = await this.setStateAsync(currentStatePath, { val: parseInt(String(value['getPA' + String(ProfileNumber)])), ack: true });
+				this.log.warn('result from setStateAsync = ' + JSON.stringify(stStaResult));
+
 
 				if(profileAvailable == 1){this.log.info('Profile ' + String(ProfileNumber) + ' is available');}
 				else{this.log.info('Profile ' + String(ProfileNumber) + ' is not available');}
