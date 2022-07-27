@@ -4465,22 +4465,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Time limit  (0 = deactivated 1...1500min (25h))',
-					'de': 'Zeitlimit (0 = deaktiviert 1...1500min (25h))',
-					'ru': 'Ограничение по времени (0 = деактивирован 1...1500min (25h))',
-					'pt': 'Limite de tempo (0 = desativado 1...1500min (25h))',
-					'nl': 'Tijdslimiet (0 = gedeactiveerd 1...1500min (25h))',
-					'fr': 'Délai  (0 = désactivé 1...1500min (25h))',
-					'it': 'Limiti di tempo  (0 = disattivato 1...1500min (25h))',
-					'es': 'Plazo límite (0 = desactivado 1...1500min (25h))',
-					'pl': 'Limit czasowy (0 = deaktywowany 1...1500min (25h))',
-					'zh-cn': '时限 (0 = 失职 1...1500min (25h))'
+					'en': 'Time limit  (0) deactivated 1...1500min (25h))',
+					'de': 'Zeitlimit (0) deaktiviert 1...1500min (25h))',
+					'ru': 'Ограничение по времени (0) деактивирован 1...1500min (25h))',
+					'pt': 'Limite de tempo (0) desativado 1...1500min (25h))',
+					'nl': 'Tijdslimiet (0) gedeactiveerd 1...1500min (25h))',
+					'fr': 'Délai  (0) désactivé 1...1500min (25h))',
+					'it': 'Limiti di tempo  (0) disattivato 1...1500min (25h))',
+					'es': 'Plazo límite (0) desactivado 1...1500min (25h))',
+					'pl': 'Limit czasowy (0) deaktywowany 1...1500min (25h))',
+					'zh-cn': '时限 (0) 失职 1...1500min (25h))'
 				},
 				type: 'number',
 				unit: 'min',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1500
 			},
 			native: {}
 		},
@@ -4496,22 +4498,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Time limit  (0 = deactivated 1...1500min (25h))',
-					'de': 'Zeitlimit (0 = deaktiviert 1...1500min (25h))',
-					'ru': 'Ограничение по времени (0 = деактивирован 1...1500min (25h))',
-					'pt': 'Limite de tempo (0 = desativado 1...1500min (25h))',
-					'nl': 'Tijdslimiet (0 = gedeactiveerd 1...1500min (25h))',
-					'fr': 'Délai  (0 = désactivé 1...1500min (25h))',
-					'it': 'Limiti di tempo  (0 = disattivato 1...1500min (25h))',
-					'es': 'Plazo límite (0 = desactivado 1...1500min (25h))',
-					'pl': 'Limit czasowy (0 = deaktywowany 1...1500min (25h))',
-					'zh-cn': '时限 (0 = 失职 1...1500min (25h))'
+					'en': 'Time limit  (0) deactivated 1...1500min (25h))',
+					'de': 'Zeitlimit (0) deaktiviert 1...1500min (25h))',
+					'ru': 'Ограничение по времени (0) деактивирован 1...1500min (25h))',
+					'pt': 'Limite de tempo (0) desativado 1...1500min (25h))',
+					'nl': 'Tijdslimiet (0) gedeactiveerd 1...1500min (25h))',
+					'fr': 'Délai  (0) désactivé 1...1500min (25h))',
+					'it': 'Limiti di tempo  (0) disattivato 1...1500min (25h))',
+					'es': 'Plazo límite (0) desactivado 1...1500min (25h))',
+					'pl': 'Limit czasowy (0) deaktywowany 1...1500min (25h))',
+					'zh-cn': '时限 (0) 失职 1...1500min (25h))'
 				},
 				type: 'number',
 				unit: 'min',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1500
 			},
 			native: {}
 		},
@@ -4527,22 +4531,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Time limit  (0 = deactivated 1...1500min (25h))',
-					'de': 'Zeitlimit (0 = deaktiviert 1...1500min (25h))',
-					'ru': 'Ограничение по времени (0 = деактивирован 1...1500min (25h))',
-					'pt': 'Limite de tempo (0 = desativado 1...1500min (25h))',
-					'nl': 'Tijdslimiet (0 = gedeactiveerd 1...1500min (25h))',
-					'fr': 'Délai  (0 = désactivé 1...1500min (25h))',
-					'it': 'Limiti di tempo  (0 = disattivato 1...1500min (25h))',
-					'es': 'Plazo límite (0 = desactivado 1...1500min (25h))',
-					'pl': 'Limit czasowy (0 = deaktywowany 1...1500min (25h))',
-					'zh-cn': '时限 (0 = 失职 1...1500min (25h))'
+					'en': 'Time limit  (0) deactivated 1...1500min (25h))',
+					'de': 'Zeitlimit (0) deaktiviert 1...1500min (25h))',
+					'ru': 'Ограничение по времени (0) деактивирован 1...1500min (25h))',
+					'pt': 'Limite de tempo (0) desativado 1...1500min (25h))',
+					'nl': 'Tijdslimiet (0) gedeactiveerd 1...1500min (25h))',
+					'fr': 'Délai  (0) désactivé 1...1500min (25h))',
+					'it': 'Limiti di tempo  (0) disattivato 1...1500min (25h))',
+					'es': 'Plazo límite (0) desactivado 1...1500min (25h))',
+					'pl': 'Limit czasowy (0) deaktywowany 1...1500min (25h))',
+					'zh-cn': '时限 (0) 失职 1...1500min (25h))'
 				},
 				type: 'number',
 				unit: 'min',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1500
 			},
 			native: {}
 		},
@@ -4558,22 +4564,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Time limit  (0 = deactivated 1...1500min (25h))',
-					'de': 'Zeitlimit (0 = deaktiviert 1...1500min (25h))',
-					'ru': 'Ограничение по времени (0 = деактивирован 1...1500min (25h))',
-					'pt': 'Limite de tempo (0 = desativado 1...1500min (25h))',
-					'nl': 'Tijdslimiet (0 = gedeactiveerd 1...1500min (25h))',
-					'fr': 'Délai  (0 = désactivé 1...1500min (25h))',
-					'it': 'Limiti di tempo  (0 = disattivato 1...1500min (25h))',
-					'es': 'Plazo límite (0 = desactivado 1...1500min (25h))',
-					'pl': 'Limit czasowy (0 = deaktywowany 1...1500min (25h))',
-					'zh-cn': '时限 (0 = 失职 1...1500min (25h))'
+					'en': 'Time limit  (0) deactivated 1...1500min (25h))',
+					'de': 'Zeitlimit (0) deaktiviert 1...1500min (25h))',
+					'ru': 'Ограничение по времени (0) деактивирован 1...1500min (25h))',
+					'pt': 'Limite de tempo (0) desativado 1...1500min (25h))',
+					'nl': 'Tijdslimiet (0) gedeactiveerd 1...1500min (25h))',
+					'fr': 'Délai  (0) désactivé 1...1500min (25h))',
+					'it': 'Limiti di tempo  (0) disattivato 1...1500min (25h))',
+					'es': 'Plazo límite (0) desactivado 1...1500min (25h))',
+					'pl': 'Limit czasowy (0) deaktywowany 1...1500min (25h))',
+					'zh-cn': '时限 (0) 失职 1...1500min (25h))'
 				},
 				type: 'number',
 				unit: 'min',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1500
 			},
 			native: {}
 		},
@@ -4589,22 +4597,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Time limit  (0 = deactivated 1...1500min (25h))',
-					'de': 'Zeitlimit (0 = deaktiviert 1...1500min (25h))',
-					'ru': 'Ограничение по времени (0 = деактивирован 1...1500min (25h))',
-					'pt': 'Limite de tempo (0 = desativado 1...1500min (25h))',
-					'nl': 'Tijdslimiet (0 = gedeactiveerd 1...1500min (25h))',
-					'fr': 'Délai  (0 = désactivé 1...1500min (25h))',
-					'it': 'Limiti di tempo  (0 = disattivato 1...1500min (25h))',
-					'es': 'Plazo límite (0 = desactivado 1...1500min (25h))',
-					'pl': 'Limit czasowy (0 = deaktywowany 1...1500min (25h))',
-					'zh-cn': '时限 (0 = 失职 1...1500min (25h))'
+					'en': 'Time limit  (0) deactivated 1...1500min (25h))',
+					'de': 'Zeitlimit (0) deaktiviert 1...1500min (25h))',
+					'ru': 'Ограничение по времени (0) деактивирован 1...1500min (25h))',
+					'pt': 'Limite de tempo (0) desativado 1...1500min (25h))',
+					'nl': 'Tijdslimiet (0) gedeactiveerd 1...1500min (25h))',
+					'fr': 'Délai  (0) désactivé 1...1500min (25h))',
+					'it': 'Limiti di tempo  (0) disattivato 1...1500min (25h))',
+					'es': 'Plazo límite (0) desactivado 1...1500min (25h))',
+					'pl': 'Limit czasowy (0) deaktywowany 1...1500min (25h))',
+					'zh-cn': '时限 (0) 失职 1...1500min (25h))'
 				},
 				type: 'number',
 				unit: 'min',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1500
 			},
 			native: {}
 		},
@@ -4620,22 +4630,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Time limit  (0 = deactivated 1...1500min (25h))',
-					'de': 'Zeitlimit (0 = deaktiviert 1...1500min (25h))',
-					'ru': 'Ограничение по времени (0 = деактивирован 1...1500min (25h))',
-					'pt': 'Limite de tempo (0 = desativado 1...1500min (25h))',
-					'nl': 'Tijdslimiet (0 = gedeactiveerd 1...1500min (25h))',
-					'fr': 'Délai  (0 = désactivé 1...1500min (25h))',
-					'it': 'Limiti di tempo  (0 = disattivato 1...1500min (25h))',
-					'es': 'Plazo límite (0 = desactivado 1...1500min (25h))',
-					'pl': 'Limit czasowy (0 = deaktywowany 1...1500min (25h))',
-					'zh-cn': '时限 (0 = 失职 1...1500min (25h))'
+					'en': 'Time limit  (0) deactivated 1...1500min (25h))',
+					'de': 'Zeitlimit (0) deaktiviert 1...1500min (25h))',
+					'ru': 'Ограничение по времени (0) деактивирован 1...1500min (25h))',
+					'pt': 'Limite de tempo (0) desativado 1...1500min (25h))',
+					'nl': 'Tijdslimiet (0) gedeactiveerd 1...1500min (25h))',
+					'fr': 'Délai  (0) désactivé 1...1500min (25h))',
+					'it': 'Limiti di tempo  (0) disattivato 1...1500min (25h))',
+					'es': 'Plazo límite (0) desactivado 1...1500min (25h))',
+					'pl': 'Limit czasowy (0) deaktywowany 1...1500min (25h))',
+					'zh-cn': '时限 (0) 失职 1...1500min (25h))'
 				},
 				type: 'number',
 				unit: 'min',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1500
 			},
 			native: {}
 		},
@@ -4651,22 +4663,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Time limit  (0 = deactivated 1...1500min (25h))',
-					'de': 'Zeitlimit (0 = deaktiviert 1...1500min (25h))',
-					'ru': 'Ограничение по времени (0 = деактивирован 1...1500min (25h))',
-					'pt': 'Limite de tempo (0 = desativado 1...1500min (25h))',
-					'nl': 'Tijdslimiet (0 = gedeactiveerd 1...1500min (25h))',
-					'fr': 'Délai  (0 = désactivé 1...1500min (25h))',
-					'it': 'Limiti di tempo  (0 = disattivato 1...1500min (25h))',
-					'es': 'Plazo límite (0 = desactivado 1...1500min (25h))',
-					'pl': 'Limit czasowy (0 = deaktywowany 1...1500min (25h))',
-					'zh-cn': '时限 (0 = 失职 1...1500min (25h))'
+					'en': 'Time limit  (0) deactivated 1...1500min (25h))',
+					'de': 'Zeitlimit (0) deaktiviert 1...1500min (25h))',
+					'ru': 'Ограничение по времени (0) деактивирован 1...1500min (25h))',
+					'pt': 'Limite de tempo (0) desativado 1...1500min (25h))',
+					'nl': 'Tijdslimiet (0) gedeactiveerd 1...1500min (25h))',
+					'fr': 'Délai  (0) désactivé 1...1500min (25h))',
+					'it': 'Limiti di tempo  (0) disattivato 1...1500min (25h))',
+					'es': 'Plazo límite (0) desactivado 1...1500min (25h))',
+					'pl': 'Limit czasowy (0) deaktywowany 1...1500min (25h))',
+					'zh-cn': '时限 (0) 失职 1...1500min (25h))'
 				},
 				type: 'number',
 				unit: 'min',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1500
 			},
 			native: {}
 		},
@@ -4682,22 +4696,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Time limit  (0 = deactivated 1...1500min (25h))',
-					'de': 'Zeitlimit (0 = deaktiviert 1...1500min (25h))',
-					'ru': 'Ограничение по времени (0 = деактивирован 1...1500min (25h))',
-					'pt': 'Limite de tempo (0 = desativado 1...1500min (25h))',
-					'nl': 'Tijdslimiet (0 = gedeactiveerd 1...1500min (25h))',
-					'fr': 'Délai  (0 = désactivé 1...1500min (25h))',
-					'it': 'Limiti di tempo  (0 = disattivato 1...1500min (25h))',
-					'es': 'Plazo límite (0 = desactivado 1...1500min (25h))',
-					'pl': 'Limit czasowy (0 = deaktywowany 1...1500min (25h))',
-					'zh-cn': '时限 (0 = 失职 1...1500min (25h))'
+					'en': 'Time limit  (0) deactivated 1...1500min (25h))',
+					'de': 'Zeitlimit (0) deaktiviert 1...1500min (25h))',
+					'ru': 'Ограничение по времени (0) деактивирован 1...1500min (25h))',
+					'pt': 'Limite de tempo (0) desativado 1...1500min (25h))',
+					'nl': 'Tijdslimiet (0) gedeactiveerd 1...1500min (25h))',
+					'fr': 'Délai  (0) désactivé 1...1500min (25h))',
+					'it': 'Limiti di tempo  (0) disattivato 1...1500min (25h))',
+					'es': 'Plazo límite (0) desactivado 1...1500min (25h))',
+					'pl': 'Limit czasowy (0) deaktywowany 1...1500min (25h))',
+					'zh-cn': '时限 (0) 失职 1...1500min (25h))'
 				},
 				type: 'number',
 				unit: 'min',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1500
 			},
 			native: {}
 		},
@@ -7879,8 +7895,8 @@ class wamo extends utils.Adapter {
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileQuantityLimitation, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
-
-				this.log.info('Profile ' + String(ProfileNumber) + ' quantity limitation is ' + String(profileQuantityLimitation) + 'l');
+				if(profileQuantityLimitation == 0){this.log.info('Profile ' + String(ProfileNumber) + ' maximum volume limit disabled');}
+				else{this.log.info('Profile ' + String(ProfileNumber) + ' maximum volume limit is ' + String(profileQuantityLimitation) + 'l');}
 				resolve(true);
 			} catch (err) {
 				this.log.error('async state_profile_PV(ProfileNumber, value) ERROR: ' + err);
@@ -7896,32 +7912,60 @@ class wamo extends utils.Adapter {
 	async state_profile_PT(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const state_ID = 'Device.Profiles.' + String(ProfileNumber) + '.PT' + String(ProfileNumber);
-				await this.setObjectNotExistsAsync(state_ID, {
-					type: 'state',
-					common: {
-						name: {
-							'en': 'Profile ' + String(ProfileNumber) + ' time limit (0 = disabled 1...1500min (25h)',
-							'de': 'Profil ' + String(ProfileNumber) + ' Zeitlimit (0 = deaktiviert 1...1500min (25h)',
-							'ru': 'Ограничение времени профиля ' + String(ProfileNumber) + ' (0 = отключено 1...1500 мин (25 ч)',
-							'pt': 'Limite de tempo do perfil ' + String(ProfileNumber) + ' (0 = desabilitado 1...1500min (25h)',
-							'nl': 'Tijdslimiet profiel ' + String(ProfileNumber) + ' (0 = uitgeschakeld 1...1500min (25h)',
-							'fr': 'Limite de temps profil ' + String(ProfileNumber) + ' (0 = désactivé 1...1500min (25h)',
-							'it': 'Limite di tempo del profilo ' + String(ProfileNumber) + ' (0 = disabilitato 1...1500min (25h)',
-							'es': 'Perfil ' + String(ProfileNumber) + ' límite de tiempo (0 = deshabilitado 1...1500min (25h)',
-							'pl': 'Limit czasu profilu ' + String(ProfileNumber) + ' (0 = wyłączone 1...1500min (25h)',
-							'zh-cn': '配置文件 ' + String(ProfileNumber) + ' 时间限制（0 = 禁用 1...1500min (25h)'
-						},
-						type: 'number',
-						role: 'value.info',
-						unit: 'min',
-						read: true,
-						write: false
-					},
-					native: {}
-				});
-				await this.setStateAsync(state_ID, { val: parseFloat(value['getPT' + String(ProfileNumber)]), ack: true });
-				this.log.info('Profile ' + String(ProfileNumber) + ' time limitation is ' + String(value['getPT' + String(ProfileNumber)]));
+
+				let currentStatePath  = '';
+				let crStaResult = null;
+				let stStaResult = null;
+				let currentstateObject = '';
+
+				const profileTimeLimitation = parseInt(String(value['getPT' + String(ProfileNumber)]));
+				this.log.debug('async state_profile_PT(ProfileNumber, value) -> const profileTimeLimitation = ' + String(profileTimeLimitation));
+
+				switch (ProfileNumber) {
+					case 1:
+						currentStatePath = String(DeviceParameters.Profile_PT1.statePath) + '.' + String(DeviceParameters.Profile_PT1.id);
+						currentstateObject = Object(DeviceParameters.Profile_PT1.objectdefinition);
+						break;
+					case 2:
+						currentStatePath = String(DeviceParameters.Profile_PT2.statePath) + '.' + String(DeviceParameters.Profile_PT2.id);
+						currentstateObject = Object(DeviceParameters.Profile_PT2.objectdefinition);
+						break;
+					case 3:
+						currentStatePath = String(DeviceParameters.Profile_PT3.statePath) + '.' + String(DeviceParameters.Profile_PT3.id);
+						currentstateObject = Object(DeviceParameters.Profile_PT3.objectdefinition);
+						break;
+					case 4:
+						currentStatePath = String(DeviceParameters.Profile_PT4.statePath) + '.' + String(DeviceParameters.Profile_PT4.id);
+						currentstateObject = Object(DeviceParameters.Profile_PT4.objectdefinition);
+						break;
+					case 5:
+						currentStatePath = String(DeviceParameters.Profile_PT5.statePath) + '.' + String(DeviceParameters.Profile_PT5.id);
+						currentstateObject = Object(DeviceParameters.Profile_PT5.objectdefinition);
+						break;
+					case 6:
+						currentStatePath = String(DeviceParameters.Profile_PT6.statePath) + '.' + String(DeviceParameters.Profile_PT6.id);
+						currentstateObject = Object(DeviceParameters.Profile_PT6.objectdefinition);
+						break;
+					case 7:
+						currentStatePath = String(DeviceParameters.Profile_PT7.statePath) + '.' + String(DeviceParameters.Profile_PT7.id);
+						currentstateObject = Object(DeviceParameters.Profile_PT7.objectdefinition);
+						break;
+					case 8:
+						currentStatePath = String(DeviceParameters.Profile_PT8.statePath) + '.' + String(DeviceParameters.Profile_PT8.id);
+						currentstateObject = Object(DeviceParameters.Profile_PT8.objectdefinition);
+						break;
+				}
+				this.log.debug('State path before setStateAsync = ' + currentStatePath);
+				this.log.debug('Value before setStateAsync = ' + String(profileTimeLimitation));
+
+				crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
+				this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
+
+				stStaResult = await this.setStateAsync(currentStatePath, { val: profileTimeLimitation, ack: true });
+				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
+
+				if(profileTimeLimitation == 0){this.log.info('Profile ' + String(ProfileNumber) + ' maximum time limit is disabled');}
+				else{this.log.info('Profile ' + String(ProfileNumber) + ' maximum time limit is ' + String(profileTimeLimitation) + 'min');}
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
