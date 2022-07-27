@@ -5529,6 +5529,9 @@ class wamo extends utils.Adapter {
 			const skipp = true;
 			const statePrefix = this.name + '.' + String(this.instance) +'.';
 			// The state was changed
+			//============================================================================
+			// Screen Rotation
+			//============================================================================
 			if((id == statePrefix + DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id) && state.ack == false)
 			{
 				switch (state.val) {
@@ -5549,6 +5552,9 @@ class wamo extends utils.Adapter {
 						break;
 				}
 			}
+			//============================================================================
+			// Shutoff valve
+			//============================================================================
 			else if((id == statePrefix + DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id) && state.ack == false)
 			{
 				switch (state.val) {
@@ -5573,6 +5579,9 @@ class wamo extends utils.Adapter {
 						break;
 				}
 			}
+			//============================================================================
+			// Selected Profile
+			//============================================================================
 			else if((id == statePrefix + DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id) && state.ack == false)
 			{
 				switch (state.val) {
@@ -7590,7 +7599,7 @@ class wamo extends utils.Adapter {
 			try {
 
 				this.log.warn('async state_profile_PA(ProfileNumber, value) value: ' + JSON.stringify(value) + ' Profilnummer: ' + String(ProfileNumber));
-				const profileAvailable = parseInt(String(value['getPA' + String(ProfileNumber)]));
+				const profileAvailable = value['getPA' + String(ProfileNumber)];
 				this.log.warn('async state_profile_PA(ProfileNumber, value) -> const profileAvailable = parseFloat(String(value[\'getPA\' + String(ProfileNumber)])); = ' + String(profileAvailable));
 
 				switch (ProfileNumber) {
@@ -7707,8 +7716,8 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 
-				const profileQuantityLimitation = parseInt(String(value['getPV' + String(ProfileNumber)]));
-				this.log.warn('async state_profile_PV(ProfileNumber, value) -> const profileAvailable = const profileQuantityLimitation = parseInt(String(value[\'getPV\' + String(ProfileNumber)])) = ' + String(profileQuantityLimitation));
+				const profileQuantityLimitation = value['getPV' + String(ProfileNumber)];
+				this.log.warn('async state_profile_PV(ProfileNumber, value) -> const profileQuantityLimitation = ' + String(profileQuantityLimitation));
 
 				switch (ProfileNumber) {
 					case 1:
