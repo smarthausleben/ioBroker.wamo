@@ -4646,7 +4646,7 @@ const DeviceParameters = {
 	Profile_PV1: {
 		id: 'PV1',
 		objectdefinition: {
-			type: 'state',
+			type: 'value',
 			common: {
 				name: {
 					'en': 'Quantity limitation (0 = deaktivated 1 - 1900l)',
@@ -4677,7 +4677,7 @@ const DeviceParameters = {
 	Profile_PV2: {
 		id: 'PV2',
 		objectdefinition: {
-			type: 'state',
+			type: 'value',
 			common: {
 				name: {
 					'en': 'Quantity limitation (0 = deaktivated 1 - 1900l)',
@@ -7600,7 +7600,7 @@ class wamo extends utils.Adapter {
 
 				this.log.warn('async state_profile_PA(ProfileNumber, value) value: ' + JSON.stringify(value) + ' Profilnummer: ' + String(ProfileNumber));
 				const profileAvailable = value['getPA' + String(ProfileNumber)];
-				this.log.warn('async state_profile_PA(ProfileNumber, value) -> const profileAvailable = parseFloat(String(value[\'getPA\' + String(ProfileNumber)])); = ' + String(profileAvailable));
+				this.log.warn('async state_profile_PA(ProfileNumber, value) -> const profileAvailable = value[\'getPA\' + String(ProfileNumber)]; = ' + String(profileAvailable));
 
 				switch (ProfileNumber) {
 					case 1:
@@ -7642,6 +7642,9 @@ class wamo extends utils.Adapter {
 					case 8:
 						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA8.statePath + '.' + DeviceParameters.Profile_PA8.id, Object(DeviceParameters.Profile_PA8.objectdefinition));
 						await this.setStateAsync(DeviceParameters.Profile_PA8.statePath + '.' + DeviceParameters.Profile_PA8.id, { val: profileAvailable, ack: true });
+						break;
+					default:
+						this.log.error('async state_profile_PA(ProfileNumber, value) -> switch (ProfileNumber) hit \'default:\'');
 						break;
 				}
 
