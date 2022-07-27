@@ -7336,7 +7336,7 @@ class wamo extends utils.Adapter {
 	async UpdateProfileState(ProfileNumber, stateID, value) {
 		return new Promise(async (resolve, reject) => {
 
-			const skipp = true;
+			const skipp = false;
 			this.log.warn('async UpdateProfileState(ProfileNumber, stateID, value) stateID: ' + String(stateID) + ' Profile Nr.: ' + String(ProfileNumber) + ' value: ' + JSON.stringify(value));
 			const parameterIDs = stateID.split('.');
 			const parameter = (parameterIDs[parameterIDs.length - 1]).substr(0, parameterIDs[parameterIDs.length - 1].length - 1);
@@ -7648,12 +7648,12 @@ class wamo extends utils.Adapter {
 						break;
 				}
 				this.log.warn('State path before setStateAsync = ' + currentStatePath);
-				this.log.warn('Value before setStateAsync = ' + String(value['getPA' + String(ProfileNumber)]));
+				this.log.warn('Value before setStateAsync = ' + String(profileAvailable));
 
 				crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
 				this.log.warn('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
 
-				stStaResult = await this.setStateAsync(currentStatePath, { val: parseInt(String(value['getPA' + String(ProfileNumber)])), ack: true });
+				stStaResult = await this.setStateAsync(currentStatePath, { val: profileAvailable, ack: true });
 				this.log.warn('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
 
@@ -7728,43 +7728,57 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 
-				const profileQuantityLimitation = value['getPV' + String(ProfileNumber)];
+				let currentStatePath  = '';
+				let crStaResult = null;
+				let stStaResult = null;
+				let currentstateObject = '';
+
+				const profileQuantityLimitation = parseInt(String(value['getPV' + String(ProfileNumber)]));
 				this.log.warn('async state_profile_PV(ProfileNumber, value) -> const profileQuantityLimitation = ' + String(profileQuantityLimitation));
 
 				switch (ProfileNumber) {
 					case 1:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PV1.statePath + '.' + DeviceParameters.Profile_PV1.id, Object(DeviceParameters.Profile_PV1.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PV1.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: Number(value['getPV' + String(ProfileNumber)]), ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PV1.statePath) + '.' + String(DeviceParameters.Profile_PV1.id);
+						currentstateObject = Object(DeviceParameters.Profile_PV1.objectdefinition);
 						break;
 					case 2:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PV2.statePath + '.' + DeviceParameters.Profile_PV2.id, Object(DeviceParameters.Profile_PV2.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PV2.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: parseFloat(value['getPV' + String(ProfileNumber)]), ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PV2.statePath) + '.' + String(DeviceParameters.Profile_PV2.id);
+						currentstateObject = Object(DeviceParameters.Profile_PV2.objectdefinition);
 						break;
 					case 3:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PV3.statePath + '.' + DeviceParameters.Profile_PV3.id, Object(DeviceParameters.Profile_PV3.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PV3.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: parseInt(value['getPV' + String(ProfileNumber)]), ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PV3.statePath) + '.' + String(DeviceParameters.Profile_PV3.id);
+						currentstateObject = Object(DeviceParameters.Profile_PV3.objectdefinition);
 						break;
 					case 4:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PV4.statePath + '.' + DeviceParameters.Profile_PV4.id, Object(DeviceParameters.Profile_PV4.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PV4.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: profileQuantityLimitation, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PV4.statePath) + '.' + String(DeviceParameters.Profile_PV4.id);
+						currentstateObject = Object(DeviceParameters.Profile_PV4.objectdefinition);
 						break;
 					case 5:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PV5.statePath + '.' + DeviceParameters.Profile_PV5.id, Object(DeviceParameters.Profile_PV5.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PV5.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: profileQuantityLimitation, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PV5.statePath) + '.' + String(DeviceParameters.Profile_PV5.id);
+						currentstateObject = Object(DeviceParameters.Profile_PV5.objectdefinition);
 						break;
 					case 6:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PV6.statePath + '.' + DeviceParameters.Profile_PV6.id, Object(DeviceParameters.Profile_PV6.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PV6.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: profileQuantityLimitation, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PV6.statePath) + '.' + String(DeviceParameters.Profile_PV6.id);
+						currentstateObject = Object(DeviceParameters.Profile_PV6.objectdefinition);
 						break;
 					case 7:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PV7.statePath + '.' + DeviceParameters.Profile_PV7.id, Object(DeviceParameters.Profile_PV7.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PV7.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: profileQuantityLimitation, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PV7.statePath) + '.' + String(DeviceParameters.Profile_PV7.id);
+						currentstateObject = Object(DeviceParameters.Profile_PV7.objectdefinition);
 						break;
 					case 8:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PV8.statePath + '.' + DeviceParameters.Profile_PV8.id, Object(DeviceParameters.Profile_PV8.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PV8.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: profileQuantityLimitation, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PV8.statePath) + '.' + String(DeviceParameters.Profile_PV8.id);
+						currentstateObject = Object(DeviceParameters.Profile_PV8.objectdefinition);
 						break;
 				}
+				this.log.warn('State path before setStateAsync = ' + currentStatePath);
+				this.log.warn('Value before setStateAsync = ' + String(profileQuantityLimitation));
+
+				crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
+				this.log.warn('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
+
+				stStaResult = await this.setStateAsync(currentStatePath, { val: profileQuantityLimitation, ack: true });
+				this.log.warn('result from setStateAsync = ' + JSON.stringify(stStaResult));
+
 
 				this.log.info('Profile ' + String(ProfileNumber) + ' quantity limitation is ' + String(profileQuantityLimitation) + 'l');
 				resolve(true);
