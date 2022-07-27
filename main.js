@@ -3441,22 +3441,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'maximum flow (0 = deactivated 1...5000l/h)',
-					'de': 'maximaler durchfluss (0 = deaktiviert 1...5000l/h)',
-					'ru': 'максимальный поток (0 = деактивирован 1...5000л/ч)',
-					'pt': 'fluxo máximo (0 = desativado 1...5000l/h)',
+					'en': 'maximum flow (0) deactivated 1...5000l/h)',
+					'de': 'maximaler Durchfluss (0) deaktiviert 1...5000l/h)',
+					'ru': 'максимальный поток (0) деактивирован 1...5000л/ч)',
+					'pt': 'fluxo máximo (0) desativado 1...5000l/h)',
 					'nl': 'maximale stroom (0) gedeactiveerd 1...5000/h ♪',
-					'fr': 'débit maximal (0 = désactivé 1...5000l/h)',
-					'it': 'flusso massimo (0 = disattivato 1...5000l/h)',
-					'es': 'flujo máximo (0 = desactivado 1...5000l/h)',
-					'pl': 'maksymalny przepływ (0 = deaktywowany 1..5000l/h)',
-					'zh-cn': '最大流量 (0 = 失职 1...5000l/h)'
+					'fr': 'débit maximal (0) désactivé 1...5000l/h)',
+					'it': 'flusso massimo (0) disattivato 1...5000l/h)',
+					'es': 'flujo máximo (0) desactivado 1...5000l/h)',
+					'pl': 'maksymalny przepływ (0) deaktywowany 1..5000l/h)',
+					'zh-cn': '最大流量 (0) 失职 1...5000l/h)'
 				},
 				type: 'number',
 				role: 'value.max',
 				unit: 'l/h',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 5000
 			},
 			native: {}
 		},
@@ -3472,22 +3474,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'maximum flow (0 = deactivated 1...5000l/h)',
-					'de': 'maximaler durchfluss (0 = deaktiviert 1...5000l/h)',
-					'ru': 'максимальный поток (0 = деактивирован 1...5000л/ч)',
-					'pt': 'fluxo máximo (0 = desativado 1...5000l/h)',
+					'en': 'maximum flow (0) deactivated 1...5000l/h)',
+					'de': 'maximaler Durchfluss (0) deaktiviert 1...5000l/h)',
+					'ru': 'максимальный поток (0) деактивирован 1...5000л/ч)',
+					'pt': 'fluxo máximo (0) desativado 1...5000l/h)',
 					'nl': 'maximale stroom (0) gedeactiveerd 1...5000/h ♪',
-					'fr': 'débit maximal (0 = désactivé 1...5000l/h)',
-					'it': 'flusso massimo (0 = disattivato 1...5000l/h)',
-					'es': 'flujo máximo (0 = desactivado 1...5000l/h)',
-					'pl': 'maksymalny przepływ (0 = deaktywowany 1..5000l/h)',
-					'zh-cn': '最大流量 (0 = 失职 1...5000l/h)'
+					'fr': 'débit maximal (0) désactivé 1...5000l/h)',
+					'it': 'flusso massimo (0) disattivato 1...5000l/h)',
+					'es': 'flujo máximo (0) desactivado 1...5000l/h)',
+					'pl': 'maksymalny przepływ (0) deaktywowany 1..5000l/h)',
+					'zh-cn': '最大流量 (0) 失职 1...5000l/h)'
 				},
 				type: 'number',
 				role: 'value.max',
 				unit: 'l/h',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 5000
 			},
 			native: {}
 		},
@@ -3503,22 +3507,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'maximum flow (0 = deactivated 1...5000l/h)',
-					'de': 'maximaler durchfluss (0 = deaktiviert 1...5000l/h)',
-					'ru': 'максимальный поток (0 = деактивирован 1...5000л/ч)',
-					'pt': 'fluxo máximo (0 = desativado 1...5000l/h)',
+					'en': 'maximum flow (0) deactivated 1...5000l/h)',
+					'de': 'maximaler Durchfluss (0) deaktiviert 1...5000l/h)',
+					'ru': 'максимальный поток (0) деактивирован 1...5000л/ч)',
+					'pt': 'fluxo máximo (0) desativado 1...5000l/h)',
 					'nl': 'maximale stroom (0) gedeactiveerd 1...5000/h ♪',
-					'fr': 'débit maximal (0 = désactivé 1...5000l/h)',
-					'it': 'flusso massimo (0 = disattivato 1...5000l/h)',
-					'es': 'flujo máximo (0 = desactivado 1...5000l/h)',
-					'pl': 'maksymalny przepływ (0 = deaktywowany 1..5000l/h)',
-					'zh-cn': '最大流量 (0 = 失职 1...5000l/h)'
+					'fr': 'débit maximal (0) désactivé 1...5000l/h)',
+					'it': 'flusso massimo (0) disattivato 1...5000l/h)',
+					'es': 'flujo máximo (0) desactivado 1...5000l/h)',
+					'pl': 'maksymalny przepływ (0) deaktywowany 1..5000l/h)',
+					'zh-cn': '最大流量 (0) 失职 1...5000l/h)'
 				},
 				type: 'number',
 				role: 'value.max',
 				unit: 'l/h',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 5000
 			},
 			native: {}
 		},
@@ -3534,22 +3540,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'maximum flow (0 = deactivated 1...5000l/h)',
-					'de': 'maximaler durchfluss (0 = deaktiviert 1...5000l/h)',
-					'ru': 'максимальный поток (0 = деактивирован 1...5000л/ч)',
-					'pt': 'fluxo máximo (0 = desativado 1...5000l/h)',
+					'en': 'maximum flow (0) deactivated 1...5000l/h)',
+					'de': 'maximaler Durchfluss (0) deaktiviert 1...5000l/h)',
+					'ru': 'максимальный поток (0) деактивирован 1...5000л/ч)',
+					'pt': 'fluxo máximo (0) desativado 1...5000l/h)',
 					'nl': 'maximale stroom (0) gedeactiveerd 1...5000/h ♪',
-					'fr': 'débit maximal (0 = désactivé 1...5000l/h)',
-					'it': 'flusso massimo (0 = disattivato 1...5000l/h)',
-					'es': 'flujo máximo (0 = desactivado 1...5000l/h)',
-					'pl': 'maksymalny przepływ (0 = deaktywowany 1..5000l/h)',
-					'zh-cn': '最大流量 (0 = 失职 1...5000l/h)'
+					'fr': 'débit maximal (0) désactivé 1...5000l/h)',
+					'it': 'flusso massimo (0) disattivato 1...5000l/h)',
+					'es': 'flujo máximo (0) desactivado 1...5000l/h)',
+					'pl': 'maksymalny przepływ (0) deaktywowany 1..5000l/h)',
+					'zh-cn': '最大流量 (0) 失职 1...5000l/h)'
 				},
 				type: 'number',
 				role: 'value.max',
 				unit: 'l/h',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 5000
 			},
 			native: {}
 		},
@@ -3565,22 +3573,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'maximum flow (0 = deactivated 1...5000l/h)',
-					'de': 'maximaler durchfluss (0 = deaktiviert 1...5000l/h)',
-					'ru': 'максимальный поток (0 = деактивирован 1...5000л/ч)',
-					'pt': 'fluxo máximo (0 = desativado 1...5000l/h)',
+					'en': 'maximum flow (0) deactivated 1...5000l/h)',
+					'de': 'maximaler Durchfluss (0) deaktiviert 1...5000l/h)',
+					'ru': 'максимальный поток (0) деактивирован 1...5000л/ч)',
+					'pt': 'fluxo máximo (0) desativado 1...5000l/h)',
 					'nl': 'maximale stroom (0) gedeactiveerd 1...5000/h ♪',
-					'fr': 'débit maximal (0 = désactivé 1...5000l/h)',
-					'it': 'flusso massimo (0 = disattivato 1...5000l/h)',
-					'es': 'flujo máximo (0 = desactivado 1...5000l/h)',
-					'pl': 'maksymalny przepływ (0 = deaktywowany 1..5000l/h)',
-					'zh-cn': '最大流量 (0 = 失职 1...5000l/h)'
+					'fr': 'débit maximal (0) désactivé 1...5000l/h)',
+					'it': 'flusso massimo (0) disattivato 1...5000l/h)',
+					'es': 'flujo máximo (0) desactivado 1...5000l/h)',
+					'pl': 'maksymalny przepływ (0) deaktywowany 1..5000l/h)',
+					'zh-cn': '最大流量 (0) 失职 1...5000l/h)'
 				},
 				type: 'number',
 				role: 'value.max',
 				unit: 'l/h',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 5000
 			},
 			native: {}
 		},
@@ -3596,22 +3606,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'maximum flow (0 = deactivated 1...5000l/h)',
-					'de': 'maximaler durchfluss (0 = deaktiviert 1...5000l/h)',
-					'ru': 'максимальный поток (0 = деактивирован 1...5000л/ч)',
-					'pt': 'fluxo máximo (0 = desativado 1...5000l/h)',
+					'en': 'maximum flow (0) deactivated 1...5000l/h)',
+					'de': 'maximaler Durchfluss (0) deaktiviert 1...5000l/h)',
+					'ru': 'максимальный поток (0) деактивирован 1...5000л/ч)',
+					'pt': 'fluxo máximo (0) desativado 1...5000l/h)',
 					'nl': 'maximale stroom (0) gedeactiveerd 1...5000/h ♪',
-					'fr': 'débit maximal (0 = désactivé 1...5000l/h)',
-					'it': 'flusso massimo (0 = disattivato 1...5000l/h)',
-					'es': 'flujo máximo (0 = desactivado 1...5000l/h)',
-					'pl': 'maksymalny przepływ (0 = deaktywowany 1..5000l/h)',
-					'zh-cn': '最大流量 (0 = 失职 1...5000l/h)'
+					'fr': 'débit maximal (0) désactivé 1...5000l/h)',
+					'it': 'flusso massimo (0) disattivato 1...5000l/h)',
+					'es': 'flujo máximo (0) desactivado 1...5000l/h)',
+					'pl': 'maksymalny przepływ (0) deaktywowany 1..5000l/h)',
+					'zh-cn': '最大流量 (0) 失职 1...5000l/h)'
 				},
 				type: 'number',
 				role: 'value.max',
 				unit: 'l/h',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 5000
 			},
 			native: {}
 		},
@@ -3627,22 +3639,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'maximum flow (0 = deactivated 1...5000l/h)',
-					'de': 'maximaler durchfluss (0 = deaktiviert 1...5000l/h)',
-					'ru': 'максимальный поток (0 = деактивирован 1...5000л/ч)',
-					'pt': 'fluxo máximo (0 = desativado 1...5000l/h)',
+					'en': 'maximum flow (0) deactivated 1...5000l/h)',
+					'de': 'maximaler Durchfluss (0) deaktiviert 1...5000l/h)',
+					'ru': 'максимальный поток (0) деактивирован 1...5000л/ч)',
+					'pt': 'fluxo máximo (0) desativado 1...5000l/h)',
 					'nl': 'maximale stroom (0) gedeactiveerd 1...5000/h ♪',
-					'fr': 'débit maximal (0 = désactivé 1...5000l/h)',
-					'it': 'flusso massimo (0 = disattivato 1...5000l/h)',
-					'es': 'flujo máximo (0 = desactivado 1...5000l/h)',
-					'pl': 'maksymalny przepływ (0 = deaktywowany 1..5000l/h)',
-					'zh-cn': '最大流量 (0 = 失职 1...5000l/h)'
+					'fr': 'débit maximal (0) désactivé 1...5000l/h)',
+					'it': 'flusso massimo (0) disattivato 1...5000l/h)',
+					'es': 'flujo máximo (0) desactivado 1...5000l/h)',
+					'pl': 'maksymalny przepływ (0) deaktywowany 1..5000l/h)',
+					'zh-cn': '最大流量 (0) 失职 1...5000l/h)'
 				},
 				type: 'number',
 				role: 'value.max',
 				unit: 'l/h',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 5000
 			},
 			native: {}
 		},
@@ -3658,22 +3672,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'maximum flow (0 = deactivated 1...5000l/h)',
-					'de': 'maximaler durchfluss (0 = deaktiviert 1...5000l/h)',
-					'ru': 'максимальный поток (0 = деактивирован 1...5000л/ч)',
-					'pt': 'fluxo máximo (0 = desativado 1...5000l/h)',
+					'en': 'maximum flow (0) deactivated 1...5000l/h)',
+					'de': 'maximaler Durchfluss (0) deaktiviert 1...5000l/h)',
+					'ru': 'максимальный поток (0) деактивирован 1...5000л/ч)',
+					'pt': 'fluxo máximo (0) desativado 1...5000l/h)',
 					'nl': 'maximale stroom (0) gedeactiveerd 1...5000/h ♪',
-					'fr': 'débit maximal (0 = désactivé 1...5000l/h)',
-					'it': 'flusso massimo (0 = disattivato 1...5000l/h)',
-					'es': 'flujo máximo (0 = desactivado 1...5000l/h)',
-					'pl': 'maksymalny przepływ (0 = deaktywowany 1..5000l/h)',
-					'zh-cn': '最大流量 (0 = 失职 1...5000l/h)'
+					'fr': 'débit maximal (0) désactivé 1...5000l/h)',
+					'it': 'flusso massimo (0) disattivato 1...5000l/h)',
+					'es': 'flujo máximo (0) desactivado 1...5000l/h)',
+					'pl': 'maksymalny przepływ (0) deaktywowany 1..5000l/h)',
+					'zh-cn': '最大流量 (0) 失职 1...5000l/h)'
 				},
 				type: 'number',
 				role: 'value.max',
 				unit: 'l/h',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 5000
 			},
 			native: {}
 		},
@@ -7905,39 +7921,65 @@ class wamo extends utils.Adapter {
 	async state_profile_PF(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const state_ID = 'Device.Profiles.' + String(ProfileNumber) + '.PF' + String(ProfileNumber);
-				await this.setObjectNotExistsAsync(state_ID, {
-					type: 'state',
-					common: {
-						name: {
-							'en': 'Profile ' + String(ProfileNumber) + ' maximum flow (0 = deaktiviert 1...5000l/h)',
-							'de': 'Profil ' + String(ProfileNumber) + ' maximaler Durchfluss (0 = deaktiviert 1...5000l/h)',
-							'ru': 'Максимальный расход профиля ' + String(ProfileNumber) + ' (0 = деактивировать 1...5000 л/ч)',
-							'pt': 'Fluxo máximo do perfil ' + String(ProfileNumber) + ' (0 = inativo 1...5000l/h)',
-							'nl': 'Profiel ' + String(ProfileNumber) + ' maximaal debiet (0 = deaktiviert 1...5000l/h)',
-							'fr': 'Profil ' + String(ProfileNumber) + ' débit maximum (0 = désactivation 1...5000l/h)',
-							'it': 'Portata massima profilo ' + String(ProfileNumber) + ' (0 = deaktiviert 1...5000l/h)',
-							'es': 'Perfil ' + String(ProfileNumber) + ' caudal máximo (0 = desactivado 1...5000l/h)',
-							'pl': 'Profil ' + String(ProfileNumber) + ' maksymalny przepływ (0 = deaktiviert 1...5000l/h)',
-							'zh-cn': '轮廓 ' + String(ProfileNumber) + ' 最大流量 (0 = 失职 1...5000l/h)'
-						},
-						type: 'number',
-						role: 'value.max',
-						unit: 'l/h',
-						read: true,
-						write: false
-					},
-					native: {}
-				});
-				await this.setStateAsync(state_ID, { val: parseFloat(value['getPF' + String(ProfileNumber)]), ack: true });
-				this.log.info('Profile ' + String(ProfileNumber) + ' maximum flow is ' + String(value['getPF' + String(ProfileNumber)]));
+
+				let currentStatePath  = '';
+				let crStaResult = null;
+				let stStaResult = null;
+				let currentstateObject = '';
+				const profileMaximumFlow = parseInt(String(value['getPF' + String(ProfileNumber)]));
+
+				switch (ProfileNumber) {
+					case 1:
+						currentStatePath = String(DeviceParameters.Profile_PF1.statePath) + '.' + String(DeviceParameters.Profile_PF1.id);
+						currentstateObject = Object(DeviceParameters.Profile_PF1.objectdefinition);
+						break;
+					case 2:
+						currentStatePath = String(DeviceParameters.Profile_PF2.statePath) + '.' + String(DeviceParameters.Profile_PF2.id);
+						currentstateObject = Object(DeviceParameters.Profile_PF2.objectdefinition);
+						break;
+					case 3:
+						currentStatePath = String(DeviceParameters.Profile_PF3.statePath) + '.' + String(DeviceParameters.Profile_PF3.id);
+						currentstateObject = Object(DeviceParameters.Profile_PF3.objectdefinition);
+						break;
+					case 4:
+						currentStatePath = String(DeviceParameters.Profile_PF4.statePath) + '.' + String(DeviceParameters.Profile_PF4.id);
+						currentstateObject = Object(DeviceParameters.Profile_PF4.objectdefinition);
+						break;
+					case 5:
+						currentStatePath = String(DeviceParameters.Profile_PF5.statePath) + '.' + String(DeviceParameters.Profile_PF5.id);
+						currentstateObject = Object(DeviceParameters.Profile_PF5.objectdefinition);
+						break;
+					case 6:
+						currentStatePath = String(DeviceParameters.Profile_PF6.statePath) + '.' + String(DeviceParameters.Profile_PF6.id);
+						currentstateObject = Object(DeviceParameters.Profile_PF6.objectdefinition);
+						break;
+					case 7:
+						currentStatePath = String(DeviceParameters.Profile_PF7.statePath) + '.' + String(DeviceParameters.Profile_PF7.id);
+						currentstateObject = Object(DeviceParameters.Profile_PF7.objectdefinition);
+						break;
+					case 8:
+						currentStatePath = String(DeviceParameters.Profile_PF8.statePath) + '.' + String(DeviceParameters.Profile_PF8.id);
+						currentstateObject = Object(DeviceParameters.Profile_PF8.objectdefinition);
+						break;
+				}
+				this.log.debug('State path before setStateAsync = ' + currentStatePath);
+				this.log.debug('Value before setStateAsync = ' + String(profileMaximumFlow));
+
+				crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
+				this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
+
+				stStaResult = await this.setStateAsync(currentStatePath, { val: profileMaximumFlow, ack: true });
+				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
+
+				if(profileMaximumFlow == 0){this.log.info('Profile ' + String(ProfileNumber) + ' maximum flow is disabled');}
+				else{this.log.info('Profile ' + String(ProfileNumber) + ' maximum flow is ' + String(profileMaximumFlow) + 'l/h');}
+
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
 				reject(err);
 			}
 		});
-
 	}
 
 	//===================================================
