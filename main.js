@@ -3453,7 +3453,7 @@ const DeviceParameters = {
 					'zh-cn': '最大流量 (0) 失职 1...5000l/h)'
 				},
 				type: 'number',
-				role: 'value.max',
+				role: 'state',
 				unit: 'l/h',
 				read: true,
 				write: true,
@@ -3486,7 +3486,7 @@ const DeviceParameters = {
 					'zh-cn': '最大流量 (0) 失职 1...5000l/h)'
 				},
 				type: 'number',
-				role: 'value.max',
+				role: 'state',
 				unit: 'l/h',
 				read: true,
 				write: true,
@@ -3520,7 +3520,7 @@ const DeviceParameters = {
 				},
 				type: 'number',
 				role: 'value.max',
-				unit: 'l/h',
+				role: 'state',
 				read: true,
 				write: true,
 				min: 0,
@@ -3552,7 +3552,7 @@ const DeviceParameters = {
 					'zh-cn': '最大流量 (0) 失职 1...5000l/h)'
 				},
 				type: 'number',
-				role: 'value.max',
+				role: 'state',
 				unit: 'l/h',
 				read: true,
 				write: true,
@@ -3585,7 +3585,7 @@ const DeviceParameters = {
 					'zh-cn': '最大流量 (0) 失职 1...5000l/h)'
 				},
 				type: 'number',
-				role: 'value.max',
+				role: 'state',
 				unit: 'l/h',
 				read: true,
 				write: true,
@@ -3618,7 +3618,7 @@ const DeviceParameters = {
 					'zh-cn': '最大流量 (0) 失职 1...5000l/h)'
 				},
 				type: 'number',
-				role: 'value.max',
+				role: 'state',
 				unit: 'l/h',
 				read: true,
 				write: true,
@@ -3651,7 +3651,7 @@ const DeviceParameters = {
 					'zh-cn': '最大流量 (0) 失职 1...5000l/h)'
 				},
 				type: 'number',
-				role: 'value.max',
+				role: 'state',
 				unit: 'l/h',
 				read: true,
 				write: true,
@@ -3684,7 +3684,7 @@ const DeviceParameters = {
 					'zh-cn': '最大流量 (0) 失职 1...5000l/h)'
 				},
 				type: 'number',
-				role: 'value.max',
+				role: 'state',
 				unit: 'l/h',
 				read: true,
 				write: true,
@@ -4977,22 +4977,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'leakage warning',
-					'de': 'Leckagewarnung',
-					'ru': 'предупреждение утечки',
-					'pt': 'aviso de fuga',
-					'nl': 'vertaling:',
-					'fr': 'avertissement de fuite',
-					'it': 'avvertimento perdite',
-					'es': 'advertencia de fugas',
-					'pl': 'ostrzeżenie',
-					'zh-cn': '泄漏警告'
+					'en': 'leakage warning (0) no, (1) yes',
+					'de': 'Leckagewarnung (0) nein, (1) ja',
+					'ru': 'предупреждение утечки (0) нет, (1) да',
+					'pt': 'aviso de fuga (0) não, (1) sim',
+					'nl': 'vertaling: (0) nee; (1) ja',
+					'fr': 'avertissement de fuite (0) non, (1) oui',
+					'it': 'avvertimento perdite (0) no, (1) sì',
+					'es': 'advertencia de fugas (0) no, (1) sí',
+					'pl': 'ostrzeżenie (0) nie; (1) dostępny',
+					'zh-cn': '泄漏警告 (0) 无; (1) 否'
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -5008,22 +5010,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'leakage warning',
-					'de': 'Leckagewarnung',
-					'ru': 'предупреждение утечки',
-					'pt': 'aviso de fuga',
-					'nl': 'vertaling:',
-					'fr': 'avertissement de fuite',
-					'it': 'avvertimento perdite',
-					'es': 'advertencia de fugas',
-					'pl': 'ostrzeżenie',
-					'zh-cn': '泄漏警告'
+					'en': 'leakage warning (0) no, (1) yes',
+					'de': 'Leckagewarnung (0) nein, (1) ja',
+					'ru': 'предупреждение утечки (0) нет, (1) да',
+					'pt': 'aviso de fuga (0) não, (1) sim',
+					'nl': 'vertaling: (0) nee; (1) ja',
+					'fr': 'avertissement de fuite (0) non, (1) oui',
+					'it': 'avvertimento perdite (0) no, (1) sì',
+					'es': 'advertencia de fugas (0) no, (1) sí',
+					'pl': 'ostrzeżenie (0) nie; (1) dostępny',
+					'zh-cn': '泄漏警告 (0) 无; (1) 否'
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -5039,22 +5043,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'leakage warning',
-					'de': 'Leckagewarnung',
-					'ru': 'предупреждение утечки',
-					'pt': 'aviso de fuga',
-					'nl': 'vertaling:',
-					'fr': 'avertissement de fuite',
-					'it': 'avvertimento perdite',
-					'es': 'advertencia de fugas',
-					'pl': 'ostrzeżenie',
-					'zh-cn': '泄漏警告'
+					'en': 'leakage warning (0) no, (1) yes',
+					'de': 'Leckagewarnung (0) nein, (1) ja',
+					'ru': 'предупреждение утечки (0) нет, (1) да',
+					'pt': 'aviso de fuga (0) não, (1) sim',
+					'nl': 'vertaling: (0) nee; (1) ja',
+					'fr': 'avertissement de fuite (0) non, (1) oui',
+					'it': 'avvertimento perdite (0) no, (1) sì',
+					'es': 'advertencia de fugas (0) no, (1) sí',
+					'pl': 'ostrzeżenie (0) nie; (1) dostępny',
+					'zh-cn': '泄漏警告 (0) 无; (1) 否'
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -5070,22 +5076,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'leakage warning',
-					'de': 'Leckagewarnung',
-					'ru': 'предупреждение утечки',
-					'pt': 'aviso de fuga',
-					'nl': 'vertaling:',
-					'fr': 'avertissement de fuite',
-					'it': 'avvertimento perdite',
-					'es': 'advertencia de fugas',
-					'pl': 'ostrzeżenie',
-					'zh-cn': '泄漏警告'
+					'en': 'leakage warning (0) no, (1) yes',
+					'de': 'Leckagewarnung (0) nein, (1) ja',
+					'ru': 'предупреждение утечки (0) нет, (1) да',
+					'pt': 'aviso de fuga (0) não, (1) sim',
+					'nl': 'vertaling: (0) nee; (1) ja',
+					'fr': 'avertissement de fuite (0) non, (1) oui',
+					'it': 'avvertimento perdite (0) no, (1) sì',
+					'es': 'advertencia de fugas (0) no, (1) sí',
+					'pl': 'ostrzeżenie (0) nie; (1) dostępny',
+					'zh-cn': '泄漏警告 (0) 无; (1) 否'
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -5101,22 +5109,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'leakage warning',
-					'de': 'Leckagewarnung',
-					'ru': 'предупреждение утечки',
-					'pt': 'aviso de fuga',
-					'nl': 'vertaling:',
-					'fr': 'avertissement de fuite',
-					'it': 'avvertimento perdite',
-					'es': 'advertencia de fugas',
-					'pl': 'ostrzeżenie',
-					'zh-cn': '泄漏警告'
+					'en': 'leakage warning (0) no, (1) yes',
+					'de': 'Leckagewarnung (0) nein, (1) ja',
+					'ru': 'предупреждение утечки (0) нет, (1) да',
+					'pt': 'aviso de fuga (0) não, (1) sim',
+					'nl': 'vertaling: (0) nee; (1) ja',
+					'fr': 'avertissement de fuite (0) non, (1) oui',
+					'it': 'avvertimento perdite (0) no, (1) sì',
+					'es': 'advertencia de fugas (0) no, (1) sí',
+					'pl': 'ostrzeżenie (0) nie; (1) dostępny',
+					'zh-cn': '泄漏警告 (0) 无; (1) 否'
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -5132,22 +5142,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'leakage warning',
-					'de': 'Leckagewarnung',
-					'ru': 'предупреждение утечки',
-					'pt': 'aviso de fuga',
-					'nl': 'vertaling:',
-					'fr': 'avertissement de fuite',
-					'it': 'avvertimento perdite',
-					'es': 'advertencia de fugas',
-					'pl': 'ostrzeżenie',
-					'zh-cn': '泄漏警告'
+					'en': 'leakage warning (0) no, (1) yes',
+					'de': 'Leckagewarnung (0) nein, (1) ja',
+					'ru': 'предупреждение утечки (0) нет, (1) да',
+					'pt': 'aviso de fuga (0) não, (1) sim',
+					'nl': 'vertaling: (0) nee; (1) ja',
+					'fr': 'avertissement de fuite (0) non, (1) oui',
+					'it': 'avvertimento perdite (0) no, (1) sì',
+					'es': 'advertencia de fugas (0) no, (1) sí',
+					'pl': 'ostrzeżenie (0) nie; (1) dostępny',
+					'zh-cn': '泄漏警告 (0) 无; (1) 否'
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -5163,22 +5175,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'leakage warning',
-					'de': 'Leckagewarnung',
-					'ru': 'предупреждение утечки',
-					'pt': 'aviso de fuga',
-					'nl': 'vertaling:',
-					'fr': 'avertissement de fuite',
-					'it': 'avvertimento perdite',
-					'es': 'advertencia de fugas',
-					'pl': 'ostrzeżenie',
-					'zh-cn': '泄漏警告'
+					'en': 'leakage warning (0) no, (1) yes',
+					'de': 'Leckagewarnung (0) nein, (1) ja',
+					'ru': 'предупреждение утечки (0) нет, (1) да',
+					'pt': 'aviso de fuga (0) não, (1) sim',
+					'nl': 'vertaling: (0) nee; (1) ja',
+					'fr': 'avertissement de fuite (0) non, (1) oui',
+					'it': 'avvertimento perdite (0) no, (1) sì',
+					'es': 'advertencia de fugas (0) no, (1) sí',
+					'pl': 'ostrzeżenie (0) nie; (1) dostępny',
+					'zh-cn': '泄漏警告 (0) 无; (1) 否'
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -5194,22 +5208,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'leakage warning',
-					'de': 'Leckagewarnung',
-					'ru': 'предупреждение утечки',
-					'pt': 'aviso de fuga',
-					'nl': 'vertaling:',
-					'fr': 'avertissement de fuite',
-					'it': 'avvertimento perdite',
-					'es': 'advertencia de fugas',
-					'pl': 'ostrzeżenie',
-					'zh-cn': '泄漏警告'
+					'en': 'leakage warning (0) no, (1) yes',
+					'de': 'Leckagewarnung (0) nein, (1) ja',
+					'ru': 'предупреждение утечки (0) нет, (1) да',
+					'pt': 'aviso de fuga (0) não, (1) sim',
+					'nl': 'vertaling: (0) nee; (1) ja',
+					'fr': 'avertissement de fuite (0) non, (1) oui',
+					'it': 'avvertimento perdite (0) no, (1) sì',
+					'es': 'advertencia de fugas (0) no, (1) sí',
+					'pl': 'ostrzeżenie (0) nie; (1) dostępny',
+					'zh-cn': '泄漏警告 (0) 无; (1) 否'
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -8164,37 +8180,62 @@ class wamo extends utils.Adapter {
 	async state_profile_PW(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const state_ID = 'Device.Profiles.' + String(ProfileNumber) + '.PW' + String(ProfileNumber);
-				await this.setObjectNotExistsAsync(state_ID, {
-					type: 'state',
-					common: {
-						name: {
-							'en': 'Profile ' + String(ProfileNumber) + ' leakage warning',
-							'de': 'Profil ' + String(ProfileNumber) + ' Leckagewarnung',
-							'ru': 'Предупреждение об утечке профиля ' + String(ProfileNumber),
-							'pt': 'Aviso de vazamento do perfil ' + String(ProfileNumber),
-							'nl': 'Lekkagewaarschuwing profiel ' + String(ProfileNumber),
-							'fr': 'Alerte fuite profil ' + String(ProfileNumber),
-							'it': 'Avviso di perdita del profilo ' + String(ProfileNumber),
-							'es': 'Advertencia de fuga del perfil ' + String(ProfileNumber),
-							'pl': 'Ostrzeżenie o wycieku profilu ' + String(ProfileNumber),
-							'zh-cn': 'Profile ' + String(ProfileNumber) + ' 泄漏警告'
-						},
-						type: 'boolean',
-						role: 'info.status',
-						read: true,
-						write: false
-					},
-					native: {}
-				});
-				if (parseFloat(value['getPW' + String(ProfileNumber)]) == 0) {
-					await this.setStateAsync(state_ID, { val: false, ack: true });
-					this.log.info('Profile ' + String(ProfileNumber) + ' Leakage Warning disabled');
+
+				const profileLeackageWarning = parseInt(String(value['getPW' + String(ProfileNumber)]));
+				let crStaResult = null;
+				let stStaResult = null;
+				let currentStatePath  = '';
+				let currentstateObject = '';
+
+				switch (ProfileNumber){
+					case 1:
+						currentStatePath = String(DeviceParameters.Profile_PW1.statePath) + '.' + String(DeviceParameters.Profile_PW1.id);
+						currentstateObject = Object(DeviceParameters.Profile_PW1.objectdefinition);
+						break;
+					case 2:
+						currentStatePath = String(DeviceParameters.Profile_PW2.statePath) + '.' + String(DeviceParameters.Profile_PW2.id);
+						currentstateObject = Object(DeviceParameters.Profile_PW2.objectdefinition);
+						break;
+					case 3:
+						currentStatePath = String(DeviceParameters.Profile_PW3.statePath) + '.' + String(DeviceParameters.Profile_PW3.id);
+						currentstateObject = Object(DeviceParameters.Profile_PW3.objectdefinition);
+						break;
+					case 4:
+						currentStatePath = String(DeviceParameters.Profile_PW4.statePath) + '.' + String(DeviceParameters.Profile_PW4.id);
+						currentstateObject = Object(DeviceParameters.Profile_PW4.objectdefinition);
+						break;
+					case 5:
+						currentStatePath = String(DeviceParameters.Profile_PW5.statePath) + '.' + String(DeviceParameters.Profile_PW5.id);
+						currentstateObject = Object(DeviceParameters.Profile_PW5.objectdefinition);
+						break;
+					case 6:
+						currentStatePath = String(DeviceParameters.Profile_PW6.statePath) + '.' + String(DeviceParameters.Profile_PW6.id);
+						currentstateObject = Object(DeviceParameters.Profile_PW6.objectdefinition);
+						break;
+					case 7:
+						currentStatePath = String(DeviceParameters.Profile_PW7.statePath) + '.' + String(DeviceParameters.Profile_PW7.id);
+						currentstateObject = Object(DeviceParameters.Profile_PW7.objectdefinition);
+						break;
+					case 8:
+						currentStatePath = String(DeviceParameters.Profile_PW8.statePath) + '.' + String(DeviceParameters.Profile_PW8.id);
+						currentstateObject = Object(DeviceParameters.Profile_PW8.objectdefinition);
+						break;
+					default:
+						this.log.error('async state_profile_PA(ProfileNumber, value) -> switch (ProfileNumber) hit \'default:\'');
+						break;
 				}
-				else {
-					await this.setStateAsync(state_ID, { val: true, ack: true });
-					this.log.info('Profile ' + String(ProfileNumber) + ' Leakage Warning is enabled');
-				}
+
+				this.log.debug('State path before setStateAsync = ' + currentStatePath);
+				this.log.debug('Value before setStateAsync = ' + String(profileLeackageWarning));
+
+				crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
+				this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
+
+				stStaResult = await this.setStateAsync(currentStatePath, { val: profileLeackageWarning, ack: true });
+				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
+
+				if (profileLeackageWarning == 0) {this.log.info('Profile ' + String(ProfileNumber) + ' Leakage Warning disabled');}
+				else {this.log.info('Profile ' + String(ProfileNumber) + ' Leakage Warning is enabled');}
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
