@@ -5523,10 +5523,9 @@ class wamo extends utils.Adapter {
 	 * @param {ioBroker.State | null | undefined} state
 	 */
 	async onStateChange(id, state) {
-		this.log.warn('async onStateChange(id, state) hit -> id: ' + String(id));
+		this.log.debug('async onStateChange(id, state) hit -> id: ' + String(id));
 		if (state) {
-			this.log.warn('async onStateChange(id, state) -> if (state) hit -> id: ' + String(id) + ' state.val: ' + state.val + ' state.ack: ' + state.ack);
-			const skipp = true;
+			this.log.debug('async onStateChange(id, state) -> if (state) hit -> id: ' + String(id) + ' state.val: ' + state.val + ' state.ack: ' + state.ack);
 			const statePrefix = this.name + '.' + String(this.instance) +'.';
 			// The state was changed
 			//============================================================================
@@ -7332,7 +7331,7 @@ class wamo extends utils.Adapter {
 	async UpdateProfileState(ProfileNumber, stateID, value) {
 		return new Promise(async (resolve, reject) => {
 
-			this.log.warn('async UpdateProfileState(ProfileNumber, stateID, value) stateID: ' + String(stateID) + ' Profile Nr.: ' + String(ProfileNumber) + ' value: ' + JSON.stringify(value));
+			this.log.debug('async UpdateProfileState(ProfileNumber, stateID, value) stateID: ' + String(stateID) + ' Profile Nr.: ' + String(ProfileNumber) + ' value: ' + JSON.stringify(value));
 			const parameterIDs = stateID.split('.');
 			const parameter = (parameterIDs[parameterIDs.length - 1]).substr(0, parameterIDs[parameterIDs.length - 1].length - 1);
 			this.log.debug('[UpdateProfileState(ProfileNumber, stateID, value)] Profilparameter =' + parameter);
@@ -7963,42 +7962,57 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 
-				const profileBuzzer = parseFloat(String(value['getPB' + String(ProfileNumber)]));
+				const profileBuzzer = parseInt(String(value['getPB' + String(ProfileNumber)]));
+				let crStaResult = null;
+				let stStaResult = null;
+				let currentStatePath  = '';
+				let currentstateObject = '';
 
 				switch (ProfileNumber) {
 					case 1:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PB1.statePath + '.' + DeviceParameters.Profile_PB1.id, Object(DeviceParameters.Profile_PB1.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PB1.statePath + '.' + DeviceParameters.Profile_PB1.id, { val: profileBuzzer, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PB1.statePath) + '.' + String(DeviceParameters.Profile_PB1.id);
+						currentstateObject = Object(DeviceParameters.Profile_PB1.objectdefinition);
 						break;
 					case 2:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PB2.statePath + '.' + DeviceParameters.Profile_PB2.id, Object(DeviceParameters.Profile_PB2.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PB2.statePath + '.' + DeviceParameters.Profile_PB2.id, { val: profileBuzzer, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PB2.statePath) + '.' + String(DeviceParameters.Profile_PB2.id);
+						currentstateObject = Object(DeviceParameters.Profile_PB2.objectdefinition);
 						break;
 					case 3:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PB3.statePath + '.' + DeviceParameters.Profile_PB3.id, Object(DeviceParameters.Profile_PB3.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PB3.statePath + '.' + DeviceParameters.Profile_PB3.id, { val: profileBuzzer, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PB3.statePath) + '.' + String(DeviceParameters.Profile_PB3.id);
+						currentstateObject = Object(DeviceParameters.Profile_PB3.objectdefinition);
 						break;
 					case 4:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PB4.statePath + '.' + DeviceParameters.Profile_PB4.id, Object(DeviceParameters.Profile_PB4.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PB4.statePath + '.' + DeviceParameters.Profile_PB4.id, { val: profileBuzzer, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PB4.statePath) + '.' + String(DeviceParameters.Profile_PB4.id);
+						currentstateObject = Object(DeviceParameters.Profile_PB4.objectdefinition);
 						break;
 					case 5:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PB5.statePath + '.' + DeviceParameters.Profile_PB5.id, Object(DeviceParameters.Profile_PB5.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PB5.statePath + '.' + DeviceParameters.Profile_PB5.id, { val: profileBuzzer, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PB5.statePath) + '.' + String(DeviceParameters.Profile_PB5.id);
+						currentstateObject = Object(DeviceParameters.Profile_PB5.objectdefinition);
 						break;
 					case 6:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PB6.statePath + '.' + DeviceParameters.Profile_PB6.id, Object(DeviceParameters.Profile_PB6.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PB6.statePath + '.' + DeviceParameters.Profile_PB6.id, { val: profileBuzzer, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PB6.statePath) + '.' + String(DeviceParameters.Profile_PB6.id);
+						currentstateObject = Object(DeviceParameters.Profile_PB6.objectdefinition);
 						break;
 					case 7:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PB7.statePath + '.' + DeviceParameters.Profile_PB7.id, Object(DeviceParameters.Profile_PB7.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PB7.statePath + '.' + DeviceParameters.Profile_PB7.id, { val: profileBuzzer, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PB7.statePath) + '.' + String(DeviceParameters.Profile_PB7.id);
+						currentstateObject = Object(DeviceParameters.Profile_PB7.objectdefinition);
 						break;
 					case 8:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PB8.statePath + '.' + DeviceParameters.Profile_PB8.id, Object(DeviceParameters.Profile_PB8.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PB8.statePath + '.' + DeviceParameters.Profile_PB8.id, { val: profileBuzzer, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PB8.statePath) + '.' + String(DeviceParameters.Profile_PB8.id);
+						currentstateObject = Object(DeviceParameters.Profile_PB7.objectdefinition);
 						break;
 				}
+
+
+				this.log.debug('State path before setStateAsync = ' + currentStatePath);
+				this.log.debug('Value before setStateAsync = ' + String(profileBuzzer));
+
+				crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
+				this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
+
+				stStaResult = await this.setStateAsync(currentStatePath, { val: profileBuzzer, ack: true });
+				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
+
 				if(profileBuzzer == 1){this.log.info('Profile ' + String(ProfileNumber) + ' buzzer is on');}
 				else{this.log.info('Profile ' + String(ProfileNumber) + ' buzzer is not on');}
 				resolve(true);
