@@ -7600,6 +7600,8 @@ class wamo extends utils.Adapter {
 
 				this.log.warn('async state_profile_PA(ProfileNumber, value) value: ' + JSON.stringify(value) + ' Profilnummer: ' + String(ProfileNumber));
 				const profileAvailable = parseInt(String(value['getPA' + String(ProfileNumber)]));
+				const a = Number(value['getPA' + String(ProfileNumber)]);
+			
 				this.log.warn('async state_profile_PA(ProfileNumber, value) -> const profileAvailable = value[\'getPA\' + String(ProfileNumber)]; = ' + String(profileAvailable));
 
 				switch (ProfileNumber) {
@@ -7725,7 +7727,7 @@ class wamo extends utils.Adapter {
 				switch (ProfileNumber) {
 					case 1:
 						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PV1.statePath + '.' + DeviceParameters.Profile_PV1.id, Object(DeviceParameters.Profile_PV1.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PV1.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: value['getPV' + String(ProfileNumber)], ack: true });
+						await this.setStateAsync(DeviceParameters.Profile_PV1.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: Number(value['getPV' + String(ProfileNumber)]), ack: true });
 						break;
 					case 2:
 						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PV2.statePath + '.' + DeviceParameters.Profile_PV2.id, Object(DeviceParameters.Profile_PV2.objectdefinition));
