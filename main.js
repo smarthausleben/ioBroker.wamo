@@ -2913,28 +2913,16 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Profile available',
-					'de': 'Profil verfügbar',
-					'ru': 'Профиль доступен',
-					'pt': 'Perfil disponível',
-					'nl': 'Profile beschikbaar',
-					'fr': 'Profil disponible',
-					'it': 'Profilo disponibile',
-					'es': 'Perfil disponible',
-					'pl': 'Profil na stronie',
-					'zh-cn': '简介'
-				},
-				desc:{
-					'en': '(0) no, (1) yes',
-					'de': '(0) nein, (1) ja',
-					'ru': '(0) нет, (1) да',
-					'pt': '(0) não, (1) sim',
-					'nl': '(0) nee; (1) ja',
-					'fr': '(0) non, (1) oui',
-					'it': '(0) no, (1) sì',
-					'es': '(0) no, (1) sí',
-					'pl': '(0) nie; (1) dostępny',
-					'zh-cn': '(0) 无; (1) 否'
+					'en': 'Profile available (0) no, (1) yes',
+					'de': 'Profil verfügbar (0) nein, (1) ja',
+					'ru': 'Профиль доступен (0) нет, (1) да',
+					'pt': 'Perfil disponível (0) não, (1) sim',
+					'nl': 'Profile beschikbaar (0) nee; (1) ja',
+					'fr': 'Profil disponible (0) non, (1) oui',
+					'it': 'Profilo disponibile (0) no, (1) sì',
+					'es': 'Perfil disponible (0) no, (1) sí',
+					'pl': 'Profil na stronie (0) nie; (1) dostępny',
+					'zh-cn': '简介 (0) 无; (1) 否'
 				},
 				type: 'number',
 				unit: null,
@@ -2958,22 +2946,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Profile available, 0 = no, 1 = yes',
-					'de': 'Profil verfügbar, 0 = nein, 1 = ja',
-					'ru': 'Профиль доступен, 0 = нет, 1 = да',
-					'pt': 'Perfil disponível, 0 = não, 1 = sim',
-					'nl': 'Profile beschikbaar, 0, 1, ja',
-					'fr': 'Profil disponible, 0 = non, 1 = oui',
-					'it': 'Profilo disponibile, 0 = no, 1 = sì',
-					'es': 'Perfil disponible, 0 = no, 1 = sí',
-					'pl': 'Profil na stronie 0 = no, 1 = yes',
-					'zh-cn': '简介,0.=无,1='
+					'en': 'Profile available (0) no, (1) yes',
+					'de': 'Profil verfügbar (0) nein, (1) ja',
+					'ru': 'Профиль доступен (0) нет, (1) да',
+					'pt': 'Perfil disponível (0) não, (1) sim',
+					'nl': 'Profile beschikbaar (0) nee; (1) ja',
+					'fr': 'Profil disponible (0) non, (1) oui',
+					'it': 'Profilo disponibile (0) no, (1) sì',
+					'es': 'Perfil disponible (0) no, (1) sí',
+					'pl': 'Profil na stronie (0) nie; (1) dostępny',
+					'zh-cn': '简介 (0) 无; (1) 否'
 				},
 				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -2989,22 +2979,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Profile available, 0 = no, 1 = yes',
-					'de': 'Profil verfügbar, 0 = nein, 1 = ja',
-					'ru': 'Профиль доступен, 0 = нет, 1 = да',
-					'pt': 'Perfil disponível, 0 = não, 1 = sim',
-					'nl': 'Profile beschikbaar, 0, 1, ja',
-					'fr': 'Profil disponible, 0 = non, 1 = oui',
-					'it': 'Profilo disponibile, 0 = no, 1 = sì',
-					'es': 'Perfil disponible, 0 = no, 1 = sí',
-					'pl': 'Profil na stronie 0 = no, 1 = yes',
-					'zh-cn': '简介,0.=无,1='
+					'en': 'Profile available (0) no, (1) yes',
+					'de': 'Profil verfügbar (0) nein, (1) ja',
+					'ru': 'Профиль доступен (0) нет, (1) да',
+					'pt': 'Perfil disponível (0) não, (1) sim',
+					'nl': 'Profile beschikbaar (0) nee; (1) ja',
+					'fr': 'Profil disponible (0) non, (1) oui',
+					'it': 'Profilo disponibile (0) no, (1) sì',
+					'es': 'Perfil disponible (0) no, (1) sí',
+					'pl': 'Profil na stronie (0) nie; (1) dostępny',
+					'zh-cn': '简介 (0) 无; (1) 否'
 				},
 				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -3020,22 +3012,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Profile available, 0 = no, 1 = yes',
-					'de': 'Profil verfügbar, 0 = nein, 1 = ja',
-					'ru': 'Профиль доступен, 0 = нет, 1 = да',
-					'pt': 'Perfil disponível, 0 = não, 1 = sim',
-					'nl': 'Profile beschikbaar, 0, 1, ja',
-					'fr': 'Profil disponible, 0 = non, 1 = oui',
-					'it': 'Profilo disponibile, 0 = no, 1 = sì',
-					'es': 'Perfil disponible, 0 = no, 1 = sí',
-					'pl': 'Profil na stronie 0 = no, 1 = yes',
-					'zh-cn': '简介,0.=无,1='
+					'en': 'Profile available (0) no, (1) yes',
+					'de': 'Profil verfügbar (0) nein, (1) ja',
+					'ru': 'Профиль доступен (0) нет, (1) да',
+					'pt': 'Perfil disponível (0) não, (1) sim',
+					'nl': 'Profile beschikbaar (0) nee; (1) ja',
+					'fr': 'Profil disponible (0) non, (1) oui',
+					'it': 'Profilo disponibile (0) no, (1) sì',
+					'es': 'Perfil disponible (0) no, (1) sí',
+					'pl': 'Profil na stronie (0) nie; (1) dostępny',
+					'zh-cn': '简介 (0) 无; (1) 否'
 				},
 				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -3051,22 +3045,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Profile available, 0 = no, 1 = yes',
-					'de': 'Profil verfügbar, 0 = nein, 1 = ja',
-					'ru': 'Профиль доступен, 0 = нет, 1 = да',
-					'pt': 'Perfil disponível, 0 = não, 1 = sim',
-					'nl': 'Profile beschikbaar, 0, 1, ja',
-					'fr': 'Profil disponible, 0 = non, 1 = oui',
-					'it': 'Profilo disponibile, 0 = no, 1 = sì',
-					'es': 'Perfil disponible, 0 = no, 1 = sí',
-					'pl': 'Profil na stronie 0 = no, 1 = yes',
-					'zh-cn': '简介,0.=无,1='
+					'en': 'Profile available (0) no, (1) yes',
+					'de': 'Profil verfügbar (0) nein, (1) ja',
+					'ru': 'Профиль доступен (0) нет, (1) да',
+					'pt': 'Perfil disponível (0) não, (1) sim',
+					'nl': 'Profile beschikbaar (0) nee; (1) ja',
+					'fr': 'Profil disponible (0) non, (1) oui',
+					'it': 'Profilo disponibile (0) no, (1) sì',
+					'es': 'Perfil disponible (0) no, (1) sí',
+					'pl': 'Profil na stronie (0) nie; (1) dostępny',
+					'zh-cn': '简介 (0) 无; (1) 否'
 				},
 				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -3082,22 +3078,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Profile available, 0 = no, 1 = yes',
-					'de': 'Profil verfügbar, 0 = nein, 1 = ja',
-					'ru': 'Профиль доступен, 0 = нет, 1 = да',
-					'pt': 'Perfil disponível, 0 = não, 1 = sim',
-					'nl': 'Profile beschikbaar, 0, 1, ja',
-					'fr': 'Profil disponible, 0 = non, 1 = oui',
-					'it': 'Profilo disponibile, 0 = no, 1 = sì',
-					'es': 'Perfil disponible, 0 = no, 1 = sí',
-					'pl': 'Profil na stronie 0 = no, 1 = yes',
-					'zh-cn': '简介,0.=无,1='
+					'en': 'Profile available (0) no, (1) yes',
+					'de': 'Profil verfügbar (0) nein, (1) ja',
+					'ru': 'Профиль доступен (0) нет, (1) да',
+					'pt': 'Perfil disponível (0) não, (1) sim',
+					'nl': 'Profile beschikbaar (0) nee; (1) ja',
+					'fr': 'Profil disponible (0) non, (1) oui',
+					'it': 'Profilo disponibile (0) no, (1) sì',
+					'es': 'Perfil disponible (0) no, (1) sí',
+					'pl': 'Profil na stronie (0) nie; (1) dostępny',
+					'zh-cn': '简介 (0) 无; (1) 否'
 				},
 				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -3113,22 +3111,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Profile available, 0 = no, 1 = yes',
-					'de': 'Profil verfügbar, 0 = nein, 1 = ja',
-					'ru': 'Профиль доступен, 0 = нет, 1 = да',
-					'pt': 'Perfil disponível, 0 = não, 1 = sim',
-					'nl': 'Profile beschikbaar, 0, 1, ja',
-					'fr': 'Profil disponible, 0 = non, 1 = oui',
-					'it': 'Profilo disponibile, 0 = no, 1 = sì',
-					'es': 'Perfil disponible, 0 = no, 1 = sí',
-					'pl': 'Profil na stronie 0 = no, 1 = yes',
-					'zh-cn': '简介,0.=无,1='
+					'en': 'Profile available (0) no, (1) yes',
+					'de': 'Profil verfügbar (0) nein, (1) ja',
+					'ru': 'Профиль доступен (0) нет, (1) да',
+					'pt': 'Perfil disponível (0) não, (1) sim',
+					'nl': 'Profile beschikbaar (0) nee; (1) ja',
+					'fr': 'Profil disponible (0) non, (1) oui',
+					'it': 'Profilo disponibile (0) no, (1) sì',
+					'es': 'Perfil disponible (0) no, (1) sí',
+					'pl': 'Profil na stronie (0) nie; (1) dostępny',
+					'zh-cn': '简介 (0) 无; (1) 否'
 				},
 				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -3144,22 +3144,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Profile available, 0 = no, 1 = yes',
-					'de': 'Profil verfügbar, 0 = nein, 1 = ja',
-					'ru': 'Профиль доступен, 0 = нет, 1 = да',
-					'pt': 'Perfil disponível, 0 = não, 1 = sim',
-					'nl': 'Profile beschikbaar, 0, 1, ja',
-					'fr': 'Profil disponible, 0 = non, 1 = oui',
-					'it': 'Profilo disponibile, 0 = no, 1 = sì',
-					'es': 'Perfil disponible, 0 = no, 1 = sí',
-					'pl': 'Profil na stronie 0 = no, 1 = yes',
-					'zh-cn': '简介,0.=无,1='
+					'en': 'Profile available (0) no, (1) yes',
+					'de': 'Profil verfügbar (0) nein, (1) ja',
+					'ru': 'Профиль доступен (0) нет, (1) да',
+					'pt': 'Perfil disponível (0) não, (1) sim',
+					'nl': 'Profile beschikbaar (0) nee; (1) ja',
+					'fr': 'Profil disponible (0) non, (1) oui',
+					'it': 'Profilo disponibile (0) no, (1) sì',
+					'es': 'Perfil disponible (0) no, (1) sí',
+					'pl': 'Profil na stronie (0) nie; (1) dostępny',
+					'zh-cn': '简介 (0) 无; (1) 否'
 				},
 				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -3190,7 +3192,9 @@ const DeviceParameters = {
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -3221,7 +3225,9 @@ const DeviceParameters = {
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -3252,7 +3258,9 @@ const DeviceParameters = {
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -3283,7 +3291,9 @@ const DeviceParameters = {
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -3314,7 +3324,9 @@ const DeviceParameters = {
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -3345,7 +3357,9 @@ const DeviceParameters = {
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -3376,7 +3390,9 @@ const DeviceParameters = {
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -3407,7 +3423,9 @@ const DeviceParameters = {
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -3671,22 +3689,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'micro leakage detection',
-					'de': 'Mikroleckerkennung',
-					'ru': 'обнаружение микро утечки',
-					'pt': 'micro detecção de vazamento',
-					'nl': 'microlekage detectie',
-					'fr': 'micro détection des fuites',
-					'it': 'rilevamento micro perdite',
-					'es': 'detección de micro fugas',
-					'pl': 'wykrywanie mikroszczelności',
-					'zh-cn': '微额泄露'
+					'en': 'micro leakage detection (0) no, (1) yes',
+					'de': 'Mikroleckerkennung (0) nein, (1) ja',
+					'ru': 'обнаружение микро утечки (0) нет, (1) да',
+					'pt': 'micro detecção de vazamento (0) não, (1) sim',
+					'nl': 'microlekage detectie (0) nee; (1) ja',
+					'fr': 'micro détection des fuites (0) non, (1) oui',
+					'it': 'rilevamento micro perdite (0) no, (1) sì',
+					'es': 'detección de micro fugas (0) no, (1) sí',
+					'pl': 'wykrywanie mikroszczelności (0) nie; (1) dostępny',
+					'zh-cn': '微额泄露 (0) 无; (1) 否'
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -3702,22 +3722,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'micro leakage detection',
-					'de': 'Mikroleckerkennung',
-					'ru': 'обнаружение микро утечки',
-					'pt': 'micro detecção de vazamento',
-					'nl': 'microlekage detectie',
-					'fr': 'micro détection des fuites',
-					'it': 'rilevamento micro perdite',
-					'es': 'detección de micro fugas',
-					'pl': 'wykrywanie mikroszczelności',
-					'zh-cn': '微额泄露'
+					'en': 'micro leakage detection (0) no, (1) yes',
+					'de': 'Mikroleckerkennung (0) nein, (1) ja',
+					'ru': 'обнаружение микро утечки (0) нет, (1) да',
+					'pt': 'micro detecção de vazamento (0) não, (1) sim',
+					'nl': 'microlekage detectie (0) nee; (1) ja',
+					'fr': 'micro détection des fuites (0) non, (1) oui',
+					'it': 'rilevamento micro perdite (0) no, (1) sì',
+					'es': 'detección de micro fugas (0) no, (1) sí',
+					'pl': 'wykrywanie mikroszczelności (0) nie; (1) dostępny',
+					'zh-cn': '微额泄露 (0) 无; (1) 否'
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -3733,22 +3755,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'micro leakage detection',
-					'de': 'Mikroleckerkennung',
-					'ru': 'обнаружение микро утечки',
-					'pt': 'micro detecção de vazamento',
-					'nl': 'microlekage detectie',
-					'fr': 'micro détection des fuites',
-					'it': 'rilevamento micro perdite',
-					'es': 'detección de micro fugas',
-					'pl': 'wykrywanie mikroszczelności',
-					'zh-cn': '微额泄露'
+					'en': 'micro leakage detection (0) no, (1) yes',
+					'de': 'Mikroleckerkennung (0) nein, (1) ja',
+					'ru': 'обнаружение микро утечки (0) нет, (1) да',
+					'pt': 'micro detecção de vazamento (0) não, (1) sim',
+					'nl': 'microlekage detectie (0) nee; (1) ja',
+					'fr': 'micro détection des fuites (0) non, (1) oui',
+					'it': 'rilevamento micro perdite (0) no, (1) sì',
+					'es': 'detección de micro fugas (0) no, (1) sí',
+					'pl': 'wykrywanie mikroszczelności (0) nie; (1) dostępny',
+					'zh-cn': '微额泄露 (0) 无; (1) 否'
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -3764,22 +3788,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'micro leakage detection',
-					'de': 'Mikroleckerkennung',
-					'ru': 'обнаружение микро утечки',
-					'pt': 'micro detecção de vazamento',
-					'nl': 'microlekage detectie',
-					'fr': 'micro détection des fuites',
-					'it': 'rilevamento micro perdite',
-					'es': 'detección de micro fugas',
-					'pl': 'wykrywanie mikroszczelności',
-					'zh-cn': '微额泄露'
+					'en': 'micro leakage detection (0) no, (1) yes',
+					'de': 'Mikroleckerkennung (0) nein, (1) ja',
+					'ru': 'обнаружение микро утечки (0) нет, (1) да',
+					'pt': 'micro detecção de vazamento (0) não, (1) sim',
+					'nl': 'microlekage detectie (0) nee; (1) ja',
+					'fr': 'micro détection des fuites (0) non, (1) oui',
+					'it': 'rilevamento micro perdite (0) no, (1) sì',
+					'es': 'detección de micro fugas (0) no, (1) sí',
+					'pl': 'wykrywanie mikroszczelności (0) nie; (1) dostępny',
+					'zh-cn': '微额泄露 (0) 无; (1) 否'
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -3795,22 +3821,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'micro leakage detection',
-					'de': 'Mikroleckerkennung',
-					'ru': 'обнаружение микро утечки',
-					'pt': 'micro detecção de vazamento',
-					'nl': 'microlekage detectie',
-					'fr': 'micro détection des fuites',
-					'it': 'rilevamento micro perdite',
-					'es': 'detección de micro fugas',
-					'pl': 'wykrywanie mikroszczelności',
-					'zh-cn': '微额泄露'
+					'en': 'micro leakage detection (0) no, (1) yes',
+					'de': 'Mikroleckerkennung (0) nein, (1) ja',
+					'ru': 'обнаружение микро утечки (0) нет, (1) да',
+					'pt': 'micro detecção de vazamento (0) não, (1) sim',
+					'nl': 'microlekage detectie (0) nee; (1) ja',
+					'fr': 'micro détection des fuites (0) non, (1) oui',
+					'it': 'rilevamento micro perdite (0) no, (1) sì',
+					'es': 'detección de micro fugas (0) no, (1) sí',
+					'pl': 'wykrywanie mikroszczelności (0) nie; (1) dostępny',
+					'zh-cn': '微额泄露 (0) 无; (1) 否'
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -3826,22 +3854,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'micro leakage detection',
-					'de': 'Mikroleckerkennung',
-					'ru': 'обнаружение микро утечки',
-					'pt': 'micro detecção de vazamento',
-					'nl': 'microlekage detectie',
-					'fr': 'micro détection des fuites',
-					'it': 'rilevamento micro perdite',
-					'es': 'detección de micro fugas',
-					'pl': 'wykrywanie mikroszczelności',
-					'zh-cn': '微额泄露'
+					'en': 'micro leakage detection (0) no, (1) yes',
+					'de': 'Mikroleckerkennung (0) nein, (1) ja',
+					'ru': 'обнаружение микро утечки (0) нет, (1) да',
+					'pt': 'micro detecção de vazamento (0) não, (1) sim',
+					'nl': 'microlekage detectie (0) nee; (1) ja',
+					'fr': 'micro détection des fuites (0) non, (1) oui',
+					'it': 'rilevamento micro perdite (0) no, (1) sì',
+					'es': 'detección de micro fugas (0) no, (1) sí',
+					'pl': 'wykrywanie mikroszczelności (0) nie; (1) dostępny',
+					'zh-cn': '微额泄露 (0) 无; (1) 否'
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -3857,22 +3887,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'micro leakage detection',
-					'de': 'Mikroleckerkennung',
-					'ru': 'обнаружение микро утечки',
-					'pt': 'micro detecção de vazamento',
-					'nl': 'microlekage detectie',
-					'fr': 'micro détection des fuites',
-					'it': 'rilevamento micro perdite',
-					'es': 'detección de micro fugas',
-					'pl': 'wykrywanie mikroszczelności',
-					'zh-cn': '微额泄露'
+					'en': 'micro leakage detection (0) no, (1) yes',
+					'de': 'Mikroleckerkennung (0) nein, (1) ja',
+					'ru': 'обнаружение микро утечки (0) нет, (1) да',
+					'pt': 'micro detecção de vazamento (0) não, (1) sim',
+					'nl': 'microlekage detectie (0) nee; (1) ja',
+					'fr': 'micro détection des fuites (0) non, (1) oui',
+					'it': 'rilevamento micro perdite (0) no, (1) sì',
+					'es': 'detección de micro fugas (0) no, (1) sí',
+					'pl': 'wykrywanie mikroszczelności (0) nie; (1) dostępny',
+					'zh-cn': '微额泄露 (0) 无; (1) 否'
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -3888,22 +3920,24 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'micro leakage detection',
-					'de': 'Mikroleckerkennung',
-					'ru': 'обнаружение микро утечки',
-					'pt': 'micro detecção de vazamento',
-					'nl': 'microlekage detectie',
-					'fr': 'micro détection des fuites',
-					'it': 'rilevamento micro perdite',
-					'es': 'detección de micro fugas',
-					'pl': 'wykrywanie mikroszczelności',
-					'zh-cn': '微额泄露'
+					'en': 'micro leakage detection (0) no, (1) yes',
+					'de': 'Mikroleckerkennung (0) nein, (1) ja',
+					'ru': 'обнаружение микро утечки (0) нет, (1) да',
+					'pt': 'micro detecção de vazamento (0) não, (1) sim',
+					'nl': 'microlekage detectie (0) nee; (1) ja',
+					'fr': 'micro détection des fuites (0) non, (1) oui',
+					'it': 'rilevamento micro perdite (0) no, (1) sì',
+					'es': 'detección de micro fugas (0) no, (1) sí',
+					'pl': 'wykrywanie mikroszczelności (0) nie; (1) dostępny',
+					'zh-cn': '微额泄露 (0) 无; (1) 否'
 				},
-				type: 'boolean',
+				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
@@ -4678,7 +4712,9 @@ const DeviceParameters = {
 				unit: 'l',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1900
 			},
 			native: {}
 		},
@@ -4709,7 +4745,9 @@ const DeviceParameters = {
 				unit: 'l',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1900
 			},
 			native: {}
 		},
@@ -4740,7 +4778,9 @@ const DeviceParameters = {
 				unit: 'l',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1900
 			},
 			native: {}
 		},
@@ -4771,7 +4811,9 @@ const DeviceParameters = {
 				unit: 'l',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1900
 			},
 			native: {}
 		},
@@ -4802,7 +4844,9 @@ const DeviceParameters = {
 				unit: 'l',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1900
 			},
 			native: {}
 		},
@@ -4833,7 +4877,9 @@ const DeviceParameters = {
 				unit: 'l',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1900
 			},
 			native: {}
 		},
@@ -4864,7 +4910,9 @@ const DeviceParameters = {
 				unit: 'l',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1900
 			},
 			native: {}
 		},
@@ -4895,7 +4943,9 @@ const DeviceParameters = {
 				unit: 'l',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1900
 			},
 			native: {}
 		},
@@ -7896,40 +7946,68 @@ class wamo extends utils.Adapter {
 	async state_profile_PM(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const state_ID = 'Device.Profiles.' + String(ProfileNumber) + '.PM' + String(ProfileNumber);
-				await this.setObjectNotExistsAsync(state_ID, {
-					type: 'state',
-					common: {
-						name: {
-							'en': 'Profile ' + String(ProfileNumber) + ' microleak detektion',
-							'de': 'Profil ' + String(ProfileNumber) + ' Mikroleckerkennung',
-							'ru': 'Профиль ' + String(ProfileNumber) + ' обнаружение микроутечек',
-							'pt': 'Detecção de microvazamento de perfil ' + String(ProfileNumber) + '',
-							'nl': 'Profiel ' + String(ProfileNumber) + ' microlekdetectie',
-							'fr': 'Détection de microfuite profil ' + String(ProfileNumber) + '',
-							'it': 'Rilevamento microperdite del profilo ' + String(ProfileNumber) + '',
-							'es': 'Perfil ' + String(ProfileNumber) + ' detección de microfugas',
-							'pl': 'Profil ' + String(ProfileNumber) + ' wykrywanie mikroprzecieków',
-							'zh-cn': '轮廓 ' + String(ProfileNumber) + ' 微泄漏检测'
-						},
-						type: 'boolean',
-						role: 'info.status',
-						read: true,
-						write: false
-					},
-					native: {}
-				});
-				if (parseFloat(value['getPM' + String(ProfileNumber)]) == 0) {
-					await this.setStateAsync(state_ID, { val: false, ack: true });
+				const profileMicroleackageDetection = parseInt(String(value['getPM' + String(ProfileNumber)]));
+				let crStaResult = null;
+				let stStaResult = null;
+				let currentStatePath  = '';
+				let currentstateObject = '';
+
+				switch (ProfileNumber){
+					case 1:
+						currentStatePath = String(DeviceParameters.Profile_PM1.statePath) + '.' + String(DeviceParameters.Profile_PM1.id);
+						currentstateObject = Object(DeviceParameters.Profile_PM1.objectdefinition);
+						break;
+					case 2:
+						currentStatePath = String(DeviceParameters.Profile_PM2.statePath) + '.' + String(DeviceParameters.Profile_PM2.id);
+						currentstateObject = Object(DeviceParameters.Profile_PM2.objectdefinition);
+						break;
+					case 3:
+						currentStatePath = String(DeviceParameters.Profile_PM3.statePath) + '.' + String(DeviceParameters.Profile_PM3.id);
+						currentstateObject = Object(DeviceParameters.Profile_PM3.objectdefinition);
+						break;
+					case 4:
+						currentStatePath = String(DeviceParameters.Profile_PM4.statePath) + '.' + String(DeviceParameters.Profile_PM4.id);
+						currentstateObject = Object(DeviceParameters.Profile_PM4.objectdefinition);
+						break;
+					case 5:
+						currentStatePath = String(DeviceParameters.Profile_PM5.statePath) + '.' + String(DeviceParameters.Profile_PM5.id);
+						currentstateObject = Object(DeviceParameters.Profile_PM5.objectdefinition);
+						break;
+					case 6:
+						currentStatePath = String(DeviceParameters.Profile_PM6.statePath) + '.' + String(DeviceParameters.Profile_PM6.id);
+						currentstateObject = Object(DeviceParameters.Profile_PM6.objectdefinition);
+						break;
+					case 7:
+						currentStatePath = String(DeviceParameters.Profile_PM7.statePath) + '.' + String(DeviceParameters.Profile_PM7.id);
+						currentstateObject = Object(DeviceParameters.Profile_PM7.objectdefinition);
+						break;
+					case 8:
+						currentStatePath = String(DeviceParameters.Profile_PM8.statePath) + '.' + String(DeviceParameters.Profile_PM8.id);
+						currentstateObject = Object(DeviceParameters.Profile_PM8.objectdefinition);
+						break;
+					default:
+						this.log.error('async state_profile_PM(ProfileNumber, value) -> switch (ProfileNumber) hit \'default:\'');
+						break;
+				}
+
+				this.log.debug('State path before setStateAsync = ' + currentStatePath);
+				this.log.debug('Value before setStateAsync = ' + String(profileMicroleackageDetection));
+
+				crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
+				this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
+
+				stStaResult = await this.setStateAsync(currentStatePath, { val: profileMicroleackageDetection, ack: true });
+				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
+
+				if (profileMicroleackageDetection == 0) {
 					this.log.info('Profile ' + String(ProfileNumber) + ' Microleak Detektion is disabled');
 				}
 				else {
-					await this.setStateAsync(state_ID, { val: true, ack: true });
 					this.log.info('Profile ' + String(ProfileNumber) + ' Microleak Detektion is enabled');
 				}
 				resolve(true);
 			} catch (err) {
-				this.log.error(err.message);
+				this.log.error('async state_profile_PM(ProfileNumber, value) ERROR: '+ err);
 				reject(err);
 			}
 		});
