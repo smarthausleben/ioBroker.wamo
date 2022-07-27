@@ -2913,22 +2913,36 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Profile available, 0 = no, 1 = yes',
-					'de': 'Profil verfügbar, 0 = nein, 1 = ja',
-					'ru': 'Профиль доступен, 0 = нет, 1 = да',
-					'pt': 'Perfil disponível, 0 = não, 1 = sim',
-					'nl': 'Profile beschikbaar, 0, 1, ja',
-					'fr': 'Profil disponible, 0 = non, 1 = oui',
-					'it': 'Profilo disponibile, 0 = no, 1 = sì',
-					'es': 'Perfil disponible, 0 = no, 1 = sí',
-					'pl': 'Profil na stronie 0 = no, 1 = yes',
-					'zh-cn': '简介,0.=无,1='
+					'en': 'Profile available',
+					'de': 'Profil verfügbar',
+					'ru': 'Профиль доступен',
+					'pt': 'Perfil disponível',
+					'nl': 'Profile beschikbaar',
+					'fr': 'Profil disponible',
+					'it': 'Profilo disponibile',
+					'es': 'Perfil disponible',
+					'pl': 'Profil na stronie',
+					'zh-cn': '简介'
+				},
+				desc:{
+					'en': '(0) no, (1) yes',
+					'de': '(0) nein, (1) ja',
+					'ru': '(0) нет, (1) да',
+					'pt': '(0) não, (1) sim',
+					'nl': '(0) nee; (1) ja',
+					'fr': '(0) non, (1) oui',
+					'it': '(0) no, (1) sì',
+					'es': '(0) no, (1) sí',
+					'pl': '(0) nie; (1) dostępny',
+					'zh-cn': '(0) 无; (1) 否'
 				},
 				type: 'number',
 				unit: null,
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 1
 			},
 			native: {}
 		},
