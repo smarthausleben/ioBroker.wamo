@@ -7336,6 +7336,7 @@ class wamo extends utils.Adapter {
 	async UpdateProfileState(ProfileNumber, stateID, value) {
 		return new Promise(async (resolve, reject) => {
 
+			const skipp = true;
 			this.log.warn('async UpdateProfileState(ProfileNumber, stateID, value) stateID: ' + String(stateID) + ' Profile Nr.: ' + String(ProfileNumber) + ' value: ' + JSON.stringify(value));
 			const parameterIDs = stateID.split('.');
 			const parameter = (parameterIDs[parameterIDs.length - 1]).substr(0, parameterIDs[parameterIDs.length - 1].length - 1);
@@ -7349,7 +7350,10 @@ class wamo extends utils.Adapter {
 						await this.state_profile_PN(ProfileNumber, value);
 						break;
 					case 'PV':
-						await this.state_profile_PV(ProfileNumber, value);
+						if(!skipp)
+						{
+							await this.state_profile_PV(ProfileNumber, value);
+						}
 						break;
 					case 'PT':
 						await this.state_profile_PT(ProfileNumber, value);
@@ -7609,35 +7613,35 @@ class wamo extends utils.Adapter {
 				switch (ProfileNumber){
 					case 1:
 						currentStatePath = String(DeviceParameters.Profile_PA1.statePath) + '.' + String(DeviceParameters.Profile_PA1.id);
-						currentstateObject = JSON.stringify(DeviceParameters.Profile_PA1.objectdefinition);
+						currentstateObject = Object(DeviceParameters.Profile_PA1.objectdefinition);
 						break;
 					case 2:
 						currentStatePath = String(DeviceParameters.Profile_PA2.statePath) + '.' + String(DeviceParameters.Profile_PA2.id);
-						currentstateObject = JSON.stringify(DeviceParameters.Profile_PA2.objectdefinition);
+						currentstateObject = Object(DeviceParameters.Profile_PA2.objectdefinition);
 						break;
 					case 3:
 						currentStatePath = String(DeviceParameters.Profile_PA3.statePath) + '.' + String(DeviceParameters.Profile_PA3.id);
-						currentstateObject = JSON.stringify(DeviceParameters.Profile_PA3.objectdefinition);
+						currentstateObject = Object(DeviceParameters.Profile_PA3.objectdefinition);
 						break;
 					case 4:
 						currentStatePath = String(DeviceParameters.Profile_PA4.statePath) + '.' + String(DeviceParameters.Profile_PA4.id);
-						currentstateObject = JSON.stringify(DeviceParameters.Profile_PA4.objectdefinition);
+						currentstateObject = Object(DeviceParameters.Profile_PA4.objectdefinition);
 						break;
 					case 5:
 						currentStatePath = String(DeviceParameters.Profile_PA5.statePath) + '.' + String(DeviceParameters.Profile_PA5.id);
-						currentstateObject = JSON.stringify(DeviceParameters.Profile_PA5.objectdefinition);
+						currentstateObject = Object(DeviceParameters.Profile_PA5.objectdefinition);
 						break;
 					case 6:
 						currentStatePath = String(DeviceParameters.Profile_PA6.statePath) + '.' + String(DeviceParameters.Profile_PA6.id);
-						currentstateObject = JSON.stringify(DeviceParameters.Profile_PA6.objectdefinition);
+						currentstateObject = Object(DeviceParameters.Profile_PA6.objectdefinition);
 						break;
 					case 7:
 						currentStatePath = String(DeviceParameters.Profile_PA7.statePath) + '.' + String(DeviceParameters.Profile_PA7.id);
-						currentstateObject = JSON.stringify(DeviceParameters.Profile_PA7.objectdefinition);
+						currentstateObject = Object(DeviceParameters.Profile_PA7.objectdefinition);
 						break;
 					case 8:
 						currentStatePath = String(DeviceParameters.Profile_PA8.statePath) + '.' + String(DeviceParameters.Profile_PA8.id);
-						currentstateObject = JSON.stringify(DeviceParameters.Profile_PA8.objectdefinition);
+						currentstateObject = Object(DeviceParameters.Profile_PA8.objectdefinition);
 						break;
 					default:
 						this.log.error('async state_profile_PA(ProfileNumber, value) -> switch (ProfileNumber) hit \'default:\'');
