@@ -7725,15 +7725,15 @@ class wamo extends utils.Adapter {
 				switch (ProfileNumber) {
 					case 1:
 						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PV1.statePath + '.' + DeviceParameters.Profile_PV1.id, Object(DeviceParameters.Profile_PV1.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PV1.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: profileQuantityLimitation, ack: true });
+						await this.setStateAsync(DeviceParameters.Profile_PV1.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: value['getPV' + String(ProfileNumber)], ack: true });
 						break;
 					case 2:
 						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PV2.statePath + '.' + DeviceParameters.Profile_PV2.id, Object(DeviceParameters.Profile_PV2.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PV2.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: profileQuantityLimitation, ack: true });
+						await this.setStateAsync(DeviceParameters.Profile_PV2.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: parseFloat(value['getPV' + String(ProfileNumber)]), ack: true });
 						break;
 					case 3:
 						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PV3.statePath + '.' + DeviceParameters.Profile_PV3.id, Object(DeviceParameters.Profile_PV3.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PV3.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: profileQuantityLimitation, ack: true });
+						await this.setStateAsync(DeviceParameters.Profile_PV3.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: parseInt(value['getPV' + String(ProfileNumber)]), ack: true });
 						break;
 					case 4:
 						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PV4.statePath + '.' + DeviceParameters.Profile_PV4.id, Object(DeviceParameters.Profile_PV4.objectdefinition));
