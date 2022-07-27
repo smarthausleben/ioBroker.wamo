@@ -7609,7 +7609,7 @@ class wamo extends utils.Adapter {
 						this.log.warn('1 vor await this.setStateAsync ->  DeviceParameters.Profile_PA1.statePath: ' + String(DeviceParameters.Profile_PA1.statePath) + ' DeviceParameters.Profile_PA1.id: ' + String(DeviceParameters.Profile_PA1.id) + ' Value: ' + String(profileAvailable));
 						await this.delay(1000);
 						this.log.warn('1 Sekunde gewartet. Wert von profileAvailable' + profileAvailable);
-						await this.setStateAsync(DeviceParameters.Profile_PA1.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: profileAvailable, ack: true });
+						await this.setStateAsync(DeviceParameters.Profile_PA1.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: parseInt(String(value['getPA' + String(ProfileNumber)])), ack: true });
 						break;
 					case 2:
 						this.log.warn('2 vor await this.setObjectNotExistsAsync -> DeviceParameters.Profile_PA2.statePath: ' + String(DeviceParameters.Profile_PA2.statePath) + ' DeviceParameters.Profile_PA2.id: ' + String(DeviceParameters.Profile_PA2.id) + ' Value: ' + String(profileAvailable));
