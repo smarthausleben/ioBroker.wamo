@@ -5610,25 +5610,23 @@ class wamo extends utils.Adapter {
 			// Profile 1
 			//============================================================================
 			else if((id.includes('Device.Profiles.1')) && (state.ack == false)){
-				if (!skipp) {
-					switch (id.substring(id.lastIndexOf('.') + 1)) {
-						// Profile Name
-						case 'PN1':
-							try {
-								let newProfileName = String(state.val);
-								if (newProfileName.length > 31) {
-									newProfileName = newProfileName.substring(0, 30);
-									this.log.warn('Profile 1 name \'' + String(state.val) + '\' is to long and will be cut to \'' + String(newProfileName) + '\' Mmax. 31 characters allowed!');
-								}
-								await this.set_DevieParameter(DeviceParameters.Profile_PN1, newProfileName, this.config.device_ip, this.config.device_port);
-								this.log.info('Profile 1 name changed to \'' + String(newProfileName) + '\'');
+				switch (id.substring(id.lastIndexOf('.') + 1)) {
+					// Profile Name
+					case 'PN1':
+						try {
+							let newProfileName = String(state.val);
+							if (newProfileName.length > 31) {
+								newProfileName = newProfileName.substring(0, 30);
+								this.log.warn('Profile 1 name \'' + String(state.val) + '\' is to long and will be cut to \'' + String(newProfileName) + '\' Mmax. 31 characters allowed!');
 							}
-							catch (err) {
-								this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.Profile_PN1 ... ERROR: ' + err);
-							}
-							break;
-						default:
-					}
+							await this.set_DevieParameter(DeviceParameters.Profile_PN1, newProfileName, this.config.device_ip, this.config.device_port);
+							this.log.info('Profile 1 name changed to \'' + String(newProfileName) + '\'');
+						}
+						catch (err) {
+							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.Profile_PN1 ... ERROR: ' + err);
+						}
+						break;
+					default:
 				}
 			}
 			//============================================================================
@@ -5642,60 +5640,58 @@ class wamo extends utils.Adapter {
 			// Profile 3
 			//============================================================================
 			else if((id.includes('Device.Profiles.3')) && (state.ack == false)){
-				if (!skipp) {
-					switch (id.substring(id.lastIndexOf('.') + 1)) {
-						// Profile available
-						case 'PA3':
-							try {
-								const AktiveProfileNumber = await this.getStateAsync(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id);
-								if ((AktiveProfileNumber != null) && (parseInt(String(AktiveProfileNumber.val)) == 3)) {
-									this.log.error('You can\'t disable the aktive profile! You ned to aktivate an other profile first!');
-									break;
-								}
-								let profileOnOff = parseFloat(String(state.val));
-								if (profileOnOff > 1) {
-									profileOnOff = 1;
-									this.log.warn('Profile 3 available value \'' + String(state.val) + '\' is is not valid! Profile will be set to \'available\'! (1)');
-								}
-								await this.set_DevieParameter(DeviceParameters.Profile_PA3, profileOnOff, this.config.device_ip, this.config.device_port);
-								this.log.info('Profile 3 available changed to \'' + String(profileOnOff) + '\'');
+				switch (id.substring(id.lastIndexOf('.') + 1)) {
+					// Profile available
+					case 'PA3':
+						try {
+							const AktiveProfileNumber = await this.getStateAsync(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id);
+							if ((AktiveProfileNumber != null) && (parseInt(String(AktiveProfileNumber.val)) == 3)) {
+								this.log.error('You can\'t disable the aktive profile! You ned to aktivate an other profile first!');
+								break;
 							}
-							catch (err) {
-								this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.Profile_PA3 ... ERROR: ' + err);
+							let profileOnOff = parseFloat(String(state.val));
+							if (profileOnOff > 1) {
+								profileOnOff = 1;
+								this.log.warn('Profile 3 available value \'' + String(state.val) + '\' is is not valid! Profile will be set to \'available\'! (1)');
 							}
-							break;
-						// Profile Name
-						case 'PN3':
-							try {
-								let newProfileName = String(state.val);
-								if (newProfileName.length > 31) {
-									newProfileName = newProfileName.substring(0, 30);
-									this.log.warn('Profile name \'' + String(state.val) + '\' is to long and will be cut to \'' + String(newProfileName) + '\' Mmax. 31 characters allowed!');
-								}
-								await this.set_DevieParameter(DeviceParameters.Profile_PN3, newProfileName, this.config.device_ip, this.config.device_port);
-								this.log.info('Profile 3 name changed to \'' + String(newProfileName) + '\'');
+							await this.set_DevieParameter(DeviceParameters.Profile_PA3, profileOnOff, this.config.device_ip, this.config.device_port);
+							this.log.info('Profile 3 available changed to \'' + String(profileOnOff) + '\'');
+						}
+						catch (err) {
+							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.Profile_PA3 ... ERROR: ' + err);
+						}
+						break;
+					// Profile Name
+					case 'PN3':
+						try {
+							let newProfileName = String(state.val);
+							if (newProfileName.length > 31) {
+								newProfileName = newProfileName.substring(0, 30);
+								this.log.warn('Profile name \'' + String(state.val) + '\' is to long and will be cut to \'' + String(newProfileName) + '\' Mmax. 31 characters allowed!');
 							}
-							catch (err) {
-								this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.Profile_PN3 ... ERROR: ' + err);
+							await this.set_DevieParameter(DeviceParameters.Profile_PN3, newProfileName, this.config.device_ip, this.config.device_port);
+							this.log.info('Profile 3 name changed to \'' + String(newProfileName) + '\'');
+						}
+						catch (err) {
+							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.Profile_PN3 ... ERROR: ' + err);
+						}
+						break;
+					// Profile Buzzer
+					case 'PB3':
+						try {
+							let profileBuzzer = parseFloat(String(state.val));
+							if (profileBuzzer > 1) {
+								profileBuzzer = 1;
+								this.log.warn('Profile 3 buzzer value \'' + String(state.val) + '\' is is not valid! Buzzer will be set to \'ON\'! (1)');
 							}
-							break;
-						// Profile Buzzer
-						case 'PB3':
-							try {
-								let profileBuzzer = parseFloat(String(state.val));
-								if (profileBuzzer > 1) {
-									profileBuzzer = 1;
-									this.log.warn('Profile 3 buzzer value \'' + String(state.val) + '\' is is not valid! Buzzer will be set to \'ON\'! (1)');
-								}
-								await this.set_DevieParameter(DeviceParameters.Profile_PB3, profileBuzzer, this.config.device_ip, this.config.device_port);
-								this.log.info('Profile 3 buzzer changed to \'' + String(profileBuzzer) + '\'');
-							}
-							catch (err) {
-								this.log.warn('onStateChange(id, state) -> set_DevieParameter(DeviceParameters.Profile_PB3 ... ERROR: ' + err);
-							}
-							break;
-						default:
-					}
+							await this.set_DevieParameter(DeviceParameters.Profile_PB3, profileBuzzer, this.config.device_ip, this.config.device_port);
+							this.log.info('Profile 3 buzzer changed to \'' + String(profileBuzzer) + '\'');
+						}
+						catch (err) {
+							this.log.warn('onStateChange(id, state) -> set_DevieParameter(DeviceParameters.Profile_PB3 ... ERROR: ' + err);
+						}
+						break;
+					default:
 				}
 			}
 			//============================================================================
@@ -7336,7 +7332,6 @@ class wamo extends utils.Adapter {
 	async UpdateProfileState(ProfileNumber, stateID, value) {
 		return new Promise(async (resolve, reject) => {
 
-			const skipp = false;
 			this.log.warn('async UpdateProfileState(ProfileNumber, stateID, value) stateID: ' + String(stateID) + ' Profile Nr.: ' + String(ProfileNumber) + ' value: ' + JSON.stringify(value));
 			const parameterIDs = stateID.split('.');
 			const parameter = (parameterIDs[parameterIDs.length - 1]).substr(0, parameterIDs[parameterIDs.length - 1].length - 1);
@@ -7350,10 +7345,7 @@ class wamo extends utils.Adapter {
 						await this.state_profile_PN(ProfileNumber, value);
 						break;
 					case 'PV':
-						if(!skipp)
-						{
-							await this.state_profile_PV(ProfileNumber, value);
-						}
+						await this.state_profile_PV(ProfileNumber, value);
 						break;
 					case 'PT':
 						await this.state_profile_PT(ProfileNumber, value);
@@ -7602,13 +7594,13 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 
-				this.log.warn('async state_profile_PA(ProfileNumber, value) value: ' + JSON.stringify(value) + ' Profilnummer: ' + String(ProfileNumber));
+				this.log.debug('async state_profile_PA(ProfileNumber, value) value: ' + JSON.stringify(value) + ' Profilnummer: ' + String(ProfileNumber));
 				const profileAvailable = parseInt(String(value['getPA' + String(ProfileNumber)]));
-				let currentStatePath  = '';
 				let crStaResult = null;
 				let stStaResult = null;
+				let currentStatePath  = '';
 				let currentstateObject = '';
-				this.log.warn('async state_profile_PA(ProfileNumber, value) -> const profileAvailable = value[\'getPA\' + String(ProfileNumber)]; = ' + String(profileAvailable));
+				this.log.debug('async state_profile_PA(ProfileNumber, value) -> const profileAvailable = value[\'getPA\' + String(ProfileNumber)]; = ' + String(profileAvailable));
 
 				switch (ProfileNumber){
 					case 1:
@@ -7647,15 +7639,15 @@ class wamo extends utils.Adapter {
 						this.log.error('async state_profile_PA(ProfileNumber, value) -> switch (ProfileNumber) hit \'default:\'');
 						break;
 				}
-				this.log.warn('State path before setStateAsync = ' + currentStatePath);
-				this.log.warn('Value before setStateAsync = ' + String(profileAvailable));
+
+				this.log.debug('State path before setStateAsync = ' + currentStatePath);
+				this.log.debug('Value before setStateAsync = ' + String(profileAvailable));
 
 				crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
-				this.log.warn('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
+				this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
 
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileAvailable, ack: true });
-				this.log.warn('result from setStateAsync = ' + JSON.stringify(stStaResult));
-
+				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
 				if(profileAvailable == 1){this.log.info('Profile ' + String(ProfileNumber) + ' is available');}
 				else{this.log.info('Profile ' + String(ProfileNumber) + ' is not available');}
@@ -7675,41 +7667,54 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 				const profileName = String(value['getPN' + String(ProfileNumber)]);
+				let crStaResult = null;
+				let stStaResult = null;
+				let currentStatePath  = '';
+				let currentstateObject = '';
 
 				switch (ProfileNumber) {
 					case 1:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PN1.statePath + '.' + DeviceParameters.Profile_PN1.id, Object(DeviceParameters.Profile_PN1.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PN1.statePath + '.' + DeviceParameters.Profile_PN1.id, { val: profileName, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PN1.statePath) + '.' + String(DeviceParameters.Profile_PN1.id);
+						currentstateObject = Object(DeviceParameters.Profile_PN1.objectdefinition);
 						break;
 					case 2:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PN2.statePath + '.' + DeviceParameters.Profile_PN2.id, Object(DeviceParameters.Profile_PN2.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PN2.statePath + '.' + DeviceParameters.Profile_PN2.id, { val: profileName, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PN2.statePath) + '.' + String(DeviceParameters.Profile_PN2.id);
+						currentstateObject = Object(DeviceParameters.Profile_PN2.objectdefinition);
 						break;
 					case 3:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PN3.statePath + '.' + DeviceParameters.Profile_PN3.id, Object(DeviceParameters.Profile_PN3.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PN3.statePath + '.' + DeviceParameters.Profile_PN3.id, { val: profileName, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PN3.statePath) + '.' + String(DeviceParameters.Profile_PN3.id);
+						currentstateObject = Object(DeviceParameters.Profile_PN3.objectdefinition);
 						break;
 					case 4:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PN4.statePath + '.' + DeviceParameters.Profile_PN4.id, Object(DeviceParameters.Profile_PN4.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PN4.statePath + '.' + DeviceParameters.Profile_PN4.id, { val: profileName, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PN4.statePath) + '.' + String(DeviceParameters.Profile_PN4.id);
+						currentstateObject = Object(DeviceParameters.Profile_PN4.objectdefinition);
 						break;
 					case 5:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PN5.statePath + '.' + DeviceParameters.Profile_PN5.id, Object(DeviceParameters.Profile_PN5.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PN5.statePath + '.' + DeviceParameters.Profile_PN5.id, { val: profileName, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PN5.statePath) + '.' + String(DeviceParameters.Profile_PN5.id);
+						currentstateObject = Object(DeviceParameters.Profile_PN5.objectdefinition);
 						break;
 					case 6:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PN6.statePath + '.' + DeviceParameters.Profile_PN6.id, Object(DeviceParameters.Profile_PN6.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PN6.statePath + '.' + DeviceParameters.Profile_PN6.id, { val: profileName, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PN6.statePath) + '.' + String(DeviceParameters.Profile_PN6.id);
+						currentstateObject = Object(DeviceParameters.Profile_PN6.objectdefinition);
 						break;
 					case 7:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PN7.statePath + '.' + DeviceParameters.Profile_PN7.id, Object(DeviceParameters.Profile_PN7.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PN7.statePath + '.' + DeviceParameters.Profile_PN7.id, { val: profileName, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PN7.statePath) + '.' + String(DeviceParameters.Profile_PN7.id);
+						currentstateObject = Object(DeviceParameters.Profile_PN7.objectdefinition);
 						break;
 					case 8:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PN8.statePath + '.' + DeviceParameters.Profile_PN8.id, Object(DeviceParameters.Profile_PN8.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PN8.statePath + '.' + DeviceParameters.Profile_PN8.id, { val: profileName, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PN8.statePath) + '.' + String(DeviceParameters.Profile_PN8.id);
+						currentstateObject = Object(DeviceParameters.Profile_PN8.objectdefinition);
 						break;
 				}
+
+				this.log.debug('State path before setStateAsync = ' + currentStatePath);
+				this.log.debug('Value before setStateAsync = ' + String(profileName));
+
+				crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
+				this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
+
+				stStaResult = await this.setStateAsync(currentStatePath, { val: profileName, ack: true });
+				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
 				this.log.info('Profile ' + String(ProfileNumber) + ' name is ' + profileName);
 				resolve(true);
@@ -7734,7 +7739,7 @@ class wamo extends utils.Adapter {
 				let currentstateObject = '';
 
 				const profileQuantityLimitation = parseInt(String(value['getPV' + String(ProfileNumber)]));
-				this.log.warn('async state_profile_PV(ProfileNumber, value) -> const profileQuantityLimitation = ' + String(profileQuantityLimitation));
+				this.log.debug('async state_profile_PV(ProfileNumber, value) -> const profileQuantityLimitation = ' + String(profileQuantityLimitation));
 
 				switch (ProfileNumber) {
 					case 1:
@@ -7770,14 +7775,14 @@ class wamo extends utils.Adapter {
 						currentstateObject = Object(DeviceParameters.Profile_PV8.objectdefinition);
 						break;
 				}
-				this.log.warn('State path before setStateAsync = ' + currentStatePath);
-				this.log.warn('Value before setStateAsync = ' + String(profileQuantityLimitation));
+				this.log.debug('State path before setStateAsync = ' + currentStatePath);
+				this.log.debug('Value before setStateAsync = ' + String(profileQuantityLimitation));
 
 				crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
-				this.log.warn('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
+				this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
 
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileQuantityLimitation, ack: true });
-				this.log.warn('result from setStateAsync = ' + JSON.stringify(stStaResult));
+				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
 
 				this.log.info('Profile ' + String(ProfileNumber) + ' quantity limitation is ' + String(profileQuantityLimitation) + 'l');
