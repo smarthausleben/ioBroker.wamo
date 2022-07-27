@@ -4232,7 +4232,9 @@ const DeviceParameters = {
 				unit: 'h',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 720
 			},
 			native: {}
 		},
@@ -4263,7 +4265,9 @@ const DeviceParameters = {
 				unit: 'h',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 720
 			},
 			native: {}
 		},
@@ -4294,7 +4298,9 @@ const DeviceParameters = {
 				unit: 'h',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 720
 			},
 			native: {}
 		},
@@ -4325,7 +4331,9 @@ const DeviceParameters = {
 				unit: 'h',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 720
 			},
 			native: {}
 		},
@@ -4356,7 +4364,9 @@ const DeviceParameters = {
 				unit: 'h',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 720
 			},
 			native: {}
 		},
@@ -4387,7 +4397,9 @@ const DeviceParameters = {
 				unit: 'h',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 720
 			},
 			native: {}
 		},
@@ -4418,7 +4430,9 @@ const DeviceParameters = {
 				unit: 'h',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 720
 			},
 			native: {}
 		},
@@ -4449,7 +4463,9 @@ const DeviceParameters = {
 				unit: 'h',
 				role: 'state',
 				read: true,
-				write: true
+				write: true,
+				min: 0,
+				max: 720
 			},
 			native: {}
 		},
@@ -8122,31 +8138,64 @@ class wamo extends utils.Adapter {
 	async state_profile_PR(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const state_ID = 'Device.Profiles.' + String(ProfileNumber) + '.PR' + String(ProfileNumber);
-				await this.setObjectNotExistsAsync(state_ID, {
-					type: 'state',
-					common: {
-						name: {
-							en: 'Profile ' + String(ProfileNumber) + ' Return Time to standard Profile (1...720h (30 Days))',
-							de: 'Profil ' + String(ProfileNumber) + ' Zeit bis zur Rückkehr zum Standardprofil (1...720h (30 Tage))'
-						},
-						type: 'number',
-						role: 'value.info',
-						unit: 'h',
-						read: true,
-						write: false
-					},
-					native: {}
-				});
-				await this.setStateAsync(state_ID, { val: parseInt(value['getPR' + String(ProfileNumber)]), ack: true });
-				this.log.info('Profile ' + String(ProfileNumber) + ' return time ' + String(value['getPR' + String(ProfileNumber)]));
+
+				let currentStatePath  = '';
+				let crStaResult = null;
+				let stStaResult = null;
+				let currentstateObject = '';
+				const profileReturnTime = parseInt(String(value['getPR' + String(ProfileNumber)]));
+
+				switch (ProfileNumber) {
+					case 1:
+						currentStatePath = String(DeviceParameters.Profile_PR1.statePath) + '.' + String(DeviceParameters.Profile_PR1.id);
+						currentstateObject = Object(DeviceParameters.Profile_PR1.objectdefinition);
+						break;
+					case 2:
+						currentStatePath = String(DeviceParameters.Profile_PR2.statePath) + '.' + String(DeviceParameters.Profile_PR2.id);
+						currentstateObject = Object(DeviceParameters.Profile_PR2.objectdefinition);
+						break;
+					case 3:
+						currentStatePath = String(DeviceParameters.Profile_PR3.statePath) + '.' + String(DeviceParameters.Profile_PR3.id);
+						currentstateObject = Object(DeviceParameters.Profile_PR3.objectdefinition);
+						break;
+					case 4:
+						currentStatePath = String(DeviceParameters.Profile_PR4.statePath) + '.' + String(DeviceParameters.Profile_PR4.id);
+						currentstateObject = Object(DeviceParameters.Profile_PR4.objectdefinition);
+						break;
+					case 5:
+						currentStatePath = String(DeviceParameters.Profile_PR5.statePath) + '.' + String(DeviceParameters.Profile_PR5.id);
+						currentstateObject = Object(DeviceParameters.Profile_PR5.objectdefinition);
+						break;
+					case 6:
+						currentStatePath = String(DeviceParameters.Profile_PR6.statePath) + '.' + String(DeviceParameters.Profile_PR6.id);
+						currentstateObject = Object(DeviceParameters.Profile_PR6.objectdefinition);
+						break;
+					case 7:
+						currentStatePath = String(DeviceParameters.Profile_PR7.statePath) + '.' + String(DeviceParameters.Profile_PR7.id);
+						currentstateObject = Object(DeviceParameters.Profile_PR7.objectdefinition);
+						break;
+					case 8:
+						currentStatePath = String(DeviceParameters.Profile_PR8.statePath) + '.' + String(DeviceParameters.Profile_PR8.id);
+						currentstateObject = Object(DeviceParameters.Profile_PR8.objectdefinition);
+						break;
+				}
+				this.log.debug('State path before setStateAsync = ' + currentStatePath);
+				this.log.debug('Value before setStateAsync = ' + String(profileReturnTime));
+
+				crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
+				this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
+
+				stStaResult = await this.setStateAsync(currentStatePath, { val: profileReturnTime, ack: true });
+				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
+
+				this.log.info('Profile ' + String(ProfileNumber) + ' return time to default profile is ' + String(profileReturnTime) + 'h');
+
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
 				reject(err);
 			}
 		});
-
 	}
 
 	//===================================================
