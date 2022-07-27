@@ -7600,56 +7600,51 @@ class wamo extends utils.Adapter {
 
 				this.log.warn('async state_profile_PA(ProfileNumber, value) value: ' + JSON.stringify(value) + ' Profilnummer: ' + String(ProfileNumber));
 				const profileAvailable = parseInt(String(value['getPA' + String(ProfileNumber)]));
-				const a = Number(value['getPA' + String(ProfileNumber)]);
-			
+				let currentStatePath  = '';
+				let crStaResult = null;
 				this.log.warn('async state_profile_PA(ProfileNumber, value) -> const profileAvailable = value[\'getPA\' + String(ProfileNumber)]; = ' + String(profileAvailable));
 
-				switch (ProfileNumber) {
+				switch (ProfileNumber){
 					case 1:
-						this.log.warn('1 vor await this.setObjectNotExistsAsync -> DeviceParameters.Profile_PA1.statePath: ' + String(DeviceParameters.Profile_PA1.statePath) + ' DeviceParameters.Profile_PA1.id: ' + String(DeviceParameters.Profile_PA1.id) + ' Value: ' + String(profileAvailable));
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA1.statePath + '.' + DeviceParameters.Profile_PA1.id, Object(DeviceParameters.Profile_PA1.objectdefinition));
-						this.log.warn('1 vor await this.setStateAsync ->  DeviceParameters.Profile_PA1.statePath: ' + String(DeviceParameters.Profile_PA1.statePath) + ' DeviceParameters.Profile_PA1.id: ' + String(DeviceParameters.Profile_PA1.id) + ' Value: ' + String(profileAvailable));
-						await this.delay(1000);
-						this.log.warn('1 Sekunde gewartet. Wert von profileAvailable' + profileAvailable);
-						await this.setStateAsync(DeviceParameters.Profile_PA1.statePath + '.' + DeviceParameters.Profile_PA1.id, { val: parseInt(String(value['getPA' + String(ProfileNumber)])), ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PA1.statePath) + '.' + String(DeviceParameters.Profile_PA1.id);
+						crStaResult = await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA1.statePath + '.' + DeviceParameters.Profile_PA1.id, Object(DeviceParameters.Profile_PA1.objectdefinition));
 						break;
 					case 2:
-						this.log.warn('2 vor await this.setObjectNotExistsAsync -> DeviceParameters.Profile_PA2.statePath: ' + String(DeviceParameters.Profile_PA2.statePath) + ' DeviceParameters.Profile_PA2.id: ' + String(DeviceParameters.Profile_PA2.id) + ' Value: ' + String(profileAvailable));
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA2.statePath + '.' + DeviceParameters.Profile_PA2.id, Object(DeviceParameters.Profile_PA2.objectdefinition));
-						this.log.warn('2 vor await this.setStateAsync ->  DeviceParameters.Profile_PA2.statePath: ' + String(DeviceParameters.Profile_PA2.statePath) + ' DeviceParameters.Profile_PA2.id: ' + String(DeviceParameters.Profile_PA2.id) + ' Value: ' + String(profileAvailable));
-						await this.delay(1000);
-						this.log.warn('1 Sekunde gewartet. Wert von profileAvailable' + profileAvailable);
-						await this.setStateAsync(DeviceParameters.Profile_PA2.statePath + '.' + DeviceParameters.Profile_PA2.id, { val: profileAvailable, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PA2.statePath) + '.' + String(DeviceParameters.Profile_PA2.id);
+						crStaResult = await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA2.statePath + '.' + DeviceParameters.Profile_PA2.id, Object(DeviceParameters.Profile_PA2.objectdefinition));
 						break;
 					case 3:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA3.statePath + '.' + DeviceParameters.Profile_PA3.id, Object(DeviceParameters.Profile_PA3.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PA3.statePath + '.' + DeviceParameters.Profile_PA3.id, { val: profileAvailable, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PA3.statePath) + '.' + String(DeviceParameters.Profile_PA3.id);
+						crStaResult = await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA3.statePath + '.' + DeviceParameters.Profile_PA3.id, Object(DeviceParameters.Profile_PA3.objectdefinition));
 						break;
 					case 4:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA4.statePath + '.' + DeviceParameters.Profile_PA4.id, Object(DeviceParameters.Profile_PA4.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PA4.statePath + '.' + DeviceParameters.Profile_PA4.id, { val: profileAvailable, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PA4.statePath) + '.' + String(DeviceParameters.Profile_PA4.id);
+						crStaResult = await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA4.statePath + '.' + DeviceParameters.Profile_PA4.id, Object(DeviceParameters.Profile_PA4.objectdefinition));
 						break;
 					case 5:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA5.statePath + '.' + DeviceParameters.Profile_PA5.id, Object(DeviceParameters.Profile_PA5.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PA5.statePath + '.' + DeviceParameters.Profile_PA5.id, { val: profileAvailable, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PA5.statePath) + '.' + String(DeviceParameters.Profile_PA5.id);
+						crStaResult = await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA5.statePath + '.' + DeviceParameters.Profile_PA5.id, Object(DeviceParameters.Profile_PA5.objectdefinition));
 						break;
 					case 6:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA6.statePath + '.' + DeviceParameters.Profile_PA6.id, Object(DeviceParameters.Profile_PA6.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PA6.statePath + '.' + DeviceParameters.Profile_PA6.id, { val: profileAvailable, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PA6.statePath) + '.' + String(DeviceParameters.Profile_PA6.id);
+						crStaResult = await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA6.statePath + '.' + DeviceParameters.Profile_PA6.id, Object(DeviceParameters.Profile_PA6.objectdefinition));
 						break;
 					case 7:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA7.statePath + '.' + DeviceParameters.Profile_PA7.id, Object(DeviceParameters.Profile_PA7.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PA7.statePath + '.' + DeviceParameters.Profile_PA7.id, { val: profileAvailable, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PA7.statePath) + '.' + String(DeviceParameters.Profile_PA7.id);
+						crStaResult = await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA7.statePath + '.' + DeviceParameters.Profile_PA7.id, Object(DeviceParameters.Profile_PA7.objectdefinition));
 						break;
 					case 8:
-						await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA8.statePath + '.' + DeviceParameters.Profile_PA8.id, Object(DeviceParameters.Profile_PA8.objectdefinition));
-						await this.setStateAsync(DeviceParameters.Profile_PA8.statePath + '.' + DeviceParameters.Profile_PA8.id, { val: profileAvailable, ack: true });
+						currentStatePath = String(DeviceParameters.Profile_PA8.statePath) + '.' + String(DeviceParameters.Profile_PA8.id);
+						crStaResult = await this.setObjectNotExistsAsync(DeviceParameters.Profile_PA8.statePath + '.' + DeviceParameters.Profile_PA8.id, Object(DeviceParameters.Profile_PA8.objectdefinition));
 						break;
 					default:
 						this.log.error('async state_profile_PA(ProfileNumber, value) -> switch (ProfileNumber) hit \'default:\'');
 						break;
 				}
-
+				this.log.warn('result from setObjectNotExistsAsync = ' + String(crStaResult));
+				this.log.warn('State path before setStateAsync = ' + currentStatePath);
+				this.log.warn('Value before setStateAsync = ' + String(value['getPA' + String(ProfileNumber)]));
+				await this.setStateAsync(currentStatePath, { val: parseInt(String(value['getPA' + String(ProfileNumber)])), ack: true });
 				if(profileAvailable == 1){this.log.info('Profile ' + String(ProfileNumber) + ' is available');}
 				else{this.log.info('Profile ' + String(ProfileNumber) + ' is not available');}
 				resolve(true);
