@@ -21,6 +21,7 @@ The adapter connects to your **SYR SafeTech Connect 2422** or **POLYGONVATRO** l
 ## Changelog
 ### developing (----.--.--)
 * (smarthausleben) change Profile states data type - All old Profile state objects need to be deleted first
+* (smarthausleben) added State PR - Profile x time to return to default profile is now changeable (part of Issue #8)
 * (smarthausleben) added State PM - Profile x micro leak detection is now changeable (part of Issue #8)
 * (smarthausleben) added State PF - Profile x max flow is now changeable (part of Issue #8)
 * (smarthausleben) added State PB - Profile x buzzer is now changeable (part of Issue #8)
