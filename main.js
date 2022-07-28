@@ -5993,46 +5993,85 @@ class wamo extends utils.Adapter {
 							break;
 						case 'PR':	// Time back to default profile
 							try {
-								let profileMTimeBackStandardProfile = parseInt(String(state.val));
-								if (profileMTimeBackStandardProfile > 720) {
-									profileMTimeBackStandardProfile = 720;
-									this.log.warn('Profile ' + String(stateChangeProfileNo) + ' time back to default profile of \'' + String(state.val) + '/h\' is is to high! Max time will be set to maximum \'720h\' (30 days)!');
+								let profileTimeBackStandardProfile = parseInt(String(state.val));
+								if (profileTimeBackStandardProfile > 720) {
+									profileTimeBackStandardProfile = 720;
+									this.log.warn('Profile ' + String(stateChangeProfileNo) + ' time back to default profile of \'' + String(state.val) + ' h\' is is to high! It will be set to the maximum of \'720h\' (30 days)!');
 								}
 								switch (stateChangeProfileNo) {
 									case 1:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR1, profileMTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PR1, profileTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
 										break;
 									case 2:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR2, profileMTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PR2, profileTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
 										break;
 									case 3:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR3, profileMTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PR3, profileTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
 										break;
 									case 4:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR4, profileMTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PR4, profileTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
 										break;
 									case 5:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR5, profileMTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PR5, profileTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
 										break;
 									case 6:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR6, profileMTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PR6, profileTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
 										break;
 									case 7:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR7, profileMTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PR7, profileTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
 										break;
 									case 8:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR8, profileMTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PR8, profileTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
 										break;
 									default:
 										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PR');
 								}
 
-								if (profileMTimeBackStandardProfile == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' time back to default profile is disabled'); }
-								else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' time back to default profile is \'' + String(profileMTimeBackStandardProfile) + 'h\''); }
+								if (profileTimeBackStandardProfile == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' time back to default profile is disabled'); }
+								else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' time back to default profile is \'' + String(profileTimeBackStandardProfile) + ' h\''); }
 
 							} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile back to default profile change ERROR: ' + err); }
 							break;
 						case 'PT':	// Time limit
+							try {
+								let profileLeakageTimeLimit = parseInt(String(state.val));
+								if (profileLeakageTimeLimit > 1500) {
+									profileLeakageTimeLimit = 1500;
+									this.log.warn('Profile ' + String(stateChangeProfileNo) + ' leakage time limit of \'' + String(state.val) + ' min\' is is to high! It will be set to the maximum of \'1500 min\' (30 days)!');
+								}
+								switch (stateChangeProfileNo) {
+									case 1:
+										await this.set_DevieParameter(DeviceParameters.Profile_PT1, profileLeakageTimeLimit, this.config.device_ip, this.config.device_port);
+										break;
+									case 2:
+										await this.set_DevieParameter(DeviceParameters.Profile_PT2, profileLeakageTimeLimit, this.config.device_ip, this.config.device_port);
+										break;
+									case 3:
+										await this.set_DevieParameter(DeviceParameters.Profile_PT3, profileLeakageTimeLimit, this.config.device_ip, this.config.device_port);
+										break;
+									case 4:
+										await this.set_DevieParameter(DeviceParameters.Profile_PT4, profileLeakageTimeLimit, this.config.device_ip, this.config.device_port);
+										break;
+									case 5:
+										await this.set_DevieParameter(DeviceParameters.Profile_PT5, profileLeakageTimeLimit, this.config.device_ip, this.config.device_port);
+										break;
+									case 6:
+										await this.set_DevieParameter(DeviceParameters.Profile_PT6, profileLeakageTimeLimit, this.config.device_ip, this.config.device_port);
+										break;
+									case 7:
+										await this.set_DevieParameter(DeviceParameters.Profile_PT7, profileLeakageTimeLimit, this.config.device_ip, this.config.device_port);
+										break;
+									case 8:
+										await this.set_DevieParameter(DeviceParameters.Profile_PT8, profileLeakageTimeLimit, this.config.device_ip, this.config.device_port);
+										break;
+									default:
+										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PT');
+								}
+
+								if (profileLeakageTimeLimit == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' leakage time limit is disabled'); }
+								else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' leakage time limit is \'' + String(profileLeakageTimeLimit) + ' min\''); }
+
+							} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile time limit change ERROR: ' + err); }
 							break;
 						case 'PV':	// Volume limit
 							break;
