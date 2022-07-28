@@ -5823,11 +5823,11 @@ class wamo extends utils.Adapter {
 										await this.set_DevieParameter(DeviceParameters.Profile_PA8, profAvailableState, this.config.device_ip, this.config.device_port);
 										break;
 									default:
-										this.log.error('Invalid Profile Number \'' + String(AktiveProfileNumber) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PA');
+										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PA');
 								}
 
-								if(profAvailableState == 0){this.log.info('Profile ' + String(AktiveProfileNumber) + ' availability changed to \'not available\'.');}
-								else{this.log.info('Profile ' + String(AktiveProfileNumber) + ' availability changed to \'available\'.');}
+								if(profAvailableState == 0){this.log.info('Profile ' + String(stateChangeProfileNo) + ' availability changed to \'not available\'.');}
+								else{this.log.info('Profile ' + String(stateChangeProfileNo) + ' availability changed to \'available\'.');}
 							}
 							break;
 						case 'PN':	// Name
@@ -5863,9 +5863,9 @@ class wamo extends utils.Adapter {
 										await this.set_DevieParameter(DeviceParameters.Profile_PN8, newProfileName, this.config.device_ip, this.config.device_port);
 										break;
 									default:
-										this.log.error('Invalid Profile Number \'' + String(AktiveProfileNumber) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PN');
+										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PN');
 								}
-								this.log.info('Profile ' + String(AktiveProfileNumber) + ' name changed to \'' + String(newProfileName) + '\'');
+								this.log.info('Profile ' + String(stateChangeProfileNo) + ' name changed to \'' + String(newProfileName) + '\'');
 							} catch (err) {this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile Name change ERROR: ' + err);}
 							break;
 						case 'PB':	// Buzzer
@@ -5901,11 +5901,11 @@ class wamo extends utils.Adapter {
 										await this.set_DevieParameter(DeviceParameters.Profile_PB8, profileBuzzer, this.config.device_ip, this.config.device_port);
 										break;
 									default:
-										this.log.error('Invalid Profile Number \'' + String(AktiveProfileNumber) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PB');
+										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PB');
 								}
 
-								if(profileBuzzer == 0){this.log.info('Profile ' + String(AktiveProfileNumber) + ' buzzer is disabled');}
-								else{this.log.info('Profile ' + String(AktiveProfileNumber) + ' buzzer is enabled');}
+								if(profileBuzzer == 0){this.log.info('Profile ' + String(stateChangeProfileNo) + ' buzzer is disabled');}
+								else{this.log.info('Profile ' + String(stateChangeProfileNo) + ' buzzer is enabled');}
 
 							}catch(err){this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile buzzer change ERROR: ' + err);}
 							break;
@@ -5942,15 +5942,54 @@ class wamo extends utils.Adapter {
 										await this.set_DevieParameter(DeviceParameters.Profile_PF8, profileMaxFlow, this.config.device_ip, this.config.device_port);
 										break;
 									default:
-										this.log.error('Invalid Profile Number \'' + String(AktiveProfileNumber) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PB');
+										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PF');
 								}
 
-								if(profileMaxFlow == 0){this.log.info('Profile ' + String(AktiveProfileNumber) + ' max Flow per hour is disabled');}
-								else{this.log.info('Profile ' + String(AktiveProfileNumber) + ' max Flow per hour changed to \'' + String(profileMaxFlow) + 'l/h\'');}
+								if(profileMaxFlow == 0){this.log.info('Profile ' + String(stateChangeProfileNo) + ' max Flow per hour is disabled');}
+								else{this.log.info('Profile ' + String(stateChangeProfileNo) + ' max Flow per hour changed to \'' + String(profileMaxFlow) + 'l/h\'');}
 
-							} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile buzzer change ERROR: ' + err); }
+							} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile max flow change ERROR: ' + err); }
 							break;
 						case 'PM':	// Micro leak detection
+							try {
+								let profileMicroLeak = parseInt(String(state.val));
+								if (profileMicroLeak > 1) {
+									profileMicroLeak = 1;
+									this.log.warn('Profile ' + String(stateChangeProfileNo) + ' micro leak detection \'' + String(state.val) + '\' is is not valid! Micro leak detection will be set to \'ON\'! (1)');
+								}
+								switch (stateChangeProfileNo) {
+									case 1:
+										await this.set_DevieParameter(DeviceParameters.Profile_PM1, profileMicroLeak, this.config.device_ip, this.config.device_port);
+										break;
+									case 2:
+										await this.set_DevieParameter(DeviceParameters.Profile_PM2, profileMicroLeak, this.config.device_ip, this.config.device_port);
+										break;
+									case 3:
+										await this.set_DevieParameter(DeviceParameters.Profile_PM3, profileMicroLeak, this.config.device_ip, this.config.device_port);
+										break;
+									case 4:
+										await this.set_DevieParameter(DeviceParameters.Profile_PM4, profileMicroLeak, this.config.device_ip, this.config.device_port);
+										break;
+									case 5:
+										await this.set_DevieParameter(DeviceParameters.Profile_PM5, profileMicroLeak, this.config.device_ip, this.config.device_port);
+										break;
+									case 6:
+										await this.set_DevieParameter(DeviceParameters.Profile_PM6, profileMicroLeak, this.config.device_ip, this.config.device_port);
+										break;
+									case 7:
+										await this.set_DevieParameter(DeviceParameters.Profile_PM7, profileMicroLeak, this.config.device_ip, this.config.device_port);
+										break;
+									case 8:
+										await this.set_DevieParameter(DeviceParameters.Profile_PM8, profileMicroLeak, this.config.device_ip, this.config.device_port);
+										break;
+									default:
+										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PM');
+								}
+
+								if (profileMicroLeak == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' micro leak detection is disabled'); }
+								else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' micro leak detection is enabled'); }
+
+							} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile micro leak detection change ERROR: ' + err); }
 							break;
 						case 'PR':	// Time back to standard profile
 							break;
