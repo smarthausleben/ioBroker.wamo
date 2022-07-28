@@ -5775,10 +5775,10 @@ class wamo extends utils.Adapter {
 			else if((id.includes('Device.Profiles.')) && (state.ack == false)){
 				try{
 					// identify Profile parameter
-					const currentProfileState = id.substring(id.lastIndexOf('.') + 1, id.length - 2);
+					const currentProfileState = id.substring(id.lastIndexOf('.') + 1, id.length - 1);
 					this.log.warn('onStateChange Profile Parameter is: ' + String(currentProfileState));
 					// identify profile number
-					const stateChangeProfileNo = parseInt(id.substring(id.length - 2, id.length - 1));
+					const stateChangeProfileNo = parseInt(id.substring(id.length - 1));
 					this.log.warn('onStateChange Profile Number is: ' + String(stateChangeProfileNo));
 
 					// identify currentAktiveProfile
