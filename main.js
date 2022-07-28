@@ -5776,10 +5776,10 @@ class wamo extends utils.Adapter {
 				try{
 					// identify Profile parameter
 					const currentProfileState = id.substring(id.lastIndexOf('.') + 1, id.length - 1);
-					this.log.warn('onStateChange Profile Parameter is: ' + String(currentProfileState));
+					this.log.debug('onStateChange Profile Parameter is: ' + String(currentProfileState));
 					// identify profile number
 					const stateChangeProfileNo = parseInt(id.substring(id.length - 1));
-					this.log.warn('onStateChange Profile Number is: ' + String(stateChangeProfileNo));
+					this.log.debug('onStateChange Profile Number is: ' + String(stateChangeProfileNo));
 
 					// identify currentAktiveProfile
 					const AktiveProfileNumber = await this.getStateAsync(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id);
@@ -5795,7 +5795,7 @@ class wamo extends utils.Adapter {
 								// do we have a legal value like 0 or 1
 								if (profAvailableState > 1) {
 									profAvailableState = 1;
-									this.log.warn('Profile ' + stateChangeProfileNo + ' available value \'' + String(state.val) + '\' is is not valid! Profile will be set to \'available\'! (1)');
+									this.log.warn('Profile ' + stateChangeProfileNo + ' available value \'' + String(state.val) + '\' is not valid! Profile will be set to \'available\'! (1)');
 								}
 								switch (stateChangeProfileNo) {
 									case 1:
@@ -5873,7 +5873,7 @@ class wamo extends utils.Adapter {
 								let profileBuzzer = parseFloat(String(state.val));
 								if (profileBuzzer > 1) {
 									profileBuzzer = 1;
-									this.log.warn('Profile ' + String(stateChangeProfileNo) + ' buzzer value \'' + String(state.val) + '\' is is not valid! Buzzer will be set to \'ON\'! (1)');
+									this.log.warn('Profile ' + String(stateChangeProfileNo) + ' buzzer value \'' + String(state.val) + '\' is not valid! Buzzer will be set to \'ON\'! (1)');
 								}
 								switch (stateChangeProfileNo) {
 									case 1:
@@ -5955,7 +5955,7 @@ class wamo extends utils.Adapter {
 								let profileMicroLeak = parseInt(String(state.val));
 								if (profileMicroLeak > 1) {
 									profileMicroLeak = 1;
-									this.log.warn('Profile ' + String(stateChangeProfileNo) + ' micro leak detection \'' + String(state.val) + '\' is is not valid! Micro leak detection will be set to \'ON\'! (1)');
+									this.log.warn('Profile ' + String(stateChangeProfileNo) + ' micro leak detection \'' + String(state.val) + '\' is not valid! Micro leak detection will be set to \'ON\'! (1)');
 								}
 								switch (stateChangeProfileNo) {
 									case 1:
@@ -6037,7 +6037,7 @@ class wamo extends utils.Adapter {
 								let profileLeakageTimeLimit = parseInt(String(state.val));
 								if (profileLeakageTimeLimit > 1500) {
 									profileLeakageTimeLimit = 1500;
-									this.log.warn('Profile ' + String(stateChangeProfileNo) + ' leakage time limit of \'' + String(state.val) + ' min\' is is to high! It will be set to the maximum of \'1500 min\' (30 days)!');
+									this.log.warn('Profile ' + String(stateChangeProfileNo) + ' leakage time limit of \'' + String(state.val) + ' min\' is is to high! It will be set to the maximum of \'1500 min\' (25 h)!');
 								}
 								switch (stateChangeProfileNo) {
 									case 1:
@@ -6115,6 +6115,45 @@ class wamo extends utils.Adapter {
 							} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile volume limit change ERROR: ' + err); }
 							break;
 						case 'PW':	// Leakage warning
+							try {
+								let profileLeakageWarning = parseInt(String(state.val));
+								if (profileLeakageWarning > 1) {
+									profileLeakageWarning = 1;
+									this.log.warn('Profile ' + String(stateChangeProfileNo) + ' leackage warning value \'' + String(state.val) + '\' is not valid! Leackage warning will be set to \'ON\'! (1)');
+								}
+								switch (stateChangeProfileNo) {
+									case 1:
+										await this.set_DevieParameter(DeviceParameters.Profile_PW1, profileLeakageWarning, this.config.device_ip, this.config.device_port);
+										break;
+									case 2:
+										await this.set_DevieParameter(DeviceParameters.Profile_PW2, profileLeakageWarning, this.config.device_ip, this.config.device_port);
+										break;
+									case 3:
+										await this.set_DevieParameter(DeviceParameters.Profile_PW3, profileLeakageWarning, this.config.device_ip, this.config.device_port);
+										break;
+									case 4:
+										await this.set_DevieParameter(DeviceParameters.Profile_PW4, profileLeakageWarning, this.config.device_ip, this.config.device_port);
+										break;
+									case 5:
+										await this.set_DevieParameter(DeviceParameters.Profile_PW5, profileLeakageWarning, this.config.device_ip, this.config.device_port);
+										break;
+									case 6:
+										await this.set_DevieParameter(DeviceParameters.Profile_PW6, profileLeakageWarning, this.config.device_ip, this.config.device_port);
+										break;
+									case 7:
+										await this.set_DevieParameter(DeviceParameters.Profile_PW7, profileLeakageWarning, this.config.device_ip, this.config.device_port);
+										break;
+									case 8:
+										await this.set_DevieParameter(DeviceParameters.Profile_PW8, profileLeakageWarning, this.config.device_ip, this.config.device_port);
+										break;
+									default:
+										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PW');
+								}
+
+								if (profileLeakageWarning == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' leackage warning is disabled'); }
+								else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' leackage warning is enabled'); }
+
+							} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile leackage warning ERROR: ' + err); }
 							break;
 						default:
 					}
