@@ -5767,7 +5767,14 @@ class wamo extends utils.Adapter {
 						this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.SelectedProfile ... ERROR: ' + err);
 					}
 				}
-				else{this.log.error('You cant change to an unavailable profile! Please make profil ' + String(state.val) + ' available first.');}
+				else{
+					this.log.error('You cant change to an unavailable profile! Please make profil ' + String(state.val) + ' available first.');
+					// Rerstore old active Profile back to State
+					// Read selected Profile from Device
+					const currentAktiveProfile = await this.get_DevieParameter(DeviceParameters.SelectedProfile ,this.config.device_ip, this.config.device_port);
+					// Save aktive profile from Device in state
+					await this.set_DevieParameter(DeviceParameters.SelectedProfile, currentAktiveProfile['getPAF'], this.config.device_ip, this.config.device_port);
+				}
 			}
 			//============================================================================
 			// Profile(s) Parameter
@@ -5789,6 +5796,35 @@ class wamo extends utils.Adapter {
 							// Trying to disable the ACTIVE profile?
 							if ((AktiveProfileNumber != null) && (parseInt(String(AktiveProfileNumber.val)) == stateChangeProfileNo) && (parseInt(String(state.val)) == 0)) {
 								this.log.error('You can\'t disable the aktive profile! You ned to aktivate an other profile first!');
+
+								// Restore availability parameter to 1 (on)
+								switch (stateChangeProfileNo) {
+									case 1:
+										await this.set_DevieParameter(DeviceParameters.Profile_PA1, 1, this.config.device_ip, this.config.device_port);
+										break;
+									case 2:
+										await this.set_DevieParameter(DeviceParameters.Profile_PA2, 1, this.config.device_ip, this.config.device_port);
+										break;
+									case 3:
+										await this.set_DevieParameter(DeviceParameters.Profile_PA3, 1, this.config.device_ip, this.config.device_port);
+										break;
+									case 4:
+										await this.set_DevieParameter(DeviceParameters.Profile_PA4, 1, this.config.device_ip, this.config.device_port);
+										break;
+									case 5:
+										await this.set_DevieParameter(DeviceParameters.Profile_PA5, 1, this.config.device_ip, this.config.device_port);
+										break;
+									case 6:
+										await this.set_DevieParameter(DeviceParameters.Profile_PA6, 1, this.config.device_ip, this.config.device_port);
+										break;
+									case 7:
+										await this.set_DevieParameter(DeviceParameters.Profile_PA7, 1, this.config.device_ip, this.config.device_port);
+										break;
+									case 8:
+										await this.set_DevieParameter(DeviceParameters.Profile_PA8, 1, this.config.device_ip, this.config.device_port);
+										break;
+								}
+								this.log.warn('Restored profile ' + String(stateChangeProfileNo) + 'availability to 1 (on)');
 							}
 							else{
 								let profAvailableState = parseInt(String(state.val));
