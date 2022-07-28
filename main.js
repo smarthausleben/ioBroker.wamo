@@ -5770,127 +5770,152 @@ class wamo extends utils.Adapter {
 				else{this.log.error('You cant change to an unavailable profile! Please make profil ' + String(state.val) + ' available first.');}
 			}
 			//============================================================================
-			// Profile 1
+			// Profile(s) Parameter
 			//============================================================================
-			else if((id.includes('Device.Profiles.1')) && (state.ack == false)){
-				switch (id.substring(id.lastIndexOf('.') + 1)) {
-					// Profile Name
-					case 'PN1':
-						try {
-							let newProfileName = String(state.val);
-							if (newProfileName.length > 31) {
-								newProfileName = newProfileName.substring(0, 30);
-								this.log.warn('Profile 1 name \'' + String(state.val) + '\' is to long and will be cut to \'' + String(newProfileName) + '\' Mmax. 31 characters allowed!');
-							}
-							await this.set_DevieParameter(DeviceParameters.Profile_PN1, newProfileName, this.config.device_ip, this.config.device_port);
-							this.log.info('Profile 1 name changed to \'' + String(newProfileName) + '\'');
-						}
-						catch (err) {
-							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.Profile_PN1 ... ERROR: ' + err);
-						}
-						break;
-					default:
-				}
-			}
-			//============================================================================
-			// Profile 2
-			//============================================================================
-			else if((id.includes('Device.Profiles.2')) && (state.ack == false)){
-				this.log.warn('Profile 2 State Change: ' + String(id));
-				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
-			}
-			//============================================================================
-			// Profile 3
-			//============================================================================
-			else if((id.includes('Device.Profiles.3')) && (state.ack == false)){
-				switch (id.substring(id.lastIndexOf('.') + 1)) {
-					// Profile available
-					case 'PA3':
-						try {
-							const AktiveProfileNumber = await this.getStateAsync(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id);
-							if ((AktiveProfileNumber != null) && (parseInt(String(AktiveProfileNumber.val)) == 3)) {
+			else if((id.includes('Device.Profiles.')) && (state.ack == false)){
+				try{
+					// identify Profile parameter
+					const currentProfileState = id.substring(id.lastIndexOf('.') + 1, id.length - 2);
+					// identify profile number
+					const stateChangeProfileNo = parseInt(id.substring(id.length - 2, id.length - 1));
+
+					// identify currentAktiveProfile
+					const AktiveProfileNumber = await this.getStateAsync(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id);
+
+					switch (currentProfileState) {
+						case 'PA':	// Available
+							// Trying to disable the ACTIVE profile?
+							if ((AktiveProfileNumber != null) && (parseInt(String(AktiveProfileNumber.val)) == stateChangeProfileNo) && (parseInt(String(state.val)) == 0)) {
 								this.log.error('You can\'t disable the aktive profile! You ned to aktivate an other profile first!');
-								break;
 							}
-							let profileOnOff = parseFloat(String(state.val));
-							if (profileOnOff > 1) {
-								profileOnOff = 1;
-								this.log.warn('Profile 3 available value \'' + String(state.val) + '\' is is not valid! Profile will be set to \'available\'! (1)');
+							else{
+								let profAvailableState = parseInt(String(state.val));
+								// do we have a legal value like 0 or 1
+								if (profAvailableState > 1) {
+									profAvailableState = 1;
+									this.log.warn('Profile ' + stateChangeProfileNo + ' available value \'' + String(state.val) + '\' is is not valid! Profile will be set to \'available\'! (1)');
+								}
+								switch (stateChangeProfileNo) {
+									case 1:
+										await this.set_DevieParameter(DeviceParameters.Profile_PA1, profAvailableState, this.config.device_ip, this.config.device_port);
+										break;
+									case 2:
+										await this.set_DevieParameter(DeviceParameters.Profile_PA2, profAvailableState, this.config.device_ip, this.config.device_port);
+										break;
+									case 3:
+										await this.set_DevieParameter(DeviceParameters.Profile_PA3, profAvailableState, this.config.device_ip, this.config.device_port);
+										break;
+									case 4:
+										await this.set_DevieParameter(DeviceParameters.Profile_PA4, profAvailableState, this.config.device_ip, this.config.device_port);
+										break;
+									case 5:
+										await this.set_DevieParameter(DeviceParameters.Profile_PA5, profAvailableState, this.config.device_ip, this.config.device_port);
+										break;
+									case 6:
+										await this.set_DevieParameter(DeviceParameters.Profile_PA6, profAvailableState, this.config.device_ip, this.config.device_port);
+										break;
+									case 7:
+										await this.set_DevieParameter(DeviceParameters.Profile_PA7, profAvailableState, this.config.device_ip, this.config.device_port);
+										break;
+									case 8:
+										await this.set_DevieParameter(DeviceParameters.Profile_PA8, profAvailableState, this.config.device_ip, this.config.device_port);
+										break;
+									default:
+										this.log.error('Invalid Profile Number \'' + String(AktiveProfileNumber) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PA');
+								}
+								this.log.info('Profile ' + String(AktiveProfileNumber) + ' available changed to \'' + String(profAvailableState) + '\'');
 							}
-							await this.set_DevieParameter(DeviceParameters.Profile_PA3, profileOnOff, this.config.device_ip, this.config.device_port);
-							this.log.info('Profile 3 available changed to \'' + String(profileOnOff) + '\'');
-						}
-						catch (err) {
-							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.Profile_PA3 ... ERROR: ' + err);
-						}
-						break;
-					// Profile Name
-					case 'PN3':
-						try {
-							let newProfileName = String(state.val);
-							if (newProfileName.length > 31) {
-								newProfileName = newProfileName.substring(0, 30);
-								this.log.warn('Profile name \'' + String(state.val) + '\' is to long and will be cut to \'' + String(newProfileName) + '\' Mmax. 31 characters allowed!');
-							}
-							await this.set_DevieParameter(DeviceParameters.Profile_PN3, newProfileName, this.config.device_ip, this.config.device_port);
-							this.log.info('Profile 3 name changed to \'' + String(newProfileName) + '\'');
-						}
-						catch (err) {
-							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.Profile_PN3 ... ERROR: ' + err);
-						}
-						break;
-					// Profile Buzzer
-					case 'PB3':
-						try {
-							let profileBuzzer = parseFloat(String(state.val));
-							if (profileBuzzer > 1) {
-								profileBuzzer = 1;
-								this.log.warn('Profile 3 buzzer value \'' + String(state.val) + '\' is is not valid! Buzzer will be set to \'ON\'! (1)');
-							}
-							await this.set_DevieParameter(DeviceParameters.Profile_PB3, profileBuzzer, this.config.device_ip, this.config.device_port);
-							this.log.info('Profile 3 buzzer changed to \'' + String(profileBuzzer) + '\'');
-						}
-						catch (err) {
-							this.log.warn('onStateChange(id, state) -> set_DevieParameter(DeviceParameters.Profile_PB3 ... ERROR: ' + err);
-						}
-						break;
-					default:
-				}
-			}
-			//============================================================================
-			// Profile 4
-			//============================================================================
-			else if((id.includes('Device.Profiles.4')) && (state.ack == false)){
-				this.log.warn('Profile 4 State Change: ' + String(id));
-				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
-			}
-			//============================================================================
-			// Profile 5
-			//============================================================================
-			else if((id.includes('Device.Profiles.5')) && (state.ack == false)){
-				this.log.warn('Profile 5 State Change: ' + String(id));
-				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
-			}
-			//============================================================================
-			// Profile 6
-			//============================================================================
-			else if((id.includes('Device.Profiles.6')) && (state.ack == false)){
-				this.log.warn('Profile 6 State Change: ' + String(id));
-				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
-			}
-			//============================================================================
-			// Profile 7
-			//============================================================================
-			else if((id.includes('Device.Profiles.7')) && (state.ack == false)){
-				this.log.warn('Profile 7 State Change: ' + String(id));
-				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
-			}
-			//============================================================================
-			// Profile 8
-			//============================================================================
-			else if((id.includes('Device.Profiles.8')) && (state.ack == false)){
-				this.log.warn('Profile 8 State Change: ' + String(id));
-				this.log.warn(id.substring(id.lastIndexOf('.') + 1));
+							break;
+						case 'PN':	// Name
+							try {
+								let newProfileName = String(state.val);
+								if (String(state.val).length > 31) {
+									newProfileName = newProfileName.substring(0, 30);
+									this.log.warn('Profile name \'' + String(state.val) + '\' is to long and will be cut to \'' + String(newProfileName) + '\' Mmax. 31 characters allowed!');
+								}
+								switch (stateChangeProfileNo) {
+									case 1:
+										await this.set_DevieParameter(DeviceParameters.Profile_PN1, newProfileName, this.config.device_ip, this.config.device_port);
+										break;
+									case 2:
+										await this.set_DevieParameter(DeviceParameters.Profile_PN2, newProfileName, this.config.device_ip, this.config.device_port);
+										break;
+									case 3:
+										await this.set_DevieParameter(DeviceParameters.Profile_PN3, newProfileName, this.config.device_ip, this.config.device_port);
+										break;
+									case 4:
+										await this.set_DevieParameter(DeviceParameters.Profile_PN4, newProfileName, this.config.device_ip, this.config.device_port);
+										break;
+									case 5:
+										await this.set_DevieParameter(DeviceParameters.Profile_PN5, newProfileName, this.config.device_ip, this.config.device_port);
+										break;
+									case 6:
+										await this.set_DevieParameter(DeviceParameters.Profile_PN6, newProfileName, this.config.device_ip, this.config.device_port);
+										break;
+									case 7:
+										await this.set_DevieParameter(DeviceParameters.Profile_PN7, newProfileName, this.config.device_ip, this.config.device_port);
+										break;
+									case 8:
+										await this.set_DevieParameter(DeviceParameters.Profile_PN8, newProfileName, this.config.device_ip, this.config.device_port);
+										break;
+									default:
+										this.log.error('Invalid Profile Number \'' + String(AktiveProfileNumber) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PN');
+								}
+								this.log.info('Profile ' + String(AktiveProfileNumber) + ' name changed to \'' + String(newProfileName) + '\'');
+							} catch (err) {this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile Name change ERROR: ' + err);}
+							break;
+						case 'PB':	// Buzzer
+							try{
+								let profileBuzzer = parseFloat(String(state.val));
+								if (profileBuzzer > 1) {
+									profileBuzzer = 1;
+									this.log.warn('Profile ' + String(stateChangeProfileNo) + ' buzzer value \'' + String(state.val) + '\' is is not valid! Buzzer will be set to \'ON\'! (1)');
+								}
+								switch (stateChangeProfileNo) {
+									case 1:
+										await this.set_DevieParameter(DeviceParameters.Profile_PB1, profileBuzzer, this.config.device_ip, this.config.device_port);
+										break;
+									case 2:
+										await this.set_DevieParameter(DeviceParameters.Profile_PB2, profileBuzzer, this.config.device_ip, this.config.device_port);
+										break;
+									case 3:
+										await this.set_DevieParameter(DeviceParameters.Profile_PB3, profileBuzzer, this.config.device_ip, this.config.device_port);
+										break;
+									case 4:
+										await this.set_DevieParameter(DeviceParameters.Profile_PB4, profileBuzzer, this.config.device_ip, this.config.device_port);
+										break;
+									case 5:
+										await this.set_DevieParameter(DeviceParameters.Profile_PB5, profileBuzzer, this.config.device_ip, this.config.device_port);
+										break;
+									case 6:
+										await this.set_DevieParameter(DeviceParameters.Profile_PB6, profileBuzzer, this.config.device_ip, this.config.device_port);
+										break;
+									case 7:
+										await this.set_DevieParameter(DeviceParameters.Profile_PB7, profileBuzzer, this.config.device_ip, this.config.device_port);
+										break;
+									case 8:
+										await this.set_DevieParameter(DeviceParameters.Profile_PB8, profileBuzzer, this.config.device_ip, this.config.device_port);
+										break;
+									default:
+										this.log.error('Invalid Profile Number \'' + String(AktiveProfileNumber) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PB');
+								}
+							}catch(err){this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile buzzer change ERROR: ' + err);}
+							break;
+						case 'PF':	// Max flow
+							break;
+						case 'PM':	// Micro leak detection
+							break;
+						case 'PR':	// Time back to standard profile
+							break;
+						case 'PT':	// Time limit
+							break;
+						case 'PV':	// Volume limit
+							break;
+						case 'PW':	// Leakage warning
+							break;
+						default:
+					}
+				} catch (err) {this.log.warn('onStateChange(id, state) -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) ... ERROR: ' + err);}
 			}
 			else{
 				this.log.debug('StateChange: ' + String(id) + ' Value: ' + String(state.val) + ' acknowledged: ' + String(state.ack));
