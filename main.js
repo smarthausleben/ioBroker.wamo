@@ -4217,16 +4217,16 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Time back to standard profile 1 - 720 h (30 days)',
-					'de': 'Zurück zum Standardprofil 1 - 720 h (30 Tage)',
-					'ru': 'Время обратно в стандартный профиль 1 - 720 ч (30 дней)',
-					'pt': 'Tempo de volta ao perfil padrão 1 - 720 h (30 dias)',
-					'nl': 'Terug naar standaard profiel 1 - 720 h (30 dagen)',
-					'fr': 'Retour au profil standard 1 - 720 h (30 jours)',
-					'it': 'Tempo di ritorno al profilo standard 1 - 720 h (30 giorni)',
-					'es': 'Tiempo de regreso al perfil estándar 1 - 720 h (30 días)',
-					'pl': 'Time back to standard profile 1 – 720 h (30 dni)',
-					'zh-cn': 'B. 标准概况的及时性 1 - 720 h(30天)'
+					'en': 'Time back to standard profile (0) deaktivated 1 - 720 h (30 days)',
+					'de': 'Zurück zum Standardprofil (0) deaktiviert 1 - 720 h (30 Tage)',
+					'ru': 'Время обратно в стандартный профиль (0) άτομα με ειδικές ανάγκες 1 - 720 ч (30 дней)',
+					'pt': 'Tempo de volta ao perfil padrão (0) descativado 1 - 720 h (30 dias)',
+					'nl': 'Terug naar standaard profiel (0) Deaktivatie 1 - 720 h (30 dagen)',
+					'fr': 'Retour au profil standard (0) inactiver 1 - 720 h (30 jours)',
+					'it': 'Tempo di ritorno al profilo standard (0) disattivare 1 - 720 h (30 giorni)',
+					'es': 'Tiempo de regreso al perfil estándar (0) desactivar 1 - 720 h (30 días)',
+					'pl': 'Time back to standard profile (0) dezaktywować 1 – 720 h (30 dni)',
+					'zh-cn': 'B. 标准概况的及时性 (0) 减少 1 - 720 h(30天)'
 				},
 				type: 'number',
 				unit: 'h',
@@ -4250,16 +4250,16 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Time back to standard profile 1 - 720 h (30 days)',
-					'de': 'Zurück zum Standardprofil 1 - 720 h (30 Tage)',
-					'ru': 'Время обратно в стандартный профиль 1 - 720 ч (30 дней)',
-					'pt': 'Tempo de volta ao perfil padrão 1 - 720 h (30 dias)',
-					'nl': 'Terug naar standaard profiel 1 - 720 h (30 dagen)',
-					'fr': 'Retour au profil standard 1 - 720 h (30 jours)',
-					'it': 'Tempo di ritorno al profilo standard 1 - 720 h (30 giorni)',
-					'es': 'Tiempo de regreso al perfil estándar 1 - 720 h (30 días)',
-					'pl': 'Time back to standard profile 1 – 720 h (30 dni)',
-					'zh-cn': 'B. 标准概况的及时性 1 - 720 h(30天)'
+					'en': 'Time back to standard profile (0) deaktivated 1 - 720 h (30 days)',
+					'de': 'Zurück zum Standardprofil (0) deaktiviert 1 - 720 h (30 Tage)',
+					'ru': 'Время обратно в стандартный профиль (0) άτομα με ειδικές ανάγκες 1 - 720 ч (30 дней)',
+					'pt': 'Tempo de volta ao perfil padrão (0) descativado 1 - 720 h (30 dias)',
+					'nl': 'Terug naar standaard profiel (0) Deaktivatie 1 - 720 h (30 dagen)',
+					'fr': 'Retour au profil standard (0) inactiver 1 - 720 h (30 jours)',
+					'it': 'Tempo di ritorno al profilo standard (0) disattivare 1 - 720 h (30 giorni)',
+					'es': 'Tiempo de regreso al perfil estándar (0) desactivar 1 - 720 h (30 días)',
+					'pl': 'Time back to standard profile (0) dezaktywować 1 – 720 h (30 dni)',
+					'zh-cn': 'B. 标准概况的及时性 (0) 减少 1 - 720 h(30天)'
 				},
 				type: 'number',
 				unit: 'h',
@@ -4283,16 +4283,16 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Time back to standard profile 1 - 720 h (30 days)',
-					'de': 'Zurück zum Standardprofil 1 - 720 h (30 Tage)',
-					'ru': 'Время обратно в стандартный профиль 1 - 720 ч (30 дней)',
-					'pt': 'Tempo de volta ao perfil padrão 1 - 720 h (30 dias)',
-					'nl': 'Terug naar standaard profiel 1 - 720 h (30 dagen)',
-					'fr': 'Retour au profil standard 1 - 720 h (30 jours)',
-					'it': 'Tempo di ritorno al profilo standard 1 - 720 h (30 giorni)',
-					'es': 'Tiempo de regreso al perfil estándar 1 - 720 h (30 días)',
-					'pl': 'Time back to standard profile 1 – 720 h (30 dni)',
-					'zh-cn': 'B. 标准概况的及时性 1 - 720 h(30天)'
+					'en': 'Time back to standard profile (0) deaktivated 1 - 720 h (30 days)',
+					'de': 'Zurück zum Standardprofil (0) deaktiviert 1 - 720 h (30 Tage)',
+					'ru': 'Время обратно в стандартный профиль (0) άτομα με ειδικές ανάγκες 1 - 720 ч (30 дней)',
+					'pt': 'Tempo de volta ao perfil padrão (0) descativado 1 - 720 h (30 dias)',
+					'nl': 'Terug naar standaard profiel (0) Deaktivatie 1 - 720 h (30 dagen)',
+					'fr': 'Retour au profil standard (0) inactiver 1 - 720 h (30 jours)',
+					'it': 'Tempo di ritorno al profilo standard (0) disattivare 1 - 720 h (30 giorni)',
+					'es': 'Tiempo de regreso al perfil estándar (0) desactivar 1 - 720 h (30 días)',
+					'pl': 'Time back to standard profile (0) dezaktywować 1 – 720 h (30 dni)',
+					'zh-cn': 'B. 标准概况的及时性 (0) 减少 1 - 720 h(30天)'
 				},
 				type: 'number',
 				unit: 'h',
@@ -4316,16 +4316,16 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Time back to standard profile 1 - 720 h (30 days)',
-					'de': 'Zurück zum Standardprofil 1 - 720 h (30 Tage)',
-					'ru': 'Время обратно в стандартный профиль 1 - 720 ч (30 дней)',
-					'pt': 'Tempo de volta ao perfil padrão 1 - 720 h (30 dias)',
-					'nl': 'Terug naar standaard profiel 1 - 720 h (30 dagen)',
-					'fr': 'Retour au profil standard 1 - 720 h (30 jours)',
-					'it': 'Tempo di ritorno al profilo standard 1 - 720 h (30 giorni)',
-					'es': 'Tiempo de regreso al perfil estándar 1 - 720 h (30 días)',
-					'pl': 'Time back to standard profile 1 – 720 h (30 dni)',
-					'zh-cn': 'B. 标准概况的及时性 1 - 720 h(30天)'
+					'en': 'Time back to standard profile (0) deaktivated 1 - 720 h (30 days)',
+					'de': 'Zurück zum Standardprofil (0) deaktiviert 1 - 720 h (30 Tage)',
+					'ru': 'Время обратно в стандартный профиль (0) άτομα με ειδικές ανάγκες 1 - 720 ч (30 дней)',
+					'pt': 'Tempo de volta ao perfil padrão (0) descativado 1 - 720 h (30 dias)',
+					'nl': 'Terug naar standaard profiel (0) Deaktivatie 1 - 720 h (30 dagen)',
+					'fr': 'Retour au profil standard (0) inactiver 1 - 720 h (30 jours)',
+					'it': 'Tempo di ritorno al profilo standard (0) disattivare 1 - 720 h (30 giorni)',
+					'es': 'Tiempo de regreso al perfil estándar (0) desactivar 1 - 720 h (30 días)',
+					'pl': 'Time back to standard profile (0) dezaktywować 1 – 720 h (30 dni)',
+					'zh-cn': 'B. 标准概况的及时性 (0) 减少 1 - 720 h(30天)'
 				},
 				type: 'number',
 				unit: 'h',
@@ -4349,16 +4349,16 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Time back to standard profile 1 - 720 h (30 days)',
-					'de': 'Zurück zum Standardprofil 1 - 720 h (30 Tage)',
-					'ru': 'Время обратно в стандартный профиль 1 - 720 ч (30 дней)',
-					'pt': 'Tempo de volta ao perfil padrão 1 - 720 h (30 dias)',
-					'nl': 'Terug naar standaard profiel 1 - 720 h (30 dagen)',
-					'fr': 'Retour au profil standard 1 - 720 h (30 jours)',
-					'it': 'Tempo di ritorno al profilo standard 1 - 720 h (30 giorni)',
-					'es': 'Tiempo de regreso al perfil estándar 1 - 720 h (30 días)',
-					'pl': 'Time back to standard profile 1 – 720 h (30 dni)',
-					'zh-cn': 'B. 标准概况的及时性 1 - 720 h(30天)'
+					'en': 'Time back to standard profile (0) deaktivated 1 - 720 h (30 days)',
+					'de': 'Zurück zum Standardprofil (0) deaktiviert 1 - 720 h (30 Tage)',
+					'ru': 'Время обратно в стандартный профиль (0) άτομα με ειδικές ανάγκες 1 - 720 ч (30 дней)',
+					'pt': 'Tempo de volta ao perfil padrão (0) descativado 1 - 720 h (30 dias)',
+					'nl': 'Terug naar standaard profiel (0) Deaktivatie 1 - 720 h (30 dagen)',
+					'fr': 'Retour au profil standard (0) inactiver 1 - 720 h (30 jours)',
+					'it': 'Tempo di ritorno al profilo standard (0) disattivare 1 - 720 h (30 giorni)',
+					'es': 'Tiempo de regreso al perfil estándar (0) desactivar 1 - 720 h (30 días)',
+					'pl': 'Time back to standard profile (0) dezaktywować 1 – 720 h (30 dni)',
+					'zh-cn': 'B. 标准概况的及时性 (0) 减少 1 - 720 h(30天)'
 				},
 				type: 'number',
 				unit: 'h',
@@ -4382,16 +4382,16 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Time back to standard profile 1 - 720 h (30 days)',
-					'de': 'Zurück zum Standardprofil 1 - 720 h (30 Tage)',
-					'ru': 'Время обратно в стандартный профиль 1 - 720 ч (30 дней)',
-					'pt': 'Tempo de volta ao perfil padrão 1 - 720 h (30 dias)',
-					'nl': 'Terug naar standaard profiel 1 - 720 h (30 dagen)',
-					'fr': 'Retour au profil standard 1 - 720 h (30 jours)',
-					'it': 'Tempo di ritorno al profilo standard 1 - 720 h (30 giorni)',
-					'es': 'Tiempo de regreso al perfil estándar 1 - 720 h (30 días)',
-					'pl': 'Time back to standard profile 1 – 720 h (30 dni)',
-					'zh-cn': 'B. 标准概况的及时性 1 - 720 h(30天)'
+					'en': 'Time back to standard profile (0) deaktivated 1 - 720 h (30 days)',
+					'de': 'Zurück zum Standardprofil (0) deaktiviert 1 - 720 h (30 Tage)',
+					'ru': 'Время обратно в стандартный профиль (0) άτομα με ειδικές ανάγκες 1 - 720 ч (30 дней)',
+					'pt': 'Tempo de volta ao perfil padrão (0) descativado 1 - 720 h (30 dias)',
+					'nl': 'Terug naar standaard profiel (0) Deaktivatie 1 - 720 h (30 dagen)',
+					'fr': 'Retour au profil standard (0) inactiver 1 - 720 h (30 jours)',
+					'it': 'Tempo di ritorno al profilo standard (0) disattivare 1 - 720 h (30 giorni)',
+					'es': 'Tiempo de regreso al perfil estándar (0) desactivar 1 - 720 h (30 días)',
+					'pl': 'Time back to standard profile (0) dezaktywować 1 – 720 h (30 dni)',
+					'zh-cn': 'B. 标准概况的及时性 (0) 减少 1 - 720 h(30天)'
 				},
 				type: 'number',
 				unit: 'h',
@@ -4415,16 +4415,16 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Time back to standard profile 1 - 720 h (30 days)',
-					'de': 'Zurück zum Standardprofil 1 - 720 h (30 Tage)',
-					'ru': 'Время обратно в стандартный профиль 1 - 720 ч (30 дней)',
-					'pt': 'Tempo de volta ao perfil padrão 1 - 720 h (30 dias)',
-					'nl': 'Terug naar standaard profiel 1 - 720 h (30 dagen)',
-					'fr': 'Retour au profil standard 1 - 720 h (30 jours)',
-					'it': 'Tempo di ritorno al profilo standard 1 - 720 h (30 giorni)',
-					'es': 'Tiempo de regreso al perfil estándar 1 - 720 h (30 días)',
-					'pl': 'Time back to standard profile 1 – 720 h (30 dni)',
-					'zh-cn': 'B. 标准概况的及时性 1 - 720 h(30天)'
+					'en': 'Time back to standard profile (0) deaktivated 1 - 720 h (30 days)',
+					'de': 'Zurück zum Standardprofil (0) deaktiviert 1 - 720 h (30 Tage)',
+					'ru': 'Время обратно в стандартный профиль (0) άτομα με ειδικές ανάγκες 1 - 720 ч (30 дней)',
+					'pt': 'Tempo de volta ao perfil padrão (0) descativado 1 - 720 h (30 dias)',
+					'nl': 'Terug naar standaard profiel (0) Deaktivatie 1 - 720 h (30 dagen)',
+					'fr': 'Retour au profil standard (0) inactiver 1 - 720 h (30 jours)',
+					'it': 'Tempo di ritorno al profilo standard (0) disattivare 1 - 720 h (30 giorni)',
+					'es': 'Tiempo de regreso al perfil estándar (0) desactivar 1 - 720 h (30 días)',
+					'pl': 'Time back to standard profile (0) dezaktywować 1 – 720 h (30 dni)',
+					'zh-cn': 'B. 标准概况的及时性 (0) 减少 1 - 720 h(30天)'
 				},
 				type: 'number',
 				unit: 'h',
@@ -4448,16 +4448,16 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Time back to standard profile 1 - 720 h (30 days)',
-					'de': 'Zurück zum Standardprofil 1 - 720 h (30 Tage)',
-					'ru': 'Время обратно в стандартный профиль 1 - 720 ч (30 дней)',
-					'pt': 'Tempo de volta ao perfil padrão 1 - 720 h (30 dias)',
-					'nl': 'Terug naar standaard profiel 1 - 720 h (30 dagen)',
-					'fr': 'Retour au profil standard 1 - 720 h (30 jours)',
-					'it': 'Tempo di ritorno al profilo standard 1 - 720 h (30 giorni)',
-					'es': 'Tiempo de regreso al perfil estándar 1 - 720 h (30 días)',
-					'pl': 'Time back to standard profile 1 – 720 h (30 dni)',
-					'zh-cn': 'B. 标准概况的及时性 1 - 720 h(30天)'
+					'en': 'Time back to standard profile (0) deaktivated 1 - 720 h (30 days)',
+					'de': 'Zurück zum Standardprofil (0) deaktiviert 1 - 720 h (30 Tage)',
+					'ru': 'Время обратно в стандартный профиль (0) άτομα με ειδικές ανάγκες 1 - 720 ч (30 дней)',
+					'pt': 'Tempo de volta ao perfil padrão (0) descativado 1 - 720 h (30 dias)',
+					'nl': 'Terug naar standaard profiel (0) Deaktivatie 1 - 720 h (30 dagen)',
+					'fr': 'Retour au profil standard (0) inactiver 1 - 720 h (30 jours)',
+					'it': 'Tempo di ritorno al profilo standard (0) disattivare 1 - 720 h (30 giorni)',
+					'es': 'Tiempo de regreso al perfil estándar (0) desactivar 1 - 720 h (30 días)',
+					'pl': 'Time back to standard profile (0) dezaktywować 1 – 720 h (30 dni)',
+					'zh-cn': 'B. 标准概况的及时性 (0) 减少 1 - 720 h(30天)'
 				},
 				type: 'number',
 				unit: 'h',
@@ -4745,16 +4745,16 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Quantity limitation (0 = deaktivated 1 - 1900l)',
-					'de': 'Mengenbegrenzung (0 = deaktiviert 1 - 1900l)',
-					'ru': 'Ограничение количества (0 = deaktivated 1 - 1900l)',
-					'pt': 'Limitação de quantidade (0 = descativado 1 - 1900l)',
-					'nl': 'Quantity beperking (0 = Deaktivatie 1 - 1900l)',
-					'fr': 'Limite de la quantité (0 = daktivated 1 - 1900l)',
-					'it': 'Limiti di quantità (0 = deaktivated 1 - 1900l)',
-					'es': 'Limitación de la cantidad (0 = deaktivada 1 - 1900l)',
-					'pl': 'Granica graniczna (0 = deaktivated 1 – 1900l)',
-					'zh-cn': '资格限制(0 = 减少1-1900l)'
+					'en': 'Quantity limitation (0) deaktivated 1 - 1900l)',
+					'de': 'Mengenbegrenzung (0) deaktiviert 1 - 1900l)',
+					'ru': 'Ограничение количества (0) άτομα με ειδικές ανάγκες 1 - 1900l)',
+					'pt': 'Limitação de quantidade (0) descativado 1 - 1900l)',
+					'nl': 'Quantity beperking (0) Deaktivatie 1 - 1900l)',
+					'fr': 'Limite de la quantité (0) inactiver 1 - 1900l)',
+					'it': 'Limiti di quantità (0) disattivare 1 - 1900l)',
+					'es': 'Limitación de la cantidad (0) desactivar 1 - 1900l)',
+					'pl': 'Granica graniczna (0) dezaktywować 1 – 1900l)',
+					'zh-cn': '资格限制 (0) 减少 1-1900l)'
 				},
 				type: 'number',
 				unit: 'l',
@@ -4778,16 +4778,16 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Quantity limitation (0 = deaktivated 1 - 1900l)',
-					'de': 'Mengenbegrenzung (0 = deaktiviert 1 - 1900l)',
-					'ru': 'Ограничение количества (0 = deaktivated 1 - 1900l)',
-					'pt': 'Limitação de quantidade (0 = descativado 1 - 1900l)',
-					'nl': 'Quantity beperking (0 = Deaktivatie 1 - 1900l)',
-					'fr': 'Limite de la quantité (0 = daktivated 1 - 1900l)',
-					'it': 'Limiti di quantità (0 = deaktivated 1 - 1900l)',
-					'es': 'Limitación de la cantidad (0 = deaktivada 1 - 1900l)',
-					'pl': 'Granica graniczna (0 = deaktivated 1 – 1900l)',
-					'zh-cn': '资格限制(0 = 减少1-1900l)'
+					'en': 'Quantity limitation (0) deaktivated 1 - 1900l)',
+					'de': 'Mengenbegrenzung (0) deaktiviert 1 - 1900l)',
+					'ru': 'Ограничение количества (0) άτομα με ειδικές ανάγκες 1 - 1900l)',
+					'pt': 'Limitação de quantidade (0) descativado 1 - 1900l)',
+					'nl': 'Quantity beperking (0) Deaktivatie 1 - 1900l)',
+					'fr': 'Limite de la quantité (0) inactiver 1 - 1900l)',
+					'it': 'Limiti di quantità (0) disattivare 1 - 1900l)',
+					'es': 'Limitación de la cantidad (0) desactivar 1 - 1900l)',
+					'pl': 'Granica graniczna (0) dezaktywować 1 – 1900l)',
+					'zh-cn': '资格限制 (0) 减少 1-1900l)'
 				},
 				type: 'number',
 				unit: 'l',
@@ -4811,16 +4811,16 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Quantity limitation (0 = deaktivated 1 - 1900l)',
-					'de': 'Mengenbegrenzung (0 = deaktiviert 1 - 1900l)',
-					'ru': 'Ограничение количества (0 = deaktivated 1 - 1900l)',
-					'pt': 'Limitação de quantidade (0 = descativado 1 - 1900l)',
-					'nl': 'Quantity beperking (0 = Deaktivatie 1 - 1900l)',
-					'fr': 'Limite de la quantité (0 = daktivated 1 - 1900l)',
-					'it': 'Limiti di quantità (0 = deaktivated 1 - 1900l)',
-					'es': 'Limitación de la cantidad (0 = deaktivada 1 - 1900l)',
-					'pl': 'Granica graniczna (0 = deaktivated 1 – 1900l)',
-					'zh-cn': '资格限制(0 = 减少1-1900l)'
+					'en': 'Quantity limitation (0) deaktivated 1 - 1900l)',
+					'de': 'Mengenbegrenzung (0) deaktiviert 1 - 1900l)',
+					'ru': 'Ограничение количества (0) άτομα με ειδικές ανάγκες 1 - 1900l)',
+					'pt': 'Limitação de quantidade (0) descativado 1 - 1900l)',
+					'nl': 'Quantity beperking (0) Deaktivatie 1 - 1900l)',
+					'fr': 'Limite de la quantité (0) inactiver 1 - 1900l)',
+					'it': 'Limiti di quantità (0) disattivare 1 - 1900l)',
+					'es': 'Limitación de la cantidad (0) desactivar 1 - 1900l)',
+					'pl': 'Granica graniczna (0) dezaktywować 1 – 1900l)',
+					'zh-cn': '资格限制 (0) 减少 1-1900l)'
 				},
 				type: 'number',
 				unit: 'l',
@@ -4844,16 +4844,16 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Quantity limitation (0 = deaktivated 1 - 1900l)',
-					'de': 'Mengenbegrenzung (0 = deaktiviert 1 - 1900l)',
-					'ru': 'Ограничение количества (0 = deaktivated 1 - 1900l)',
-					'pt': 'Limitação de quantidade (0 = descativado 1 - 1900l)',
-					'nl': 'Quantity beperking (0 = Deaktivatie 1 - 1900l)',
-					'fr': 'Limite de la quantité (0 = daktivated 1 - 1900l)',
-					'it': 'Limiti di quantità (0 = deaktivated 1 - 1900l)',
-					'es': 'Limitación de la cantidad (0 = deaktivada 1 - 1900l)',
-					'pl': 'Granica graniczna (0 = deaktivated 1 – 1900l)',
-					'zh-cn': '资格限制(0 = 减少1-1900l)'
+					'en': 'Quantity limitation (0) deaktivated 1 - 1900l)',
+					'de': 'Mengenbegrenzung (0) deaktiviert 1 - 1900l)',
+					'ru': 'Ограничение количества (0) άτομα με ειδικές ανάγκες 1 - 1900l)',
+					'pt': 'Limitação de quantidade (0) descativado 1 - 1900l)',
+					'nl': 'Quantity beperking (0) Deaktivatie 1 - 1900l)',
+					'fr': 'Limite de la quantité (0) inactiver 1 - 1900l)',
+					'it': 'Limiti di quantità (0) disattivare 1 - 1900l)',
+					'es': 'Limitación de la cantidad (0) desactivar 1 - 1900l)',
+					'pl': 'Granica graniczna (0) dezaktywować 1 – 1900l)',
+					'zh-cn': '资格限制 (0) 减少 1-1900l)'
 				},
 				type: 'number',
 				unit: 'l',
@@ -4877,16 +4877,16 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Quantity limitation (0 = deaktivated 1 - 1900l)',
-					'de': 'Mengenbegrenzung (0 = deaktiviert 1 - 1900l)',
-					'ru': 'Ограничение количества (0 = deaktivated 1 - 1900l)',
-					'pt': 'Limitação de quantidade (0 = descativado 1 - 1900l)',
-					'nl': 'Quantity beperking (0 = Deaktivatie 1 - 1900l)',
-					'fr': 'Limite de la quantité (0 = daktivated 1 - 1900l)',
-					'it': 'Limiti di quantità (0 = deaktivated 1 - 1900l)',
-					'es': 'Limitación de la cantidad (0 = deaktivada 1 - 1900l)',
-					'pl': 'Granica graniczna (0 = deaktivated 1 – 1900l)',
-					'zh-cn': '资格限制(0 = 减少1-1900l)'
+					'en': 'Quantity limitation (0) deaktivated 1 - 1900l)',
+					'de': 'Mengenbegrenzung (0) deaktiviert 1 - 1900l)',
+					'ru': 'Ограничение количества (0) άτομα με ειδικές ανάγκες 1 - 1900l)',
+					'pt': 'Limitação de quantidade (0) descativado 1 - 1900l)',
+					'nl': 'Quantity beperking (0) Deaktivatie 1 - 1900l)',
+					'fr': 'Limite de la quantité (0) inactiver 1 - 1900l)',
+					'it': 'Limiti di quantità (0) disattivare 1 - 1900l)',
+					'es': 'Limitación de la cantidad (0) desactivar 1 - 1900l)',
+					'pl': 'Granica graniczna (0) dezaktywować 1 – 1900l)',
+					'zh-cn': '资格限制 (0) 减少 1-1900l)'
 				},
 				type: 'number',
 				unit: 'l',
@@ -4910,16 +4910,16 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Quantity limitation (0 = deaktivated 1 - 1900l)',
-					'de': 'Mengenbegrenzung (0 = deaktiviert 1 - 1900l)',
-					'ru': 'Ограничение количества (0 = deaktivated 1 - 1900l)',
-					'pt': 'Limitação de quantidade (0 = descativado 1 - 1900l)',
-					'nl': 'Quantity beperking (0 = Deaktivatie 1 - 1900l)',
-					'fr': 'Limite de la quantité (0 = daktivated 1 - 1900l)',
-					'it': 'Limiti di quantità (0 = deaktivated 1 - 1900l)',
-					'es': 'Limitación de la cantidad (0 = deaktivada 1 - 1900l)',
-					'pl': 'Granica graniczna (0 = deaktivated 1 – 1900l)',
-					'zh-cn': '资格限制(0 = 减少1-1900l)'
+					'en': 'Quantity limitation (0) deaktivated 1 - 1900l)',
+					'de': 'Mengenbegrenzung (0) deaktiviert 1 - 1900l)',
+					'ru': 'Ограничение количества (0) άτομα με ειδικές ανάγκες 1 - 1900l)',
+					'pt': 'Limitação de quantidade (0) descativado 1 - 1900l)',
+					'nl': 'Quantity beperking (0) Deaktivatie 1 - 1900l)',
+					'fr': 'Limite de la quantité (0) inactiver 1 - 1900l)',
+					'it': 'Limiti di quantità (0) disattivare 1 - 1900l)',
+					'es': 'Limitación de la cantidad (0) desactivar 1 - 1900l)',
+					'pl': 'Granica graniczna (0) dezaktywować 1 – 1900l)',
+					'zh-cn': '资格限制 (0) 减少 1-1900l)'
 				},
 				type: 'number',
 				unit: 'l',
@@ -4943,16 +4943,16 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Quantity limitation (0 = deaktivated 1 - 1900l)',
-					'de': 'Mengenbegrenzung (0 = deaktiviert 1 - 1900l)',
-					'ru': 'Ограничение количества (0 = deaktivated 1 - 1900l)',
-					'pt': 'Limitação de quantidade (0 = descativado 1 - 1900l)',
-					'nl': 'Quantity beperking (0 = Deaktivatie 1 - 1900l)',
-					'fr': 'Limite de la quantité (0 = daktivated 1 - 1900l)',
-					'it': 'Limiti di quantità (0 = deaktivated 1 - 1900l)',
-					'es': 'Limitación de la cantidad (0 = deaktivada 1 - 1900l)',
-					'pl': 'Granica graniczna (0 = deaktivated 1 – 1900l)',
-					'zh-cn': '资格限制(0 = 减少1-1900l)'
+					'en': 'Quantity limitation (0) deaktivated 1 - 1900l)',
+					'de': 'Mengenbegrenzung (0) deaktiviert 1 - 1900l)',
+					'ru': 'Ограничение количества (0) άτομα με ειδικές ανάγκες 1 - 1900l)',
+					'pt': 'Limitação de quantidade (0) descativado 1 - 1900l)',
+					'nl': 'Quantity beperking (0) Deaktivatie 1 - 1900l)',
+					'fr': 'Limite de la quantité (0) inactiver 1 - 1900l)',
+					'it': 'Limiti di quantità (0) disattivare 1 - 1900l)',
+					'es': 'Limitación de la cantidad (0) desactivar 1 - 1900l)',
+					'pl': 'Granica graniczna (0) dezaktywować 1 – 1900l)',
+					'zh-cn': '资格限制 (0) 减少 1-1900l)'
 				},
 				type: 'number',
 				unit: 'l',
@@ -4976,16 +4976,16 @@ const DeviceParameters = {
 			type: 'state',
 			common: {
 				name: {
-					'en': 'Quantity limitation (0 = deaktivated 1 - 1900l)',
-					'de': 'Mengenbegrenzung (0 = deaktiviert 1 - 1900l)',
-					'ru': 'Ограничение количества (0 = deaktivated 1 - 1900l)',
-					'pt': 'Limitação de quantidade (0 = descativado 1 - 1900l)',
-					'nl': 'Quantity beperking (0 = Deaktivatie 1 - 1900l)',
-					'fr': 'Limite de la quantité (0 = daktivated 1 - 1900l)',
-					'it': 'Limiti di quantità (0 = deaktivated 1 - 1900l)',
-					'es': 'Limitación de la cantidad (0 = deaktivada 1 - 1900l)',
-					'pl': 'Granica graniczna (0 = deaktivated 1 – 1900l)',
-					'zh-cn': '资格限制(0 = 减少1-1900l)'
+					'en': 'Quantity limitation (0) deaktivated 1 - 1900l)',
+					'de': 'Mengenbegrenzung (0) deaktiviert 1 - 1900l)',
+					'ru': 'Ограничение количества (0) άτομα με ειδικές ανάγκες 1 - 1900l)',
+					'pt': 'Limitação de quantidade (0) descativado 1 - 1900l)',
+					'nl': 'Quantity beperking (0) Deaktivatie 1 - 1900l)',
+					'fr': 'Limite de la quantité (0) inactiver 1 - 1900l)',
+					'it': 'Limiti di quantità (0) disattivare 1 - 1900l)',
+					'es': 'Limitación de la cantidad (0) desactivar 1 - 1900l)',
+					'pl': 'Granica graniczna (0) dezaktywować 1 – 1900l)',
+					'zh-cn': '资格限制 (0) 减少 1-1900l)'
 				},
 				type: 'number',
 				unit: 'l',
@@ -5711,27 +5711,63 @@ class wamo extends utils.Adapter {
 			//============================================================================
 			else if((id == statePrefix + DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id) && state.ack == false)
 			{
+				let profileEnabled = Object();
+				let changeOK = false;
 				switch (state.val) {
 					case 1:
+						// Profile available?
+						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA1.statePath + '.' + DeviceParameters.Profile_PA1.id);
+						if((profileEnabled != null) && parseInt(profileEnabled.val) == 1){changeOK = true;}else{changeOK = false;}
+						break;
 					case 2:
+						// Profile available?
+						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA2.statePath + '.' + DeviceParameters.Profile_PA2.id);
+						if((profileEnabled != null) && parseInt(profileEnabled.val) == 1){changeOK = true;}else{changeOK = false;}
+						break;
 					case 3:
+						// Profile available?
+						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA3.statePath + '.' + DeviceParameters.Profile_PA3.id);
+						if((profileEnabled != null) && parseInt(profileEnabled.val) == 1){changeOK = true;}else{changeOK = false;}
+						break;
 					case 4:
+						// Profile available?
+						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA4.statePath + '.' + DeviceParameters.Profile_PA4.id);
+						if((profileEnabled != null) && parseInt(profileEnabled.val) == 1){changeOK = true;}else{changeOK = false;}
+						break;
 					case 5:
+						// Profile available?
+						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA5.statePath + '.' + DeviceParameters.Profile_PA5.id);
+						if((profileEnabled != null) && parseInt(profileEnabled.val) == 1){changeOK = true;}else{changeOK = false;}
+						break;
 					case 6:
+						// Profile available?
+						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA6.statePath + '.' + DeviceParameters.Profile_PA6.id);
+						if((profileEnabled != null) && parseInt(profileEnabled.val) == 1){changeOK = true;}else{changeOK = false;}
+						break;
 					case 7:
+						// Profile available?
+						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA7.statePath + '.' + DeviceParameters.Profile_PA7.id);
+						if((profileEnabled != null) && parseInt(profileEnabled.val) == 1){changeOK = true;}else{changeOK = false;}
+						break;
 					case 8:
-						try {
-							await this.set_DevieParameter(DeviceParameters.SelectedProfile, state.val, this.config.device_ip, this.config.device_port);
-							this.log.info('Selected profile changed to number ' + String(state.val));
-						}
-						catch(err){
-							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.SelectedProfile ... ERROR: ' + err);
-						}
+						// Profile available?
+						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA8.statePath + '.' + DeviceParameters.Profile_PA8.id);
+						if((profileEnabled != null) && parseInt(profileEnabled.val) == 1){changeOK = true;}else{changeOK = false;}
 						break;
 					default:
 						this.log.error(String(state.val) + ' is not valid for ' + String(DeviceParameters.SelectedProfile.id + ' Valid values: 1...8'));
 						break;
 				}
+				if (changeOK) {
+					try {
+						await this.set_DevieParameter(DeviceParameters.SelectedProfile, state.val, this.config.device_ip, this.config.device_port);
+						this.log.info('Selected profile changed to number ' + String(state.val));
+					}
+					catch (err) {
+						this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.SelectedProfile ... ERROR: ' + err);
+					}
+				}
+				else{this.log.error('You cant change to an unavailable profile! Please make profil ' + String(state.val) + ' available first.');}
 			}
 			//============================================================================
 			// Profile 1
