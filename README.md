@@ -21,7 +21,11 @@ The adapter connects to your **SYR SafeTech Connect 2422** or **POLYGONVATRO** l
 ## Changelog
 ### developing (----.--.--)
 * (smarthausleben) change Profile states data type - All old Profile state objects need to be deleted first
-* (smarthausleben) added State PRF - Selected profiler is now changeable (part of Issue #8)
+* (smarthausleben) added State PM - Profile x max flow is now changeable (part of Issue #8)
+* (smarthausleben) added State PB - Profile x buzzer is now changeable (part of Issue #8)
+* (smarthausleben) added State PN - Profile x name is now changeable (part of Issue #8)
+* (smarthausleben) added State PA - Profile x available is now changeable (part of Issue #8)
+* (smarthausleben) added State PRF - Selected profile is now changeable (part of Issue #8)
 * (smarthausleben) added State AB - Shutoff valve is now changeable (part of Issue #8)
 * (smarthausleben) added State SRO - Screen rotation angel is now changeable (part of Issue #8)
 * (smarthausleben) added profiles read out at very long timer (Issue #5)

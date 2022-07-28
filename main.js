@@ -5825,7 +5825,9 @@ class wamo extends utils.Adapter {
 									default:
 										this.log.error('Invalid Profile Number \'' + String(AktiveProfileNumber) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PA');
 								}
-								this.log.info('Profile ' + String(AktiveProfileNumber) + ' available changed to \'' + String(profAvailableState) + '\'');
+
+								if(profAvailableState == 0){this.log.info('Profile ' + String(AktiveProfileNumber) + ' availability changed to \'not available\'.');}
+								else{this.log.info('Profile ' + String(AktiveProfileNumber) + ' availability changed to \'available\'.');}
 							}
 							break;
 						case 'PN':	// Name
@@ -5901,9 +5903,52 @@ class wamo extends utils.Adapter {
 									default:
 										this.log.error('Invalid Profile Number \'' + String(AktiveProfileNumber) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PB');
 								}
+
+								if(profileBuzzer == 0){this.log.info('Profile ' + String(AktiveProfileNumber) + ' buzzer is disabled');}
+								else{this.log.info('Profile ' + String(AktiveProfileNumber) + ' buzzer is enabled');}
+
 							}catch(err){this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile buzzer change ERROR: ' + err);}
 							break;
 						case 'PF':	// Max flow
+							try {
+								let profileMaxFlow = parseInt(String(state.val));
+								if (profileMaxFlow > 5000) {
+									profileMaxFlow = 5000;
+									this.log.warn('Profile ' + String(stateChangeProfileNo) + ' Maximal flow per hour of \'' + String(state.val) + '/h\' is is to high! Max flow will be set to maximum \'5000l/h\'!');
+								}
+								switch (stateChangeProfileNo) {
+									case 1:
+										await this.set_DevieParameter(DeviceParameters.Profile_PF1, profileMaxFlow, this.config.device_ip, this.config.device_port);
+										break;
+									case 2:
+										await this.set_DevieParameter(DeviceParameters.Profile_PF2, profileMaxFlow, this.config.device_ip, this.config.device_port);
+										break;
+									case 3:
+										await this.set_DevieParameter(DeviceParameters.Profile_PF3, profileMaxFlow, this.config.device_ip, this.config.device_port);
+										break;
+									case 4:
+										await this.set_DevieParameter(DeviceParameters.Profile_PF4, profileMaxFlow, this.config.device_ip, this.config.device_port);
+										break;
+									case 5:
+										await this.set_DevieParameter(DeviceParameters.Profile_PF5, profileMaxFlow, this.config.device_ip, this.config.device_port);
+										break;
+									case 6:
+										await this.set_DevieParameter(DeviceParameters.Profile_PF6, profileMaxFlow, this.config.device_ip, this.config.device_port);
+										break;
+									case 7:
+										await this.set_DevieParameter(DeviceParameters.Profile_PF7, profileMaxFlow, this.config.device_ip, this.config.device_port);
+										break;
+									case 8:
+										await this.set_DevieParameter(DeviceParameters.Profile_PF8, profileMaxFlow, this.config.device_ip, this.config.device_port);
+										break;
+									default:
+										this.log.error('Invalid Profile Number \'' + String(AktiveProfileNumber) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PB');
+								}
+
+								if(profileMaxFlow == 0){this.log.info('Profile ' + String(AktiveProfileNumber) + ' max Flow per hour is disabled');}
+								else{this.log.info('Profile ' + String(AktiveProfileNumber) + ' max Flow per hour changed to \'' + String(profileMaxFlow) + 'l/h\'');}
+
+							} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile buzzer change ERROR: ' + err); }
 							break;
 						case 'PM':	// Micro leak detection
 							break;
