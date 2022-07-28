@@ -5773,7 +5773,7 @@ class wamo extends utils.Adapter {
 					// Read selected Profile from Device
 					const currentAktiveProfile = await this.get_DevieParameter(DeviceParameters.SelectedProfile ,this.config.device_ip, this.config.device_port);
 					// Save aktive profile from Device in state
-					await this.set_DevieParameter(DeviceParameters.SelectedProfile, currentAktiveProfile['getPAF'], this.config.device_ip, this.config.device_port);
+					await this.set_DevieParameter(DeviceParameters.SelectedProfile, currentAktiveProfile['getPRF'], this.config.device_ip, this.config.device_port);
 				}
 			}
 			//============================================================================
