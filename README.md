@@ -19,7 +19,7 @@ The adapter connects to your **SYR SafeTech Connect 2422** or **POLYGONVATRO** l
 
 
 ## Changelog
-### developing (----.--.--)
+### 0.2.0 (2022.07.28)
 * (smarthausleben) change Profile states data type - All old Profile state objects need to be deleted first
 * (smarthausleben) added State PW - Profile x leakage warning is now changeable (Issue #8)
 * (smarthausleben) added State PV - Profile x leakage volume limit is now changeable (Issue #8)

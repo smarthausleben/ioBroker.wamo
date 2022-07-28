@@ -5773,7 +5773,7 @@ class wamo extends utils.Adapter {
 					// Read selected Profile from Device
 					const currentAktiveProfile = await this.get_DevieParameter(DeviceParameters.SelectedProfile ,this.config.device_ip, this.config.device_port);
 					// Save aktive profile from Device in state
-					await this.set_DevieParameter(DeviceParameters.SelectedProfile, currentAktiveProfile['getPRF'], this.config.device_ip, this.config.device_port);
+					await this.set_DevieParameter(DeviceParameters.SelectedProfile, parseInt(String(currentAktiveProfile['getPRF'])), this.config.device_ip, this.config.device_port);
 				}
 			}
 			//============================================================================
@@ -5795,7 +5795,7 @@ class wamo extends utils.Adapter {
 						case 'PA':	// Available
 							// Trying to disable the ACTIVE profile?
 							if ((AktiveProfileNumber != null) && (parseInt(String(AktiveProfileNumber.val)) == stateChangeProfileNo) && (parseInt(String(state.val)) == 0)) {
-								this.log.error('You can\'t disable the aktive profile! You ned to aktivate an other profile first!');
+								this.log.error('You can\'t disable the aktive profile! You need to select an other aktiv profile first!');
 
 								// Restore availability parameter to 1 (on)
 								switch (stateChangeProfileNo) {
