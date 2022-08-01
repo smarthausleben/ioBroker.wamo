@@ -6519,12 +6519,14 @@ class wamo extends utils.Adapter {
 			interfaceBussy = true;
 			axios({ method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/', timeout: 10000, responseType: 'json' }
 			).then(async (response) => {
+				await this.setStateAsync('info.connection', { val: true, ack: true });
 				interfaceBussy = false;
 				this.log.debug('Device http://' + String(IPadress) + ':' + String(Port) + ' OK');
 				resolve(response);
 			}
 			).catch(async (err) => {
 				interfaceBussy = false;
+				await this.setStateAsync('info.connection', { val: false, ack: true });
 				this.log.error('devicePing() -> Device http://' + String(IPadress) + ':' + String(Port) + ' is NOT reachable -> ERROR: ' + err);
 				reject(err);
 			});
