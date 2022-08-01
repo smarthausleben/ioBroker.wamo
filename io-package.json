@@ -26,9 +26,20 @@
 				"es": "versión de prueba",
 				"pl": "wersja testowa",
 				"zh-cn": "测试版本"
+			  },
+			  "0.2.0": {
+				"en": "",
+				"de": "Testfreigabe",
+				"ru": "тестовый выпуск",
+				"pt": "lançamento de teste",
+				"nl": "test release",
+				"fr": "version d'essai",
+				"it": "rilascio di prova",
+				"es": "versión de prueba",
+				"pl": "wersja testowa",
+				"zh-cn": "测试版本"
 			  }
 		},
-		"title": "wamo",
 		"titleLang": {
 			"en": "wamo",
 			"de": "wamo",
@@ -57,9 +68,8 @@
 			"smarthausleben <info@smarthausleben.de>"
 		],
 		"keywords": [
-			"ioBroker",
-			"Smart Home",
-			"home automation"
+			"leakage protection",
+			"leakage monitor"
 		],
 		"license": "MIT",
 		"platform": "Javascript/Node.js",
