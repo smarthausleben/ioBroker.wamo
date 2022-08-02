@@ -26,6 +26,9 @@ The POLYGONVATRO unit is,under the hood, a SYR SaveTech Connect 2422 unit but wi
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+* (smarthausleben) change state NET -> new role: value.voltage 
+* (smarthausleben) change state AB -> new role: level.valve
+* (smarthausleben) change state BAT -> new role: value.battery
 * (smarthausleben) change info messages on profile readout will only be showen if option "more loging messages" is enabled  
 * (smarthausleben) change to Admin 5  
 * (smarthausleben) add adapter connection status will be updated if device ins reachable/unreachable

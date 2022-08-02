@@ -1285,7 +1285,7 @@ const DeviceParameters = {
 				},
 				type: 'number',
 				unit: null,
-				role: 'state',
+				role: 'level.valve',
 				read: true,
 				write: false
 			},
@@ -1784,7 +1784,7 @@ const DeviceParameters = {
 				},
 				type: 'number',
 				unit: 'V',
-				role: 'state',
+				role: 'value.voltage',
 				read: true,
 				write: false
 			},
