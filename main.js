@@ -5426,24 +5426,25 @@ class wamo extends utils.Adapter {
 			try {
 				await this.devicePing(this.config.device_ip, this.config.device_port);
 				this.log.info('Leakage protection device is present at: ' + String(this.config.device_ip) + ':' + String(this.config.device_port));
+				//=========================================================================================
+				//===  Connection LED to GREEN															===
+				//=========================================================================================
+				try {
+					await this.setStateAsync('info.connection', { val: true, ack: true });
+					this.log.debug('info.connection set');
+				}
+				catch (err) {
+					this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
+				}
 				device_responsive = true;	// global flag if device is responsive
 				pingOK = true;
 			}
 			catch (err) {
 				this.log.error(err);
+				return;
 			}
 		}
 
-		//=================================================================================================
-		//===  Connection LED to Green																	===
-		//=================================================================================================
-		try {
-			await this.setStateAsync('info.connection', { val: true, ack: true });
-			this.log.debug('info.connection set');
-		}
-		catch (err) {
-			this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
-		}
 
 		//=================================================================================================
 		//===  Getting device data																		===
@@ -5459,6 +5460,17 @@ class wamo extends utils.Adapter {
 			catch (err) {
 				this.log.error('initDevice() ERROR: ' + err);
 
+				//=========================================================================================
+				//===  Connection LED to RED															===
+				//=========================================================================================
+				try {
+					await this.setStateAsync('info.connection', { val: false, ack: true });
+					this.log.debug('info.connection set to false');
+				}
+				catch (err) {
+					this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
+				}
+
 				//=================================================================================================
 				// Waiting till device is responding again
 				//=================================================================================================
@@ -5466,6 +5478,16 @@ class wamo extends utils.Adapter {
 				while (!pingOK) {
 					try {
 						await this.devicePing(this.config.device_ip, this.config.device_port);
+						//=========================================================================================
+						//===  Connection LED to GREEN															===
+						//=========================================================================================
+						try {
+							await this.setStateAsync('info.connection', { val: true, ack: true });
+							this.log.debug('info.connection set');
+						}
+						catch (err) {
+							this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
+						}
 						device_responsive = true;	// global flag if device is responsive
 						pingOK = true;
 					}
@@ -5490,6 +5512,16 @@ class wamo extends utils.Adapter {
 			}
 			catch (err) {
 				this.log.error('initDeviceProfiles() ERROR: ' + err);
+				//=========================================================================================
+				//===  Connection LED to RED															===
+				//=========================================================================================
+				try {
+					await this.setStateAsync('info.connection', { val: false, ack: true });
+					this.log.debug('info.connection set to false');
+				}
+				catch (err) {
+					this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
+				}
 
 				//=================================================================================================
 				// Waiting till device is responding again
@@ -5498,6 +5530,16 @@ class wamo extends utils.Adapter {
 				while (!pingOK) {
 					try {
 						await this.devicePing(this.config.device_ip, this.config.device_port);
+						//=========================================================================================
+						//===  Connection LED to GREEN															===
+						//=========================================================================================
+						try {
+							await this.setStateAsync('info.connection', { val: true, ack: true });
+							this.log.debug('info.connection set');
+						}
+						catch (err) {
+							this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
+						}
 						device_responsive = true;	// global flag if device is responsive
 						pingOK = true;
 					}
@@ -5516,8 +5558,7 @@ class wamo extends utils.Adapter {
 			this.log.debug('Timers started - result: ' + String(tmstarted));
 		} catch (err) {
 			this.log.error('Timer start error ... exit');
-			// we throw an exception causing Adaper to restart
-			throw 'timerStarts() ERROR;' + err;
+			return;
 		}
 
 		/*
@@ -5577,6 +5618,7 @@ class wamo extends utils.Adapter {
 		//await this.setStateAsync('testVariable', { val: true, ack: true, expire: 30 });
 
 		// examples for the checkPassword/checkGroup functions
+		/*
 		try {
 			const result = await this.checkPasswordAsync('admin', 'iobroker');
 			this.log.debug('check user admin pw iobroker: ' + result);
@@ -5592,6 +5634,7 @@ class wamo extends utils.Adapter {
 		catch (err) {
 			this.log.error('checkGroupAsync -> ERROR: ' + err);
 		}
+		*/
 
 		// reference to Adapter
 		myAdapter = this;
