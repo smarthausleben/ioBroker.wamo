@@ -1,0 +1,13 @@
+{
+    "Options": "Opties",
+    "Device IP Address": "IP-adres apparaat",
+    "Device Port": "Apparaatpoort:",
+    "alarm polling time in seconds": "alarm polling tijd in seconden",
+    "fast polling time in seconds": "snelle pollingtijd in seconden",
+    "slow polling time in seconds": "langzame pollingtijd in seconden",
+    "very slow polling time in seconds": "zeer langzame pollingtijd in seconden",
+    "more loging messages": "meer logberichten",
+    "factor german water hardness": "factor duitse waterhardheid",
+    "IP or hostname of your SYR SaveTech Connect 2422 or your POLYGONVATRO leakage protection device.": "IP of hostnaam van uw SYR SaveTech Connect 2422 of uw POLYGONVATRO lekkagebeveiligingsapparaat.",
+    "Port of your SYR SaveTech Connect 2422 or your POLYGONVATRO leakage protection device": "Poort van uw SYR SaveTech Connect 2422 of uw POLYGONVATRO lekbeschermingsapparaat"
+}

@@ -9,9 +9,9 @@
   "homepage": "https://github.com/smarthausleben/ioBroker.wamo",
   "license": "MIT",
   "keywords": [
-    "ioBroker",
-    "Smart Home",
-    "home automation",
+    "Leakage detection",
+    "Leakage protection",
+    "Water conditions monitor",
     "Polygonvatro",
     "SYR Safetech Connect 2442"
   ],

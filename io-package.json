@@ -3,6 +3,18 @@
 		"name": "wamo",
 		"version": "0.2.0",
 		"news": {
+			"0.2.0": {
+				"en": "",
+				"de": "first stable version",
+				"ru": "тестовый выпуск",
+				"pt": "lançamento de teste",
+				"nl": "test release",
+				"fr": "version d'essai",
+				"it": "rilascio di prova",
+				"es": "versión de prueba",
+				"pl": "wersja testowa",
+				"zh-cn": "测试版本"
+			},
 			"0.0.1": {
 				"en": "initial release",
 				"de": "Erstveröffentlichung",
@@ -17,18 +29,6 @@
 			},
 			"0.0.2": {
 				"en": "test release",
-				"de": "Testfreigabe",
-				"ru": "тестовый выпуск",
-				"pt": "lançamento de teste",
-				"nl": "test release",
-				"fr": "version d'essai",
-				"it": "rilascio di prova",
-				"es": "versión de prueba",
-				"pl": "wersja testowa",
-				"zh-cn": "测试版本"
-			  },
-			  "0.2.0": {
-				"en": "",
 				"de": "Testfreigabe",
 				"ru": "тестовый выпуск",
 				"pt": "lançamento de teste",
@@ -85,11 +85,19 @@
 		"connectionType": "local",
 		"dataSource": "poll",
 		"materialize": true,
+		"adminUI":{
+			"config": "json"
+		},
 		"dependencies": [
 			{
 				"js-controller": ">=2.0.0"
 			}
-		]
+		],
+		"globalDependencies": [
+			{
+				"admin": ">=5.1.28"
+			}
+		]	
 	},
 	"native": {
 		"device_ip": "0.0.0.0",

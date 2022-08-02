@@ -1,0 +1,39 @@
+{
+    "i18n": true,
+    "type": "tabs",
+    "items": {
+        "_options": {
+            "type": "panel",
+            "label": "Options",
+            "items": {
+                "device_ip": {
+                    "type": "text",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "label": "Device IP",
+                    "help": "IP or hostname of your SYR SaveTech Connect 2422 or your POLYGONVATRO leakage protection device."
+                },
+                "device_port": {
+                    "type": "number",
+                    "min": 1,
+                    "max": 65535,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "label": "Device Port",
+                    "help": "Port of your SYR SaveTech Connect 2422 or your POLYGONVATRO leakage protection device"
+                },
+                "_ioBrokerKursBanner": {
+                    "newLine": true,
+                    "type": "staticImage",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "href": "https://haus-automatisierung.com/iobroker-kurs/?refid=iobroker-gira-iot",
+                    "src": "https://haus-automatisierung.com/images/ads/ioBroker-Kurs.png"
+                }
+            }
+        }
+    }
+}

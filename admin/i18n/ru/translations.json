@@ -1,0 +1,13 @@
+{
+    "Options": "Опции",
+    "Device IP Address": "IP-адрес устройства",
+    "Device Port": "Порт устройства",
+    "alarm polling time in seconds": "время опроса тревоги в секундах",
+    "fast polling time in seconds": "быстрое время опроса в секундах",
+    "slow polling time in seconds": "медленное время опроса в секундах",
+    "very slow polling time in seconds": "очень медленное время опроса в секундах",
+    "more loging messages": "больше сообщений журнала",
+    "factor german water hardness": "коэффициент жесткости воды по немецкому языку",
+    "IP or hostname of your SYR SaveTech Connect 2422 or your POLYGONVATRO leakage protection device.": "IP-адрес или имя хоста вашего SYR SaveTech Connect 2422 или устройства защиты от утечек POLYGONVATRO.",
+    "Port of your SYR SaveTech Connect 2422 or your POLYGONVATRO leakage protection device": "Порт вашего SYR SaveTech Connect 2422 или вашего устройства защиты от утечек POLYGONVATRO"
+}
