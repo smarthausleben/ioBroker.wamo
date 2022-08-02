@@ -1,126 +1,128 @@
 {
-	"common": {
-		"name": "wamo",
-		"version": "0.2.0",
-		"news": {
-			"0.2.0": {
-				"en": "",
-				"de": "first stable version",
-				"ru": "тестовый выпуск",
-				"pt": "lançamento de teste",
-				"nl": "test release",
-				"fr": "version d'essai",
-				"it": "rilascio di prova",
-				"es": "versión de prueba",
-				"pl": "wersja testowa",
-				"zh-cn": "测试版本"
-			},
-			"0.0.1": {
-				"en": "initial release",
-				"de": "Erstveröffentlichung",
-				"ru": "Начальная версия",
-				"pt": "lançamento inicial",
-				"nl": "Eerste uitgave",
-				"fr": "Première version",
-				"it": "Versione iniziale",
-				"es": "Versión inicial",
-				"pl": "Pierwsze wydanie",
-				"zh-cn": "首次出版"
-			},
-			"0.0.2": {
-				"en": "test release",
-				"de": "Testfreigabe",
-				"ru": "тестовый выпуск",
-				"pt": "lançamento de teste",
-				"nl": "test release",
-				"fr": "version d'essai",
-				"it": "rilascio di prova",
-				"es": "versión de prueba",
-				"pl": "wersja testowa",
-				"zh-cn": "测试版本"
-			  }
-		},
-		"titleLang": {
-			"en": "wamo",
-			"de": "wamo",
-			"ru": "wamo",
-			"pt": "Detecção de vazamento",
-			"nl": "wamo",
-			"fr": "wamo",
-			"it": "PerditaDect",
-			"es": "Detección de fugas",
-			"pl": "wamo",
-			"zh-cn": "泄漏检测"
-		},
-		"desc": {
-			"en": "wamo",
-			"de": "wamo",
-			"ru": "утечка",
-			"pt": "vazamento",
-			"nl": "lekdetectie",
-			"fr": "détection de fuite",
-			"it": "leakedect",
-			"es": "fugadecto",
-			"pl": "wyciek wycieku",
-			"zh-cn": "泄漏检测"
-		},
-		"authors": [
-			"smarthausleben <info@smarthausleben.de>"
-		],
-		"keywords": [
-			"leakage protection",
-			"leakage monitor"
-		],
-		"license": "MIT",
-		"platform": "Javascript/Node.js",
-		"main": "main.js",
-		"icon": "wamo.png",
-		"enabled": true,
-		"extIcon": "https://raw.githubusercontent.com/smarthausleben/ioBroker.wamo/main/admin/wamo.png",
-		"readme": "https://github.com/smarthausleben/ioBroker.wamo/blob/main/README.md",
-		"loglevel": "info",
-		"mode": "daemon",
-		"type": "iot-systems",
-		"compact": true,
-		"connectionType": "local",
-		"dataSource": "poll",
-		"materialize": true,
-		"adminUI":{
-			"config": "json"
-		},
-		"dependencies": [
-			{
-				"js-controller": ">=2.0.0"
-			}
-		],
-		"globalDependencies": [
-			{
-				"admin": ">=5.1.28"
-			}
-		]	
-	},
-	"native": {
-		"device_ip": "0.0.0.0",
-		"device_port": "5333",
-		"factor_german_water_hardnes": "0.03030303",
-		"device_alarm_poll_interval": "30",
-		"device_short_poll_interval": "60",
-		"device_long_poll_interval": "120",
-		"device_very_long_poll_interval": "300",
-		"moremessages": false
-	},
-	"objects": [],
-	"instanceObjects": [{
-        "_id": "info.connection",
-        "type": "state",
-        "common": {
-            "role": "indicator.connected",
-            "name": "If communication with circuit works",
-            "type": "boolean",
-            "read": true,
-            "write": false,
-            "def": false
+    "common": {
+        "name": "wamo",
+        "version": "0.2.0",
+        "news": {
+            "0.2.0": {
+                "en": "",
+                "de": "first stable version",
+                "ru": "тестовый выпуск",
+                "pt": "lançamento de teste",
+                "nl": "test release",
+                "fr": "version d'essai",
+                "it": "rilascio di prova",
+                "es": "versión de prueba",
+                "pl": "wersja testowa",
+                "zh-cn": "测试版本"
+            },
+            "0.0.1": {
+                "en": "initial release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "zh-cn": "首次出版"
+            },
+            "0.0.2": {
+                "en": "test release",
+                "de": "Testfreigabe",
+                "ru": "тестовый выпуск",
+                "pt": "lançamento de teste",
+                "nl": "test release",
+                "fr": "version d'essai",
+                "it": "rilascio di prova",
+                "es": "versión de prueba",
+                "pl": "wersja testowa",
+                "zh-cn": "测试版本"
+            }
         },
-        "native": {}
-    }]
+        "titleLang": {
+            "en": "wamo",
+            "de": "wamo",
+            "ru": "wamo",
+            "pt": "Detecção de vazamento",
+            "nl": "wamo",
+            "fr": "wamo",
+            "it": "PerditaDect",
+            "es": "Detección de fugas",
+            "pl": "wamo",
+            "zh-cn": "泄漏检测"
+        },
+        "desc": {
+            "en": "wamo",
+            "de": "wamo",
+            "ru": "утечка",
+            "pt": "vazamento",
+            "nl": "lekdetectie",
+            "fr": "détection de fuite",
+            "it": "leakedect",
+            "es": "fugadecto",
+            "pl": "wyciek wycieku",
+            "zh-cn": "泄漏检测"
+        },
+        "authors": [
+            "smarthausleben <info@smarthausleben.de>"
+        ],
+        "keywords": [
+            "leakage protection",
+            "leakage monitor"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "main.js",
+        "icon": "wamo.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/smarthausleben/ioBroker.wamo/main/admin/wamo.png",
+        "readme": "https://github.com/smarthausleben/ioBroker.wamo/blob/main/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "type": "iot-systems",
+        "compact": true,
+        "connectionType": "local",
+        "dataSource": "poll",
+        "materialize": true,
+        "adminUI": {
+            "config": "json"
+        },
+        "dependencies": [
+            {
+                "js-controller": ">=2.0.0"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "admin": ">=5.1.28"
+            }
+        ]
+    },
+    "native": {
+        "device_ip": "0.0.0.0",
+        "device_port": "5333",
+        "factor_german_water_hardnes": "0.03030303",
+        "device_alarm_poll_interval": "30",
+        "device_short_poll_interval": "60",
+        "device_long_poll_interval": "120",
+        "device_very_long_poll_interval": "300",
+        "moremessages": false
+    },
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "If communication with circuit works",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
+    ]
 }

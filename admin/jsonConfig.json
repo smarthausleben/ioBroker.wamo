@@ -11,7 +11,7 @@
                     "sm": 12,
                     "md": 6,
                     "lg": 6,
-                    "label": "Device IP",
+                    "label": "Device IP Address",
                     "help": "IP or hostname of your SYR SaveTech Connect 2422 or your POLYGONVATRO leakage protection device."
                 },
                 "device_port": {
@@ -23,6 +23,59 @@
                     "lg": 6,
                     "label": "Device Port",
                     "help": "Port of your SYR SaveTech Connect 2422 or your POLYGONVATRO leakage protection device"
+                },
+                "factor_german_water_hardnes":{
+                    "newLine": true,
+                    "type": "number",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "label": "factor german water hardness",
+                    "help": "Factor to calculate German water hardnes from conductivity."
+                },
+                "device_alarm_poll_interval":{
+                    "newLine": true,
+                    "type": "number",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "min": 5,
+                    "max": 60,
+                    "label": "alarm polling time in seconds"
+
+                },
+                "device_short_poll_interval":{
+                    "type": "number",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "min": 30,
+                    "label": "fast polling time in seconds"
+                },
+                "device_long_poll_interval":{
+                    "newLine": true,
+                    "type": "number",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "min": 61,
+                    "label": "slow polling time in seconds"
+                },
+                "device_very_long_poll_interval":{
+                    "type": "number",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "min": 120,
+                    "label": "very slow polling time in seconds"
+                },
+                "moremessages":{
+                    "newLine": true,
+                    "type": "boolean",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "label": "more loging messages"
                 },
                 "_ioBrokerKursBanner": {
                     "newLine": true,

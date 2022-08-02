@@ -9,5 +9,6 @@
     "more loging messages": "więcej wiadomości logowania",
     "factor german water hardness": "współczynnik niemieckiej twardości wody",
     "IP or hostname of your SYR SaveTech Connect 2422 or your POLYGONVATRO leakage protection device.": "IP lub nazwa hosta SYR SaveTech Connect 2422 lub urządzenia zabezpieczającego przed wyciekiem POLYGONVATRO.",
-    "Port of your SYR SaveTech Connect 2422 or your POLYGONVATRO leakage protection device": "Port urządzenia SYR SaveTech Connect 2422 lub urządzenia zabezpieczającego przed wyciekiem POLYGONVATRO"
+    "Port of your SYR SaveTech Connect 2422 or your POLYGONVATRO leakage protection device": "Port urządzenia SYR SaveTech Connect 2422 lub urządzenia zabezpieczającego przed wyciekiem POLYGONVATRO",
+    "Factor to calculate German water hardnes from conductivity.": "Współczynnik do obliczania niemieckiej twardości wody na podstawie przewodności."
 }
