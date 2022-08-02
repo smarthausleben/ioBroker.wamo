@@ -5414,7 +5414,7 @@ class wamo extends utils.Adapter {
 		try {
 			await this.initDevicesAndChanels();
 		} catch (err) {
-			this.log.error('Error from initStatesAndChanels : ' + err);
+			this.log.error('Error initStatesAndChanels: ' + err);
 		}
 
 
@@ -5425,6 +5425,7 @@ class wamo extends utils.Adapter {
 		while (!pingOK) {
 			try {
 				await this.devicePing(this.config.device_ip, this.config.device_port);
+				this.log.info('Leakage protection device is present at: ' + String(this.config.device_ip) + ':' + String(this.config.device_port));
 				device_responsive = true;	// global flag if device is responsive
 				pingOK = true;
 			}
@@ -5438,7 +5439,7 @@ class wamo extends utils.Adapter {
 		//=================================================================================================
 		try {
 			await this.setStateAsync('info.connection', { val: true, ack: true });
-			this.log.debug('info.connection gesetzt');
+			this.log.debug('info.connection set');
 		}
 		catch (err) {
 			this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
@@ -5450,7 +5451,7 @@ class wamo extends utils.Adapter {
 		let gotDeviceData = false;
 		while (!gotDeviceData) {
 			try {
-				this.log.info('async onReady() - initComckeck -> Getting data from device at ' + this.config.device_ip + ':' + this.config.device_port);
+				this.log.debug('async onReady() - initComckeck -> Getting data from device at ' + this.config.device_ip + ':' + this.config.device_port);
 				const responseInit = await this.initDevice();
 				this.log.debug(`[async onReady() - initComckeck -> initDevice] Response:  ${responseInit}`);
 				gotDeviceData = true;
@@ -5482,7 +5483,7 @@ class wamo extends utils.Adapter {
 		while (!gotDeviceProfileData) {
 			try {
 				// Device Profiles Initialisation
-				this.log.info('async onReady() - initDeviceProfiles -> Getting Profiles data from device at ' + this.config.device_ip + ':' + this.config.device_port);
+				this.log.debug('async onReady() - initDeviceProfiles -> Getting Profiles data from device at ' + this.config.device_ip + ':' + this.config.device_port);
 				const responseInitProfiles = await this.initDeviceProfiles(this.config.device_ip, this.config.device_port);
 				this.log.debug(`[async onReady() - initDeviceProfiles -> initDeviceProfiles] Response:  ${responseInitProfiles}`);
 				gotDeviceProfileData = true;
@@ -5595,7 +5596,7 @@ class wamo extends utils.Adapter {
 		// reference to Adapter
 		myAdapter = this;
 
-		this.log.info('Adapter is running');
+		this.log.info('wamo adapter is running');
 
 	}
 
@@ -6234,7 +6235,7 @@ class wamo extends utils.Adapter {
 				schedule.scheduleJob(cron_Week, cron_poll_week);
 				schedule.scheduleJob(cron_Month, cron_poll_month);
 				schedule.scheduleJob(cron_Year, cron_poll_year);
-				this.log.debug('Cron timer started');
+				if(moreMessages){this.log.info('Cron timer started');}
 			} catch (err) {
 				this.log.error('Cron timer start error: ' + err);
 			}
@@ -6242,7 +6243,7 @@ class wamo extends utils.Adapter {
 
 				// Die Timer für das Polling starten
 				alarm_Intervall_ID = this.setInterval(alarm_poll, parseInt(this.config.device_alarm_poll_interval) * 1000);
-				this.log.debug('Alarm timer initialized');
+				if(moreMessages){this.log.info('Alarm timer initialized');}
 				try {
 					await sleep(3000); // Warten um einen Versatz zu erzeugen
 				}
@@ -6250,7 +6251,7 @@ class wamo extends utils.Adapter {
 					this.log.error('await sleep(3000) ERROR: ' + err);
 				}
 				short_Intervall_ID = this.setInterval(short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
-				this.log.debug('Short timer initialized');
+				if(moreMessages){this.log.info('Short timer initialized');}
 
 				try {
 					await sleep(3000); // Warten um einen Versatz zu erzeugen
@@ -6259,7 +6260,7 @@ class wamo extends utils.Adapter {
 					this.log.error('await sleep(3000) ERROR: ' + err);
 				}
 				long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
-				this.log.debug('Long timer initialized');
+				if(moreMessages){this.log.info('Long timer initialized');}
 
 				try {
 					await sleep(2000); // Warten um einen Versatz zu erzeugen
@@ -6268,7 +6269,7 @@ class wamo extends utils.Adapter {
 					this.log.error('await sleep(3000) ERROR: ' + err);
 				}
 				very_long_Intervall_ID = this.setInterval(very_long_poll, parseInt(this.config.device_very_long_poll_interval) * 1000);
-				this.log.debug('Very Long timer initialized');
+				if(moreMessages){this.log.info('Very Long timer initialized');}
 				resolve('Alarm timer ID = ' + alarm_Intervall_ID + ' / Short timer ID = ' + short_Intervall_ID + ' / Long timer ID = ' + long_Intervall_ID+ ' / Very long timer ID = ' + very_long_Intervall_ID);
 			} catch (err) {
 				reject(err);
@@ -6281,7 +6282,7 @@ class wamo extends utils.Adapter {
 	async alarm_cron_day_Tick() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				this.log.debug('Cron day tick');
+				if(moreMessages){this.log.info('Cron day tick');}
 
 				// ================================================
 				// Dayly sum reset
@@ -6337,7 +6338,7 @@ class wamo extends utils.Adapter {
 	async alarm_cron_week_Tick() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				this.log.warn('Cron week tick');
+				if(moreMessages){this.log.info('Cron week tick');}
 
 				// ================================================
 				// Week sum reset
@@ -6366,7 +6367,7 @@ class wamo extends utils.Adapter {
 	async alarm_cron_month_Tick() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				this.log.warn('Cron month tick');
+				if(moreMessages){this.log.info('Cron month tick');}
 
 				// ================================================
 				// Month sum reset
@@ -6395,7 +6396,7 @@ class wamo extends utils.Adapter {
 	async alarm_cron_year_Tick() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				this.log.warn('Cron year tick');
+				if(moreMessages){this.log.info('Cron year tick');}
 
 				// ================================================
 				// Year sum reset
@@ -6426,7 +6427,7 @@ class wamo extends utils.Adapter {
 	async alarm_TimerTick() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				if(moreMessages){this.log.info('Alarm Timer tick')};
+				if(moreMessages){this.log.info('Alarm Timer tick');}
 				// get alarmPeriode data
 				if (!interfaceBussy) {
 					await this.getData(alarmPeriod);
@@ -6533,7 +6534,6 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-
 	async getData(statesToGet) {
 		return new Promise(async (resolve, reject) => {
 			let parnumber = 0;
@@ -6623,7 +6623,7 @@ class wamo extends utils.Adapter {
 	async initDevice() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				this.log.debug('Long Timer tick');
+				if(moreMessages){this.log.info('reading basic information');}
 				// get longPeriode data
 				await this.getData(initStates);
 				resolve(true);
@@ -6637,6 +6637,7 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 
+				if(moreMessages){this.log.info('reading device profiles');}
 				// alle 8 möglichen Profile durchlaufen
 				for (let ProfileNumber = 1; ProfileNumber < 9; ProfileNumber++) {
 
