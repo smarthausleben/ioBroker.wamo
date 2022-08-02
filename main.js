@@ -8008,10 +8008,10 @@ class wamo extends utils.Adapter {
 					// The request was made but no response was received
 					// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
 					// http.ClientRequest in node.js<div></div>
-					this.log.info(error.message);
+					this.log.error(error.message);
 				} else {
 					// Something happened in setting up the request that triggered an Error
-					this.log.info(error.message);
+					this.log.error(error.message);
 				}
 				reject(error);
 			});
@@ -8043,10 +8043,10 @@ class wamo extends utils.Adapter {
 					// The request was made but no response was received
 					// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
 					// http.ClientRequest in node.js<div></div>
-					this.log.info(error.message);
+					this.log.error(error.message);
 				} else {
 					// Something happened in setting up the request that triggered an Error
-					this.log.info(error.message);
+					this.log.error(error.message);
 				}
 				reject('http error');
 			});
@@ -8117,8 +8117,10 @@ class wamo extends utils.Adapter {
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileAvailable, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
-				if(profileAvailable == 1){this.log.info('Profile ' + String(ProfileNumber) + ' is available');}
-				else{this.log.info('Profile ' + String(ProfileNumber) + ' is not available');}
+				if(moreMessages){
+					if (profileAvailable == 1) { this.log.info('Profile ' + String(ProfileNumber) + ' is available'); }
+					else { this.log.info('Profile ' + String(ProfileNumber) + ' is not available'); }
+				}
 				resolve(true);
 			} catch (err) {
 				this.log.error('async state_profile_PA(ProfileNumber, value) ERROR: '+ err);
@@ -8184,7 +8186,7 @@ class wamo extends utils.Adapter {
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileName, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
-				this.log.info('Profile ' + String(ProfileNumber) + ' name is ' + profileName);
+				if(moreMessages){this.log.info('Profile ' + String(ProfileNumber) + ' name is ' + profileName);}
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
@@ -8251,9 +8253,10 @@ class wamo extends utils.Adapter {
 
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileQuantityLimitation, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
-
-				if(profileQuantityLimitation == 0){this.log.info('Profile ' + String(ProfileNumber) + ' maximum volume limit disabled');}
-				else{this.log.info('Profile ' + String(ProfileNumber) + ' maximum volume limit is ' + String(profileQuantityLimitation) + 'l');}
+				if(moreMessages){
+					if (profileQuantityLimitation == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' maximum volume limit disabled'); }
+					else { this.log.info('Profile ' + String(ProfileNumber) + ' maximum volume limit is ' + String(profileQuantityLimitation) + 'l'); }
+				}
 				resolve(true);
 			} catch (err) {
 				this.log.error('async state_profile_PV(ProfileNumber, value) ERROR: ' + err);
@@ -8321,8 +8324,10 @@ class wamo extends utils.Adapter {
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileTimeLimitation, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
-				if(profileTimeLimitation == 0){this.log.info('Profile ' + String(ProfileNumber) + ' maximum time limit is disabled');}
-				else{this.log.info('Profile ' + String(ProfileNumber) + ' maximum time limit is ' + String(profileTimeLimitation) + 'min');}
+				if (moreMessages) {
+					if (profileTimeLimitation == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' maximum time limit is disabled'); }
+					else { this.log.info('Profile ' + String(ProfileNumber) + ' maximum time limit is ' + String(profileTimeLimitation) + 'min'); }
+				}
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
@@ -8388,8 +8393,10 @@ class wamo extends utils.Adapter {
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileMaximumFlow, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
-				if(profileMaximumFlow == 0){this.log.info('Profile ' + String(ProfileNumber) + ' maximum flow is disabled');}
-				else{this.log.info('Profile ' + String(ProfileNumber) + ' maximum flow is ' + String(profileMaximumFlow) + 'l/h');}
+				if(moreMessages){
+					if (profileMaximumFlow == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' maximum flow is disabled'); }
+					else { this.log.info('Profile ' + String(ProfileNumber) + ' maximum flow is ' + String(profileMaximumFlow) + 'l/h'); }
+				}
 
 				resolve(true);
 			} catch (err) {
@@ -8458,11 +8465,9 @@ class wamo extends utils.Adapter {
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileMicroleackageDetection, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
-				if (profileMicroleackageDetection == 0) {
-					this.log.info('Profile ' + String(ProfileNumber) + ' Microleak Detektion is disabled');
-				}
-				else {
-					this.log.info('Profile ' + String(ProfileNumber) + ' Microleak Detektion is enabled');
+				if (moreMessages) {
+					if (profileMicroleackageDetection == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' Microleak Detektion is disabled'); }
+					else { this.log.info('Profile ' + String(ProfileNumber) + ' Microleak Detektion is enabled'); }
 				}
 				resolve(true);
 			} catch (err) {
@@ -8529,7 +8534,7 @@ class wamo extends utils.Adapter {
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileReturnTime, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
-				this.log.info('Profile ' + String(ProfileNumber) + ' return time to default profile is ' + String(profileReturnTime) + 'h');
+				if(moreMessages){this.log.info('Profile ' + String(ProfileNumber) + ' return time to default profile is ' + String(profileReturnTime) + 'h');}
 
 				resolve(true);
 			} catch (err) {
@@ -8597,8 +8602,10 @@ class wamo extends utils.Adapter {
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileBuzzer, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
-				if(profileBuzzer == 1){this.log.info('Profile ' + String(ProfileNumber) + ' buzzer is on');}
-				else{this.log.info('Profile ' + String(ProfileNumber) + ' buzzer is not on');}
+				if(moreMessages){
+					if (profileBuzzer == 1) { this.log.info('Profile ' + String(ProfileNumber) + ' buzzer is on'); }
+					else { this.log.info('Profile ' + String(ProfileNumber) + ' buzzer is not on'); }
+				}
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
@@ -8668,8 +8675,10 @@ class wamo extends utils.Adapter {
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileLeackageWarning, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
-				if (profileLeackageWarning == 0) {this.log.info('Profile ' + String(ProfileNumber) + ' Leakage Warning disabled');}
-				else {this.log.info('Profile ' + String(ProfileNumber) + ' Leakage Warning is enabled');}
+				if (moreMessages) {
+					if (profileLeackageWarning == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' Leakage Warning disabled'); }
+					else { this.log.info('Profile ' + String(ProfileNumber) + ' Leakage Warning is enabled'); }
+				}
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
