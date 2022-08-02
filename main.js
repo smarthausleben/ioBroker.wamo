@@ -1799,7 +1799,7 @@ const DeviceParameters = {
 	BatteryVoltage: {
 		id: 'BAT',
 		objectdefinition: {
-			type: 'state',
+			type: 'value',
 			common: {
 				name: {
 					'en': 'Battery voltage',
@@ -1815,7 +1815,7 @@ const DeviceParameters = {
 				},
 				type: 'number',
 				unit: 'V',
-				role: 'state',
+				role: 'value.battery',
 				read: true,
 				write: false
 			},

@@ -21,7 +21,10 @@ SYR SaveTech Connect 2422: https://www.syr.de/de/Produkte/CB9D9A72-BC51-40CE-840
 The POLYGONVATRO unit is,under the hood, a SYR SaveTech Connect 2422 unit but without pressure- temperature- and conductivity sensor. The POLYGONVATRO unit is currently not available.  
 
 ## Changelog
-
+<!--
+    Placeholder for the next version (at the beginning of the line):
+    ### **WORK IN PROGRESS**
+-->
 ### **WORK IN PROGRESS**
 * (smarthausleben) change info messages on profile readout will only be showen if option "more loging messages" is enabled  
 * (smarthausleben) change to Admin 5  
