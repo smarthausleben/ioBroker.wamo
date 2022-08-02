@@ -70,7 +70,7 @@
                 },
                 "moremessages":{
                     "newLine": true,
-                    "type": "boolean",
+                    "type": "checkbox",
                     "sm": 12,
                     "md": 6,
                     "lg": 6,
