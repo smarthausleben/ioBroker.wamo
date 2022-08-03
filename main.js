@@ -6752,13 +6752,12 @@ class wamo extends utils.Adapter {
 			}
 		});
 	}
-	//===================================================
 
 	/**
 	 * updates states value to DeviceParameter
 	 * @param {Object} deviceParameterToUpdate - DeviceParameter Object
 	 * @param {JSON} deviceValue - JSON return value from Device eg {"getCND": "269"}
-	 * @returns true if OK or error */
+	 */
 	async updateState(deviceParameterToUpdate, deviceValue) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -6877,9 +6876,12 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-	//=============================================================================
-	// returns a globalised value if defined in the parameter Structure
-	//=============================================================================
+	/**
+	 * returns a globalised value if defined in the parameter Structure
+	 * @param {object} ParameterObject - DeviceParameter Object
+	 * @param {JSON} value - JSON return value from Device eg {"getCND": "269"}
+	 * @returns translated result value or NULL if ther is no translation
+	 */
 	async getGlobalisedValue(ParameterObject, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -6909,9 +6911,13 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-	//================================================================================
-	// here we convert the raw values from the device into final values for the states
-	//================================================================================
+	/**
+	 * here we convert the raw values from the device
+	 * into the final values for the states
+	 * @param {string} valueKey - State ID value out of the DeviceParameter
+	 * @param {any} value - value to convert
+	 * @returns final value or an error
+	 */
 	async convertDeviceReturnValue(valueKey, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -7475,9 +7481,10 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-	//==========================================================
-	// brings device into FACTORY mode
-	//==========================================================
+	/**
+	 * sends the comand to the device to bring it into FACTORY mode
+	 * @returns true or error
+	 */
 	async set_FACTORY_Mode() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -7515,9 +7522,10 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-	//==========================================================
-	// brings device into SERVICE mode
-	//==========================================================
+	/**
+	 * sends the comand to the device to bring it into SERVICE mode
+	 * @returns true or error
+	 */
 	async set_SERVICE_Mode() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -7555,9 +7563,10 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-	//==========================================================
-	// brings device back into USER mode
-	//==========================================================
+	/**
+	 * sends the comand to the device to bring it back into USER mode
+	 * @returns true or error
+	 */
 	async clear_SERVICE_FACTORY_Mode() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -7594,10 +7603,13 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-	//=============================================================================
-	// generate the additional log messages if the option is aktive in
-	// adapter settings
-	//=============================================================================
+	/**
+	 * generate the additional log messages if the option is aktive in
+	 * adapter settings
+	 * @param {Object} ParameterStruct - DeviceParameter Object
+	 * @param {any} value - value to show in log
+	 * @returns true or error
+	 */
 	async moremessages(ParameterStruct, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -7622,9 +7634,10 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-	//=============================================================================
-	// here we do a part of the math for the statistics
-	//=============================================================================
+	/**
+	 * here we do a part of the math for the statistics
+	 * @returns true or error
+	 */
 	async updateStatistics() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -7804,9 +7817,10 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-	//=============================================================================
-	// here we calculate Water conductivity -> German water hardness
-	//=============================================================================
+	/**
+	 * here we calculate Water conductivity -> German water hardness
+	 * @returns true or error
+	 */
 	async updateGermanWaterHardnes() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -7848,9 +7862,10 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-	//=============================================================================
-	// here we calculate Water temperature kompensated conductivity
-	//=============================================================================
+	/**
+	 * here we calculate Water temperature kompensated conductivity
+	 * @returns true or error
+	 */
 	async updateEC25conductivity(){
 		return new Promise(async (resolve, reject) => {
 			// The formula is:
@@ -7888,9 +7903,13 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-	//=========================================================================
-	// Reads out all Profiles, generates and/ore updates state objects
-	//=========================================================================
+	/**
+	 * reads out all Profiles, generates and/ore updates state objects
+	 * @param {number} ProfileNumber - profile number
+	 * @param {Object} stateID - DeviceParameter Object
+	 * @param {JSON} value - JSON return value from Device eg {"getCND": "269"}
+	 * @returns true or error
+	 */
 	async UpdateProfileState(ProfileNumber, stateID, value) {
 		return new Promise(async (resolve, reject) => {
 
@@ -7937,13 +7956,13 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-	//=========================================================================
-	// Pulls the Information from the device
-	// ParameterID: API command Parameter (last instance of the State path)
-	// IPadress: Device IP Adress
-	// Port: Device Port
-	//=========================================================================
-	// Return: Readed Value from Device (JSON Format)
+	/**
+	 * Pulls the Information from the device
+	 * @param {Object} Parameter - DeviceParameter Object
+	 * @param {string} IPadress - Device IP Adress
+	 * @param {string} Port - Device port number
+	 * @returns Readed Value from Device (JSON Format) or ERROR
+	 */
 	async get_DevieParameter(Parameter, IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
 
@@ -8012,13 +8031,14 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-	//===================================================
-	// Pulls the Information from the Device
-	// ParameterID: API command Parameter (last instance of the State path)
-	// IPadress: Device IP Adress
-	// Port: Device Port
-	//===================================================
-	// Return: Readed Value from Device (JSON Format)
+	/**
+	 * Putts the a value to the Device
+	 * @param {Object} Parameter - DeviceParameter Object
+	 * @param {String} Value - Value to send to the device
+	 * @param {string} IPadress - Device IP Adress
+	 * @param {string} Port - Device port number
+	 * @returns axios response data OR error
+	 */
 	async set_DevieParameter(Parameter, Value, IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
 
@@ -8114,13 +8134,21 @@ class wamo extends utils.Adapter {
 	}
 
 
-	async get_DevieProfileParameter(Profile, ParameterID, IPadress, Port) {
+	/**
+	 * Pulls profile parameter data from the device
+	 * @param {number} ProfileNumber - profile number
+	 * @param {String} ParameterID - Profile parameter ID (without number)
+	 * @param {string} IPadress - Device IP Adress
+	 * @param {string} Port - Device port number
+	 * @returns Readed Value from Device (JSON Format) or ERROR
+	 */
+	async get_DevieProfileParameter(ProfileNumber, ParameterID, IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
 
-			this.log.debug(`[getDevieParameter(ParameterID)] ${ParameterID} Profile ${Profile}`);
+			this.log.debug(`[getDevieParameter(ParameterID)] ${ParameterID} Profile ${ProfileNumber}`);
 
 			axios({
-				method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/' + String(ParameterID) + String(Profile), timeout: 10000, responseType: 'json'
+				method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/' + String(ParameterID) + String(ProfileNumber), timeout: 10000, responseType: 'json'
 			}
 			).then(async (response) => {
 				const content = response.data;
@@ -8142,16 +8170,18 @@ class wamo extends utils.Adapter {
 					// Something happened in setting up the request that triggered an Error
 					this.log.error(error.message);
 				}
-				reject('http error');
+				reject('http error' + error);
 			});
 
 		});
 	}
-	//===================================================
 
-	//===================================================
-	//Profile X AVAILABLE
-	//===================================================
+	/**
+	 * sets AVAILABLE state of Profile X
+	 * @param {number} ProfileNumber - Profile number
+	 * @param {JSON} value - Value from Device eg {"getPAx": "x"}
+	 * @returns true OR error
+	 */
 	async state_profile_PA(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -8224,9 +8254,12 @@ class wamo extends utils.Adapter {
 
 	}
 
-	//===================================================
-	//Profile X NAME
-	//===================================================
+	/**
+	 * sets NAME state of Profile X
+	 * @param {number} ProfileNumber - Profile number
+	 * @param {JSON} value - Value from Device eg {"getPNx": "x"}
+	 * @returns true OR error
+	 */
 	async state_profile_PN(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -8290,9 +8323,12 @@ class wamo extends utils.Adapter {
 
 	}
 
-	//===================================================
-	//Profile X QUANTITY LIMITATION
-	//===================================================
+	/**
+	 * sets QUANTITY LIMITATION state of Profile X
+	 * @param {number} ProfileNumber - Profile number
+	 * @param {JSON} value - Value from Device eg {"getPVx": "x"}
+	 * @returns true OR error
+	 */
 	async state_profile_PV(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -8360,9 +8396,12 @@ class wamo extends utils.Adapter {
 
 	}
 
-	//===================================================
-	//Profile X TIME LIMITATION
-	//===================================================
+	/**
+	 * sets TIME LIMITATION state of Profile X
+	 * @param {number} ProfileNumber - Profile number
+	 * @param {JSON} value - Value from Device eg {"getPTx": "x"}
+	 * @returns true OR error
+	 */
 	async state_profile_PT(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -8431,9 +8470,12 @@ class wamo extends utils.Adapter {
 
 	}
 
-	//===================================================
-	//Profile X MAXIMUM FLOW
-	//===================================================
+	/**
+	 * sets MAXIMUM FLOW state of Profile X
+	 * @param {number} ProfileNumber - Profile number
+	 * @param {JSON} value - Value from Device eg {"getPFx": "x"}
+	 * @returns true OR error
+	 */
 	async state_profile_PF(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -8500,9 +8542,12 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-	//===================================================
-	//Profile X MICROLEAK DETECTION
-	//===================================================
+	/**
+	 * sets MICROLEAK DETECTION state of Profile X
+	 * @param {number} ProfileNumber - Profile number
+	 * @param {JSON} value - Value from Device eg {"getPMx": "x"}
+	 * @returns true OR error
+	 */
 	async state_profile_PM(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -8572,9 +8617,12 @@ class wamo extends utils.Adapter {
 
 	}
 
-	//===================================================
-	//Profile [X] RETURNE TIME TO STANDARD PROFILE
-	//===================================================
+	/**
+	 * sets RETURNE TIME TO STANDARD PROFILE state of Profile X
+	 * @param {number} ProfileNumber - Profile number
+	 * @param {JSON} value - Value from Device eg {"getPRx": "x"}
+	 * @returns true OR error
+	 */
 	async state_profile_PR(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -8638,9 +8686,12 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-	//===================================================
-	//Profile [X] BUZZER
-	//===================================================
+	/**
+	 * sets BUZZER state of Profile X
+	 * @param {number} ProfileNumber - Profile number
+	 * @param {JSON} value - Value from Device eg {"getPRx": "x"}
+	 * @returns true OR error
+	 */
 	async state_profile_PB(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -8709,9 +8760,12 @@ class wamo extends utils.Adapter {
 
 	}
 
-	//===================================================
-	//Profile [X] LEACKAGE WARNING
-	//===================================================
+	/**
+	 * sets LEACKAGE WARNING state of Profile X
+	 * @param {number} ProfileNumber - Profile number
+	 * @param {JSON} value - Value from Device eg {"getPWx": "x"}
+	 * @returns true OR error
+	 */
 	async state_profile_PW(ProfileNumber, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -8784,8 +8838,10 @@ class wamo extends utils.Adapter {
 
 }
 
-//===================================================
-// Async Delay Funktion (you can await for delay)
+/**
+ * Async Delay Funktion (you can await for delay)
+ * @param {number} ms - Milliseconds to sleep 
+ */
 function sleep(ms) {
 	return new Promise((resolve) => {
 		setTimeout(resolve, ms);
