@@ -27,6 +27,7 @@ The POLYGONVATRO unit is,under the hood, a SYR SaveTech Connect 2422 unit but wi
 -->
 ### **WORK IN PROGRESS**
 * (smarthausleben) change all RAW states -> new role: json
+* (smarthausleben) change all RAW states -> new common.type: string
 * (smarthausleben) change state RTC -> new role: value.time
 * (smarthausleben) change state SRO -> new write: true
 * (smarthausleben) change state WFS -> new role: indicator.reachable

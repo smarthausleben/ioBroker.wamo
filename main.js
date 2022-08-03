@@ -5507,13 +5507,13 @@ class wamo extends utils.Adapter {
 		while (!gotDeviceProfileData) {
 			try {
 				// Device Profiles Initialisation
-				this.log.debug('async onReady() - initDeviceProfiles -> Getting Profiles data from device at ' + this.config.device_ip + ':' + this.config.device_port);
-				const responseInitProfiles = await this.initDeviceProfiles(this.config.device_ip, this.config.device_port);
-				this.log.debug(`[async onReady() - initDeviceProfiles -> initDeviceProfiles] Response:  ${responseInitProfiles}`);
+				this.log.debug('async onReady() - getDeviceProfilesData -> Getting Profiles data from device at ' + this.config.device_ip + ':' + this.config.device_port);
+				const responseInitProfiles = await this.getDeviceProfilesData(this.config.device_ip, this.config.device_port);
+				this.log.debug(`[async onReady() - getDeviceProfilesData -> getDeviceProfilesData] Response:  ${responseInitProfiles}`);
 				gotDeviceProfileData = true;
 			}
 			catch (err) {
-				this.log.error('initDeviceProfiles() ERROR: ' + err);
+				this.log.error('getDeviceProfilesData() ERROR: ' + err);
 				//=========================================================================================
 				//===  Connection LED to RED															===
 				//=========================================================================================
@@ -5651,7 +5651,7 @@ class wamo extends utils.Adapter {
 	 * @param {() => void} callback
 	 */
 	onUnload(callback) {
-		this.log.warn('[onUnload(callback)] was hit');
+		this.log.debug('[onUnload(callback)] was hit');
 		try {
 			schedule.gracefulShutdown();
 		} catch (err) {
@@ -5659,16 +5659,11 @@ class wamo extends utils.Adapter {
 		}
 
 		try {
-			// Here you must clear all timeouts or intervals that may still be active
-			// clearTimeout(timeout1);
-			// clearTimeout(timeout2);
-			// ...
-
+			// clear all intervals
 			clearInterval(alarm_Intervall_ID);
 			clearInterval(short_Intervall_ID);
 			clearInterval(long_Intervall_ID);
 			clearInterval(very_long_Intervall_ID);
-
 			callback();
 		} catch (e) {
 			callback();
@@ -6288,9 +6283,9 @@ class wamo extends utils.Adapter {
 	// }
 
 
-	//===================================================
-	// Timer Starten
-
+	/**
+	 * start timers
+	 */
 	async timerStarts() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -6493,7 +6488,7 @@ class wamo extends utils.Adapter {
 				if(moreMessages){this.log.info('Alarm Timer tick');}
 				// get alarmPeriode data
 				if (!interfaceBussy) {
-					await this.getData(alarmPeriod);
+					await this.getData(Object(alarmPeriod));
 					resolve(true);
 				}
 				else {
@@ -6513,7 +6508,7 @@ class wamo extends utils.Adapter {
 				if(moreMessages){this.log.info('Short Timer tick');}
 				// get longPeriode data
 				if (!interfaceBussy) {
-					await this.getData(shortPeriod);
+					await this.getData(Object(shortPeriod));
 					try {
 						await this.updateStatistics();
 					} catch (err) {
@@ -6539,7 +6534,7 @@ class wamo extends utils.Adapter {
 				if(moreMessages){this.log.info('Long Timer tick');}
 				// get longPeriode data
 				if (!interfaceBussy) {
-					await this.getData(longPeriode);
+					await this.getData(Object(longPeriode));
 					resolve(true);
 				}
 				else {
@@ -6560,9 +6555,9 @@ class wamo extends utils.Adapter {
 				// get longPeriode data
 				if (!interfaceBussy) {
 					if(moreMessages){this.log.info('Get initStates');}
-					await this.getData(initStates);
+					await this.getData(Object(initStates));
 					if(moreMessages){this.log.info('Get Device Profiles');}
-					await this.initDeviceProfiles(this.config.device_ip, this.config.device_port);
+					await this.getDeviceProfilesData(this.config.device_ip, this.config.device_port);
 					resolve(true);
 				}
 				else {
@@ -6576,8 +6571,12 @@ class wamo extends utils.Adapter {
 
 		});
 	}
-	//===================================================
-	// testing if device ist responding
+
+	/**
+	 * test if device is responding
+	 * @param {string} IPadress
+	 * @param {string} Port
+	 */
 	async devicePing(IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
 			interfaceBussy = true;
@@ -6597,23 +6596,27 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-	async getData(statesToGet) {
+	/**
+	* getting data of handet over DeviceParameter objects from device 
+	* @param {Object[]} deviceParametersToGet - Array of DeviceParameters Objects
+	*/
+	async getData(deviceParametersToGet) {
 		return new Promise(async (resolve, reject) => {
 			let parnumber = 0;
 			try {
 				// iterate through all requested Parameters
-				for (let i = 0; i < statesToGet.length; i++) {
+				for (let i = 0; i < deviceParametersToGet.length; i++) {
 					parnumber = i;
 					let DeviceParameterReturn = null;
 					let gotDeviceParameter = false;
 					while (!gotDeviceParameter) {
 						// Read out parameter from device
 						try {
-							DeviceParameterReturn = await this.get_DevieParameter(statesToGet[i], this.config.device_ip, this.config.device_port);
+							DeviceParameterReturn = await this.get_DevieParameter(deviceParametersToGet[i], this.config.device_ip, this.config.device_port);
 							gotDeviceParameter = true;
 						}
 						catch (err) {
-							this.log.error('async getData('+ statesToGet[i].id + ', ' + this.config.device_ip + ':' + this.config.device_port + ' ERROR: ' + err);
+							this.log.error('async getData('+ deviceParametersToGet[i].id + ', ' + this.config.device_ip + ':' + this.config.device_port + ' ERROR: ' + err);
 							//=================================================================================================
 							// Waiting till device is responding again
 							//=================================================================================================
@@ -6632,17 +6635,17 @@ class wamo extends utils.Adapter {
 					}
 					// Update object states
 					try {
-						await this.updateState(statesToGet[i], DeviceParameterReturn);
+						await this.updateState(deviceParametersToGet[i], DeviceParameterReturn);
 					}
 					catch (err) {
 						// something went wrong during state update
-						this.log.error('Error [updateState] ('+ statesToGet[i].id +', ' + DeviceParameterReturn + ') within [getData] ERROR: ' + err);
+						this.log.error('Error [updateState] ('+ deviceParametersToGet[i].id +', ' + DeviceParameterReturn + ') within [getData] ERROR: ' + err);
 					}
 				}
 				resolve(true);
 			} catch (err) {
 				// something else and unhandled went wrong
-				this.log.error('getData(statesToGet) -> somthing else went wrong at ID '+ statesToGet[parnumber].id +'! ERROR: ' + err);
+				this.log.error('getData(deviceParametersToGet) -> somthing else went wrong at ID '+ deviceParametersToGet[parnumber].id +'! ERROR: ' + err);
 				reject(err);
 			}
 		});
@@ -6696,7 +6699,11 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-	async initDeviceProfiles(DeviceIP, DevicePort,) {
+	/**
+	 * get data of all profiles from the device
+	 * @param {string} DeviceIP - device IP address
+	 * @param {string} DevicePort - device port number */
+	async getDeviceProfilesData(DeviceIP, DevicePort,) {
 		return new Promise(async (resolve, reject) => {
 			try {
 
@@ -6704,7 +6711,7 @@ class wamo extends utils.Adapter {
 				// alle 8 möglichen Profile durchlaufen
 				for (let ProfileNumber = 1; ProfileNumber < 9; ProfileNumber++) {
 
-					this.log.debug('[async initDeviceProfiles(DeviceIP, DevicePort)] Profil ' + ProfileNumber);
+					this.log.debug('[async getDeviceProfilesData(DeviceIP, DevicePort)] Profil ' + ProfileNumber);
 
 					const listOfParameter = [
 						'Device.Profiles.' + String(ProfileNumber) + '.PA' + String(ProfileNumber),
@@ -6717,7 +6724,7 @@ class wamo extends utils.Adapter {
 						'Device.Profiles.' + String(ProfileNumber) + '.PB' + String(ProfileNumber),
 						'Device.Profiles.' + String(ProfileNumber) + '.PW' + String(ProfileNumber)];
 
-					this.log.debug(`[initDeviceProfiles()] Profil ` + ProfileNumber);
+					this.log.debug(`[getDeviceProfilesData()] Profil ` + ProfileNumber);
 					for (const stateID of listOfParameter) {
 						const parameterIDs = stateID.split('.');
 						this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
@@ -6727,14 +6734,14 @@ class wamo extends utils.Adapter {
 							this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
 						}
 						catch (err) {
-							this.log.error('initDeviceProfiles -> Error from get_DevieProfileParameter Profile Number:' + String(ProfileNumber) + ' ParameterID:' + String(parameterIDs[parameterIDs.length - 1]));
+							this.log.error('getDeviceProfilesData -> Error from get_DevieProfileParameter Profile Number:' + String(ProfileNumber) + ' ParameterID:' + String(parameterIDs[parameterIDs.length - 1]));
 						}
 						try {
 							await this.UpdateProfileState(ProfileNumber, stateID, result);
 							this.log.debug('Profil ' + ProfileNumber + ' Parameter ' + parameterIDs[parameterIDs.length - 1]);
 						}
 						catch (err) {
-							this.log.error('initDeviceProfiles -> Error from UpdateProfileState -> Profile Number:' + String(ProfileNumber) + ' stateID:' + String(stateID) + ' ParameterID:' + String(parameterIDs[parameterIDs.length - 1]));
+							this.log.error('getDeviceProfilesData -> Error from UpdateProfileState -> Profile Number:' + String(ProfileNumber) + ' stateID:' + String(stateID) + ' ParameterID:' + String(parameterIDs[parameterIDs.length - 1]));
 						}
 					}
 				}
@@ -6747,11 +6754,12 @@ class wamo extends utils.Adapter {
 	}
 	//===================================================
 
-	//=============================================================================
-	// Diese Funktion speichert das übergebene'Value' im entsprechenden State
-	// der in 'stateID' übergebenen Struktur
-	//=============================================================================
-	async updateState(stateID, value) {
+	/**
+	 * updates states value to DeviceParameter
+	 * @param {Object} deviceParameterToUpdate - DeviceParameter Object
+	 * @param {JSON} deviceValue - JSON return value from Device eg {"getCND": "269"}
+	 * @returns true if OK or error */
+	async updateState(deviceParameterToUpdate, deviceValue) {
 		return new Promise(async (resolve, reject) => {
 			try {
 
@@ -6759,24 +6767,23 @@ class wamo extends utils.Adapter {
 				let cur_StatePath;		// State Path
 
 				// Parameter ID ermitteln, wenn nciht vorhanden, Error auslösen und abbrechen
-				if (stateID == null) { reject('[async updateState(stateID, value)] stateID is null'); }
+				if (deviceParameterToUpdate == null) { reject('[async updateState(deviceParameterToUpdate, deviceValue)] deviceParameterToUpdate is null'); }
 
-
-				if ('id' in stateID) {
-					if (stateID.id == null || stateID.id == '') { reject(String(stateID) + ' [async updateState(stateID, value)] has no valid [id] key (null or empty)'); }
-					cur_ParameterID = stateID.id;
+				if ('id' in deviceParameterToUpdate) {
+					if (deviceParameterToUpdate.id == null || deviceParameterToUpdate.id == '') { reject(String(deviceParameterToUpdate) + ' [async updateState(deviceParameterToUpdate, deviceValue)] has no valid [id] key (null or empty)'); }
+					cur_ParameterID = deviceParameterToUpdate.id;
 					this.log.debug('id key Value is: ' + cur_ParameterID);
 				} else {
-					reject(String(stateID) + ' [async updateState(stateID, value)] has no [id] key');
+					reject(String(deviceParameterToUpdate) + ' [async updateState(deviceParameterToUpdate, deviceValue)] has no [id] key');
 				}
 
 				// Den Pafad des States ermittlen -> wenn nicht vorhanden, Error auslösen und abbrechen
-				if ('statePath' in stateID) {
-					if (stateID.statePath == null || stateID.statePath == '') { reject(String(stateID) + ' [async updateState(stateID, value)] has no valid (statePath) key'); }
-					cur_StatePath = stateID.statePath;
+				if ('statePath' in deviceParameterToUpdate) {
+					if (deviceParameterToUpdate.statePath == null || deviceParameterToUpdate.statePath == '') { reject(String(deviceParameterToUpdate) + ' [async updateState(deviceParameterToUpdate, deviceValue)] has no valid (statePath) key'); }
+					cur_StatePath = deviceParameterToUpdate.statePath;
 					this.log.debug('(statePath) key Value is: ' + cur_StatePath);
 				} else {
-					reject(String(stateID) + ' [async updateState(stateID, value)] has no id statePath');
+					reject(String(deviceParameterToUpdate) + ' [async updateState(deviceParameterToUpdate, deviceValue)] has no id statePath');
 				}
 
 				// Path for state object
@@ -6795,11 +6802,11 @@ class wamo extends utils.Adapter {
 				}
 
 				try {
-					await this.setObjectNotExistsAsync(state_ID, stateID.objectdefinition);
-					this.log.debug('stateID.objectdefinition.common.type = ' + stateID.objectdefinition.common.type);
+					await this.setObjectNotExistsAsync(state_ID, deviceParameterToUpdate.objectdefinition);
+					this.log.debug('deviceParameterToUpdate.objectdefinition.common.type = ' + deviceParameterToUpdate.objectdefinition.common.type);
 				}
 				catch (err) {
-					this.log.error('updateState -> await this.setObjectNotExistsAsync(state_ID, stateID.objectdefinition) returned ERROR: ' + err);
+					this.log.error('updateState -> await this.setObjectNotExistsAsync(state_ID, deviceParameterToUpdate.objectdefinition) returned ERROR: ' + err);
 				}
 				// Path for RAW state object
 				const state_ID_RAW = adapterChannels.DeviceRawData.path + '.' + cur_ParameterID;
@@ -6810,7 +6817,7 @@ class wamo extends utils.Adapter {
 					common: {
 						name: {
 						},
-						type: 'json',
+						type: 'string',
 						unit: null,
 						role: 'json',
 						read: true,
@@ -6818,53 +6825,53 @@ class wamo extends utils.Adapter {
 					},
 					native: {}
 				};
-				raw_objectdefinition.common.name = stateID.objectdefinition.common.name;
+				raw_objectdefinition.common.name = deviceParameterToUpdate.objectdefinition.common.name;
 				try {
 					await this.setObjectNotExistsAsync(state_ID_RAW, Object(raw_objectdefinition));
-					this.log.debug('RAW stateID.objectdefinition.common.type = ' + raw_objectdefinition);
+					this.log.debug('RAW deviceParameterToUpdate.objectdefinition.common.type = ' + raw_objectdefinition);
 				}
 				catch (err) {
 					this.log.error('updateState -> await this.setObjectNotExistsAsync(state_ID_RAW, Object(raw_objectdefinition) returned ERROR: ' + err);
 				}
 				// save RAW State
 				try {
-					this.setStateAsync(state_ID_RAW, { val: JSON.stringify(value), ack: true });
+					this.setStateAsync(state_ID_RAW, { val: JSON.stringify(deviceValue), ack: true });
 				}
 				catch (err) {
-					this.log.error('[async updateState(stateID, value)] ERROR saving RAW state. State ID=' + String(state_ID_RAW) + ' Value=' + String(value));
+					this.log.error('[async updateState(deviceParameterToUpdate, deviceValue)] ERROR saving RAW state. State ID=' + String(state_ID_RAW) + ' Value=' + String(deviceValue));
 				}
 
 				// convert into final value
 				let finalValue;
 				try {
-					finalValue = await this.convertDeviceReturnValue(stateID.id, value['get' + stateID.id]);
+					finalValue = await this.convertDeviceReturnValue(deviceParameterToUpdate.id, deviceValue['get' + deviceParameterToUpdate.id]);
 					this.log.debug('finalValue = ' + String(finalValue));
 				}
 				catch (err) {
-					this.log.error('[async updateState(stateID, value)] Error: ' + String(err));
+					this.log.error('[async updateState(deviceParameterToUpdate, deviceValue)] Error: ' + String(err));
 					reject(err);
 				}
 
-				switch (stateID.objectdefinition.common.type) {
+				switch (deviceParameterToUpdate.objectdefinition.common.type) {
 					case 'number':
-						this.log.debug('[async updateState(stateID, value)] value is NUMBER');
+						this.log.debug('[async updateState(deviceParameterToUpdate, deviceValue)] value is NUMBER');
 						this.setStateAsync(state_ID, { val: parseFloat(String(finalValue)), ack: true });
 						break;
 					default:
 						// handle as string
-						this.log.debug('[async updateState(stateID, value)] value is STRING');
+						this.log.debug('[async updateState(deviceParameterToUpdate, deviceValue)] value is STRING');
 						this.setStateAsync(state_ID, { val: String(finalValue), ack: true });
 				}
 
-				if (stateID.objectdefinition.common.unit !== null) {
-					this.log.debug('[async updateState(stateID, value)] info: ' + String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue) + ' ' + String(stateID.objectdefinition.common.unit));
+				if (deviceParameterToUpdate.objectdefinition.common.unit !== null) {
+					this.log.debug('[async updateState(deviceParameterToUpdate, deviceValue)] info: ' + String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue) + ' ' + String(deviceParameterToUpdate.objectdefinition.common.unit));
 				}
 				else {
-					this.log.debug('[async updateState(stateID, value)] info: ' + String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
+					this.log.debug('[async updateState(deviceParameterToUpdate, deviceValue)] info: ' + String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
 				}
 				resolve(true);
 			} catch (err) {
-				this.log.error('[async updateState(stateID, value)] Error: ' + String(err));
+				this.log.error('[async updateState(deviceParameterToUpdate, deviceValue)] Error: ' + String(err));
 				reject(err);
 			}
 		});
@@ -7468,6 +7475,9 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	//==========================================================
+	// brings device into FACTORY mode
+	//==========================================================
 	async set_FACTORY_Mode() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -7505,6 +7515,9 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	//==========================================================
+	// brings device into SERVICE mode
+	//==========================================================
 	async set_SERVICE_Mode() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -7542,6 +7555,9 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	//==========================================================
+	// brings device back into USER mode
+	//==========================================================
 	async clear_SERVICE_FACTORY_Mode() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -7579,7 +7595,7 @@ class wamo extends utils.Adapter {
 	}
 
 	//=============================================================================
-	// here we generate the additional messages if this option is aktive in the
+	// generate the additional log messages if the option is aktive in
 	// adapter settings
 	//=============================================================================
 	async moremessages(ParameterStruct, value) {
@@ -7595,7 +7611,7 @@ class wamo extends utils.Adapter {
 				const Name = ParameterStruct.objectdefinition.common.name[nameWish];
 				const Unit = ParameterStruct.objectdefinition.common.unit;
 				if (Unit !== null) {
-					this.log.info(ID + ' - ' + Name + ': ' + String(value) + ' ' + Unit);
+					this.log.info(ID + ' - ' + Name + ': ' + String(value) + ' ' + String(Unit));
 				} else {
 					this.log.info(ID + ' - ' + Name + ': ' + String(value));
 				}
@@ -7605,6 +7621,7 @@ class wamo extends utils.Adapter {
 			}
 		});
 	}
+
 	//=============================================================================
 	// here we do a part of the math for the statistics
 	//=============================================================================
@@ -7631,8 +7648,10 @@ class wamo extends utils.Adapter {
 				// getting states
 				try {
 					lastTotalvalueState = await this.getStateAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id);
-					// pulling values from state if state already existed
-					lastTotalValue = parseFloat(lastTotalvalueState.val);
+					if((lastTotalvalueState != null) && (lastTotalvalueState.val != null)){
+						// pulling values from state if state already existed
+						lastTotalValue = parseFloat(String(lastTotalvalueState.val));
+					}
 				}
 				catch (err) {
 					this.log.error('async updateStatistics() -> lastTotalvalueState = await this.getStateAsync(StatisticStates.TotalLastValue.statePath + \'.\' + StatisticStates.TotalLastValue.id) -> returned ERROR: ' + err);
@@ -7640,8 +7659,10 @@ class wamo extends utils.Adapter {
 
 				try {
 					currentTotalvalueState = await this.getStateAsync(DeviceParameters.TotalVolume.statePath + '.' + DeviceParameters.TotalVolume.id);
-					// pulling values from state if state already existed
-					currentTotalValue = parseFloat(currentTotalvalueState.val) * 1000;
+					if((currentTotalvalueState != null) && (currentTotalvalueState.val != null)){
+						// pulling values from state if state already existed
+						currentTotalValue = parseFloat(String(currentTotalvalueState.val)) * 1000;
+					}
 				}
 				catch (err) {
 					this.log.error('async updateStatistics() -> currentTotalvalueState = await this.getStateAsync(DeviceParameters.TotalVolume.statePath + \'.\' + DeviceParameters.TotalVolume.id) -> returned ERROR: ' + err);
@@ -7649,8 +7670,10 @@ class wamo extends utils.Adapter {
 
 				try {
 					current_Day_valueState = await this.getStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id);
-					// pulling values from state if state already existed
-					current_Day = parseFloat(current_Day_valueState.val);
+					if((current_Day_valueState != null) && (current_Day_valueState.val != null)){
+						// pulling values from state if state already existed
+						current_Day = parseFloat(String(current_Day_valueState.val));
+					}
 				}
 				catch (err) {
 					this.log.error('async updateStatistics() -> current_Day_valueState = await this.getStateAsync(StatisticStates.TotalDay.statePath + \'.\' + StatisticStates.TotalDay.id) -> returned ERROR: ' + err);
@@ -7658,8 +7681,10 @@ class wamo extends utils.Adapter {
 
 				try {
 					current_Week_valueState = await this.getStateAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id);
-					// pulling values from state if state already existed
-					current_Week = parseFloat(current_Week_valueState.val);
+					if((current_Week_valueState != null) && (current_Week_valueState.val != null)){
+						// pulling values from state if state already existed
+						current_Week = parseFloat(String(current_Week_valueState.val));
+					}
 				}
 				catch (err) {
 					this.log.error('async updateStatistics() -> current_Week_valueState = await this.getStateAsync(StatisticStates.TotalWeek.statePath + \'.\' + StatisticStates.TotalWeek.id) -> returned ERROR: ' + err);
@@ -7667,8 +7692,10 @@ class wamo extends utils.Adapter {
 
 				try {
 					current_Month_valueState = await this.getStateAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id);
-					// pulling values from state if state already existed
-					current_Month = parseFloat(current_Month_valueState.val);
+					if((current_Month_valueState != null) && (current_Month_valueState.val != null)){
+						// pulling values from state if state already existed
+						current_Month = parseFloat(String(current_Month_valueState.val));
+					}
 				}
 				catch (err) {
 					this.log.error('async updateStatistics() -> current_Month_valueState = await this.getStateAsync(StatisticStates.TotalMonth.statePath + \'.\' + StatisticStates.TotalMonth.id) -> returned ERROR: ' + err);
@@ -7676,8 +7703,10 @@ class wamo extends utils.Adapter {
 
 				try {
 					current_Year_valueState = await this.getStateAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id);
-					// pulling values from state if state already existed
-					current_Year = parseFloat(current_Year_valueState.val);
+					if((current_Year_valueState != null) && (current_Year_valueState.val != null)){
+						// pulling values from state if state already existed
+						current_Year = parseFloat(String(current_Year_valueState.val));
+					}
 				}
 				catch (err) {
 					this.log.error('async updateStatistics() -> current_Year_valueState = await this.getStateAsync(StatisticStates.TotalYear.statePath + \'.\' + StatisticStates.TotalYear.id) -> returned ERROR: ' + err);
@@ -7858,6 +7887,7 @@ class wamo extends utils.Adapter {
 			}
 		});
 	}
+
 	//=========================================================================
 	// Reads out all Profiles, generates and/ore updates state objects
 	//=========================================================================
@@ -7907,12 +7937,12 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-	//===================================================
-	// Pulls the Information from the Device
+	//=========================================================================
+	// Pulls the Information from the device
 	// ParameterID: API command Parameter (last instance of the State path)
 	// IPadress: Device IP Adress
 	// Port: Device Port
-	//===================================================
+	//=========================================================================
 	// Return: Readed Value from Device (JSON Format)
 	async get_DevieParameter(Parameter, IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
