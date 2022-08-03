@@ -1848,7 +1848,7 @@ const DeviceParameters = {
 				},
 				type: 'string',
 				unit: null,
-				role: 'state',
+				role: 'indicator.reachable',
 				read: true,
 				write: false
 			},
@@ -2269,7 +2269,7 @@ const DeviceParameters = {
 				},
 				type: 'string',
 				unit: null,
-				role: 'state',
+				role: 'info.serial',
 				read: true,
 				write: false
 			},
@@ -2300,7 +2300,7 @@ const DeviceParameters = {
 				},
 				type: 'string',
 				unit: null,
-				role: 'info.address',
+				role: 'info.ip',
 				read: true,
 				write: false
 			},
@@ -2393,7 +2393,7 @@ const DeviceParameters = {
 				},
 				type: 'string',
 				unit: null,
-				role: 'state',
+				role: 'info.firmware',
 				read: true,
 				write: false
 			},
@@ -2517,7 +2517,7 @@ const DeviceParameters = {
 				},
 				type: 'string',
 				unit: null,
-				role: 'info.code',
+				role: 'value.valve',
 				read: true,
 				write: false
 			},
@@ -5754,7 +5754,7 @@ class wamo extends utils.Adapter {
 				}
 			}
 			//============================================================================
-			// Shutoff valve
+			// Leakage protection deactivation time
 			//============================================================================
 			else if((id == statePrefix + DeviceParameters.LeakProtectionTemporaryDeactivation.statePath + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id) && state.ack == false)
 			{
@@ -5768,7 +5768,7 @@ class wamo extends utils.Adapter {
 				const offTime = new Date(tempDisabledSeconds * 1000).toISOString().substring(11, 19);
 
 				if(tempDisabledSeconds == 0) {this.log.info('Command: [TMP] Leakage protection is aktive');}
-				else{this.log.warn('Command: [TMP] Leakage protection temporary disabled for ' + offTime);}
+				else{this.log.warn('Command: [TMP] Leakage protection temporary disabled for ' + offTime + ' (hh:mm:ss)');}
 			}
 			//============================================================================
 			// Selected Profile
