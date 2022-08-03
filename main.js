@@ -1254,9 +1254,11 @@ const DeviceParameters = {
 				},
 				type: 'number',
 				unit: 's',
-				role: 'state',
+				role: 'level.timer',
+				min: 0,
+				max: 4294967295,
 				read: true,
-				write: false
+				write: true
 			},
 			native: {}
 		},
@@ -1287,7 +1289,7 @@ const DeviceParameters = {
 				unit: null,
 				role: 'level.valve',
 				read: true,
-				write: false
+				write: true
 			},
 			native: {}
 		},
@@ -5738,7 +5740,7 @@ class wamo extends utils.Adapter {
 								this.log.info('Command: [AB] Shutoff valve OPENED');
 							}
 							else{
-								this.log.info('Command: [AB] Shutoff valve CLOSED');
+								this.log.warn('Command: [AB] Shutoff valve CLOSED');
 							}
 						}
 						catch(err){
@@ -5749,6 +5751,25 @@ class wamo extends utils.Adapter {
 						this.log.error(String(state.val) + ' is not valid for ' + String(DeviceParameters.ScreenRotation.id + ' Valid values: 1=open 2=closed'));
 						break;
 				}
+			}
+			//============================================================================
+			// Shutoff valve
+			//============================================================================
+			else if((id == statePrefix + DeviceParameters.LeakProtectionTemporaryDeactivation.statePath + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id) && state.ack == false)
+			{
+				try{
+					await this.set_DevieParameter(DeviceParameters.LeakProtectionTemporaryDeactivation, state.val, this.config.device_ip, this.config.device_port);
+				}
+				catch(err){
+					this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.LeakProtectionTemporaryDeactivation ... ERROR: ' + err);
+				}
+				const tempDisabledSeconds = parseFloat(String(state.val));
+				let offTime = null;
+				if(tempDisabledSeconds < 3600){offTime = new Date(tempDisabledSeconds * 1000).toISOString().substring(14, 19);}
+				else{offTime = new Date(tempDisabledSeconds * 1000).toISOString().substring(11, 16);}
+
+				if(tempDisabledSeconds == 0) {this.log.info('Command: [TMP] Leakage protection is aktive');}
+				else{this.log.warn('Command: [TMP] Leakage protection temporary disabled for ' + offTime);}
 			}
 			//============================================================================
 			// Selected Profile

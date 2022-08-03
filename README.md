@@ -32,6 +32,7 @@ The POLYGONVATRO unit is,under the hood, a SYR SaveTech Connect 2422 unit but wi
 * (smarthausleben) change info messages on profile readout will only be showen if option "more loging messages" is enabled  
 * (smarthausleben) change to Admin 5  
 * (smarthausleben) add adapter connection status will be updated if device ins reachable/unreachable
+* (smarthausleben) added State TMP - Leak protection temporary deactivation is now changeable
 
 ### 0.2.0 (2022.07.28)
 * (smarthausleben) change Profile states data type - All old Profile state objects need to be deleted first
