@@ -780,7 +780,7 @@ const DeviceParameters = {
 				unit: '°',
 				role: 'state',
 				read: true,
-				write: false
+				write: true
 			},
 			native: {}
 		},
@@ -2835,7 +2835,7 @@ const DeviceParameters = {
 				},
 				type: 'string',
 				unit: null,
-				role: 'state',
+				role: 'value.time',
 				read: true,
 				write: false
 			},
@@ -6812,7 +6812,7 @@ class wamo extends utils.Adapter {
 						},
 						type: 'json',
 						unit: null,
-						role: 'state',
+						role: 'json',
 						read: true,
 						write: false
 					},
