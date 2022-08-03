@@ -1256,7 +1256,7 @@ const DeviceParameters = {
 				unit: 's',
 				role: 'level.timer',
 				min: 0,
-				max: 4294967295,
+				max: 65535,
 				read: true,
 				write: true
 			},
@@ -5765,9 +5765,7 @@ class wamo extends utils.Adapter {
 					this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.LeakProtectionTemporaryDeactivation ... ERROR: ' + err);
 				}
 				const tempDisabledSeconds = parseFloat(String(state.val));
-				let offTime = null;
-				if(tempDisabledSeconds < 3600){offTime = new Date(tempDisabledSeconds * 1000).toISOString().substring(14, 19);}
-				else{offTime = new Date(tempDisabledSeconds * 1000).toISOString().substring(11, 16);}
+				const offTime = new Date(tempDisabledSeconds * 1000).toISOString().substring(11, 19);
 
 				if(tempDisabledSeconds == 0) {this.log.info('Command: [TMP] Leakage protection is aktive');}
 				else{this.log.warn('Command: [TMP] Leakage protection temporary disabled for ' + offTime);}
