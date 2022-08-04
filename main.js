@@ -6272,9 +6272,11 @@ class wamo extends utils.Adapter {
 				if(moreMessages){this.log.info('Long timer initialized');}
 
 				try {
-					await sleep(2000); // Warten um einen Versatz zu erzeugen
+					const retVal = await sleep(2000); // Warten um einen Versatz zu erzeugen
+					this.log.error('Sleep return:' + String(retVal));
 				}
 				catch (err) {
+
 					this.log.error('await sleep(3000) ERROR: ' + err);
 				}
 				very_long_Intervall_ID = this.setInterval(very_long_poll, parseInt(this.config.device_very_long_poll_interval) * 1000);
@@ -8804,11 +8806,11 @@ class wamo extends utils.Adapter {
 
 /**
  * Async Delay Funktion (you can await for delay)
- * @param {number} ms - Milliseconds to sleep 
+ * @param {number} ms - Milliseconds to sleep
  */
 function sleep(ms) {
 	return new Promise((resolve) => {
-		setTimeout(resolve, ms);
+		return setTimeout(resolve, ms);
 	});
 }
 
