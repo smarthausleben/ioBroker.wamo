@@ -5,7 +5,7 @@
     ## **WORK IN PROGRESS**
 -->
 
-## **WORK IN PROGRESS**
+## 0.2.3 (2022-08-04)
 * (smarthausleben) Admin 5 support, TMP changable, connection status
 
 ## 0.2.2 (2022-08-04)

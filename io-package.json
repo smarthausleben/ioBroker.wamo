@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "wamo",
-        "version": "0.2.0",
+        "version": "0.2.3",
         "news": {
+            "0.2.3": {
+                "en": "Admin 5 support, TMP changable, connection status",
+                "de": "Admin 5 Unterstützung, TMP changbar, Verbindungsstatus",
+                "ru": "Admin 5 поддержка, TMP changable, статус соединения",
+                "pt": "Admin 5 suporte, TMP changable, status de conexão",
+                "nl": "Admin 5 steun, TMP changable, connectie status",
+                "fr": "Admin 5 support, TMP changable, état de connexion",
+                "it": "Admin 5 supporto, TMP pugilato, stato di connessione",
+                "es": "Soporte de Admin 5, changable TMP, estado de conexión",
+                "pl": "Admin 5 obsługuje TMP changable, status połączenia",
+                "zh-cn": "突出5种支持,TMPuggangable,联系地位"
+            },
             "0.2.0": {
                 "en": "All parameters in the profile section can now be changed and the active Profile “PRF” is now also changeable, so you can select the active profile.",
                 "de": "Alle Parameter im Profilabschnitt können nun geändert werden und das aktive Profil „PRF“ ist nun auch änderbar, so dass Sie das aktive Profil auswählen können.",
@@ -14,7 +26,7 @@
                 "es": "Todos los parámetros de la sección de perfil ahora se pueden cambiar y el perfil activo “PRF” es ahora también cambiante, por lo que puede seleccionar el perfil activo.",
                 "pl": "Wszystkie parametry w sekcji profilu mogą być obecnie zmieniane, a aktywny profil „PRF” jest obecnie zmienny, więc można wybrać profil aktywny.",
                 "zh-cn": "简介科的所有参数现在可以改变,目前积极的“PRF”是可以改变的,因此你可以选择积极的形象。."
-            }            
+            }
         },
         "titleLang": {
             "en": "wamo",
