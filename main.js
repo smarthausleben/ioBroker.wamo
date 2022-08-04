@@ -55,6 +55,9 @@ let SystemLanguage;
 const connectionRetrys = 5;
 const connectionRetryPause = 3000;
 
+/**
+ * [Objects] Adapter chanels definition
+ */
 const adapterChannels = {
 	DeviceRawData: {
 		path: 'Device.RawData',
@@ -415,6 +418,10 @@ const adapterChannels = {
 	},
 };
 
+/**
+ * [Objects] Calculatet values
+ * including state definition
+ */
 const calculatedStates = {
 	germanWaterHardness: {
 		id: 'GHARDNESS',
@@ -476,6 +483,10 @@ const calculatedStates = {
 	},
 };
 
+/**
+ * [Objects] Calculatet statistic values
+ * including state definition
+ */
 const StatisticStates = {
 	TotalLastValue: {
 		id: 'TLV',
@@ -757,7 +768,11 @@ const StatisticStates = {
 		writeCommand: null
 	},
 };
-// Object all possible device commands
+
+/**
+ * [Objects] Device Settings and Parameter definitions
+ * including state definition
+ */
 const DeviceParameters = {
 	ScreenRotation: {
 		id: 'SRO',
@@ -5271,7 +5286,11 @@ const DeviceParameters = {
 	},
 };
 
-
+/**
+ * Array of 'DeviceParameters' objects
+ * This states and parameters will be pulled / calculated during adapter startup
+ * and during "Very long timer" event
+ */
 const initStates = [
 	DeviceParameters.FirmwareVersion,
 	DeviceParameters.IPAddress,
@@ -5302,14 +5321,25 @@ const initStates = [
 	DeviceParameters.MicroLeakageTest,
 	DeviceParameters.MicroLeakageTestPeriod,
 	DeviceParameters.BuzzerOnAlarm,
-	DeviceParameters.LeakageNotificationWarningThreshold];
+	DeviceParameters.LeakageNotificationWarningThreshold
+];
 
+/**
+ * Array of 'DeviceParameters' objects
+ * This states and parameters will be pulled / calculated
+ * during "Alarm timer" event
+ */
 const alarmPeriod = [
 	DeviceParameters.CurrentAlarmStatus,
 	DeviceParameters.CurrentValveStatus,
 	DeviceParameters.ShutOff
 ];
 
+/**
+ * Array of 'DeviceParameters' objects
+ * This states and parameters will be pulled / calculated
+ * during "Short timer" event
+ */
 const shortPeriod = [
 	DeviceParameters.WaterTemperature,
 	DeviceParameters.WaterConductivity,
@@ -5319,8 +5349,14 @@ const shortPeriod = [
 	DeviceParameters.TotalVolume,
 	DeviceParameters.CurrentVolume,
 	DeviceParameters.WaterFlow,
-	DeviceParameters.TurbineNoPulseTime];
+	DeviceParameters.TurbineNoPulseTime
+];
 
+/**
+ * Array of 'DeviceParameters' objects
+ * This states and parameters will be pulled / calculated
+ * during "Long timer" event
+ */
 const longPeriode = [
 	DeviceParameters.ScreenRotation,
 	DeviceParameters.FirmwareCheck,
@@ -5334,28 +5370,25 @@ const longPeriode = [
 	DeviceParameters.MicroLeakageTestPeriod,
 	DeviceParameters.BuzzerOnAlarm,
 	DeviceParameters.LeakageNotificationWarningThreshold,
-	DeviceParameters.ValveTestOngoing];
+	DeviceParameters.ValveTestOngoing
+];
 
-//============================================================================
-//=== Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln       ===
-//============================================================================
+/**
+ * Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln
+ */
 axios.interceptors.request.use(x => {
 	x.meta = x.meta || {};
 	x.meta.requestStartedAt = new Date().getTime();
 	return x;
 });
 
+/**
+ * Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln
+ */
 axios.interceptors.response.use(x => {
 	x.responseTime = new Date().getTime() - x.config.meta.requestStartedAt;
 	return x;
 });
-//============================================================================
-
-
-// Load your modules here, e.g.:
-// const fs = require("fs");
-
-// ein Kommentar von mir
 
 class wamo extends utils.Adapter {
 
@@ -5380,15 +5413,13 @@ class wamo extends utils.Adapter {
 	 * Is called when databases are connected and adapter received configuration.
 	 */
 	async onReady() {
-		/* Umrechnung in Härte
-		eine Quelle besagt, dass 33µS/cm in etwa 1° deutscher Härte entspricht
-		*/
 
 		// The adapters config (in the instance object everything under the attribute "native") is accessible via
 		// this.config:
 		this.log.debug('config Device IP: ' + this.config.device_ip);
 		this.log.debug('config Device Port: ' + this.config.device_port);
-		moreMessages = this.config.moremessages;
+		this.moreMessages = this.config.moremessages;
+		this.log.debug('More log messages: ' + String(this.config.moremessages));
 
 		//=================================================================================================
 		// getting system language
@@ -5421,7 +5452,7 @@ class wamo extends utils.Adapter {
 
 
 		//=================================================================================================
-		// Test if Device is responding
+		// Test if device is responding
 		//=================================================================================================
 		pingOK = false;
 		while (!pingOK) {
@@ -5455,12 +5486,15 @@ class wamo extends utils.Adapter {
 		while (!gotDeviceData) {
 			try {
 				this.log.debug('async onReady() - initComckeck -> Getting data from device at ' + this.config.device_ip + ':' + this.config.device_port);
-				const responseInit = await this.initDevice();
-				this.log.debug(`[async onReady() - initComckeck -> initDevice] Response:  ${responseInit}`);
+				//==================================================================
+				//= Getting all datas for 'DeviceParameters' in [const initStates] =
+				//==================================================================
+				if(moreMessages){this.log.info('reading DeviceParameters in [initStates]');}
+				await this.getData(initStates);
 				gotDeviceData = true;
 			}
 			catch (err) {
-				this.log.error('initDevice() ERROR: ' + err);
+				this.log.error('this.getData(initStates) ERROR: ' + err);
 
 				//=========================================================================================
 				//===  Connection LED to RED															===
@@ -5508,6 +5542,9 @@ class wamo extends utils.Adapter {
 			try {
 				// Device Profiles Initialisation
 				this.log.debug('async onReady() - getDeviceProfilesData -> Getting Profiles data from device at ' + this.config.device_ip + ':' + this.config.device_port);
+				//===============================================
+				//= Getting all Profile 'DeviceParameters' data =
+				//===============================================
 				const responseInitProfiles = await this.getDeviceProfilesData(this.config.device_ip, this.config.device_port);
 				this.log.debug(`[async onReady() - getDeviceProfilesData -> getDeviceProfilesData] Response:  ${responseInitProfiles}`);
 				gotDeviceProfileData = true;
@@ -5552,9 +5589,9 @@ class wamo extends utils.Adapter {
 			}
 		}
 
-		//=================================================================================================
-		//===  Timer starten																			===
-		//=================================================================================================
+		//=========================
+		//===  Timer starten	===
+		//=========================
 		try {
 			const tmstarted = await this.timerStarts();
 			this.log.debug('Timers started - result: ' + String(tmstarted));
@@ -5562,21 +5599,6 @@ class wamo extends utils.Adapter {
 			this.log.error('Timer start error ... exit');
 			return;
 		}
-
-		/*
-		// ==================================================================================================================
-		// =======                                 TESTING															  =======
-		// ==================================================================================================================
-		this.log.debug('Neue update Funktion Testen');
-		try {
-			await this.updateState(DeviceParameters.TestDefinition, 224);
-		}
-		catch (err) {
-			this.log.error(`[updateState(DeviceParameters.TestDefinition, '224')] error: ${err}`);
-		}
-		// ==================================================================================================================
-		*/
-
 		/*
 		For every state in the system there has to be also an object of type state
 		Here a simple template for a boolean variable named "testVariable"
@@ -5595,49 +5617,15 @@ class wamo extends utils.Adapter {
 		});
 		*/
 
-		// In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
-		this.subscribeStates(DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id);
-		this.subscribeStates(DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id);
-		this.subscribeStates(DeviceParameters.LeakProtectionTemporaryDeactivation.statePath  + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id);
-		this.subscribeStates(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id);
-		this.subscribeStates(adapterChannels.DevicePofiles.path + '.*');
-		// You can also add a subscription for multiple states. The following line watches all states starting with "lights."
-		// this.subscribeStates('lights.*');
-		// Or, if you really must, you can also watch all states. Don't do this if you don't need to. Otherwise this will cause a lot of unnecessary load on the system:
-		// this.subscribeStates('*');
+		//=====================================
+		//=== Subscribe to changable states ===
+		//=====================================
 
-		/*
-			setState examples
-			you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
-		*/
-		// the variable testVariable is set to true as command (ack=false)
-		//await this.setStateAsync('testVariable', true);
-
-		// same thing, but the value is flagged "ack"
-		// ack should be always set to true if the value is received from or acknowledged from the target system
-		//await this.setStateAsync('testVariable', { val: true, ack: true });
-
-		// same thing, but the state is deleted after 30s (getState will return null afterwards)
-		//await this.setStateAsync('testVariable', { val: true, ack: true, expire: 30 });
-
-		// examples for the checkPassword/checkGroup functions
-		/*
-		try {
-			const result = await this.checkPasswordAsync('admin', 'iobroker');
-			this.log.debug('check user admin pw iobroker: ' + result);
-		}
-		catch (err) {
-			this.log.error('checkPasswordAsync -> ERROR: ' + err);
-		}
-
-		try {
-			const result = await this.checkGroupAsync('admin', 'admin');
-			this.log.debug('check group user admin group admin: ' + result);
-		}
-		catch (err) {
-			this.log.error('checkGroupAsync -> ERROR: ' + err);
-		}
-		*/
+		this.subscribeStates(DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id); // [SRO] Screen Rotation
+		this.subscribeStates(DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id); // [AB] Shutoff valve
+		this.subscribeStates(DeviceParameters.LeakProtectionTemporaryDeactivation.statePath  + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id);// [TMP] temporary protection deactivation 
+		this.subscribeStates(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id); // [PRF] Selected profile
+		this.subscribeStates(adapterChannels.DevicePofiles.path + '.*'); // ALL profile states
 
 		// reference to Adapter
 		myAdapter = this;
@@ -5669,23 +5657,6 @@ class wamo extends utils.Adapter {
 			callback();
 		}
 	}
-
-	// If you need to react to object changes, uncomment the following block and the corresponding line in the constructor.
-	// You also need to subscribe to the objects with `this.subscribeObjects`, similar to `this.subscribeStates`.
-	// /**
-	//  * Is called if a subscribed object changes
-	//  * @param {string} id
-	//  * @param {ioBroker.Object | null | undefined} obj
-	//  */
-	// onObjectChange(id, obj) {
-	// 	if (obj) {
-	// 		// The object was changed
-	// 		this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
-	// 	} else {
-	// 		// The object was deleted
-	// 		this.log.info(`object ${id} deleted`);
-	// 	}
-	// }
 
 	/**
 	 * Is called if a subscribed state changes
@@ -6264,25 +6235,6 @@ class wamo extends utils.Adapter {
 		}
 	}
 
-	// If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
-	// /**
-	//  * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
-	//  * Using this method requires "common.messagebox" property to be set to true in io-package.json
-	//  * @param {ioBroker.Message} obj
-	//  */
-	// onMessage(obj) {
-	// 	if (typeof obj === 'object' && obj.message) {
-	// 		if (obj.command === 'send') {
-	// 			// e.g. send email or pushover or whatever
-	// 			this.log.info('send command');
-
-	// 			// Send response in callback if required
-	// 			if (obj.callback) this.sendTo(obj.from, obj.command, 'Message received', obj.callback);
-	// 		}
-	// 	}
-	// }
-
-
 	/**
 	 * start timers
 	 */
@@ -6335,8 +6287,10 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-	//===================================================
-	// Cron EVENTS
+	/**
+	 * Cron event handler
+	 * [daily]
+	 */
 	async alarm_cron_day_Tick() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -6393,6 +6347,10 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	/**
+	 * Cron event handler
+	 * [weekly]
+	 */
 	async alarm_cron_week_Tick() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -6422,6 +6380,10 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	/**
+	 * Cron event handler
+	 * [monthly]
+	 */
 	async alarm_cron_month_Tick() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -6451,6 +6413,10 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	/**
+	 * Cron event handler
+	 * [yearly]
+	 */
 	async alarm_cron_year_Tick() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -6480,8 +6446,10 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-	//===================================================
-	// Timer EVENTS
+	/**
+	 * Timer event handler
+	 * [alarm]
+	 */
 	async alarm_TimerTick() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -6502,6 +6470,10 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	/**
+	 * Timer event handler
+	 * [short]
+	 */
 	async short_TimerTick() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -6528,6 +6500,10 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	/**
+	 * Timer event handler
+	 * [long]
+	 */
 	async long_TimerTick() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -6548,6 +6524,10 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	/**
+	 * Timer event handler
+	 * [very long]
+	 */
 	async very_long_TimerTick() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -6597,7 +6577,7 @@ class wamo extends utils.Adapter {
 	}
 
 	/**
-	* getting data of handet over DeviceParameter objects from device 
+	* getting data from device according DeviceParameter Array
 	* @param {Object[]} deviceParametersToGet - Array of DeviceParameters Objects
 	*/
 	async getData(deviceParametersToGet) {
@@ -6651,8 +6631,10 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-	//===================================================
-	// Creating device object and all channel objects
+	/**
+	 * Creating device object and all channel objects
+	 * @returns true OR error
+	 */
 	async initDevicesAndChanels() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -6677,21 +6659,6 @@ class wamo extends utils.Adapter {
 						this.log.error('[async initDevicesAndChanels()] ERROR Channel: ]' + err);
 					}
 				}
-				resolve(true);
-			} catch (err) {
-				reject(err);
-			}
-		});
-	}
-
-	//===================================================
-	// Divice Initialisation (called on Adapter Start)
-	async initDevice() {
-		return new Promise(async (resolve, reject) => {
-			try {
-				if(moreMessages){this.log.info('reading basic information');}
-				// get longPeriode data
-				await this.getData(initStates);
 				resolve(true);
 			} catch (err) {
 				reject(err);
