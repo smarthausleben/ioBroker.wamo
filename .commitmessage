@@ -1,3 +1,4 @@
+chore: release v0.2.0
 
 change all RAW states -> new role: json
 change all RAW states -> new common.type: string
