@@ -6,6 +6,9 @@
 -->
 
 ## **WORK IN PROGRESS**
+* (smarthausleben) Admin 5 support, TMP changable, connection status
+
+## 0.2.2 (2022-08-04)
 * (smarthausleben) change all RAW states -> new role: json
 * (smarthausleben) change all RAW states -> new common.type: string
 * (smarthausleben) change state RTC -> new role: value.time
