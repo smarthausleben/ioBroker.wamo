@@ -5489,7 +5489,7 @@ class wamo extends utils.Adapter {
 				//==================================================================
 				//= Getting all datas for 'DeviceParameters' in [const initStates] =
 				//==================================================================
-				if(moreMessages){this.log.info('reading DeviceParameters in [initStates]');}
+				if (moreMessages) { this.log.info('reading DeviceParameters in [initStates]'); }
 				await this.getData(initStates);
 				gotDeviceData = true;
 			}
@@ -5623,7 +5623,7 @@ class wamo extends utils.Adapter {
 
 		this.subscribeStates(DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id); // [SRO] Screen Rotation
 		this.subscribeStates(DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id); // [AB] Shutoff valve
-		this.subscribeStates(DeviceParameters.LeakProtectionTemporaryDeactivation.statePath  + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id);// [TMP] temporary protection deactivation 
+		this.subscribeStates(DeviceParameters.LeakProtectionTemporaryDeactivation.statePath + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id);// [TMP] temporary protection deactivation 
 		this.subscribeStates(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id); // [PRF] Selected profile
 		this.subscribeStates(adapterChannels.DevicePofiles.path + '.*'); // ALL profile states
 
@@ -5666,23 +5666,22 @@ class wamo extends utils.Adapter {
 		this.log.debug('async onStateChange(id, state) hit -> id: ' + String(id));
 		if (state) {
 			this.log.debug('async onStateChange(id, state) -> if (state) hit -> id: ' + String(id) + ' state.val: ' + state.val + ' state.ack: ' + state.ack);
-			const statePrefix = this.name + '.' + String(this.instance) +'.';
+			const statePrefix = this.name + '.' + String(this.instance) + '.';
 			// The state was changed
 			//============================================================================
 			// Screen Rotation
 			//============================================================================
-			if((id == statePrefix + DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id) && state.ack == false)
-			{
+			if ((id == statePrefix + DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id) && state.ack == false) {
 				switch (state.val) {
 					case 0:
 					case 90:
 					case 180:
 					case 270:
-						try{
+						try {
 							await this.set_DevieParameter(DeviceParameters.ScreenRotation, state.val, this.config.device_ip, this.config.device_port);
 							this.log.info('[SRO] Screen rotation changed to ' + String(state.val) + '°');
 						}
-						catch(err){
+						catch (err) {
 							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.ScreenRotation ... ERROR: ' + err);
 						}
 						break;
@@ -5694,22 +5693,20 @@ class wamo extends utils.Adapter {
 			//============================================================================
 			// Shutoff valve
 			//============================================================================
-			else if((id == statePrefix + DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id) && state.ack == false)
-			{
+			else if ((id == statePrefix + DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id) && state.ack == false) {
 				switch (state.val) {
 					case 1:
 					case 2:
-						try{
+						try {
 							await this.set_DevieParameter(DeviceParameters.ShutOff, state.val, this.config.device_ip, this.config.device_port);
-							if(state.val == 1)
-							{
+							if (state.val == 1) {
 								this.log.info('Command: [AB] Shutoff valve OPENED');
 							}
-							else{
+							else {
 								this.log.warn('Command: [AB] Shutoff valve CLOSED');
 							}
 						}
-						catch(err){
+						catch (err) {
 							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.ShutOff ... ERROR: ' + err);
 						}
 						break;
@@ -5721,67 +5718,65 @@ class wamo extends utils.Adapter {
 			//============================================================================
 			// Leakage protection deactivation time
 			//============================================================================
-			else if((id == statePrefix + DeviceParameters.LeakProtectionTemporaryDeactivation.statePath + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id) && state.ack == false)
-			{
-				try{
+			else if ((id == statePrefix + DeviceParameters.LeakProtectionTemporaryDeactivation.statePath + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id) && state.ack == false) {
+				try {
 					await this.set_DevieParameter(DeviceParameters.LeakProtectionTemporaryDeactivation, state.val, this.config.device_ip, this.config.device_port);
 				}
-				catch(err){
+				catch (err) {
 					this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.LeakProtectionTemporaryDeactivation ... ERROR: ' + err);
 				}
 				const tempDisabledSeconds = parseFloat(String(state.val));
 				const offTime = new Date(tempDisabledSeconds * 1000).toISOString().substring(11, 19);
 
-				if(tempDisabledSeconds == 0) {this.log.info('Command: [TMP] Leakage protection is aktive');}
-				else{this.log.warn('Command: [TMP] Leakage protection temporary disabled for ' + offTime + ' (hh:mm:ss)');}
+				if (tempDisabledSeconds == 0) { this.log.info('Command: [TMP] Leakage protection is aktive'); }
+				else { this.log.warn('Command: [TMP] Leakage protection temporary disabled for ' + offTime + ' (hh:mm:ss)'); }
 			}
 			//============================================================================
 			// Selected Profile
 			//============================================================================
-			else if((id == statePrefix + DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id) && state.ack == false)
-			{
+			else if ((id == statePrefix + DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id) && state.ack == false) {
 				let profileEnabled = Object();
 				let changeOK = false;
 				switch (state.val) {
 					case 1:
 						// Profile available?
 						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA1.statePath + '.' + DeviceParameters.Profile_PA1.id);
-						if((profileEnabled != null) && parseInt(profileEnabled.val) == 1){changeOK = true;}else{changeOK = false;}
+						if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
 						break;
 					case 2:
 						// Profile available?
 						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA2.statePath + '.' + DeviceParameters.Profile_PA2.id);
-						if((profileEnabled != null) && parseInt(profileEnabled.val) == 1){changeOK = true;}else{changeOK = false;}
+						if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
 						break;
 					case 3:
 						// Profile available?
 						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA3.statePath + '.' + DeviceParameters.Profile_PA3.id);
-						if((profileEnabled != null) && parseInt(profileEnabled.val) == 1){changeOK = true;}else{changeOK = false;}
+						if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
 						break;
 					case 4:
 						// Profile available?
 						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA4.statePath + '.' + DeviceParameters.Profile_PA4.id);
-						if((profileEnabled != null) && parseInt(profileEnabled.val) == 1){changeOK = true;}else{changeOK = false;}
+						if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
 						break;
 					case 5:
 						// Profile available?
 						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA5.statePath + '.' + DeviceParameters.Profile_PA5.id);
-						if((profileEnabled != null) && parseInt(profileEnabled.val) == 1){changeOK = true;}else{changeOK = false;}
+						if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
 						break;
 					case 6:
 						// Profile available?
 						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA6.statePath + '.' + DeviceParameters.Profile_PA6.id);
-						if((profileEnabled != null) && parseInt(profileEnabled.val) == 1){changeOK = true;}else{changeOK = false;}
+						if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
 						break;
 					case 7:
 						// Profile available?
 						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA7.statePath + '.' + DeviceParameters.Profile_PA7.id);
-						if((profileEnabled != null) && parseInt(profileEnabled.val) == 1){changeOK = true;}else{changeOK = false;}
+						if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
 						break;
 					case 8:
 						// Profile available?
 						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA8.statePath + '.' + DeviceParameters.Profile_PA8.id);
-						if((profileEnabled != null) && parseInt(profileEnabled.val) == 1){changeOK = true;}else{changeOK = false;}
+						if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
 						break;
 					default:
 						this.log.error(String(state.val) + ' is not valid for ' + String(DeviceParameters.SelectedProfile.id + ' Valid values: 1...8'));
@@ -5796,11 +5791,11 @@ class wamo extends utils.Adapter {
 						this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.SelectedProfile ... ERROR: ' + err);
 					}
 				}
-				else{
+				else {
 					this.log.error('You cant change to an unavailable profile! Please make profil ' + String(state.val) + ' available first.');
 					// Rerstore old active Profile back to State
 					// Read selected Profile from Device
-					const currentAktiveProfile = await this.get_DevieParameter(DeviceParameters.SelectedProfile ,this.config.device_ip, this.config.device_port);
+					const currentAktiveProfile = await this.get_DevieParameter(DeviceParameters.SelectedProfile, this.config.device_ip, this.config.device_port);
 					// Save aktive profile from Device in state
 					await this.set_DevieParameter(DeviceParameters.SelectedProfile, parseInt(String(currentAktiveProfile['getPRF'])), this.config.device_ip, this.config.device_port);
 				}
@@ -5808,8 +5803,8 @@ class wamo extends utils.Adapter {
 			//============================================================================
 			// Profile(s) Parameter
 			//============================================================================
-			else if((id.includes('Device.Profiles.')) && (state.ack == false)){
-				try{
+			else if ((id.includes('Device.Profiles.')) && (state.ack == false)) {
+				try {
 					// identify Profile parameter
 					const currentProfileState = id.substring(id.lastIndexOf('.') + 1, id.length - 1);
 					this.log.debug('onStateChange Profile Parameter is: ' + String(currentProfileState));
@@ -5855,7 +5850,7 @@ class wamo extends utils.Adapter {
 								}
 								this.log.warn('Restored profile ' + String(stateChangeProfileNo) + 'availability to 1 (on)');
 							}
-							else{
+							else {
 								let profAvailableState = parseInt(String(state.val));
 								// do we have a legal value like 0 or 1
 								if (profAvailableState > 1) {
@@ -5891,8 +5886,8 @@ class wamo extends utils.Adapter {
 										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PA');
 								}
 
-								if(profAvailableState == 0){this.log.info('Profile ' + String(stateChangeProfileNo) + ' availability changed to \'not available\'.');}
-								else{this.log.info('Profile ' + String(stateChangeProfileNo) + ' availability changed to \'available\'.');}
+								if (profAvailableState == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' availability changed to \'not available\'.'); }
+								else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' availability changed to \'available\'.'); }
 							}
 							break;
 						case 'PN':	// Name
@@ -5931,10 +5926,10 @@ class wamo extends utils.Adapter {
 										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PN');
 								}
 								this.log.info('Profile ' + String(stateChangeProfileNo) + ' name changed to \'' + String(newProfileName) + '\'');
-							} catch (err) {this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile Name change ERROR: ' + err);}
+							} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile Name change ERROR: ' + err); }
 							break;
 						case 'PB':	// Buzzer
-							try{
+							try {
 								let profileBuzzer = parseFloat(String(state.val));
 								if (profileBuzzer > 1) {
 									profileBuzzer = 1;
@@ -5969,10 +5964,10 @@ class wamo extends utils.Adapter {
 										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PB');
 								}
 
-								if(profileBuzzer == 0){this.log.info('Profile ' + String(stateChangeProfileNo) + ' buzzer is disabled');}
-								else{this.log.info('Profile ' + String(stateChangeProfileNo) + ' buzzer is enabled');}
+								if (profileBuzzer == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' buzzer is disabled'); }
+								else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' buzzer is enabled'); }
 
-							}catch(err){this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile buzzer change ERROR: ' + err);}
+							} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile buzzer change ERROR: ' + err); }
 							break;
 						case 'PF':	// Max flow
 							try {
@@ -6010,8 +6005,8 @@ class wamo extends utils.Adapter {
 										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PF');
 								}
 
-								if(profileMaxFlow == 0){this.log.info('Profile ' + String(stateChangeProfileNo) + ' max Flow per hour is disabled');}
-								else{this.log.info('Profile ' + String(stateChangeProfileNo) + ' max Flow per hour changed to \'' + String(profileMaxFlow) + 'l/h\'');}
+								if (profileMaxFlow == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' max Flow per hour is disabled'); }
+								else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' max Flow per hour changed to \'' + String(profileMaxFlow) + 'l/h\''); }
 
 							} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile max flow change ERROR: ' + err); }
 							break;
@@ -6222,9 +6217,9 @@ class wamo extends utils.Adapter {
 							break;
 						default:
 					}
-				} catch (err) {this.log.warn('onStateChange(id, state) -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) ... ERROR: ' + err);}
+				} catch (err) { this.log.warn('onStateChange(id, state) -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) ... ERROR: ' + err); }
 			}
-			else{
+			else {
 				this.log.debug('StateChange: ' + String(id) + ' Value: ' + String(state.val) + ' acknowledged: ' + String(state.ack));
 			}
 
@@ -6244,7 +6239,7 @@ class wamo extends utils.Adapter {
 				schedule.scheduleJob(cron_Week, cron_poll_week);
 				schedule.scheduleJob(cron_Month, cron_poll_month);
 				schedule.scheduleJob(cron_Year, cron_poll_year);
-				if(moreMessages){this.log.info('Cron timer started');}
+				if (moreMessages) { this.log.info('Cron timer started'); }
 			} catch (err) {
 				this.log.error('Cron timer start error: ' + err);
 			}
@@ -6252,7 +6247,14 @@ class wamo extends utils.Adapter {
 
 				// Die Timer für das Polling starten
 				alarm_Intervall_ID = this.setInterval(alarm_poll, parseInt(this.config.device_alarm_poll_interval) * 1000);
-				if(moreMessages){this.log.info('Alarm timer initialized');}
+				if (moreMessages) { this.log.info('Alarm timer initialized'); }
+
+				this.log.error('Timer init');
+				const timer = Timer(3000);
+				timer.start().then(() => this.log.error('timer return'));
+				//timer.abort(); // this would abort the operation
+				this.log.error('line after timer');
+
 				try {
 					await sleep(3000); // Warten um einen Versatz zu erzeugen
 				}
@@ -6260,7 +6262,7 @@ class wamo extends utils.Adapter {
 					this.log.error('await sleep(3000) ERROR: ' + err);
 				}
 				short_Intervall_ID = this.setInterval(short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
-				if(moreMessages){this.log.info('Short timer initialized');}
+				if (moreMessages) { this.log.info('Short timer initialized'); }
 
 				try {
 					await sleep(3000); // Warten um einen Versatz zu erzeugen
@@ -6269,19 +6271,18 @@ class wamo extends utils.Adapter {
 					this.log.error('await sleep(3000) ERROR: ' + err);
 				}
 				long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
-				if(moreMessages){this.log.info('Long timer initialized');}
+				if (moreMessages) { this.log.info('Long timer initialized'); }
 
 				try {
-					const retVal = await sleep(2000); // Warten um einen Versatz zu erzeugen
-					this.log.error('Sleep return:' + String(retVal));
+					await sleep(2000); // Warten um einen Versatz zu erzeugen
 				}
 				catch (err) {
 
-					this.log.error('await sleep(3000) ERROR: ' + err);
+					this.log.error('await sleep(2000) ERROR: ' + err);
 				}
 				very_long_Intervall_ID = this.setInterval(very_long_poll, parseInt(this.config.device_very_long_poll_interval) * 1000);
-				if(moreMessages){this.log.info('Very Long timer initialized');}
-				resolve('Alarm timer ID = ' + alarm_Intervall_ID + ' / Short timer ID = ' + short_Intervall_ID + ' / Long timer ID = ' + long_Intervall_ID+ ' / Very long timer ID = ' + very_long_Intervall_ID);
+				if (moreMessages) { this.log.info('Very Long timer initialized'); }
+				resolve('Alarm timer ID = ' + alarm_Intervall_ID + ' / Short timer ID = ' + short_Intervall_ID + ' / Long timer ID = ' + long_Intervall_ID + ' / Very long timer ID = ' + very_long_Intervall_ID);
 			} catch (err) {
 				reject(err);
 			}
@@ -6295,7 +6296,7 @@ class wamo extends utils.Adapter {
 	async alarm_cron_day_Tick() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				if(moreMessages){this.log.info('Cron day tick');}
+				if (moreMessages) { this.log.info('Cron day tick'); }
 
 				// ================================================
 				// Dayly sum reset
@@ -6355,7 +6356,7 @@ class wamo extends utils.Adapter {
 	async alarm_cron_week_Tick() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				if(moreMessages){this.log.info('Cron week tick');}
+				if (moreMessages) { this.log.info('Cron week tick'); }
 
 				// ================================================
 				// Week sum reset
@@ -6388,7 +6389,7 @@ class wamo extends utils.Adapter {
 	async alarm_cron_month_Tick() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				if(moreMessages){this.log.info('Cron month tick');}
+				if (moreMessages) { this.log.info('Cron month tick'); }
 
 				// ================================================
 				// Month sum reset
@@ -6421,7 +6422,7 @@ class wamo extends utils.Adapter {
 	async alarm_cron_year_Tick() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				if(moreMessages){this.log.info('Cron year tick');}
+				if (moreMessages) { this.log.info('Cron year tick'); }
 
 				// ================================================
 				// Year sum reset
@@ -6454,7 +6455,7 @@ class wamo extends utils.Adapter {
 	async alarm_TimerTick() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				if(moreMessages){this.log.info('Alarm Timer tick');}
+				if (moreMessages) { this.log.info('Alarm Timer tick'); }
 				// get alarmPeriode data
 				if (!interfaceBussy) {
 					await this.getData(Object(alarmPeriod));
@@ -6478,7 +6479,7 @@ class wamo extends utils.Adapter {
 	async short_TimerTick() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				if(moreMessages){this.log.info('Short Timer tick');}
+				if (moreMessages) { this.log.info('Short Timer tick'); }
 				// get longPeriode data
 				if (!interfaceBussy) {
 					await this.getData(Object(shortPeriod));
@@ -6508,7 +6509,7 @@ class wamo extends utils.Adapter {
 	async long_TimerTick() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				if(moreMessages){this.log.info('Long Timer tick');}
+				if (moreMessages) { this.log.info('Long Timer tick'); }
 				// get longPeriode data
 				if (!interfaceBussy) {
 					await this.getData(Object(longPeriode));
@@ -6532,12 +6533,12 @@ class wamo extends utils.Adapter {
 	async very_long_TimerTick() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				if(moreMessages){this.log.info('Very Long Timer tick');}
+				if (moreMessages) { this.log.info('Very Long Timer tick'); }
 				// get longPeriode data
 				if (!interfaceBussy) {
-					if(moreMessages){this.log.info('Get initStates');}
+					if (moreMessages) { this.log.info('Get initStates'); }
 					await this.getData(Object(initStates));
-					if(moreMessages){this.log.info('Get Device Profiles');}
+					if (moreMessages) { this.log.info('Get Device Profiles'); }
 					await this.getDeviceProfilesData(this.config.device_ip, this.config.device_port);
 					resolve(true);
 				}
@@ -6597,7 +6598,7 @@ class wamo extends utils.Adapter {
 							gotDeviceParameter = true;
 						}
 						catch (err) {
-							this.log.error('async getData('+ deviceParametersToGet[i].id + ', ' + this.config.device_ip + ':' + this.config.device_port + ' ERROR: ' + err);
+							this.log.error('async getData(' + deviceParametersToGet[i].id + ', ' + this.config.device_ip + ':' + this.config.device_port + ' ERROR: ' + err);
 							//=================================================================================================
 							// Waiting till device is responding again
 							//=================================================================================================
@@ -6620,13 +6621,13 @@ class wamo extends utils.Adapter {
 					}
 					catch (err) {
 						// something went wrong during state update
-						this.log.error('Error [updateState] ('+ deviceParametersToGet[i].id +', ' + DeviceParameterReturn + ') within [getData] ERROR: ' + err);
+						this.log.error('Error [updateState] (' + deviceParametersToGet[i].id + ', ' + DeviceParameterReturn + ') within [getData] ERROR: ' + err);
 					}
 				}
 				resolve(true);
 			} catch (err) {
 				// something else and unhandled went wrong
-				this.log.error('getData(deviceParametersToGet) -> somthing else went wrong at ID '+ deviceParametersToGet[parnumber].id +'! ERROR: ' + err);
+				this.log.error('getData(deviceParametersToGet) -> somthing else went wrong at ID ' + deviceParametersToGet[parnumber].id + '! ERROR: ' + err);
 				reject(err);
 			}
 		});
@@ -6675,7 +6676,7 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 
-				if(moreMessages){this.log.info('reading device profiles');}
+				if (moreMessages) { this.log.info('reading device profiles'); }
 				// alle 8 möglichen Profile durchlaufen
 				for (let ProfileNumber = 1; ProfileNumber < 9; ProfileNumber++) {
 
@@ -7105,13 +7106,13 @@ class wamo extends utils.Adapter {
 									_WaterConductivity = finalValue;
 									// updatig German water hardness
 									if (sensor_temperature_present) {
-										try {await this.updateEC25conductivity();}catch (err) {this.log.error('convertDeviceReturnValue -> WaterConductivity -> updateEC25conductivity ERROR: ' + err);}
-										if (moreMessages) { try{await this.moremessages(calculatedStates.conductivityEC25, _WaterConductivity_EC25);}catch(err){this.log.error('convertDeviceReturnValue -> WaterConductivity -> moremessages ERROR: '+ err);} }
+										try { await this.updateEC25conductivity(); } catch (err) { this.log.error('convertDeviceReturnValue -> WaterConductivity -> updateEC25conductivity ERROR: ' + err); }
+										if (moreMessages) { try { await this.moremessages(calculatedStates.conductivityEC25, _WaterConductivity_EC25); } catch (err) { this.log.error('convertDeviceReturnValue -> WaterConductivity -> moremessages ERROR: ' + err); } }
 									}
-									try{await this.updateGermanWaterHardnes();}catch (err) {this.log.error('convertDeviceReturnValue -> WaterConductivity -> updateGermanWaterHardnes ERROR: ' + err);}
+									try { await this.updateGermanWaterHardnes(); } catch (err) { this.log.error('convertDeviceReturnValue -> WaterConductivity -> updateGermanWaterHardnes ERROR: ' + err); }
 								}
-								if (moreMessages) { try{await this.moremessages(DeviceParameters.WaterConductivity, _WaterConductivity);}catch(err){this.log.error('convertDeviceReturnValue -> WaterConductivity -> moremessages ERROR: '+ err);} }
-							}catch(err) {
+								if (moreMessages) { try { await this.moremessages(DeviceParameters.WaterConductivity, _WaterConductivity); } catch (err) { this.log.error('convertDeviceReturnValue -> WaterConductivity -> moremessages ERROR: ' + err); } }
+							} catch (err) {
 								this.log.error('convertDeviceReturnValue -> WaterConductivity -> getGlobalisedValue ERROR: ' + err);
 							}
 						}
@@ -7629,7 +7630,7 @@ class wamo extends utils.Adapter {
 				// getting states
 				try {
 					lastTotalvalueState = await this.getStateAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id);
-					if((lastTotalvalueState != null) && (lastTotalvalueState.val != null)){
+					if ((lastTotalvalueState != null) && (lastTotalvalueState.val != null)) {
 						// pulling values from state if state already existed
 						lastTotalValue = parseFloat(String(lastTotalvalueState.val));
 					}
@@ -7640,7 +7641,7 @@ class wamo extends utils.Adapter {
 
 				try {
 					currentTotalvalueState = await this.getStateAsync(DeviceParameters.TotalVolume.statePath + '.' + DeviceParameters.TotalVolume.id);
-					if((currentTotalvalueState != null) && (currentTotalvalueState.val != null)){
+					if ((currentTotalvalueState != null) && (currentTotalvalueState.val != null)) {
 						// pulling values from state if state already existed
 						currentTotalValue = parseFloat(String(currentTotalvalueState.val)) * 1000;
 					}
@@ -7651,7 +7652,7 @@ class wamo extends utils.Adapter {
 
 				try {
 					current_Day_valueState = await this.getStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id);
-					if((current_Day_valueState != null) && (current_Day_valueState.val != null)){
+					if ((current_Day_valueState != null) && (current_Day_valueState.val != null)) {
 						// pulling values from state if state already existed
 						current_Day = parseFloat(String(current_Day_valueState.val));
 					}
@@ -7662,7 +7663,7 @@ class wamo extends utils.Adapter {
 
 				try {
 					current_Week_valueState = await this.getStateAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id);
-					if((current_Week_valueState != null) && (current_Week_valueState.val != null)){
+					if ((current_Week_valueState != null) && (current_Week_valueState.val != null)) {
 						// pulling values from state if state already existed
 						current_Week = parseFloat(String(current_Week_valueState.val));
 					}
@@ -7673,7 +7674,7 @@ class wamo extends utils.Adapter {
 
 				try {
 					current_Month_valueState = await this.getStateAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id);
-					if((current_Month_valueState != null) && (current_Month_valueState.val != null)){
+					if ((current_Month_valueState != null) && (current_Month_valueState.val != null)) {
 						// pulling values from state if state already existed
 						current_Month = parseFloat(String(current_Month_valueState.val));
 					}
@@ -7684,7 +7685,7 @@ class wamo extends utils.Adapter {
 
 				try {
 					current_Year_valueState = await this.getStateAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id);
-					if((current_Year_valueState != null) && (current_Year_valueState.val != null)){
+					if ((current_Year_valueState != null) && (current_Year_valueState.val != null)) {
 						// pulling values from state if state already existed
 						current_Year = parseFloat(String(current_Year_valueState.val));
 					}
@@ -7793,18 +7794,17 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 				this.log.debug('calculating german water hardness ...');
-				if((_WaterConductivity === 0) || _WaterConductivity === null){reject('updateGermanWaterHardnes -> No valid water conductivity value');}
+				if ((_WaterConductivity === 0) || _WaterConductivity === null) { reject('updateGermanWaterHardnes -> No valid water conductivity value'); }
 				let german_hardnes = 0;
 
-				if(_WaterConductivity_EC25 === 0)
-				{
+				if (_WaterConductivity_EC25 === 0) {
 					// Water hardnes NOT temperatur compensated
 					german_hardnes = parseFloat((_WaterConductivity * parseFloat(this.config.factor_german_water_hardnes)).toFixed(2));
-					if(moreMessages){this.log.info('German water hardness: ' + german_hardnes + ' (NOT temperature compensated)');}
-				}else{
+					if (moreMessages) { this.log.info('German water hardness: ' + german_hardnes + ' (NOT temperature compensated)'); }
+				} else {
 					// Water hardnes temperatur compensated
 					german_hardnes = parseFloat((_WaterConductivity_EC25 * parseFloat(this.config.factor_german_water_hardnes)).toFixed(2));
-					if(moreMessages){this.log.info('German water hardness: ' + german_hardnes + ' (Temperature compensated)');}
+					if (moreMessages) { this.log.info('German water hardness: ' + german_hardnes + ' (Temperature compensated)'); }
 				}
 
 				this.log.debug('calculated german water hardness = ' + String(german_hardnes));
@@ -7834,7 +7834,7 @@ class wamo extends utils.Adapter {
 	 * here we calculate Water temperature kompensated conductivity
 	 * @returns true or error
 	 */
-	async updateEC25conductivity(){
+	async updateEC25conductivity() {
 		return new Promise(async (resolve, reject) => {
 			// The formula is:
 			// EC25 = EC / (1 + 0.020 * (t - 25))
@@ -7842,10 +7842,10 @@ class wamo extends utils.Adapter {
 			// EC: Measured conductivity at Temperature t
 			// t: Temperature in °C
 			try {
-				if((_WaterConductivity === 0) || _WaterConductivity === null){reject('updateEC25conductivity -> No valid water conductivity value');}
-				if((_WaterTemperature === 0) || _WaterTemperature === null){reject('updateEC25conductivity -> No valid water temperature value');}
+				if ((_WaterConductivity === 0) || _WaterConductivity === null) { reject('updateEC25conductivity -> No valid water conductivity value'); }
+				if ((_WaterTemperature === 0) || _WaterTemperature === null) { reject('updateEC25conductivity -> No valid water temperature value'); }
 
-				_WaterConductivity_EC25 = parseFloat((_WaterConductivity / (1 + 0.02 * (_WaterTemperature -25)) ).toFixed(2));
+				_WaterConductivity_EC25 = parseFloat((_WaterConductivity / (1 + 0.02 * (_WaterTemperature - 25))).toFixed(2));
 
 				this.log.debug('EC25 conductivity = ' + String(_WaterConductivity_EC25));
 
@@ -7946,20 +7946,20 @@ class wamo extends utils.Adapter {
 
 			// Do we need special permission to read this parameter?
 			if (Parameter.levelRead === 'SERVICE') {
-				try{
+				try {
 					await this.set_SERVICE_Mode();
 					readModeChanged = true;
 				}
-				catch(err){
+				catch (err) {
 					this.log.error('get_DevieParameter -> set_SERVICE_Mode() ERROR: ' + err);
 				}
 			}
 			else if (Parameter.levelRead === 'FACTORY') {
-				try{
+				try {
 					await this.set_FACTORY_Mode();
 					readModeChanged = true;
 				}
-				catch(err){
+				catch (err) {
 					this.log.error('get_DevieParameter -> set_FACTORY_Mode() ERROR: ' + err);
 				}
 			}
@@ -8010,7 +8010,7 @@ class wamo extends utils.Adapter {
 	async set_DevieParameter(Parameter, Value, IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
 
-			const oldParameter = await this.get_DevieParameter(Parameter,IPadress,Port);
+			const oldParameter = await this.get_DevieParameter(Parameter, IPadress, Port);
 
 			// Flag indicating if we had to modifiy Admin Mode
 			let writeModeChanged = false;
@@ -8025,20 +8025,20 @@ class wamo extends utils.Adapter {
 
 			// Do we need special permission to write this parameter?
 			if (Parameter.levelWrite === 'SERVICE') {
-				try{
+				try {
 					await this.set_SERVICE_Mode();
 					writeModeChanged = true;
 				}
-				catch(err){
+				catch (err) {
 					this.log.error('async set_DevieParameter(Parameter, Value, IPadress, Port) -> await this.set_SERVICE_Mode() ERROR: ' + err);
 				}
 			}
 			else if (Parameter.levelWrite === 'FACTORY') {
-				try{
+				try {
 					await this.set_FACTORY_Mode();
 					writeModeChanged = true;
 				}
-				catch(err){
+				catch (err) {
 					this.log.error('async set_DevieParameter(Parameter, Value, IPadress, Port) -> await this.set_FACTORY_Mode() ERROR: ' + err);
 				}
 			}
@@ -8070,9 +8070,8 @@ class wamo extends utils.Adapter {
 					}
 					reject('Error modifiing device parameter: ' + JSON.stringify(content));
 				}
-				else
-				{
-				// writing value ACKNOWLAGED back into state
+				else {
+					// writing value ACKNOWLAGED back into state
 					try {
 						await this.setStateAsync(Parameter.statePath + '.' + Parameter.id, { val: Value, ack: true });
 					} catch (err) {
@@ -8157,11 +8156,11 @@ class wamo extends utils.Adapter {
 				const profileAvailable = parseInt(String(value['getPA' + String(ProfileNumber)]));
 				let crStaResult = null;
 				let stStaResult = null;
-				let currentStatePath  = '';
+				let currentStatePath = '';
 				let currentstateObject = '';
 				this.log.debug('async state_profile_PA(ProfileNumber, value) -> const profileAvailable = value[\'getPA\' + String(ProfileNumber)]; = ' + String(profileAvailable));
 
-				switch (ProfileNumber){
+				switch (ProfileNumber) {
 					case 1:
 						currentStatePath = String(DeviceParameters.Profile_PA1.statePath) + '.' + String(DeviceParameters.Profile_PA1.id);
 						currentstateObject = Object(DeviceParameters.Profile_PA1.objectdefinition);
@@ -8208,13 +8207,13 @@ class wamo extends utils.Adapter {
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileAvailable, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
-				if(moreMessages){
+				if (moreMessages) {
 					if (profileAvailable == 1) { this.log.info('Profile ' + String(ProfileNumber) + ' is available'); }
 					else { this.log.info('Profile ' + String(ProfileNumber) + ' is not available'); }
 				}
 				resolve(true);
 			} catch (err) {
-				this.log.error('async state_profile_PA(ProfileNumber, value) ERROR: '+ err);
+				this.log.error('async state_profile_PA(ProfileNumber, value) ERROR: ' + err);
 				reject(err);
 			}
 		});
@@ -8233,7 +8232,7 @@ class wamo extends utils.Adapter {
 				const profileName = String(value['getPN' + String(ProfileNumber)]);
 				let crStaResult = null;
 				let stStaResult = null;
-				let currentStatePath  = '';
+				let currentStatePath = '';
 				let currentstateObject = '';
 
 				switch (ProfileNumber) {
@@ -8280,7 +8279,7 @@ class wamo extends utils.Adapter {
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileName, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
-				if(moreMessages){this.log.info('Profile ' + String(ProfileNumber) + ' name is ' + profileName);}
+				if (moreMessages) { this.log.info('Profile ' + String(ProfileNumber) + ' name is ' + profileName); }
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
@@ -8300,7 +8299,7 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 
-				let currentStatePath  = '';
+				let currentStatePath = '';
 				let crStaResult = null;
 				let stStaResult = null;
 				let currentstateObject = '';
@@ -8350,7 +8349,7 @@ class wamo extends utils.Adapter {
 
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileQuantityLimitation, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
-				if(moreMessages){
+				if (moreMessages) {
 					if (profileQuantityLimitation == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' maximum volume limit disabled'); }
 					else { this.log.info('Profile ' + String(ProfileNumber) + ' maximum volume limit is ' + String(profileQuantityLimitation) + 'l'); }
 				}
@@ -8373,7 +8372,7 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 
-				let currentStatePath  = '';
+				let currentStatePath = '';
 				let crStaResult = null;
 				let stStaResult = null;
 				let currentstateObject = '';
@@ -8447,7 +8446,7 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 
-				let currentStatePath  = '';
+				let currentStatePath = '';
 				let crStaResult = null;
 				let stStaResult = null;
 				let currentstateObject = '';
@@ -8496,7 +8495,7 @@ class wamo extends utils.Adapter {
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileMaximumFlow, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
-				if(moreMessages){
+				if (moreMessages) {
 					if (profileMaximumFlow == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' maximum flow is disabled'); }
 					else { this.log.info('Profile ' + String(ProfileNumber) + ' maximum flow is ' + String(profileMaximumFlow) + 'l/h'); }
 				}
@@ -8521,10 +8520,10 @@ class wamo extends utils.Adapter {
 				const profileMicroleackageDetection = parseInt(String(value['getPM' + String(ProfileNumber)]));
 				let crStaResult = null;
 				let stStaResult = null;
-				let currentStatePath  = '';
+				let currentStatePath = '';
 				let currentstateObject = '';
 
-				switch (ProfileNumber){
+				switch (ProfileNumber) {
 					case 1:
 						currentStatePath = String(DeviceParameters.Profile_PM1.statePath) + '.' + String(DeviceParameters.Profile_PM1.id);
 						currentstateObject = Object(DeviceParameters.Profile_PM1.objectdefinition);
@@ -8577,7 +8576,7 @@ class wamo extends utils.Adapter {
 				}
 				resolve(true);
 			} catch (err) {
-				this.log.error('async state_profile_PM(ProfileNumber, value) ERROR: '+ err);
+				this.log.error('async state_profile_PM(ProfileNumber, value) ERROR: ' + err);
 				reject(err);
 			}
 		});
@@ -8594,7 +8593,7 @@ class wamo extends utils.Adapter {
 		return new Promise(async (resolve, reject) => {
 			try {
 
-				let currentStatePath  = '';
+				let currentStatePath = '';
 				let crStaResult = null;
 				let stStaResult = null;
 				let currentstateObject = '';
@@ -8643,7 +8642,7 @@ class wamo extends utils.Adapter {
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileReturnTime, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
-				if(moreMessages){this.log.info('Profile ' + String(ProfileNumber) + ' return time to default profile is ' + String(profileReturnTime) + 'h');}
+				if (moreMessages) { this.log.info('Profile ' + String(ProfileNumber) + ' return time to default profile is ' + String(profileReturnTime) + 'h'); }
 
 				resolve(true);
 			} catch (err) {
@@ -8666,7 +8665,7 @@ class wamo extends utils.Adapter {
 				const profileBuzzer = parseInt(String(value['getPB' + String(ProfileNumber)]));
 				let crStaResult = null;
 				let stStaResult = null;
-				let currentStatePath  = '';
+				let currentStatePath = '';
 				let currentstateObject = '';
 
 				switch (ProfileNumber) {
@@ -8714,7 +8713,7 @@ class wamo extends utils.Adapter {
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileBuzzer, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
-				if(moreMessages){
+				if (moreMessages) {
 					if (profileBuzzer == 1) { this.log.info('Profile ' + String(ProfileNumber) + ' buzzer is on'); }
 					else { this.log.info('Profile ' + String(ProfileNumber) + ' buzzer is not on'); }
 				}
@@ -8740,10 +8739,10 @@ class wamo extends utils.Adapter {
 				const profileLeackageWarning = parseInt(String(value['getPW' + String(ProfileNumber)]));
 				let crStaResult = null;
 				let stStaResult = null;
-				let currentStatePath  = '';
+				let currentStatePath = '';
 				let currentstateObject = '';
 
-				switch (ProfileNumber){
+				switch (ProfileNumber) {
 					case 1:
 						currentStatePath = String(DeviceParameters.Profile_PW1.statePath) + '.' + String(DeviceParameters.Profile_PW1.id);
 						currentstateObject = Object(DeviceParameters.Profile_PW1.objectdefinition);
@@ -8809,10 +8808,45 @@ class wamo extends utils.Adapter {
  * @param {number} ms - Milliseconds to sleep
  */
 function sleep(ms) {
-	return new Promise((resolve) => {
-		return setTimeout(resolve, ms);
+	return new Promise(resolve => {
+		setTimeout(resolve, ms);
 	});
 }
+
+const delay = (ms) => {
+	let id;
+	const promise = new Promise(resolve => {
+		id = setTimeout(resolve, ms);
+	});
+
+	return {
+		id, promise
+	};
+};
+
+const Timer = (ms) => {
+	let id;
+
+	const start = () => new Promise(resolve => {
+		if (id === -1) {
+			throw new Error('Timer already aborted');
+		}
+
+		id = setTimeout(resolve, ms);
+	});
+
+	const abort = () => {
+		if (id !== -1 || id === undefined) {
+			clearTimeout(id);
+			id = -1;
+		}
+	};
+
+	return {
+		start, abort
+	};
+};
+
 
 /**
  * testing if val is an object
