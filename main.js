@@ -39,6 +39,7 @@ let alarm_Intervall_ID;
 let short_Intervall_ID;
 let long_Intervall_ID;
 let very_long_Intervall_ID;
+let delay_Timer_ID;
 
 let sensor_temperature_present = false;
 let sensor_pressure_present = false;
@@ -5647,10 +5648,13 @@ class wamo extends utils.Adapter {
 
 		try {
 			// clear all intervals
-			clearInterval(alarm_Intervall_ID);
-			clearInterval(short_Intervall_ID);
-			clearInterval(long_Intervall_ID);
-			clearInterval(very_long_Intervall_ID);
+			try{clearInterval(alarm_Intervall_ID);}catch(err){this.log.error('ERRRO clerring [Alarm Timer] interval');}
+			try{clearInterval(short_Intervall_ID);}catch(err){this.log.error('ERRRO clerring [Short Timer] interval');}
+			try{clearInterval(long_Intervall_ID);}catch(err){this.log.error('ERRRO clerring [Long Timer] interval');}
+			try{clearInterval(very_long_Intervall_ID);}catch(err){this.log.error('ERRRO clerring [Very Long Timer] interval');}
+
+			try{clearTimeout(delay_Timer_ID);}catch(err){this.log.error('ERRRO clerring [Delay Timeout] interval');}
+
 			callback();
 		} catch (e) {
 			callback();
@@ -6249,16 +6253,15 @@ class wamo extends utils.Adapter {
 				alarm_Intervall_ID = this.setInterval(alarm_poll, parseInt(this.config.device_alarm_poll_interval) * 1000);
 				if (moreMessages) { this.log.info('Alarm timer initialized'); }
 
-				this.log.error('Timer init');
-				const timer = Timer(3000);
-				timer.start().then(() => this.log.error('timer return'));
-				//timer.abort(); // this would abort the operation
-				this.log.error('line after timer');
-
 				try {
 					await sleep(3000); // Warten um einen Versatz zu erzeugen
 				}
 				catch (err) {
+					// Tieout to clear?
+					if(delay_Timer_ID != null){
+						try{this.clearTimeout(delay_Timer_ID);}
+						catch(err){this.log.error('Error clear Timeout');}
+					}
 					this.log.error('await sleep(3000) ERROR: ' + err);
 				}
 				short_Intervall_ID = this.setInterval(short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
@@ -6268,6 +6271,11 @@ class wamo extends utils.Adapter {
 					await sleep(3000); // Warten um einen Versatz zu erzeugen
 				}
 				catch (err) {
+					// Tieout to clear?
+					if(delay_Timer_ID != null){
+						try{this.clearTimeout(delay_Timer_ID);}
+						catch(err){this.log.error('Error clear Timeout');}
+					}
 					this.log.error('await sleep(3000) ERROR: ' + err);
 				}
 				long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
@@ -6277,7 +6285,11 @@ class wamo extends utils.Adapter {
 					await sleep(2000); // Warten um einen Versatz zu erzeugen
 				}
 				catch (err) {
-
+					// Tieout to clear?
+					if(delay_Timer_ID != null){
+						try{this.clearTimeout(delay_Timer_ID);}
+						catch(err){this.log.error('Error clear Timeout');}
+					}
 					this.log.error('await sleep(2000) ERROR: ' + err);
 				}
 				very_long_Intervall_ID = this.setInterval(very_long_poll, parseInt(this.config.device_very_long_poll_interval) * 1000);
@@ -8809,43 +8821,9 @@ class wamo extends utils.Adapter {
  */
 function sleep(ms) {
 	return new Promise(resolve => {
-		setTimeout(resolve, ms);
+		delay_Timer_ID = setTimeout(resolve, ms);
 	});
 }
-
-const delay = (ms) => {
-	let id;
-	const promise = new Promise(resolve => {
-		id = setTimeout(resolve, ms);
-	});
-
-	return {
-		id, promise
-	};
-};
-
-const Timer = (ms) => {
-	let id;
-
-	const start = () => new Promise(resolve => {
-		if (id === -1) {
-			throw new Error('Timer already aborted');
-		}
-
-		id = setTimeout(resolve, ms);
-	});
-
-	const abort = () => {
-		if (id !== -1 || id === undefined) {
-			clearTimeout(id);
-			id = -1;
-		}
-	};
-
-	return {
-		start, abort
-	};
-};
 
 
 /**
