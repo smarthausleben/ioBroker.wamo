@@ -4,8 +4,92 @@
         "version": "0.2.0",
         "news": {
             "0.2.0": {
-                "en": "",
-                "de": "first stable version",
+                "en": "All parameters in the profile section can now be changed and the active Profile “PRF” is now also changeable, so you can select the active profile.",
+                "de": "Alle Parameter im Profilabschnitt können nun geändert werden und das aktive Profil „PRF“ ist nun auch änderbar, so dass Sie das aktive Profil auswählen können.",
+                "ru": "Все параметры в разделе профиля теперь могут быть изменены и активный профиль “PRF” теперь также меняется, так что вы можете выбрать активный профиль.",
+                "pt": "Todos os parâmetros na seção de perfil agora podem ser alterados e o perfil ativo “PRF” agora também é mutável, para que você possa selecionar o perfil ativo.",
+                "nl": "Alle parameters in het profiel kunnen nu veranderen en de actieve Profile is nu ook veranderd, dus je kunt het actieve profiel kiezen.",
+                "fr": "Tous les paramètres de la section de profil peuvent maintenant être changés et le Profil actif “PRF” est maintenant également modifiable, de sorte que vous pouvez sélectionner le profil actif.",
+                "it": "Tutti i parametri nella sezione del profilo possono ora essere modificati e il profilo attivo “PRF” è ora anche modificabile, in modo da poter selezionare il profilo attivo.",
+                "es": "Todos los parámetros de la sección de perfil ahora se pueden cambiar y el perfil activo “PRF” es ahora también cambiante, por lo que puede seleccionar el perfil activo.",
+                "pl": "Wszystkie parametry w sekcji profilu mogą być obecnie zmieniane, a aktywny profil „PRF” jest obecnie zmienny, więc można wybrać profil aktywny.",
+                "zh-cn": "简介科的所有参数现在可以改变,目前积极的“PRF”是可以改变的,因此你可以选择积极的形象。."
+            },
+            "0.1.5": {
+                "en": "Fixed adapter crash if device was not reachable (fixes #1 , fixes #4 , fixes #7 , fixes #9 )",
+                "de": "Fixed Adapter Crash, wenn Gerät nicht erreichbar war (fixes #1, fixes #4, fixes #7, fixes #9 )",
+                "ru": "Исправлена ошибка адаптера, если устройство не было достижимо (фиксы #1, исправления #4, исправления #7, исправления #9 )",
+                "pt": "Desligamento do adaptador fixo se o dispositivo não foi acessível (fixos #1 , correções #4 , correções #7 , correções #9 )",
+                "nl": "Gerepareerde adapter crash als het apparaat niet bereikbaar was, repareert #4, repareert #7, repareert #9 #9",
+                "fr": "Correction du crash de l'adaptateur si l'appareil n'était pas accessible (fixes #1 , corrige #4 , corrige #7 , corrige #9 )",
+                "it": "Attacco adattatore fisso se il dispositivo non è raggiungibile (fissi #1 , correzioni #4 , correzioni #7 , correzioni #9 )",
+                "es": "Se bloquea el adaptador fijo si el dispositivo no era accesible (fijos #1 , fija #4 , fija #7 , fija #9 )",
+                "pl": "Fixed adapter crash, jeśli urządzenie nie było w stanie dotrzeć (fixes #1, fixes #4 , fixes #7, fixes #9)",
+                "zh-cn": "如果装置无法使用(第1号、第4号、第7号、第9号指示)"
+            },
+            "0.1.4": {
+                "en": "Fixed version number",
+                "de": "Anpassung Versionsnummer",
+                "ru": "Фиксированный номер версии",
+                "pt": "Número de versão fixa",
+                "nl": "Vertaling:",
+                "fr": "Numéro de version fixe",
+                "it": "Numero di versione fisso",
+                "es": "Número de versión fija",
+                "pl": "Fixed version number",
+                "zh-cn": "固定版本"
+            },
+            "0.1.2": {
+                "en": "Automatic permission handling (USER, SERVICE and FACTORY) for reading parameters.",
+                "de": "Automatisches Berechtigungshandling (USER, SERVICE und FACTORY) zum Lesen von Parametern.",
+                "ru": "Автоматическая обработка разрешения (USER, SERVICE и FACTORY) для параметров чтения.",
+                "pt": "Manuseio automático de permissão (USER, SERVICE e FACTORY) para parâmetros de leitura.",
+                "nl": "Automatische toestemming voor het lezen van parameters.",
+                "fr": "Gestion automatique des autorisations (USER, SERVICE et FACTORY) pour les paramètres de lecture.",
+                "it": "Gestione automatica delle autorizzazioni (USER, SERVICE e FACTORY) per i parametri di lettura.",
+                "es": "Manejo automático de permisos (USER, SERVICIO y FACTORIA) para parámetros de lectura.",
+                "pl": "Automatyczna obsługa zezwoleń (USER, SERVICE i FACTORY) dla parametrów odczytu.",
+                "zh-cn": "自动许可处理(美国、联邦和联邦事务委员会)的阅读参数。."
+            },
+            "0.1.1": {
+                "en": "added water hardness.",
+                "de": "Wasserhärte hinzugefügt.",
+                "ru": "добавленная твердость воды.",
+                "pt": "adicionado dureza da água.",
+                "nl": "voegde waterharding toe.",
+                "fr": "ajout de dureté d'eau.",
+                "it": "maggiore durezza dell'acqua.",
+                "es": "añadido dureza del agua.",
+                "pl": "dodaj się, że twardość wody.",
+                "zh-cn": "增加水力。."
+            },
+            "0.1.0": {
+                "en": "First beta release.",
+                "de": "Erste Beta-Version.",
+                "ru": "Первый бета-релиз.",
+                "pt": "Primeira versão beta.",
+                "nl": "Eerste beta vrijlating.",
+                "fr": "Première sortie de bêta.",
+                "it": "Prima versione beta.",
+                "es": "Primer lanzamiento beta.",
+                "pl": "Pierwsza wersja beta.",
+                "zh-cn": "第一是释放。."
+            },
+            "0.0.3": {
+                "en": "First release having only basic parameter readouts and statistics.",
+                "de": "Erste Veröffentlichung mit nur grundlegenden Parameterauslesungen und Statistiken.",
+                "ru": "Первый выпуск, имеющий только основные параметры чтения и статистики.",
+                "pt": "Primeiro lançamento tendo apenas leituras de parâmetros básicos e estatísticas.",
+                "nl": "Eerste vrijlating met slechts basis parameter uitslagen en statistieken.",
+                "fr": "Première sortie n'ayant que des lectures de paramètres de base et des statistiques.",
+                "it": "Prima release con solo lettura dei parametri di base e statistiche.",
+                "es": "Primera publicación con sólo lecturas básicas del parámetro y estadísticas.",
+                "pl": "Pierwsze wydanie posiada tylko podstawowe parametry i statystyki.",
+                "zh-cn": "只发放基本参数图表和统计数字的第一次释放。."
+            },
+            "0.0.2": {
+                "en": "test release",
+                "de": "Testfreigabe",
                 "ru": "тестовый выпуск",
                 "pt": "lançamento de teste",
                 "nl": "test release",
@@ -26,18 +110,6 @@
                 "es": "Versión inicial",
                 "pl": "Pierwsze wydanie",
                 "zh-cn": "首次出版"
-            },
-            "0.0.2": {
-                "en": "test release",
-                "de": "Testfreigabe",
-                "ru": "тестовый выпуск",
-                "pt": "lançamento de teste",
-                "nl": "test release",
-                "fr": "version d'essai",
-                "it": "rilascio di prova",
-                "es": "versión de prueba",
-                "pl": "wersja testowa",
-                "zh-cn": "测试版本"
             }
         },
         "titleLang": {
