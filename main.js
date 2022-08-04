@@ -5617,9 +5617,9 @@ class wamo extends utils.Adapter {
 		});
 		*/
 
-		//=====================================
-		//=== Subscribe to changable states ===
-		//=====================================
+		//==========================================
+		//=== Subscribe to user changable states ===
+		//==========================================
 
 		this.subscribeStates(DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id); // [SRO] Screen Rotation
 		this.subscribeStates(DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id); // [AB] Shutoff valve
@@ -5631,7 +5631,6 @@ class wamo extends utils.Adapter {
 		myAdapter = this;
 
 		this.log.info('wamo adapter is running');
-
 	}
 
 	/**
@@ -6236,7 +6235,7 @@ class wamo extends utils.Adapter {
 	}
 
 	/**
-	 * start timers
+	 * start all timers
 	 */
 	async timerStarts() {
 		return new Promise(async (resolve, reject) => {
@@ -6288,7 +6287,7 @@ class wamo extends utils.Adapter {
 	}
 
 	/**
-	 * Cron event handler
+	 * Cron action
 	 * [daily]
 	 */
 	async alarm_cron_day_Tick() {
@@ -6348,7 +6347,7 @@ class wamo extends utils.Adapter {
 	}
 
 	/**
-	 * Cron event handler
+	 * Cron action
 	 * [weekly]
 	 */
 	async alarm_cron_week_Tick() {
@@ -6381,7 +6380,7 @@ class wamo extends utils.Adapter {
 	}
 
 	/**
-	 * Cron event handler
+	 * Cron action
 	 * [monthly]
 	 */
 	async alarm_cron_month_Tick() {
@@ -6414,7 +6413,7 @@ class wamo extends utils.Adapter {
 	}
 
 	/**
-	 * Cron event handler
+	 * Cron action
 	 * [yearly]
 	 */
 	async alarm_cron_year_Tick() {
@@ -6447,7 +6446,7 @@ class wamo extends utils.Adapter {
 	}
 
 	/**
-	 * Timer event handler
+	 * Timer action
 	 * [alarm]
 	 */
 	async alarm_TimerTick() {
@@ -6471,7 +6470,7 @@ class wamo extends utils.Adapter {
 	}
 
 	/**
-	 * Timer event handler
+	 * Timer action
 	 * [short]
 	 */
 	async short_TimerTick() {
@@ -6501,7 +6500,7 @@ class wamo extends utils.Adapter {
 	}
 
 	/**
-	 * Timer event handler
+	 * Timer action
 	 * [long]
 	 */
 	async long_TimerTick() {
@@ -6525,7 +6524,7 @@ class wamo extends utils.Adapter {
 	}
 
 	/**
-	 * Timer event handler
+	 * Timer action
 	 * [very long]
 	 */
 	async very_long_TimerTick() {
@@ -8100,7 +8099,6 @@ class wamo extends utils.Adapter {
 		});
 	}
 
-
 	/**
 	 * Pulls profile parameter data from the device
 	 * @param {number} ProfileNumber - profile number
@@ -8802,7 +8800,6 @@ class wamo extends utils.Adapter {
 		});
 
 	}
-
 }
 
 /**
@@ -8815,14 +8812,20 @@ function sleep(ms) {
 	});
 }
 
-const isObject = function (val) {
+/**
+ * testing if val is an object
+ * @param {any} val
+ * @returns String 'object' or false
+ */
+function isObject(val) {
 	if (val === null) { return false; }
 	return (typeof val === 'object');
-};
+}
 
-//===================================================
-// Timer Event Handler
-//===================================================
+/**
+ * Timer event handler
+ * [alarm]
+ */
 async function alarm_poll() {
 	try {
 		await myAdapter.alarm_TimerTick();
@@ -8831,6 +8834,10 @@ async function alarm_poll() {
 	}
 }
 
+/**
+ * Timer event handler
+ * [short]
+ */
 async function short_poll() {
 	try {
 		await myAdapter.short_TimerTick();
@@ -8839,6 +8846,10 @@ async function short_poll() {
 	}
 }
 
+/**
+ * Timer event handler
+ * [long]
+ */
 async function long_poll() {
 	try {
 		await myAdapter.long_TimerTick();
@@ -8847,6 +8858,10 @@ async function long_poll() {
 	}
 }
 
+/**
+ * Timer event handler
+ * [very long]
+ */
 async function very_long_poll() {
 	try {
 		await myAdapter.very_long_TimerTick();
@@ -8855,6 +8870,10 @@ async function very_long_poll() {
 	}
 }
 
+/**
+ * Cron event handler
+ * [daily]
+ */
 async function cron_poll_day() {
 	try {
 		await myAdapter.alarm_cron_day_Tick();
@@ -8864,6 +8883,10 @@ async function cron_poll_day() {
 
 }
 
+/**
+ * Cron event handler
+ * [weekly]
+ */
 async function cron_poll_week() {
 	try {
 		await myAdapter.alarm_cron_week_Tick();
@@ -8873,6 +8896,10 @@ async function cron_poll_week() {
 
 }
 
+/**
+ * Cron event handler
+ * [monthly]
+ */
 async function cron_poll_month() {
 	try {
 		await myAdapter.alarm_cron_month_Tick();
@@ -8882,6 +8909,10 @@ async function cron_poll_month() {
 
 }
 
+/**
+ * Cron event handler
+ * [yearly]
+ */
 async function cron_poll_year() {
 	try {
 		await myAdapter.alarm_cron_year_Tick();
