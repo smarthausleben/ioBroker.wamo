@@ -1,0 +1,18 @@
+chore: release v0.2.1
+
+change all RAW states -> new role: json
+change all RAW states -> new common.type: string
+change state RTC -> new role: value.time
+change state SRO -> new write: true
+change state WFS -> new role: indicator.reachable
+change state VER -> new role: info.firmware
+change state SRN -> new role: info.serial
+change state WGW -> new role: info.ip 
+change state VLV -> new role: value.valve 
+change state NET -> new role: value.voltage 
+change state AB -> new role: level.valve
+change state BAT -> new role: value.battery
+change info messages on profile readout will only be showen if option "more loging messages" is enabled  
+change to Admin 5  
+add adapter connection status will be updated if device ins reachable/unreachable
+added State TMP - Leak protection temporary deactivation is now changeable
