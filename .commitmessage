@@ -1,4 +1,4 @@
-chore: release v0.2.0
+chore: release v0.2.1
 
 change all RAW states -> new role: json
 change all RAW states -> new common.type: string
