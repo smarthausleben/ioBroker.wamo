@@ -1,5 +1,26 @@
 # Older changes
 
+## 0.2.0 (2022.07.28)
+* (smarthausleben) change Profile states data type - All old Profile state objects need to be deleted first
+* (smarthausleben) added State PW - Profile x leakage warning is now changeable (Issue #8)
+* (smarthausleben) added State PV - Profile x leakage volume limit is now changeable (Issue #8)
+* (smarthausleben) added State PT - Profile x leakage time limit is now changeable (Issue #8)
+* (smarthausleben) added State PR - Profile x time to return to default profile is now changeable (Issue #8)
+* (smarthausleben) added State PM - Profile x micro leak detection is now changeable (Issue #8)
+* (smarthausleben) added State PF - Profile x max flow is now changeable (Issue #8)
+* (smarthausleben) added State PB - Profile x buzzer is now changeable (Issue #8)
+* (smarthausleben) added State PN - Profile x name is now changeable (Issue #8)
+* (smarthausleben) added State PA - Profile x available is now changeable (Issue #8)
+* (smarthausleben) added State PRF - Selected profile is now changeable (Issue #8)
+* (smarthausleben) added State AB - Shutoff valve is now changeable (Issue #8)
+* (smarthausleben) added State SRO - Screen rotation angel is now changeable (Issue #8)
+* (smarthausleben) added profiles read out at very long timer (Issue #5)
+* (smarthausleben) added very long timer where values from initial start will be updated (Issue #5)
+* (smarthausleben) added German water hardness will be calculated unsing CONEC25 (temperature compensated water conductivity) if conductivity sensor AND temperature sensor is present * (smarthausleben) fixed State NET - needs to be red in SERVICE mode (Issue #11)
+* (smarthausleben) fixed SERVICE and FACTORY mode failure (Issue #10)
+* (smarthausleben) fixed water pressure unit (bar changed to mbar) (Issue #3)
+* (smarthausleben) added calculated state CNDEC25 (temperature compensated water conductivity) (Issue #6)
+
 ## 0.1.5 (2022.07.21)
 * (smarthausleben) fixed adapter crash (Issue #1, #4, #7, #9)
 * (smarthausleben) added state SFV (Flag if new firmware is available)

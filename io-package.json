@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "wamo",
-        "version": "0.2.4",
+        "version": "0.2.5",
         "news": {
+            "0.2.5": {
+                "en": "Readme file clean up",
+                "de": "Readme Datei aufräumen",
+                "ru": "Readme файл очистить вверх",
+                "pt": "Leia o arquivo clean-up",
+                "nl": "Vertaling:",
+                "fr": "Le fichier Readme nettoie",
+                "it": "Readme file pulizia",
+                "es": "Archivo de Readme limpia",
+                "pl": "Czyste pliki",
+                "zh-cn": "阅读档案清洁"
+              },
             "0.2.4": {
                 "en": "Readme file clean up",
                 "de": "Readme Datei aufräumen",
