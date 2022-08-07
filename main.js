@@ -7508,7 +7508,7 @@ class wamo extends utils.Adapter {
 			if (moreMessages) { this.log.info('Setting SERVICE mode');}
 			if(this.syrApiClient != null)
 			{
-				const deviceResponse = await this.syrApiClient.get(Parameter_SERVICE_Mode);
+				const deviceResponse = await this.syrApiClient.get('set/' + Parameter_SERVICE_Mode);
 				if(moreMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
 				return true;
 			}
