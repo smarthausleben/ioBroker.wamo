@@ -5441,7 +5441,7 @@ class wamo extends utils.Adapter {
 
 		this.syrApiClient = axios.create({
 			baseURL: `https://${this.config.device_ip}:${this.config.device_port}/safe-tec/`,
-			timeout: 1000,
+			timeout: 10000,
 			responseType: 'json',
 			responseEncoding: 'utf8',
 			httpsAgent: new https.Agent({
@@ -5648,12 +5648,12 @@ class wamo extends utils.Adapter {
 
 		try {
 			// clear all intervals
-			try{clearInterval(alarm_Intervall_ID);}catch(err){this.log.error('ERRRO clerring [Alarm Timer] interval');}
-			try{clearInterval(short_Intervall_ID);}catch(err){this.log.error('ERRRO clerring [Short Timer] interval');}
-			try{clearInterval(long_Intervall_ID);}catch(err){this.log.error('ERRRO clerring [Long Timer] interval');}
-			try{clearInterval(very_long_Intervall_ID);}catch(err){this.log.error('ERRRO clerring [Very Long Timer] interval');}
+			try { clearInterval(alarm_Intervall_ID); } catch (err) { this.log.error('ERRRO clerring [Alarm Timer] interval'); }
+			try { clearInterval(short_Intervall_ID); } catch (err) { this.log.error('ERRRO clerring [Short Timer] interval'); }
+			try { clearInterval(long_Intervall_ID); } catch (err) { this.log.error('ERRRO clerring [Long Timer] interval'); }
+			try { clearInterval(very_long_Intervall_ID); } catch (err) { this.log.error('ERRRO clerring [Very Long Timer] interval'); }
 
-			try{clearTimeout(delay_Timer_ID);}catch(err){this.log.error('ERRRO clerring [Delay Timeout] interval');}
+			try { clearTimeout(delay_Timer_ID); } catch (err) { this.log.error('ERRRO clerring [Delay Timeout] interval'); }
 
 			callback();
 		} catch (e) {
@@ -6258,9 +6258,9 @@ class wamo extends utils.Adapter {
 				}
 				catch (err) {
 					// Tieout to clear?
-					if(delay_Timer_ID != null){
-						try{this.clearTimeout(delay_Timer_ID);}
-						catch(err){this.log.error('Error clear Timeout');}
+					if (delay_Timer_ID != null) {
+						try { this.clearTimeout(delay_Timer_ID); }
+						catch (err) { this.log.error('Error clear Timeout'); }
 					}
 					this.log.error('await sleep(3000) ERROR: ' + err);
 				}
@@ -6272,9 +6272,9 @@ class wamo extends utils.Adapter {
 				}
 				catch (err) {
 					// Tieout to clear?
-					if(delay_Timer_ID != null){
-						try{this.clearTimeout(delay_Timer_ID);}
-						catch(err){this.log.error('Error clear Timeout');}
+					if (delay_Timer_ID != null) {
+						try { this.clearTimeout(delay_Timer_ID); }
+						catch (err) { this.log.error('Error clear Timeout'); }
 					}
 					this.log.error('await sleep(3000) ERROR: ' + err);
 				}
@@ -6286,9 +6286,9 @@ class wamo extends utils.Adapter {
 				}
 				catch (err) {
 					// Tieout to clear?
-					if(delay_Timer_ID != null){
-						try{this.clearTimeout(delay_Timer_ID);}
-						catch(err){this.log.error('Error clear Timeout');}
+					if (delay_Timer_ID != null) {
+						try { this.clearTimeout(delay_Timer_ID); }
+						catch (err) { this.log.error('Error clear Timeout'); }
 					}
 					this.log.error('await sleep(2000) ERROR: ' + err);
 				}
@@ -6567,23 +6567,25 @@ class wamo extends utils.Adapter {
 	}
 
 	async newDevicePing() {
-		try {
-			if (this.syrApiClient != null) {
-				interfaceBussy = true; // to informe other timer calls that the can't perfromnrequest and therefore have to skipp.
-				const deviceResponse = await this.syrApiClient.get('get/');
-				if (deviceResponse.status === 200) {
-					return true;
+		return new Promise(async (resolve, reject) => {
+			try {
+				if (this.syrApiClient != null) {
+					interfaceBussy = true; // to informe other timer calls that the can't perfromnrequest and therefore have to skipp.
+					const deviceResponse = await this.syrApiClient.get('get/');
+					if (deviceResponse.status === 200) {
+						resolve(true);
+					} else {
+						this.log.error('Axios response.status: ' + String(deviceResponse.status) + ' ' + String(deviceResponse.statusText));
+						reject(false);
+					}
 				} else {
-					this.log.error('Axios response.status: ' + String(deviceResponse.status) + ' ' + String(deviceResponse.statusText));
-					return false;
+					reject('syrApiClient is NULL');
 				}
-			} else {
-				throw 'syrApiClient is NULL';
+			} catch (err) {
+				this.log.error(String(err));
+				reject(err);
 			}
-		}catch (err) {
-			this.log.error(String(err));
-			throw err;
-		}
+		});
 	}
 
 	/**
@@ -6594,19 +6596,18 @@ class wamo extends utils.Adapter {
 	async devicePing(IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
 			interfaceBussy = true;
-			try{
-				if(this.syrApiClient != null)
-				{
+			try {
+				if (this.syrApiClient != null) {
 					const deviceResponse = await this.syrApiClient.get('get/');
 					interfaceBussy = false;
 					await this.setStateAsync('info.connection', { val: true, ack: true });
 					this.log.debug('Target device is reachable');
 					resolve(deviceResponse);
-				}else{
+				} else {
 					reject('syrApiClient is null;');
 				}
 			}
-			catch(err){
+			catch (err) {
 				interfaceBussy = false;
 				await this.setStateAsync('info.connection', { val: false, ack: true });
 				this.log.error('Target device is NOT reachable -> ERROR: ' + err);
