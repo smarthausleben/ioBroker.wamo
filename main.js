@@ -7504,6 +7504,26 @@ class wamo extends utils.Adapter {
 	 * @returns true or error
 	 */
 	async set_SERVICE_Mode() {
+		try {
+			if (moreMessages) { this.log.info('Setting SERVICE mode');}
+			if(this.syrApiClient != null)
+			{
+				const deviceResponse = await this.syrApiClient.get(Parameter_SERVICE_Mode);
+				if(moreMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
+				return true;
+			}
+			else{
+				throw new Error('syrApiClient is not initialized!');
+			}
+		} catch (err) {
+			throw new Error(err.message);
+		}
+	}
+	/**
+	 * sends the comand to the device to bring it into SERVICE mode
+	 * @returns true or error
+	 */
+	async old_set_SERVICE_Mode() {
 		return new Promise(async (resolve, reject) => {
 			try {
 				this.log.debug('async set_SERVICE_Mode() -> url: http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/set/' + Parameter_SERVICE_Mode);
