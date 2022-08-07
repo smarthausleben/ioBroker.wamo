@@ -6579,7 +6579,7 @@ class wamo extends utils.Adapter {
 				this.log.debug('this.syrApiClientbaseURL: ' + String(this.syrApiClient.defaults.responseType));
 				this.log.debug('this.syrApiClient.get(\'get/\') -> hit');
 				const deviceResponse = await this.syrApiClient.get('get/');
-				this.log.debug('syrApiClient response: ' + JSON.stringify(deviceResponse));
+				this.log.debug('syrApiClient response: ' + JSON.stringify(deviceResponse.data));
 				if (deviceResponse.status === 200) {
 					return true;
 				} else {
