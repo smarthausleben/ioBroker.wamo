@@ -5443,10 +5443,12 @@ class wamo extends utils.Adapter {
 			baseURL: `https://${this.config.device_ip}:${this.config.device_port}/safe-tec/`,
 			timeout: 10000,
 			responseType: 'json',
-			responseEncoding: 'utf8',
+			responseEncoding: 'utf8'
+			/*
 			httpsAgent: new https.Agent({
 				rejectUnauthorized: false,
 			}),
+			*/
 		});
 
 		//=================================================================================================
