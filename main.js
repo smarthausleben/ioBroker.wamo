@@ -5439,9 +5439,14 @@ class wamo extends utils.Adapter {
 
 
 
-		this.syrApiClient = await axios.create({
+
+		//=================================================================================================
+		// Initialize Axios Client
+		//=================================================================================================
+		this.syrApiClient = axios.create({
 			baseURL: `http://${this.config.device_ip}:${this.config.device_port}/safe-tec/`,
-			timeout: 2500
+			timeout: 2500,
+			responseType: 'json'
 		});
 
 		//=================================================================================================
@@ -6567,6 +6572,10 @@ class wamo extends utils.Adapter {
 			try {
 				if (this.syrApiClient != null) {
 					interfaceBussy = true; // to informe other timer calls that the can't perfromnrequest and therefore have to skipp.
+					this.log.debug('this.syrApiClientbaseURL: ' + String(this.syrApiClient.defaults.baseURL));
+					this.log.debug('this.syrApiClientbaseURL: ' + String(this.syrApiClient.defaults.timeout));
+					this.log.debug('this.syrApiClientbaseURL: ' + String(this.syrApiClient.defaults.responseType));
+					this.log.debug('this.syrApiClient.get(\'get/\') -> hit');
 					const deviceResponse = await this.syrApiClient.get('get/');
 					this.log.debug('syrApiClient response: ' + JSON.stringify(deviceResponse));
 					if (deviceResponse.status === 200) {
