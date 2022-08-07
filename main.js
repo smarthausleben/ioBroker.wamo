@@ -5441,12 +5441,7 @@ class wamo extends utils.Adapter {
 
 		this.syrApiClient = axios.create({
 			baseURL: `http://${this.config.device_ip}:${this.config.device_port}/safe-tec/`,
-			timeout: 10000,
-			responseType: 'json',
-			responseEncoding: 'utf8',
-			httpsAgent: new https.Agent({
-				rejectUnauthorized: false,
-			}),
+			timeout: 10000
 		});
 
 		//=================================================================================================
