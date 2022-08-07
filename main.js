@@ -7830,49 +7830,46 @@ class wamo extends utils.Adapter {
 	 * @returns true or error
 	 */
 	async UpdateProfileState(ProfileNumber, stateID, value) {
-		return new Promise(async (resolve, reject) => {
-
-			this.log.debug('async UpdateProfileState(ProfileNumber, stateID, value) stateID: ' + String(stateID) + ' Profile Nr.: ' + String(ProfileNumber) + ' value: ' + JSON.stringify(value));
-			const parameterIDs = stateID.split('.');
-			const parameter = (parameterIDs[parameterIDs.length - 1]).substr(0, parameterIDs[parameterIDs.length - 1].length - 1);
-			this.log.debug('[UpdateProfileState(ProfileNumber, stateID, value)] Profilparameter =' + parameter);
-			try {
-				switch (parameter) {
-					case 'PA':
-						await this.state_profile_PA(ProfileNumber, value);
-						break;
-					case 'PN':
-						await this.state_profile_PN(ProfileNumber, value);
-						break;
-					case 'PV':
-						await this.state_profile_PV(ProfileNumber, value);
-						break;
-					case 'PT':
-						await this.state_profile_PT(ProfileNumber, value);
-						break;
-					case 'PF':
-						await this.state_profile_PF(ProfileNumber, value);
-						break;
-					case 'PM':
-						await this.state_profile_PM(ProfileNumber, value);
-						break;
-					case 'PR':
-						await this.state_profile_PR(ProfileNumber, value);
-						break;
-					case 'PB':
-						await this.state_profile_PB(ProfileNumber, value);
-						break;
-					case 'PW':
-						await this.state_profile_PW(ProfileNumber, value);
-						break;
-					default:
-				}
-
-				resolve(true);
-			} catch (err) {
-				reject(err);
+		this.log.debug('async UpdateProfileState(ProfileNumber, stateID, value) stateID: ' + String(stateID) + ' Profile Nr.: ' + String(ProfileNumber) + ' value: ' + JSON.stringify(value));
+		const parameterIDs = stateID.split('.');
+		const parameter = (parameterIDs[parameterIDs.length - 1]).substr(0, parameterIDs[parameterIDs.length - 1].length - 1);
+		this.log.debug('[UpdateProfileState(ProfileNumber, stateID, value)] Profilparameter =' + parameter);
+		try {
+			switch (parameter) {
+				case 'PA':
+					await this.state_profile_PA(ProfileNumber, value);
+					break;
+				case 'PN':
+					await this.state_profile_PN(ProfileNumber, value);
+					break;
+				case 'PV':
+					await this.state_profile_PV(ProfileNumber, value);
+					break;
+				case 'PT':
+					await this.state_profile_PT(ProfileNumber, value);
+					break;
+				case 'PF':
+					await this.state_profile_PF(ProfileNumber, value);
+					break;
+				case 'PM':
+					await this.state_profile_PM(ProfileNumber, value);
+					break;
+				case 'PR':
+					await this.state_profile_PR(ProfileNumber, value);
+					break;
+				case 'PB':
+					await this.state_profile_PB(ProfileNumber, value);
+					break;
+				case 'PW':
+					await this.state_profile_PW(ProfileNumber, value);
+					break;
+				default:
 			}
-		});
+
+			return true;
+		} catch (err) {
+			throw new Error(err.message);
+		}
 	}
 
 	/**
