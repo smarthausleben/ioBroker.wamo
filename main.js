@@ -7465,38 +7465,20 @@ class wamo extends utils.Adapter {
 	 * @returns true or error
 	 */
 	async set_FACTORY_Mode() {
-		return new Promise(async (resolve, reject) => {
-			try {
-				this.log.debug('async set_FACTORY_Mode() -> url: http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/set/' + Parameter_FACTORY_Mode);
-
-				axios({
-					method: 'get', url: 'http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/set/' + Parameter_FACTORY_Mode, timeout: 10000, responseType: 'json'
-				}
-				).then(async (response) => {
-					resolve(response.data);
-				}
-				).catch(async (error) => {
-					if (error.response) {
-						// The request was made and the server responded with a status code
-
-						this.log.warn(`Warnmeldung`);
-					} else if (error.request) {
-						// The request was made but no response was received
-						// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-						// http.ClientRequest in node.js<div></div>
-						this.log.info(error.message);
-					} else {
-						// Something happened in setting up the request that triggered an Error
-						this.log.info(error.message);
-					}
-					reject(error);
-				});
-				this.log.debug('FACTORY Mode aktiv');
-				resolve(true);
-			} catch (err) {
-				reject(err);
+		try {
+			if (moreMessages) { this.log.info('Setting SERVICE mode');}
+			if(this.syrApiClient != null)
+			{
+				const deviceResponse = await this.syrApiClient.get('set/' + Parameter_FACTORY_Mode);
+				if(moreMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
+				return true;
 			}
-		});
+			else{
+				throw new Error('syrApiClient is not initialized!');
+			}
+		} catch (err) {
+			throw new Error(err.message);
+		}
 	}
 
 	/**
@@ -7505,7 +7487,7 @@ class wamo extends utils.Adapter {
 	 */
 	async set_SERVICE_Mode() {
 		try {
-			if (moreMessages) { this.log.info('Setting SERVICE mode');}
+			if (moreMessages) { this.log.info('Setting FACTORY mode');}
 			if(this.syrApiClient != null)
 			{
 				const deviceResponse = await this.syrApiClient.get('set/' + Parameter_SERVICE_Mode);
@@ -7519,81 +7501,26 @@ class wamo extends utils.Adapter {
 			throw new Error(err.message);
 		}
 	}
-	/**
-	 * sends the comand to the device to bring it into SERVICE mode
-	 * @returns true or error
-	 */
-	async old_set_SERVICE_Mode() {
-		return new Promise(async (resolve, reject) => {
-			try {
-				this.log.debug('async set_SERVICE_Mode() -> url: http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/set/' + Parameter_SERVICE_Mode);
-
-				axios({
-					method: 'get', url: 'http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/set/' + Parameter_SERVICE_Mode, timeout: 10000, responseType: 'json'
-				}
-				).then(async (response) => {
-					resolve(response.data);
-				}
-				).catch(async (error) => {
-					if (error.response) {
-						// The request was made and the server responded with a status code
-
-						this.log.warn(`Warnmeldung`);
-					} else if (error.request) {
-						// The request was made but no response was received
-						// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-						// http.ClientRequest in node.js<div></div>
-						this.log.info(error.message);
-					} else {
-						// Something happened in setting up the request that triggered an Error
-						this.log.info(error.message);
-					}
-					reject(error);
-				});
-				this.log.debug('SERVICE Mode aktiv');
-				resolve(true);
-			} catch (err) {
-				reject(err);
-			}
-		});
-	}
 
 	/**
 	 * sends the comand to the device to bring it back into USER mode
 	 * @returns true or error
 	 */
 	async clear_SERVICE_FACTORY_Mode() {
-		return new Promise(async (resolve, reject) => {
-			try {
-				this.log.debug('async clear_SERVICE_FACTORY_Mode() -> url: http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/clr/' + Parameter_Clear_SERVICE_FACTORY_Mode);
-				axios({
-					method: 'get', url: 'http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/clr/' + Parameter_Clear_SERVICE_FACTORY_Mode, timeout: 10000, responseType: 'json'
-				}
-				).then(async (response) => {
-					resolve(response.data);
-				}
-				).catch(async (error) => {
-					if (error.response) {
-						// The request was made and the server responded with a status code
-
-						this.log.warn(`Warnmeldung`);
-					} else if (error.request) {
-						// The request was made but no response was received
-						// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-						// http.ClientRequest in node.js<div></div>
-						this.log.info(error.message);
-					} else {
-						// Something happened in setting up the request that triggered an Error
-						this.log.info(error.message);
-					}
-					reject(error);
-				});
-				this.log.debug('Cleared SERVICE or FACTORY mode.');
-				resolve(true);
-			} catch (err) {
-				reject(err);
+		try {
+			if (moreMessages) { this.log.info('Clearing SERVICE or FACTORY mode');}
+			if(this.syrApiClient != null)
+			{
+				const deviceResponse = await this.syrApiClient.get('clr/' + Parameter_Clear_SERVICE_FACTORY_Mode);
+				if(moreMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
+				return true;
 			}
-		});
+			else{
+				throw new Error('syrApiClient is not initialized!');
+			}
+		} catch (err) {
+			throw new Error(err.message);
+		}
 	}
 
 	/**
