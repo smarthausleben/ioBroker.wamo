@@ -8,6 +8,7 @@
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
 const axios = require('axios').default;
+const https = require('https');
 const schedule = require('node-schedule');
 const { join } = require('path');
 const { stringify } = require('querystring');
@@ -5374,23 +5375,6 @@ const longPeriode = [
 	DeviceParameters.ValveTestOngoing
 ];
 
-/**
- * Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln
- */
-axios.interceptors.request.use(x => {
-	x.meta = x.meta || {};
-	x.meta.requestStartedAt = new Date().getTime();
-	return x;
-});
-
-/**
- * Funktionen um die Antwortzeiten des HTTP Requests zu ermitteln
- */
-axios.interceptors.response.use(x => {
-	x.responseTime = new Date().getTime() - x.config.meta.requestStartedAt;
-	return x;
-});
-
 class wamo extends utils.Adapter {
 
 	/**
@@ -5399,8 +5383,10 @@ class wamo extends utils.Adapter {
 	constructor(options) {
 		super({
 			...options,
-			name: adapterName,
+			name: String(adapterName),
 		});
+
+		this.syrApiClient = null;
 
 		// test
 		this.on('ready', this.onReady.bind(this));
@@ -5452,13 +5438,25 @@ class wamo extends utils.Adapter {
 		}
 
 
+
+		this.syrApiClient = axios.create({
+			baseURL: `https://${this.config.device_ip}:${this.config.device_port}/safe-tec/`,
+			timeout: 1000,
+			responseType: 'json',
+			responseEncoding: 'utf8',
+			httpsAgent: new https.Agent({
+				rejectUnauthorized: false,
+			}),
+		});
+
 		//=================================================================================================
 		// Test if device is responding
 		//=================================================================================================
 		pingOK = false;
 		while (!pingOK) {
 			try {
-				await this.devicePing(this.config.device_ip, this.config.device_port);
+				await this.newDevicePing();
+				// await this.devicePing(this.config.device_ip, this.config.device_port);
 				this.log.info('Leakage protection device is present at: ' + String(this.config.device_ip) + ':' + String(this.config.device_port));
 				//=========================================================================================
 				//===  Connection LED to GREEN															===
@@ -5514,7 +5512,8 @@ class wamo extends utils.Adapter {
 				pingOK = false;
 				while (!pingOK) {
 					try {
-						await this.devicePing(this.config.device_ip, this.config.device_port);
+						await this.newDevicePing();
+						//await this.devicePing(this.config.device_ip, this.config.device_port);
 						//=========================================================================================
 						//===  Connection LED to GREEN															===
 						//=========================================================================================
@@ -5569,7 +5568,8 @@ class wamo extends utils.Adapter {
 				pingOK = false;
 				while (!pingOK) {
 					try {
-						await this.devicePing(this.config.device_ip, this.config.device_port);
+						await this.newDevicePing();
+						//await this.devicePing(this.config.device_ip, this.config.device_port);
 						//=========================================================================================
 						//===  Connection LED to GREEN															===
 						//=========================================================================================
@@ -6566,6 +6566,26 @@ class wamo extends utils.Adapter {
 		});
 	}
 
+	async newDevicePing() {
+		try {
+			if (this.syrApiClient != null) {
+				interfaceBussy = true; // to informe other timer calls that the can't perfromnrequest and therefore have to skipp.
+				const deviceResponse = await this.syrApiClient.get('get/');
+				if (deviceResponse.status === 200) {
+					return true;
+				} else {
+					this.log.error('Axios response.status: ' + String(deviceResponse.status) + ' ' + String(deviceResponse.statusText));
+					return false;
+				}
+			} else {
+				throw 'syrApiClient is NULL';
+			}
+		}catch (err) {
+			this.log.error(String(err));
+			throw err;
+		}
+	}
+
 	/**
 	 * test if device is responding
 	 * @param {string} IPadress
@@ -6573,6 +6593,26 @@ class wamo extends utils.Adapter {
 	 */
 	async devicePing(IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
+			interfaceBussy = true;
+			try{
+				if(this.syrApiClient != null)
+				{
+					const deviceResponse = await this.syrApiClient.get('get/');
+					interfaceBussy = false;
+					await this.setStateAsync('info.connection', { val: true, ack: true });
+					this.log.debug('Target device is reachable');
+					resolve(deviceResponse);
+				}else{
+					reject('syrApiClient is null;');
+				}
+			}
+			catch(err){
+				interfaceBussy = false;
+				await this.setStateAsync('info.connection', { val: false, ack: true });
+				this.log.error('Target device is NOT reachable -> ERROR: ' + err);
+				reject(err);
+			}
+
 			interfaceBussy = true;
 			axios({ method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/', timeout: 10000, responseType: 'json' }
 			).then(async (response) => {
@@ -6617,7 +6657,8 @@ class wamo extends utils.Adapter {
 							pingOK = false;
 							while (!pingOK) {
 								try {
-									await this.devicePing(this.config.device_ip, this.config.device_port);
+									await this.newDevicePing();
+									//await this.devicePing(this.config.device_ip, this.config.device_port);
 									device_responsive = true;	// global flag if device is responsive
 									pingOK = true;
 								}
@@ -7475,8 +7516,6 @@ class wamo extends utils.Adapter {
 					method: 'get', url: 'http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/set/' + Parameter_FACTORY_Mode, timeout: 10000, responseType: 'json'
 				}
 				).then(async (response) => {
-					const content = response.data;
-					this.log.debug(`[setDeviceParameter] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
 					resolve(response.data);
 				}
 				).catch(async (error) => {
@@ -7516,8 +7555,6 @@ class wamo extends utils.Adapter {
 					method: 'get', url: 'http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/set/' + Parameter_SERVICE_Mode, timeout: 10000, responseType: 'json'
 				}
 				).then(async (response) => {
-					const content = response.data;
-					this.log.debug(`[setDeviceParameter] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
 					resolve(response.data);
 				}
 				).catch(async (error) => {
@@ -7556,8 +7593,6 @@ class wamo extends utils.Adapter {
 					method: 'get', url: 'http://' + this.config.device_ip + ':' + this.config.device_port + '/safe-tec/clr/' + Parameter_Clear_SERVICE_FACTORY_Mode, timeout: 10000, responseType: 'json'
 				}
 				).then(async (response) => {
-					const content = response.data;
-					this.log.debug(`[setDeviceParameter] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
 					resolve(response.data);
 				}
 				).catch(async (error) => {
@@ -7979,8 +8014,6 @@ class wamo extends utils.Adapter {
 			axios({ method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/' + String(Parameter.id), timeout: 10000, responseType: 'json' }
 			).then(async (response) => {
 				interfaceBussy = false;
-				const content = response.data;
-				this.log.debug(`[getSensorData] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
 
 				if (readModeChanged) {
 					try {
@@ -8060,8 +8093,6 @@ class wamo extends utils.Adapter {
 				method: 'get', url: 'http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/set/' + String(Parameter.id) + '/' + String(Value), timeout: 10000, responseType: 'json'
 			}
 			).then(async (response) => {
-				const content = response.data;
-				this.log.debug(`[setDeviceParameter] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
 
 				if (writeModeChanged) {
 					try {
@@ -8129,8 +8160,6 @@ class wamo extends utils.Adapter {
 				method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/' + String(ParameterID) + String(ProfileNumber), timeout: 10000, responseType: 'json'
 			}
 			).then(async (response) => {
-				const content = response.data;
-				this.log.debug(`[getSensorData] local request done after ${response.responseTime / 1000}s - received data (${response.status}): ${JSON.stringify(content)}`);
 
 				resolve(response.data);
 			}
