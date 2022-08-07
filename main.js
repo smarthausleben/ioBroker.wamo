@@ -5455,21 +5455,23 @@ class wamo extends utils.Adapter {
 		pingOK = false;
 		while (!pingOK) {
 			try {
-				await this.newDevicePing();
 				//await this.devicePing(this.config.device_ip, this.config.device_port);
-				this.log.info('Leakage protection device is present at: ' + String(this.config.device_ip) + ':' + String(this.config.device_port));
-				//=========================================================================================
-				//===  Connection LED to GREEN															===
-				//=========================================================================================
-				try {
-					await this.setStateAsync('info.connection', { val: true, ack: true });
-					this.log.debug('info.connection set');
+				if(await this.newDevicePing())
+				{
+					this.log.info('Leakage protection device is present at: ' + String(this.config.device_ip) + ':' + String(this.config.device_port));
+					//=========================================================================================
+					//===  Connection LED to GREEN															===
+					//=========================================================================================
+					try {
+						await this.setStateAsync('info.connection', { val: true, ack: true });
+						this.log.debug('info.connection set');
+					}
+					catch (err) {
+						this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
+					}
+					device_responsive = true;	// global flag if device is responsive
+					pingOK = true;
 				}
-				catch (err) {
-					this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
-				}
-				device_responsive = true;	// global flag if device is responsive
-				pingOK = true;
 			}
 			catch (err) {
 				this.log.error(err);
@@ -5512,20 +5514,21 @@ class wamo extends utils.Adapter {
 				pingOK = false;
 				while (!pingOK) {
 					try {
-						await this.newDevicePing();
 						//await this.devicePing(this.config.device_ip, this.config.device_port);
-						//=========================================================================================
-						//===  Connection LED to GREEN															===
-						//=========================================================================================
-						try {
-							await this.setStateAsync('info.connection', { val: true, ack: true });
-							this.log.debug('info.connection set');
+						if (await this.newDevicePing()) {
+							//=========================================================================================
+							//===  Connection LED to GREEN															===
+							//=========================================================================================
+							try {
+								await this.setStateAsync('info.connection', { val: true, ack: true });
+								this.log.debug('info.connection set');
+							}
+							catch (err) {
+								this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
+							}
+							device_responsive = true;	// global flag if device is responsive
+							pingOK = true;
 						}
-						catch (err) {
-							this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
-						}
-						device_responsive = true;	// global flag if device is responsive
-						pingOK = true;
 					}
 					catch (err) {
 						this.log.error(err);
@@ -6567,31 +6570,29 @@ class wamo extends utils.Adapter {
 	}
 
 	async newDevicePing() {
-		return new Promise(async (resolve, reject) => {
-			this.log.debug('async newDevicePing() -> hit');
-			try {
-				if (this.syrApiClient != null) {
-					interfaceBussy = true; // to informe other timer calls that the can't perfromnrequest and therefore have to skipp.
-					this.log.debug('this.syrApiClientbaseURL: ' + String(this.syrApiClient.defaults.baseURL));
-					this.log.debug('this.syrApiClientbaseURL: ' + String(this.syrApiClient.defaults.timeout));
-					this.log.debug('this.syrApiClientbaseURL: ' + String(this.syrApiClient.defaults.responseType));
-					this.log.debug('this.syrApiClient.get(\'get/\') -> hit');
-					const deviceResponse = await this.syrApiClient.get('get/');
-					this.log.debug('syrApiClient response: ' + JSON.stringify(deviceResponse));
-					if (deviceResponse.status === 200) {
-						resolve(true);
-					} else {
-						this.log.error('Axios response.status: ' + String(deviceResponse.status) + ' ' + String(deviceResponse.statusText));
-						reject(false);
-					}
+		this.log.debug('async newDevicePing() -> hit');
+		try {
+			if (this.syrApiClient != null) {
+				interfaceBussy = true; // to informe other timer calls that the can't perfromnrequest and therefore have to skipp.
+				this.log.debug('this.syrApiClientbaseURL: ' + String(this.syrApiClient.defaults.baseURL));
+				this.log.debug('this.syrApiClientbaseURL: ' + String(this.syrApiClient.defaults.timeout));
+				this.log.debug('this.syrApiClientbaseURL: ' + String(this.syrApiClient.defaults.responseType));
+				this.log.debug('this.syrApiClient.get(\'get/\') -> hit');
+				const deviceResponse = await this.syrApiClient.get('get/');
+				this.log.debug('syrApiClient response: ' + JSON.stringify(deviceResponse));
+				if (deviceResponse.status === 200) {
+					return true;
 				} else {
-					reject('syrApiClient is NULL');
+					this.log.error('Axios response.status: ' + String(deviceResponse.status) + ' ' + String(deviceResponse.statusText));
+					return false;
 				}
-			} catch (err) {
-				this.log.error(String(err));
-				reject(err);
+			} else {
+				return false;
 			}
-		});
+		} catch (err) {
+			this.log.error(String(err));
+			throw err;
+		}
 	}
 
 	/**
