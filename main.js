@@ -5440,15 +5440,13 @@ class wamo extends utils.Adapter {
 
 
 		this.syrApiClient = axios.create({
-			baseURL: `https://${this.config.device_ip}:${this.config.device_port}/safe-tec/`,
+			baseURL: `http://${this.config.device_ip}:${this.config.device_port}/safe-tec/`,
 			timeout: 10000,
 			responseType: 'json',
-			responseEncoding: 'utf8'
-			/*
+			responseEncoding: 'utf8',
 			httpsAgent: new https.Agent({
 				rejectUnauthorized: false,
 			}),
-			*/
 		});
 
 		//=================================================================================================
@@ -5457,8 +5455,8 @@ class wamo extends utils.Adapter {
 		pingOK = false;
 		while (!pingOK) {
 			try {
-				//await this.newDevicePing();
-				await this.devicePing(this.config.device_ip, this.config.device_port);
+				await this.newDevicePing();
+				//await this.devicePing(this.config.device_ip, this.config.device_port);
 				this.log.info('Leakage protection device is present at: ' + String(this.config.device_ip) + ':' + String(this.config.device_port));
 				//=========================================================================================
 				//===  Connection LED to GREEN															===
@@ -5514,8 +5512,8 @@ class wamo extends utils.Adapter {
 				pingOK = false;
 				while (!pingOK) {
 					try {
-						//await this.newDevicePing();
-						await this.devicePing(this.config.device_ip, this.config.device_port);
+						await this.newDevicePing();
+						//await this.devicePing(this.config.device_ip, this.config.device_port);
 						//=========================================================================================
 						//===  Connection LED to GREEN															===
 						//=========================================================================================
@@ -5570,8 +5568,8 @@ class wamo extends utils.Adapter {
 				pingOK = false;
 				while (!pingOK) {
 					try {
-						//await this.newDevicePing();
-						await this.devicePing(this.config.device_ip, this.config.device_port);
+						await this.newDevicePing();
+						//await this.devicePing(this.config.device_ip, this.config.device_port);
 						//=========================================================================================
 						//===  Connection LED to GREEN															===
 						//=========================================================================================
@@ -6642,8 +6640,8 @@ class wamo extends utils.Adapter {
 							pingOK = false;
 							while (!pingOK) {
 								try {
-									//await this.newDevicePing();
-									await this.devicePing(this.config.device_ip, this.config.device_port);
+									await this.newDevicePing();
+									//await this.devicePing(this.config.device_ip, this.config.device_port);
 									device_responsive = true;	// global flag if device is responsive
 									pingOK = true;
 								}
