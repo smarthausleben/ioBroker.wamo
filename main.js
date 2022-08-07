@@ -5439,9 +5439,9 @@ class wamo extends utils.Adapter {
 
 
 
-		this.syrApiClient = axios.create({
+		this.syrApiClient = await axios.create({
 			baseURL: `http://${this.config.device_ip}:${this.config.device_port}/safe-tec/`,
-			timeout: 10000
+			timeout: 2500
 		});
 
 		//=================================================================================================
@@ -6563,6 +6563,7 @@ class wamo extends utils.Adapter {
 
 	async newDevicePing() {
 		return new Promise(async (resolve, reject) => {
+			this.log.debug('async newDevicePing() -> hit');
 			try {
 				if (this.syrApiClient != null) {
 					interfaceBussy = true; // to informe other timer calls that the can't perfromnrequest and therefore have to skipp.
