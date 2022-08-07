@@ -6574,6 +6574,7 @@ class wamo extends utils.Adapter {
 				if (this.syrApiClient != null) {
 					interfaceBussy = true; // to informe other timer calls that the can't perfromnrequest and therefore have to skipp.
 					const deviceResponse = await this.syrApiClient.get('get/');
+					this.log.debug('syrApiClient response: ' + JSON.stringify(deviceResponse));
 					if (deviceResponse.status === 200) {
 						resolve(true);
 					} else {
@@ -6597,25 +6598,6 @@ class wamo extends utils.Adapter {
 	 */
 	async devicePing(IPadress, Port) {
 		return new Promise(async (resolve, reject) => {
-			interfaceBussy = true;
-			try {
-				if (this.syrApiClient != null) {
-					const deviceResponse = await this.syrApiClient.get('get/');
-					interfaceBussy = false;
-					await this.setStateAsync('info.connection', { val: true, ack: true });
-					this.log.debug('Target device is reachable');
-					resolve(deviceResponse);
-				} else {
-					reject('syrApiClient is null;');
-				}
-			}
-			catch (err) {
-				interfaceBussy = false;
-				await this.setStateAsync('info.connection', { val: false, ack: true });
-				this.log.error('Target device is NOT reachable -> ERROR: ' + err);
-				reject(err);
-			}
-
 			interfaceBussy = true;
 			axios({ method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/', timeout: 10000, responseType: 'json' }
 			).then(async (response) => {
