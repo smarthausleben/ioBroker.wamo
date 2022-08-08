@@ -3541,7 +3541,6 @@ const DeviceParameters = {
 				},
 				type: 'number',
 				role: 'value.max',
-				role: 'state',
 				read: true,
 				write: true,
 				min: 0,
@@ -5408,9 +5407,9 @@ class wamo extends utils.Adapter {
 		this.log.debug('config Device IP: ' + this.config.device_ip);
 		this.log.debug('config Device Port: ' + this.config.device_port);
 		this.moreMessages = this.config.moremessages;
-		//this.apiResponseInfoMessages = this.config.apireaponsemessages;
-		//this.log.warn('this.config.apireaponsemessages; is: ' + String(this.config.apireaponsemessages));
-		//this.log.warn('Option apiResponseInfoMessages is: ' + String(apiResponseInfoMessages));
+		this.apiResponseInfoMessages = this.config.apireaponsemessages;
+		this.log.warn('this.config.apireaponsemessages; is: ' + String(this.config.apireaponsemessages));
+		this.log.warn('Option apiResponseInfoMessages is: ' + String(apiResponseInfoMessages));
 		this.log.debug('More log messages: ' + String(this.config.moremessages));
 
 		//=================================================================================================
@@ -5620,7 +5619,7 @@ class wamo extends utils.Adapter {
 
 		this.subscribeStates(DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id); // [SRO] Screen Rotation
 		this.subscribeStates(DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id); // [AB] Shutoff valve
-		this.subscribeStates(DeviceParameters.LeakProtectionTemporaryDeactivation.statePath + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id);// [TMP] temporary protection deactivation 
+		this.subscribeStates(DeviceParameters.LeakProtectionTemporaryDeactivation.statePath + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id);// [TMP] temporary protection deactivation
 		this.subscribeStates(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id); // [PRF] Selected profile
 		this.subscribeStates(adapterChannels.DevicePofiles.path + '.*'); // ALL profile states
 
@@ -6583,7 +6582,7 @@ class wamo extends utils.Adapter {
 				const deviceResponse = await this.syrApiClient.get('get/');
 				interfaceBussy = false; // to informe other timer calls that they can perform request to the device.
 
-				if(this.apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
+				if(this.moreMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
 
 				if (deviceResponse.status === 200) {
 					return true;
@@ -7200,12 +7199,12 @@ class wamo extends utils.Adapter {
 						break;
 					case DeviceParameters.APTimeout.id:					// APT - WiFi AP timeout
 						if (parseInt(value) == 0) {
-							finalValue = await this.getGlobalisedValue(DeviceParameters.APTimeout, 0);
+							finalValue = await this.getGlobalisedValue(DeviceParameters.APTimeout, value);
 							if (finalValue === null) {	// did we get a globalised Value back?
 								finalValue = 'AP timeout not active';
 							}
 						} else {
-							finalValue = await this.getGlobalisedValue(DeviceParameters.APTimeout, 'else');
+							finalValue = await this.getGlobalisedValue(DeviceParameters.APTimeout, value);
 							if (finalValue === null) {	// did we get a globalised Value back?
 								finalValue = 'AP disabled after ' + String(value) + ' seconds after internet connection';
 							}
@@ -7970,7 +7969,7 @@ class wamo extends utils.Adapter {
 		// is parameter writable?
 		if (Parameter.writeCommand === null) {
 			this.log.warn('[async set_DevieParameter(Parameter, Value)] Parameter ID ' + String(Parameter.id) + ' can not be written!');
-			reject('Parameter ID ' + String(Parameter.id) + ' can not be written!');
+			throw new Error('Parameter ID ' + String(Parameter.id) + ' can not be written!');
 		}
 
 		// Do we need special permission to write this parameter?
