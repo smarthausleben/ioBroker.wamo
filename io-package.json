@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "wamo",
-        "version": "0.2.5",
+        "version": "0.2.6",
         "news": {
+            "0.2.6": {
+                "en": "added 2 additional options to define lof.info messages\nchange using single api client to communicate with the device\nsome code optimizations and cleanups",
+                "de": "zusätzlich 2 optionen zur definition von lof.info-nachrichten\nmit einem einzigen api-client ändern, um mit dem gerät zu kommunizieren\neinige codeoptimierungen und -reinigungen",
+                "ru": "добавлено 2 дополнительных опции для определения сообщений lof.info\nизменить с помощью одного api клиента, чтобы общаться с устройством\nнекоторые оптимизации кода и очистки",
+                "pt": "adicionado 2 opções adicionais para definir mensagens lof.info\nmudar usando um único cliente api para se comunicar com o dispositivo\nalgumas otimizações de código e limpezas",
+                "nl": "voegde twee extra opties toe om lof info berichten te definiëren\nverandering met één api cliënt om te communiceren met het apparaat\nwat code optimaties en opruiming",
+                "fr": "2 options supplémentaires pour définir des messages lof.info\nchanger en utilisant un seul client api pour communiquer avec l'appareil\nquelques optimisations de code et nettoyages",
+                "it": "aggiunto 2 opzioni aggiuntive per definire i messaggi lof.info\ncambiare utilizzando un singolo client api per comunicare con il dispositivo\nalcune ottimizzazioni di codice e pulizia",
+                "es": "añadido 2 opciones adicionales para definir mensajes de lof.info\ncambiar usando un solo cliente api para comunicarse con el dispositivo\nalgunas optimizaciones de código y limpiezas",
+                "pl": "dodano dwie dodatkowe opcje definiowania wiadomości\nzmiana pojedynczego klienta by komunikować się z urządzeniem\nniektóre z optymalizacji kodu i czyszczeń",
+                "zh-cn": "增加另外两个选择,以界定定位信息。\n使用单一皮埃尔客户与装置联系的改变\n某些守则的优化和清洁"
+            },
             "0.2.5": {
                 "en": "Readme file clean up",
                 "de": "Readme Datei aufräumen",
