@@ -7,6 +7,7 @@
 // The adapter-core module gives you access to the core ioBroker functions
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
+const { doResetHistory } = require('@iobroker/testing/build/tests/unit/mocks/tools');
 const axios = require('axios').default;
 const http = require('http');
 const schedule = require('node-schedule');
@@ -5408,6 +5409,8 @@ class wamo extends utils.Adapter {
 		this.log.debug('config Device Port: ' + this.config.device_port);
 		this.moreMessages = this.config.moremessages;
 		this.apiResponseInfoMessages = this.config.apireaponsemessages;
+		this.log.warn('this.config.apireaponsemessages; is: ' + String(this.config.apireaponsemessages));
+		this.log.warn('Option apiResponseInfoMessages is: ' + String(apiResponseInfoMessages));
 		this.log.debug('More log messages: ' + String(this.config.moremessages));
 
 		//=================================================================================================
@@ -6580,7 +6583,7 @@ class wamo extends utils.Adapter {
 				const deviceResponse = await this.syrApiClient.get('get/');
 				interfaceBussy = false; // to informe other timer calls that they can perform request to the device.
 
-				if(apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
+				if(this.apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
 
 				if (deviceResponse.status === 200) {
 					return true;
@@ -7476,7 +7479,7 @@ class wamo extends utils.Adapter {
 			if(this.syrApiClient != null)
 			{
 				const deviceResponse = await this.syrApiClient.get('set/' + Parameter_FACTORY_Mode);
-				if(apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
+				if(this.apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
 				return true;
 			}
 			else{
@@ -7497,7 +7500,7 @@ class wamo extends utils.Adapter {
 			if(this.syrApiClient != null)
 			{
 				const deviceResponse = await this.syrApiClient.get('set/' + Parameter_SERVICE_Mode);
-				if(apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
+				if(this.apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
 				return true;
 			}
 			else{
@@ -7518,7 +7521,7 @@ class wamo extends utils.Adapter {
 			if(this.syrApiClient != null)
 			{
 				const deviceResponse = await this.syrApiClient.get('clr/' + Parameter_Clear_SERVICE_FACTORY_Mode);
-				if(apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
+				if(this.apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
 				return true;
 			}
 			else{
@@ -7920,7 +7923,7 @@ class wamo extends utils.Adapter {
 				const deviceResponse = await this.syrApiClient.get('get/' + String(Parameter.id));
 				interfaceBussy = false;
 				if (deviceResponse.status === 200) {
-					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
+					if (this.apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 					if (readModeChanged) {
 						try {await this.clear_SERVICE_FACTORY_Mode();}
 						catch (err) {this.log.error('async get_DevieParameter(Parameter) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err);}
@@ -7997,7 +8000,7 @@ class wamo extends utils.Adapter {
 				const deviceResponse = await this.syrApiClient.get('set/' + String(Parameter.id));
 				interfaceBussy = false;
 				if (deviceResponse.status === 200) {
-					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
+					if (this.apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 					if (writeModeChanged) {
 						try { await this.clear_SERVICE_FACTORY_Mode(); }
 						catch (err) { this.log.error('async get_DevieParameter(Parameter) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err); }
