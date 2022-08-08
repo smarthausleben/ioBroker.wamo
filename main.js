@@ -47,6 +47,7 @@ let sensor_pressure_present = false;
 let sensor_conductivity_present = false;
 
 let moreMessages = true;
+let apiResponseInfoMessages = false;
 
 let pingOK = false;
 let device_responsive = false;
@@ -5406,6 +5407,7 @@ class wamo extends utils.Adapter {
 		this.log.debug('config Device IP: ' + this.config.device_ip);
 		this.log.debug('config Device Port: ' + this.config.device_port);
 		this.moreMessages = this.config.moremessages;
+		this.apiResponseInfoMessages = this.config.apireaponsemessages;
 		this.log.debug('More log messages: ' + String(this.config.moremessages));
 
 		//=================================================================================================
@@ -6319,21 +6321,22 @@ class wamo extends utils.Adapter {
 
 				// saving sum to "past" State
 				try {
-					await this.setObjectNotExistsAsync(StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id, StatisticStates.TotalPastDay.objectdefinition);
+					await this.setObjectNotExistsAsync(StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id, Object(StatisticStates.TotalPastDay.objectdefinition));
 				}
 				catch (err) {
 					this.log.error('await this.setObjectNotExistsAsync(' + StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id + ',' + StatisticStates.TotalPastDay.objectdefinition + ' ) ERROR: ' + err);
 				}
-				try {
-					await this.setStateAsync(StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id, { val: parseFloat(TotalDayState.val), ack: true });
+				if ((TotalDayState != null) && (TotalDayState.val != null)) {
+					try {
+						await this.setStateAsync(StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id, { val: TotalDayState.val, ack: true });
+					}
+					catch (err) {
+						this.log.error('setStateAsync(' + StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id + ',' + '{ val: parseFloat(' + TotalDayState.val + '), ack: true }) ERROR: ' + err);
+					}
 				}
-				catch (err) {
-					this.log.error('setStateAsync(' + StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id + ',' + '{ val: parseFloat(' + TotalDayState.val + '), ack: true }) ERROR: ' + err);
-				}
-
 				// resetting sum to 0
 				try {
-					await this.setObjectNotExistsAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, StatisticStates.TotalDay.objectdefinition);
+					await this.setObjectNotExistsAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, Object(StatisticStates.TotalDay.objectdefinition));
 				}
 				catch (err) {
 					this.log.error('await this.setObjectNotExistsAsync(' + StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id + ',' + StatisticStates.TotalDay.objectdefinition + ' ) ERROR: ' + err);
@@ -6370,14 +6373,15 @@ class wamo extends utils.Adapter {
 				// getting saved Total state
 				const TotalWeekState = await this.getStateAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id);
 
-				// saving sum to "past" State
-				await this.setObjectNotExistsAsync(StatisticStates.TotalPastWeek.statePath + '.' + StatisticStates.TotalPastWeek.id, StatisticStates.TotalPastWeek.objectdefinition);
-				await this.setStateAsync(StatisticStates.TotalPastWeek.statePath + '.' + StatisticStates.TotalPastWeek.id, { val: parseFloat(TotalWeekState.val), ack: true });
+				if ((TotalWeekState != null) && (TotalWeekState.val != null)) {
+					// saving sum to "past" State
+					await this.setObjectNotExistsAsync(StatisticStates.TotalPastWeek.statePath + '.' + StatisticStates.TotalPastWeek.id, Object(StatisticStates.TotalPastWeek.objectdefinition));
+					await this.setStateAsync(StatisticStates.TotalPastWeek.statePath + '.' + StatisticStates.TotalPastWeek.id, { val: TotalWeekState.val, ack: true });
 
-				// resetting sum to 0
-				await this.setObjectNotExistsAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id, StatisticStates.TotalWeek.objectdefinition);
-				await this.setStateAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id, { val: 0, ack: true });
-
+					// resetting sum to 0
+					await this.setObjectNotExistsAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id, Object(StatisticStates.TotalWeek.objectdefinition));
+					await this.setStateAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id, { val: 0, ack: true });
+				}
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -6403,14 +6407,15 @@ class wamo extends utils.Adapter {
 				// getting saved Total state
 				const TotalMonthState = await this.getStateAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id);
 
-				// saving sum to "past" State
-				await this.setObjectNotExistsAsync(StatisticStates.TotalPastMonth.statePath + '.' + StatisticStates.TotalPastMonth.id, StatisticStates.TotalPastMonth.objectdefinition);
-				await this.setStateAsync(StatisticStates.TotalPastMonth.statePath + '.' + StatisticStates.TotalPastMonth.id, { val: parseFloat(TotalMonthState.val), ack: true });
+				if ((TotalMonthState != null) && (TotalMonthState.val != null)) {
+					// saving sum to "past" State
+					await this.setObjectNotExistsAsync(StatisticStates.TotalPastMonth.statePath + '.' + StatisticStates.TotalPastMonth.id, Object(StatisticStates.TotalPastMonth.objectdefinition));
+					await this.setStateAsync(StatisticStates.TotalPastMonth.statePath + '.' + StatisticStates.TotalPastMonth.id, { val: TotalMonthState.val, ack: true });
 
-				// resetting sum to 0
-				await this.setObjectNotExistsAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id, StatisticStates.TotalMonth.objectdefinition);
-				await this.setStateAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id, { val: 0, ack: true });
-
+					// resetting sum to 0
+					await this.setObjectNotExistsAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id, Object(StatisticStates.TotalMonth.objectdefinition));
+					await this.setStateAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id, { val: 0, ack: true });
+				}
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -6436,14 +6441,15 @@ class wamo extends utils.Adapter {
 				// getting saved Total state
 				const TotalYearState = await this.getStateAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id);
 
-				// saving sum to "past" State
-				await this.setObjectNotExistsAsync(StatisticStates.TotalPastYear.statePath + '.' + StatisticStates.TotalPastYear.id, StatisticStates.TotalPastYear.objectdefinition);
-				await this.setStateAsync(StatisticStates.TotalPastYear.statePath + '.' + StatisticStates.TotalPastYear.id, { val: parseFloat(TotalYearState.val), ack: true });
+				if((TotalYearState != null) && (TotalYearState.val != null)){
+					// saving sum to "past" State
+					await this.setObjectNotExistsAsync(StatisticStates.TotalPastYear.statePath + '.' + StatisticStates.TotalPastYear.id, Object(StatisticStates.TotalPastYear.objectdefinition));
+					await this.setStateAsync(StatisticStates.TotalPastYear.statePath + '.' + StatisticStates.TotalPastYear.id, { val: TotalYearState.val, ack: true });
 
-				// resetting sum to 0
-				await this.setObjectNotExistsAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id, StatisticStates.TotalYear.objectdefinition);
-				await this.setStateAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id, { val: 0, ack: true });
-
+					// resetting sum to 0
+					await this.setObjectNotExistsAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id, Object(StatisticStates.TotalYear.objectdefinition));
+					await this.setStateAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id, { val: 0, ack: true });
+				}
 				resolve(true);
 			} catch (err) {
 				reject(err);
@@ -6574,7 +6580,7 @@ class wamo extends utils.Adapter {
 				const deviceResponse = await this.syrApiClient.get('get/');
 				interfaceBussy = false; // to informe other timer calls that they can perform request to the device.
 
-				if(moreMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
+				if(apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
 
 				if (deviceResponse.status === 200) {
 					return true;
@@ -7470,7 +7476,7 @@ class wamo extends utils.Adapter {
 			if(this.syrApiClient != null)
 			{
 				const deviceResponse = await this.syrApiClient.get('set/' + Parameter_FACTORY_Mode);
-				if(moreMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
+				if(apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
 				return true;
 			}
 			else{
@@ -7491,7 +7497,7 @@ class wamo extends utils.Adapter {
 			if(this.syrApiClient != null)
 			{
 				const deviceResponse = await this.syrApiClient.get('set/' + Parameter_SERVICE_Mode);
-				if(moreMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
+				if(apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
 				return true;
 			}
 			else{
@@ -7512,7 +7518,7 @@ class wamo extends utils.Adapter {
 			if(this.syrApiClient != null)
 			{
 				const deviceResponse = await this.syrApiClient.get('clr/' + Parameter_Clear_SERVICE_FACTORY_Mode);
-				if(moreMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
+				if(apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
 				return true;
 			}
 			else{
@@ -7914,7 +7920,7 @@ class wamo extends utils.Adapter {
 				const deviceResponse = await this.syrApiClient.get('get/' + String(Parameter.id));
 				interfaceBussy = false;
 				if (deviceResponse.status === 200) {
-					if (moreMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
+					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 					if (readModeChanged) {
 						try {await this.clear_SERVICE_FACTORY_Mode();}
 						catch (err) {this.log.error('async get_DevieParameter(Parameter) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err);}
@@ -7991,7 +7997,7 @@ class wamo extends utils.Adapter {
 				const deviceResponse = await this.syrApiClient.get('set/' + String(Parameter.id));
 				interfaceBussy = false;
 				if (deviceResponse.status === 200) {
-					if (moreMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
+					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 					if (writeModeChanged) {
 						try { await this.clear_SERVICE_FACTORY_Mode(); }
 						catch (err) { this.log.error('async get_DevieParameter(Parameter) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err); }

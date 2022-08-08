@@ -14,7 +14,7 @@
                 "es": "Archivo de Readme limpia",
                 "pl": "Czyste pliki",
                 "zh-cn": "阅读档案清洁"
-              },
+            },
             "0.2.4": {
                 "en": "Readme file clean up",
                 "de": "Readme Datei aufräumen",
@@ -26,7 +26,7 @@
                 "es": "Archivo de Readme limpia",
                 "pl": "Czyste pliki",
                 "zh-cn": "阅读档案清洁"
-              },
+            },
             "0.2.3": {
                 "en": "Admin 5 support, TMP changable, connection status",
                 "de": "Admin 5 Unterstützung, TMP changbar, Verbindungsstatus",
@@ -119,7 +119,8 @@
         "device_short_poll_interval": "60",
         "device_long_poll_interval": "120",
         "device_very_long_poll_interval": "300",
-        "moremessages": false
+        "moremessages": false,
+        "apireaponsemessages": false
     },
     "objects": [],
     "instanceObjects": [

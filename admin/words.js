@@ -98,6 +98,18 @@ systemDictionary = {
 		'pl': 'więcej wiadomości logowania',
 		'zh-cn': '更多日志信息'
 	},
+	'show api response as info logging messages': {
+		'en': 'show api response as info logging messages',
+		'de': 'api-antwort als info-logging-nachrichten anzeigen',
+		'ru': 'показать ответ api как сообщения для входа информации',
+		'pt': 'mostrar api resposta como info mensagens de registro',
+		'nl': 'toon api reactie als infologende berichten',
+		'fr': 'afficher la réponse api comme info journalging messages',
+		'it': 'mostrare api risposta come info registrazione messaggi',
+		'es': 'mostrar respuesta api como información mensajes de registro',
+		'pl': 'wykazuje odpowiedź jako info logowania wiadomości',
+		'zh-cn': 'a. 反应'
+	},
 	'factor german water hardness': {
 		'en': 'factor german water hardness',
 		'de': 'Faktor deutsche Wasserhärte',

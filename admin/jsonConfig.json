@@ -74,7 +74,15 @@
                     "sm": 12,
                     "md": 6,
                     "lg": 6,
-                    "label": "more loging messages"
+                    "label": "more logging messages"
+                },
+                "apireaponsemessages":{
+                    "newLine": true,
+                    "type": "checkbox",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "label": "show API response as info logging messages"
                 },
                 "_ioBrokerKursBanner": {
                     "newLine": true,
