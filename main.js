@@ -50,14 +50,8 @@ let sensor_conductivity_present = false;
 let moreMessages = true;
 let apiResponseInfoMessages = false;
 
-let pingOK = false;
-let device_responsive = false;
 let interfaceBussy;
 let SystemLanguage;
-
-// number of connection attemts before throwing an error and exiting
-const connectionRetrys = 5;
-const connectionRetryPause = 3000;
 
 /**
  * [Objects] Adapter chanels definition
@@ -5406,9 +5400,9 @@ class wamo extends utils.Adapter {
 		// this.config:
 		this.log.debug('config Device IP: ' + this.config.device_ip);
 		this.log.debug('config Device Port: ' + this.config.device_port);
-		this.moreMessages = this.config.moremessages;
-		this.apiResponseInfoMessages = this.config.apireaponsemessages;
-		this.log.warn('this.config.apireaponsemessages; is: ' + String(this.config.apireaponsemessages));
+		moreMessages = this.config.moremessages;
+		apiResponseInfoMessages = this.config.apiresponsemessages;
+		this.log.warn('this.config.apireaponsemessages; is: ' + String(this.config.apiresponsemessages));
 		this.log.warn('Option apiResponseInfoMessages is: ' + String(apiResponseInfoMessages));
 		this.log.debug('More log messages: ' + String(this.config.moremessages));
 
@@ -5473,7 +5467,6 @@ class wamo extends utils.Adapter {
 				catch (err) {
 					this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
 				}
-				device_responsive = true;	// global flag if device is responsive
 			}
 		}
 		catch (err) {
@@ -5524,7 +5517,6 @@ class wamo extends utils.Adapter {
 						catch (err) {
 							this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
 						}
-						device_responsive = true;	// global flag if device is responsive
 					}
 				}
 				catch (err) {
@@ -5576,7 +5568,6 @@ class wamo extends utils.Adapter {
 						} catch (err) {
 							this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
 						}
-						device_responsive = true;	// global flag if device is responsive
 					}
 				}
 				catch (err) {
@@ -6582,7 +6573,7 @@ class wamo extends utils.Adapter {
 				const deviceResponse = await this.syrApiClient.get('get/');
 				interfaceBussy = false; // to informe other timer calls that they can perform request to the device.
 
-				if(this.moreMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
+				if(moreMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
 
 				if (deviceResponse.status === 200) {
 					return true;
@@ -6625,7 +6616,8 @@ class wamo extends utils.Adapter {
 							//=================================================================================================
 							try {
 								while (!await this.devicePing()) {
-									device_responsive = true;	// global flag if device is responsive
+									await sleep(500);
+									this.log.debug('getData() ping loop');
 								}
 							}
 							catch (err) {
@@ -7478,7 +7470,7 @@ class wamo extends utils.Adapter {
 			if(this.syrApiClient != null)
 			{
 				const deviceResponse = await this.syrApiClient.get('set/' + Parameter_FACTORY_Mode);
-				if(this.apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
+				if(apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
 				return true;
 			}
 			else{
@@ -7499,7 +7491,7 @@ class wamo extends utils.Adapter {
 			if(this.syrApiClient != null)
 			{
 				const deviceResponse = await this.syrApiClient.get('set/' + Parameter_SERVICE_Mode);
-				if(this.apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
+				if(apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
 				return true;
 			}
 			else{
@@ -7520,7 +7512,7 @@ class wamo extends utils.Adapter {
 			if(this.syrApiClient != null)
 			{
 				const deviceResponse = await this.syrApiClient.get('clr/' + Parameter_Clear_SERVICE_FACTORY_Mode);
-				if(this.apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
+				if(apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
 				return true;
 			}
 			else{
@@ -7922,7 +7914,7 @@ class wamo extends utils.Adapter {
 				const deviceResponse = await this.syrApiClient.get('get/' + String(Parameter.id));
 				interfaceBussy = false;
 				if (deviceResponse.status === 200) {
-					if (this.apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
+					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 					if (readModeChanged) {
 						try {await this.clear_SERVICE_FACTORY_Mode();}
 						catch (err) {this.log.error('async get_DevieParameter(Parameter) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err);}
@@ -7999,7 +7991,7 @@ class wamo extends utils.Adapter {
 				const deviceResponse = await this.syrApiClient.get('set/' + String(Parameter.id));
 				interfaceBussy = false;
 				if (deviceResponse.status === 200) {
-					if (this.apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
+					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 					if (writeModeChanged) {
 						try { await this.clear_SERVICE_FACTORY_Mode(); }
 						catch (err) { this.log.error('async get_DevieParameter(Parameter) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err); }
