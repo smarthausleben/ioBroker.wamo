@@ -121,5 +121,17 @@ systemDictionary = {
 		'es': 'factor alemán dureza del agua',
 		'pl': 'współczynnik niemieckiej twardości wody',
 		'zh-cn': '德国水硬度系数'
+	},
+	'show values as log info messages':{
+		'en': 'show values as log info messages',
+		'de': 'werte als log-info-nachrichten anzeigen',
+		'ru': 'показать значения как сообщения информации журнала',
+		'pt': 'mostrar valores como mensagens de log info',
+		'nl': 'toon waarden als log info berichten',
+		'fr': 'afficher les valeurs comme les infos log',
+		'it': 'mostrare i valori come messaggi di informazioni di registro',
+		'es': 'mostrar valores como los mensajes de información de registro',
+		'pl': 'pokazuje wartości jako wiadomości logiczne',
+		'zh-cn': '导 言'
 	}
 };

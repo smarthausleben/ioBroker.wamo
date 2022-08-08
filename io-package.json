@@ -120,7 +120,8 @@
         "device_long_poll_interval": "120",
         "device_very_long_poll_interval": "300",
         "moremessages": false,
-        "apiresponsemessages": false
+        "apiresponsemessages": false,
+        "valueinfomessages": true
     },
     "objects": [],
     "instanceObjects": [

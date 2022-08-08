@@ -46,7 +46,8 @@ let sensor_temperature_present = false;
 let sensor_pressure_present = false;
 let sensor_conductivity_present = false;
 
-let moreMessages = true;
+let valuesInfoMessages = true;
+let moreMessages = false;
 let apiResponseInfoMessages = false;
 
 let interfaceBussy;
@@ -5401,6 +5402,7 @@ class wamo extends utils.Adapter {
 		this.log.debug('config Device Port: ' + this.config.device_port);
 		moreMessages = this.config.moremessages;
 		apiResponseInfoMessages = this.config.apiresponsemessages;
+		valuesInfoMessages = this.config.valueinfomessages;
 		//this.log.warn('this.config.apireaponsemessages; is: ' + String(this.config.apiresponsemessages));
 		//this.log.warn('Option apiResponseInfoMessages is: ' + String(apiResponseInfoMessages));
 		this.log.debug('More log messages: ' + String(this.config.moremessages));
@@ -6570,7 +6572,7 @@ class wamo extends utils.Adapter {
 				const deviceResponse = await this.syrApiClient.get('get/');
 				interfaceBussy = false; // to informe other timer calls that they can perform request to the device.
 
-				if(moreMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
+				if(apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
 
 				if (deviceResponse.status === 200) {
 					return true;
@@ -6908,7 +6910,7 @@ class wamo extends utils.Adapter {
 								finalValue = 'imperial units';
 							}
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.Units, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.Units, finalValue); }
 						break;
 					case DeviceParameters.Language.id:					// LNG - Language
 						finalValue = await this.getGlobalisedValue(DeviceParameters.Language, value);
@@ -6934,21 +6936,21 @@ class wamo extends utils.Adapter {
 									finalValue = null;
 							}
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.Language, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.Language, finalValue); }
 						break;
 					case DeviceParameters.AvailableProfiles.id: 		// PRN - available profiles
 						finalValue = await this.getGlobalisedValue(DeviceParameters.AvailableProfiles, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = parseInt(value);
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.AvailableProfiles, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.AvailableProfiles, finalValue); }
 						break;
 					case DeviceParameters.SelectedProfile.id: 			// PRF - selected profile
 						finalValue = await this.getGlobalisedValue(DeviceParameters.SelectedProfile, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = parseInt(value);
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.SelectedProfile, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SelectedProfile, finalValue); }
 						break;
 					case DeviceParameters.DeactivateTemperatureSensor.id:	// TSD - Temp sensor present
 						if (parseInt(value) == 0) { sensor_temperature_present = true; } else { sensor_temperature_present = false; }
@@ -6962,7 +6964,7 @@ class wamo extends utils.Adapter {
 								finalValue = 'Sensor deactivated';
 							}
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.DeactivateTemperatureSensor, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DeactivateTemperatureSensor, finalValue); }
 						break;
 					case DeviceParameters.DeactivateConductivitySensor.id:	// CSD - conductivity sensor present
 						if (parseInt(value) == 0) { sensor_conductivity_present = true; } else { sensor_conductivity_present = false; }
@@ -6976,7 +6978,7 @@ class wamo extends utils.Adapter {
 								finalValue = 'Sensor deactivated';
 							}
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.DeactivateConductivitySensor, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DeactivateConductivitySensor, finalValue); }
 						break;
 					case DeviceParameters.DeactivatePressureSensor.id:	// PSD - Pressure sensor present
 						if (parseInt(value) == 0) { sensor_pressure_present = true; } else { sensor_pressure_present = false; }
@@ -6990,7 +6992,7 @@ class wamo extends utils.Adapter {
 								finalValue = 'Sensor deactivated';
 							}
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.DeactivatePressureSensor, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DeactivatePressureSensor, finalValue); }
 						break;
 					case DeviceParameters.CurrentAlarmStatus.id:		// ALA Alarm status
 						finalValue = await this.getGlobalisedValue(DeviceParameters.CurrentAlarmStatus, value);
@@ -7048,7 +7050,7 @@ class wamo extends utils.Adapter {
 									finalValue = 'undefined';
 							}
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.CurrentAlarmStatus, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CurrentAlarmStatus, finalValue); }
 						break;
 					case DeviceParameters.CurrentValveStatus.id:		// VLV - Current Valve Status
 						finalValue = await this.getGlobalisedValue(DeviceParameters.CurrentValveStatus, value);
@@ -7074,14 +7076,14 @@ class wamo extends utils.Adapter {
 									finalValue = null;
 							}
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.CurrentValveStatus, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CurrentValveStatus, finalValue); }
 						break;
 					case DeviceParameters.SystemTime.id:				// RTC - System Time
 						finalValue = await this.getGlobalisedValue(DeviceParameters.SystemTime, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = (new Date(parseInt(value) * 1000)).toLocaleString();
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.SystemTime, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SystemTime, finalValue); }
 						break;
 					case DeviceParameters.WaterTemperature.id:			// CEL - Water temperature
 						if (sensor_temperature_present) {
@@ -7090,7 +7092,7 @@ class wamo extends utils.Adapter {
 								finalValue = parseFloat(value) / 10;
 								_WaterTemperature = finalValue;
 							}
-							if (moreMessages) { await this.moremessages(DeviceParameters.WaterTemperature, finalValue); }
+							if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WaterTemperature, finalValue); }
 						}
 						break;
 					case DeviceParameters.WaterPressure.id:				// BAR Water pressure
@@ -7101,7 +7103,7 @@ class wamo extends utils.Adapter {
 								finalValue = parseFloat(value);
 								_WaterPressure = finalValue;
 							}
-							if (moreMessages) { await this.moremessages(DeviceParameters.WaterPressure, finalValue); }
+							if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WaterPressure, finalValue); }
 						}
 						break;
 					case DeviceParameters.WaterConductivity.id:			// CND - Water conductivity
@@ -7114,11 +7116,11 @@ class wamo extends utils.Adapter {
 									// updatig German water hardness
 									if (sensor_temperature_present) {
 										try { await this.updateEC25conductivity(); } catch (err) { this.log.error('convertDeviceReturnValue -> WaterConductivity -> updateEC25conductivity ERROR: ' + err); }
-										if (moreMessages) { try { await this.moremessages(calculatedStates.conductivityEC25, _WaterConductivity_EC25); } catch (err) { this.log.error('convertDeviceReturnValue -> WaterConductivity -> moremessages ERROR: ' + err); } }
+										if (valuesInfoMessages) { try { await this.moremessages(calculatedStates.conductivityEC25, _WaterConductivity_EC25); } catch (err) { this.log.error('convertDeviceReturnValue -> WaterConductivity -> moremessages ERROR: ' + err); } }
 									}
 									try { await this.updateGermanWaterHardnes(); } catch (err) { this.log.error('convertDeviceReturnValue -> WaterConductivity -> updateGermanWaterHardnes ERROR: ' + err); }
 								}
-								if (moreMessages) { try { await this.moremessages(DeviceParameters.WaterConductivity, _WaterConductivity); } catch (err) { this.log.error('convertDeviceReturnValue -> WaterConductivity -> moremessages ERROR: ' + err); } }
+								if (valuesInfoMessages) { try { await this.moremessages(DeviceParameters.WaterConductivity, _WaterConductivity); } catch (err) { this.log.error('convertDeviceReturnValue -> WaterConductivity -> moremessages ERROR: ' + err); } }
 							} catch (err) {
 								this.log.error('convertDeviceReturnValue -> WaterConductivity -> getGlobalisedValue ERROR: ' + err);
 							}
@@ -7130,7 +7132,7 @@ class wamo extends utils.Adapter {
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = parseFloat(value);
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.BatteryVoltage, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BatteryVoltage, finalValue); }
 						break;
 					case DeviceParameters.PowerAdapterVoltage.id:		// NET - DC voltage (power adaptor)
 						value = parseFloat(String(value).replace(',', '.'));
@@ -7138,7 +7140,7 @@ class wamo extends utils.Adapter {
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = parseFloat(value);
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.PowerAdapterVoltage, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.PowerAdapterVoltage, finalValue); }
 						break;
 					case DeviceParameters.LastTappedVolume.id:			// LTV - Last tapped Volume
 						value = parseFloat(String(value).replace(',', '.'));
@@ -7146,7 +7148,7 @@ class wamo extends utils.Adapter {
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = parseFloat(value);
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.LastTappedVolume, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.LastTappedVolume, finalValue); }
 						break;
 					case DeviceParameters.TotalVolume.id:				// VOL - total consumed water
 						value = parseFloat(String(value).replace(',', '.').replace('Vol[L]', '')) / 1000;
@@ -7154,7 +7156,7 @@ class wamo extends utils.Adapter {
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = parseFloat(value);
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.TotalVolume, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.TotalVolume, finalValue); }
 						break;
 					case DeviceParameters.CurrentVolume.id:				// AVO - current water volume
 						value = parseFloat(String(value).replace(',', '.').replace('mL', ''));
@@ -7162,7 +7164,7 @@ class wamo extends utils.Adapter {
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = parseFloat(value);
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.CurrentVolume, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CurrentVolume, finalValue); }
 						break;
 					case DeviceParameters.APHidden.id:					// WAH - WiFi AP hidden
 						finalValue = await this.getGlobalisedValue(DeviceParameters.APHidden, value);
@@ -7173,7 +7175,7 @@ class wamo extends utils.Adapter {
 								finalValue = 'AP hidden';
 							}
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.APHidden, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.APHidden, finalValue); }
 						break;
 					case DeviceParameters.APDisabled.id:				// WAD - WiFi AP dissabled
 						finalValue = await this.getGlobalisedValue(DeviceParameters.APDisabled, value);
@@ -7184,7 +7186,7 @@ class wamo extends utils.Adapter {
 								finalValue = 'AP disabled';
 							}
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.APDisabled, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.APDisabled, finalValue); }
 						break;
 					case DeviceParameters.APTimeout.id:					// APT - WiFi AP timeout
 						if (parseInt(value) == 0) {
@@ -7201,7 +7203,7 @@ class wamo extends utils.Adapter {
 								finalValue = String(finalValue).replace('XX', String(value));
 							}
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.APTimeout, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.APTimeout, finalValue); }
 						break;
 					case DeviceParameters.WiFiDeaktivate.id:			// DWL - WiFi deactivated
 						finalValue = await this.getGlobalisedValue(DeviceParameters.WiFiDeaktivate, value);
@@ -7212,7 +7214,7 @@ class wamo extends utils.Adapter {
 								finalValue = 'deactivated';
 							}
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.WiFiDeaktivate, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WiFiDeaktivate, finalValue); }
 						break;
 					case DeviceParameters.WiFiState.id:					// WFS - WiFi state
 						finalValue = await this.getGlobalisedValue(DeviceParameters.WiFiState, value);
@@ -7227,7 +7229,7 @@ class wamo extends utils.Adapter {
 								finalValue = 'undefined';
 							}
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.WiFiState, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WiFiState, finalValue); }
 						break;
 					case DeviceParameters.DaylightSavingTime.id:		// IDS - Daylight saving time
 						finalValue = await this.getGlobalisedValue(DeviceParameters.DaylightSavingTime, value);
@@ -7238,70 +7240,70 @@ class wamo extends utils.Adapter {
 								finalValue = 'enabled';
 							}
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.DaylightSavingTime, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DaylightSavingTime, finalValue); }
 						break;
 					case DeviceParameters.FirmwareVersion.id:			// VER -Firmware Version
 						finalValue = await this.getGlobalisedValue(DeviceParameters.FirmwareVersion, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = value;
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.FirmwareVersion, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.FirmwareVersion, finalValue); }
 						break;
 					case DeviceParameters.IPAddress.id: 				// WIP - IP address
 						finalValue = await this.getGlobalisedValue(DeviceParameters.IPAddress, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = value;
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.IPAddress, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.IPAddress, finalValue); }
 						break;
 					case DeviceParameters.MACAddress.id:				// MAC -MAC address
 						finalValue = await this.getGlobalisedValue(DeviceParameters.MACAddress, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = value;
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.MACAddress, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MACAddress, finalValue); }
 						break;
 					case DeviceParameters.DefaultGateway.id:			// WGW - Default gateway
 						finalValue = await this.getGlobalisedValue(DeviceParameters.DefaultGateway, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = value;
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.DefaultGateway, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DefaultGateway, finalValue); }
 						break;
 					case DeviceParameters.SerialNumber.id:				// SRN - Device serial number
 						finalValue = await this.getGlobalisedValue(DeviceParameters.SerialNumber, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = value;
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.SerialNumber, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SerialNumber, finalValue); }
 						break;
 					case DeviceParameters.CodeNumber.id:				// CNO - Code Number
 						finalValue = await this.getGlobalisedValue(DeviceParameters.CodeNumber, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = value;
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.CodeNumber, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CodeNumber, finalValue); }
 						break;
 					case DeviceParameters.WiFiRSSI.id:					// WFR - WiFi RSSI
 						finalValue = await this.getGlobalisedValue(DeviceParameters.WiFiRSSI, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = value;
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.WiFiRSSI, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WiFiRSSI, finalValue); }
 						break;
 					case DeviceParameters.WiFiSSID.id:					// WFC - WiFi SSID
 						finalValue = await this.getGlobalisedValue(DeviceParameters.WiFiSSID, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = value;
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.WiFiSSID, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WiFiSSID, finalValue); }
 						break;
 					case DeviceParameters.NextMaintenance.id:			// SRV - Next Maintenance
 						finalValue = await this.getGlobalisedValue(DeviceParameters.NextMaintenance, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = value;
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.NextMaintenance, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.NextMaintenance, finalValue); }
 						break;
 					case DeviceParameters.FlorSensor.id:				// BSA - Floor Sensor
 						finalValue = await this.getGlobalisedValue(DeviceParameters.FlorSensor, value);
@@ -7312,7 +7314,7 @@ class wamo extends utils.Adapter {
 								finalValue = 'Floor sensor enabled';
 							}
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.FlorSensor, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.FlorSensor, finalValue); }
 						break;
 					case DeviceParameters.ShutOff.id:					// AB - Shutoff state
 						finalValue = await this.getGlobalisedValue(DeviceParameters.ShutOff, value);
@@ -7326,21 +7328,21 @@ class wamo extends utils.Adapter {
 								finalValue = 'Shutoff undefined';
 							}
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.ShutOff, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ShutOff, finalValue); }
 						break;
 					case DeviceParameters.LeakProtectionTemporaryDeactivation.id:	// TMP Leackage protection temporary deactivation
 						finalValue = await this.getGlobalisedValue(DeviceParameters.LeakProtectionTemporaryDeactivation, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = value;
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.LeakProtectionTemporaryDeactivation, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.LeakProtectionTemporaryDeactivation, finalValue); }
 						break;
 					case DeviceParameters.MaxFlowLeakageTime.id:		// T2 - Max flow leakage time
 						finalValue = await this.getGlobalisedValue(DeviceParameters.MaxFlowLeakageTime, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = value;
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.MaxFlowLeakageTime, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MaxFlowLeakageTime, finalValue); }
 						break;
 					case DeviceParameters.MicroLeakageTest.id:			// DMA - Micro leakage test
 						finalValue = await this.getGlobalisedValue(DeviceParameters.MicroLeakageTest, value);
@@ -7360,7 +7362,7 @@ class wamo extends utils.Adapter {
 									finalValue = null;
 							}
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.MicroLeakageTest, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MicroLeakageTest, finalValue); }
 						break;
 					case DeviceParameters.MicroLeakageTestPeriod.id:	// DRP - Micro leakage test period
 						finalValue = await this.getGlobalisedValue(DeviceParameters.MicroLeakageTestPeriod, value);
@@ -7383,7 +7385,7 @@ class wamo extends utils.Adapter {
 									finalValue = null;
 							}
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.MicroLeakageTestPeriod, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MicroLeakageTestPeriod, finalValue); }
 						break;
 					case DeviceParameters.BuzzerOnAlarm.id:				// BUZ - Buzzer on alarm
 						finalValue = await this.getGlobalisedValue(DeviceParameters.BuzzerOnAlarm, value);
@@ -7394,28 +7396,28 @@ class wamo extends utils.Adapter {
 								finalValue = 'Buzzer enabled';
 							}
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.BuzzerOnAlarm, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BuzzerOnAlarm, finalValue); }
 						break;
 					case DeviceParameters.LeakageNotificationWarningThreshold.id:	// LWT - Leakage notification (warning) threshold
 						finalValue = await this.getGlobalisedValue(DeviceParameters.LeakageNotificationWarningThreshold, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = value;
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.LeakageNotificationWarningThreshold, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.LeakageNotificationWarningThreshold, finalValue); }
 						break;
 					case DeviceParameters.WaterFlow.id:					// FLO - Water flow
 						finalValue = await this.getGlobalisedValue(DeviceParameters.WaterFlow, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = value;
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.WaterFlow, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WaterFlow, finalValue); }
 						break;
 					case DeviceParameters.TurbineNoPulseTime.id:		// NPS - Turbine no pulse time
 						finalValue = await this.getGlobalisedValue(DeviceParameters.TurbineNoPulseTime, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = value;
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.TurbineNoPulseTime, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.TurbineNoPulseTime, finalValue); }
 						break;
 					case DeviceParameters.ValveTestOngoing.id:			// VTO - Valve test ongoing
 						finalValue = await this.getGlobalisedValue(DeviceParameters.ValveTestOngoing, value);
@@ -7426,7 +7428,7 @@ class wamo extends utils.Adapter {
 								finalValue = 'active';
 							}
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.ValveTestOngoing, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ValveTestOngoing, finalValue); }
 						break;
 					case DeviceParameters.FirmwareCheck.id:				// SFV - Check if new firmware is available
 						finalValue = await this.getGlobalisedValue(DeviceParameters.FirmwareCheck, value);
@@ -7437,14 +7439,14 @@ class wamo extends utils.Adapter {
 								finalValue = 'new firmware available';
 							}
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.FirmwareCheck, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.FirmwareCheck, finalValue); }
 						break;
 					case DeviceParameters.ScreenRotation.id:			// SRO - Screen rotation
 						finalValue = await this.getGlobalisedValue(DeviceParameters.ScreenRotation, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = value;
 						}
-						if (moreMessages) { await this.moremessages(DeviceParameters.ScreenRotation, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ScreenRotation, finalValue); }
 						break;
 					default:
 						this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
@@ -7748,11 +7750,11 @@ class wamo extends utils.Adapter {
 				if (_WaterConductivity_EC25 === 0) {
 					// Water hardnes NOT temperatur compensated
 					german_hardnes = parseFloat((_WaterConductivity * parseFloat(this.config.factor_german_water_hardnes)).toFixed(2));
-					if (moreMessages) { this.log.info('German water hardness: ' + german_hardnes + ' (NOT temperature compensated)'); }
+					if (valuesInfoMessages) { this.log.info('German water hardness: ' + german_hardnes + ' (NOT temperature compensated)'); }
 				} else {
 					// Water hardnes temperatur compensated
 					german_hardnes = parseFloat((_WaterConductivity_EC25 * parseFloat(this.config.factor_german_water_hardnes)).toFixed(2));
-					if (moreMessages) { this.log.info('German water hardness: ' + german_hardnes + ' (Temperature compensated)'); }
+					if (valuesInfoMessages) { this.log.info('German water hardness: ' + german_hardnes + ' (Temperature compensated)'); }
 				}
 
 				this.log.debug('calculated german water hardness = ' + String(german_hardnes));
@@ -8040,8 +8042,6 @@ class wamo extends utils.Adapter {
 	 * Pulls profile parameter data from the device
 	 * @param {number} ProfileNumber - profile number
 	 * @param {String} ParameterID - Profile parameter ID (without number)
-	 * @param {string} IPadress - Device IP Adress
-	 * @param {string} Port - Device port number
 	 * @returns Readed Value from Device (JSON Format) or ERROR
 	 */
 	async get_DevieProfileParameter(ProfileNumber, ParameterID) {
@@ -8145,7 +8145,7 @@ class wamo extends utils.Adapter {
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileAvailable, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
-				if (moreMessages) {
+				if (valuesInfoMessages) {
 					if (profileAvailable == 1) { this.log.info('Profile ' + String(ProfileNumber) + ' is available'); }
 					else { this.log.info('Profile ' + String(ProfileNumber) + ' is not available'); }
 				}
@@ -8217,7 +8217,7 @@ class wamo extends utils.Adapter {
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileName, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
-				if (moreMessages) { this.log.info('Profile ' + String(ProfileNumber) + ' name is ' + profileName); }
+				if (valuesInfoMessages) { this.log.info('Profile ' + String(ProfileNumber) + ' name is ' + profileName); }
 				resolve(true);
 			} catch (err) {
 				this.log.error(err.message);
@@ -8287,7 +8287,7 @@ class wamo extends utils.Adapter {
 
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileQuantityLimitation, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
-				if (moreMessages) {
+				if (valuesInfoMessages) {
 					if (profileQuantityLimitation == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' maximum volume limit disabled'); }
 					else { this.log.info('Profile ' + String(ProfileNumber) + ' maximum volume limit is ' + String(profileQuantityLimitation) + 'l'); }
 				}
@@ -8361,7 +8361,7 @@ class wamo extends utils.Adapter {
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileTimeLimitation, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
-				if (moreMessages) {
+				if (valuesInfoMessages) {
 					if (profileTimeLimitation == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' maximum time limit is disabled'); }
 					else { this.log.info('Profile ' + String(ProfileNumber) + ' maximum time limit is ' + String(profileTimeLimitation) + 'min'); }
 				}
@@ -8433,7 +8433,7 @@ class wamo extends utils.Adapter {
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileMaximumFlow, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
-				if (moreMessages) {
+				if (valuesInfoMessages) {
 					if (profileMaximumFlow == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' maximum flow is disabled'); }
 					else { this.log.info('Profile ' + String(ProfileNumber) + ' maximum flow is ' + String(profileMaximumFlow) + 'l/h'); }
 				}
@@ -8508,7 +8508,7 @@ class wamo extends utils.Adapter {
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileMicroleackageDetection, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
-				if (moreMessages) {
+				if (valuesInfoMessages) {
 					if (profileMicroleackageDetection == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' Microleak Detektion is disabled'); }
 					else { this.log.info('Profile ' + String(ProfileNumber) + ' Microleak Detektion is enabled'); }
 				}
@@ -8580,7 +8580,7 @@ class wamo extends utils.Adapter {
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileReturnTime, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
-				if (moreMessages) { this.log.info('Profile ' + String(ProfileNumber) + ' return time to default profile is ' + String(profileReturnTime) + 'h'); }
+				if (valuesInfoMessages) { this.log.info('Profile ' + String(ProfileNumber) + ' return time to default profile is ' + String(profileReturnTime) + 'h'); }
 
 				resolve(true);
 			} catch (err) {
@@ -8651,7 +8651,7 @@ class wamo extends utils.Adapter {
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileBuzzer, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
-				if (moreMessages) {
+				if (valuesInfoMessages) {
 					if (profileBuzzer == 1) { this.log.info('Profile ' + String(ProfileNumber) + ' buzzer is on'); }
 					else { this.log.info('Profile ' + String(ProfileNumber) + ' buzzer is not on'); }
 				}
@@ -8727,7 +8727,7 @@ class wamo extends utils.Adapter {
 				stStaResult = await this.setStateAsync(currentStatePath, { val: profileLeackageWarning, ack: true });
 				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
-				if (moreMessages) {
+				if (valuesInfoMessages) {
 					if (profileLeackageWarning == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' Leakage Warning disabled'); }
 					else { this.log.info('Profile ' + String(ProfileNumber) + ' Leakage Warning is enabled'); }
 				}

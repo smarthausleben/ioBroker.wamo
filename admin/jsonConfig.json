@@ -68,8 +68,15 @@
                     "min": 120,
                     "label": "very slow polling time in seconds"
                 },
-                "moremessages":{
+                "valueinfomessages":{
                     "newLine": true,
+                    "type": "checkbox",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "label": "show values as log info messages"
+                },
+                "moremessages":{
                     "type": "checkbox",
                     "sm": 12,
                     "md": 6,
@@ -77,6 +84,7 @@
                     "label": "more logging messages"
                 },
                 "apiresponsemessages":{
+                    "newLine": true,
                     "type": "checkbox",
                     "sm": 12,
                     "md": 6,
