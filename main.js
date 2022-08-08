@@ -7,7 +7,6 @@
 // The adapter-core module gives you access to the core ioBroker functions
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
-//const { doResetHistory } = require('@iobroker/testing/build/tests/unit/mocks/tools');
 const axios = require('axios').default;
 const http = require('http');
 const schedule = require('node-schedule');
@@ -5396,17 +5395,15 @@ class wamo extends utils.Adapter {
 	 */
 	async onReady() {
 
-		/*
 		// The adapters config (in the instance object everything under the attribute "native") is accessible via
 		// this.config:
 		this.log.debug('config Device IP: ' + this.config.device_ip);
 		this.log.debug('config Device Port: ' + this.config.device_port);
 		moreMessages = this.config.moremessages;
 		apiResponseInfoMessages = this.config.apiresponsemessages;
-		this.log.warn('this.config.apireaponsemessages; is: ' + String(this.config.apiresponsemessages));
-		this.log.warn('Option apiResponseInfoMessages is: ' + String(apiResponseInfoMessages));
+		//this.log.warn('this.config.apireaponsemessages; is: ' + String(this.config.apiresponsemessages));
+		//this.log.warn('Option apiResponseInfoMessages is: ' + String(apiResponseInfoMessages));
 		this.log.debug('More log messages: ' + String(this.config.moremessages));
-		*/
 
 		//=================================================================================================
 		// getting system language
