@@ -8044,36 +8044,40 @@ class wamo extends utils.Adapter {
 	 * @param {string} Port - Device port number
 	 * @returns Readed Value from Device (JSON Format) or ERROR
 	 */
-	async get_DevieProfileParameter(ProfileNumber, ParameterID, IPadress, Port) {
-		return new Promise(async (resolve, reject) => {
+	async get_DevieProfileParameter(ProfileNumber, ParameterID) {
 
-			this.log.debug(`[getDevieParameter(ParameterID)] ${ParameterID} Profile ${ProfileNumber}`);
+		this.log.debug(`[getDevieParameter(ParameterID)] ${ParameterID} Profile ${ProfileNumber}`);
 
-			axios({
-				method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/' + String(ParameterID) + String(ProfileNumber), timeout: 10000, responseType: 'json'
-			}
-			).then(async (response) => {
-
-				resolve(response.data);
-			}
-			).catch(async (error) => {
-				if (error.response) {
-					// The request was made and the server responded with a status code
-
-					this.log.warn(`Warnmeldung`);
-				} else if (error.request) {
-					// The request was made but no response was received
-					// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-					// http.ClientRequest in node.js<div></div>
-					this.log.error(error.message);
-				} else {
-					// Something happened in setting up the request that triggered an Error
-					this.log.error(error.message);
+		try {
+			if (moreMessages) { this.log.info('Reading Profile Parameter: ' + ParameterID + String(ProfileNumber) + ' from device'); }
+			if (this.syrApiClient != null) {
+				interfaceBussy = true;
+				const deviceResponse = await this.syrApiClient.get('get/' + ParameterID + String(ProfileNumber));
+				interfaceBussy = false;
+				if (deviceResponse.status === 200) {
+					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
+					return deviceResponse.data;
 				}
-				reject('http error' + error);
-			});
-
-		});
+				throw new Error('Error reading device parameter ' + ParameterID + String(ProfileNumber) + ': response status: ' + String(deviceResponse.status) + ' ' + String(deviceResponse.statusText));
+			}
+			else {
+				throw new Error('syrApiClient is not initialized!');
+			}
+		} catch (err) {
+			if (err.response) {
+				// The request was made and the server responded with a status code
+				this.log.error('async get_DevieProfileParameter(ProfileNumber, ParameterID, IPadress, Port): Response Code: ' + String(err.message));
+			} else if (err.request) {
+				// The request was made but no response was received
+				// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+				// http.ClientRequest in node.js<div></div>
+				this.log.error('async get_DevieProfileParameter(ProfileNumber, ParameterID, IPadress, Port): Request got no response: ' + err.message);
+			} else {
+				// Something happened in setting up the request that triggered an Error
+				this.log.error('async get_DevieProfileParameter(ProfileNumber, ParameterID, IPadress, Port): Error: ' + err.message);
+			}			//throw new Error(err.message);
+			throw new Error(err.message);
+		}
 	}
 
 	/**
