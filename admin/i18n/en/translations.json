@@ -12,5 +12,5 @@
 	"factor german water hardness": "factor german water hardness",
     "Factor to calculate German water hardnes from conductivity.": "Factor to calculate German water hardnes from conductivity.",
     "show values as log info messages": "show values as log info messages",
-    "show api response as info logging messages": "show api response as info logging messages"
+    "show API response as info logging messages": "show api response as info logging messages"
 }

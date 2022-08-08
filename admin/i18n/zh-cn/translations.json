@@ -12,5 +12,5 @@
     "Port of your SYR SaveTech Connect 2422 or your POLYGONVATRO leakage protection device": "SYR SaveTech Connect 2422 或 POLYGONVATRO 漏电保护装置的端口",
     "Factor to calculate German water hardnes from conductivity.": "从电导率计算德国水硬度的因子。",
     "show values as log info messages": "将值显示为日志信息消息",
-    "show api response as info logging messages": "将 api 响应显示为信息记录消息"
+    "show API response as info logging messages": "将 api 响应显示为信息记录消息"
 }
