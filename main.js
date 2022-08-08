@@ -5408,9 +5408,9 @@ class wamo extends utils.Adapter {
 		this.log.debug('config Device IP: ' + this.config.device_ip);
 		this.log.debug('config Device Port: ' + this.config.device_port);
 		this.moreMessages = this.config.moremessages;
-		this.apiResponseInfoMessages = this.config.apireaponsemessages;
-		this.log.warn('this.config.apireaponsemessages; is: ' + String(this.config.apireaponsemessages));
-		this.log.warn('Option apiResponseInfoMessages is: ' + String(apiResponseInfoMessages));
+		//this.apiResponseInfoMessages = this.config.apireaponsemessages;
+		//this.log.warn('this.config.apireaponsemessages; is: ' + String(this.config.apireaponsemessages));
+		//this.log.warn('Option apiResponseInfoMessages is: ' + String(apiResponseInfoMessages));
 		this.log.debug('More log messages: ' + String(this.config.moremessages));
 
 		//=================================================================================================

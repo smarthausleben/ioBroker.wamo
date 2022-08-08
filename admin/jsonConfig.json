@@ -77,7 +77,6 @@
                     "label": "more logging messages"
                 },
                 "apireaponsemessages":{
-                    "newLine": true,
                     "type": "checkbox",
                     "sm": 12,
                     "md": 6,
