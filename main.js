@@ -5673,7 +5673,7 @@ class wamo extends utils.Adapter {
 					case 180:
 					case 270:
 						try {
-							await this.set_DevieParameter(DeviceParameters.ScreenRotation, state.val, this.config.device_ip, this.config.device_port);
+							await this.set_DevieParameter(DeviceParameters.ScreenRotation, String(state.val));
 							this.log.info('[SRO] Screen rotation changed to ' + String(state.val) + '°');
 						}
 						catch (err) {
@@ -5693,7 +5693,7 @@ class wamo extends utils.Adapter {
 					case 1:
 					case 2:
 						try {
-							await this.set_DevieParameter(DeviceParameters.ShutOff, state.val, this.config.device_ip, this.config.device_port);
+							await this.set_DevieParameter(DeviceParameters.ShutOff, String(state.val));
 							if (state.val == 1) {
 								this.log.info('Command: [AB] Shutoff valve OPENED');
 							}
@@ -5715,7 +5715,7 @@ class wamo extends utils.Adapter {
 			//============================================================================
 			else if ((id == statePrefix + DeviceParameters.LeakProtectionTemporaryDeactivation.statePath + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id) && state.ack == false) {
 				try {
-					await this.set_DevieParameter(DeviceParameters.LeakProtectionTemporaryDeactivation, state.val, this.config.device_ip, this.config.device_port);
+					await this.set_DevieParameter(DeviceParameters.LeakProtectionTemporaryDeactivation, String(state.val));
 				}
 				catch (err) {
 					this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.LeakProtectionTemporaryDeactivation ... ERROR: ' + err);
@@ -5779,7 +5779,7 @@ class wamo extends utils.Adapter {
 				}
 				if (changeOK) {
 					try {
-						await this.set_DevieParameter(DeviceParameters.SelectedProfile, state.val, this.config.device_ip, this.config.device_port);
+						await this.set_DevieParameter(DeviceParameters.SelectedProfile, String(state.val));
 						this.log.info('Selected profile changed to number ' + String(state.val));
 					}
 					catch (err) {
@@ -5790,9 +5790,9 @@ class wamo extends utils.Adapter {
 					this.log.error('You cant change to an unavailable profile! Please make profil ' + String(state.val) + ' available first.');
 					// Rerstore old active Profile back to State
 					// Read selected Profile from Device
-					const currentAktiveProfile = await this.get_DevieParameter(DeviceParameters.SelectedProfile, this.config.device_ip, this.config.device_port);
+					const currentAktiveProfile = await this.get_DevieParameter(DeviceParameters.SelectedProfile);
 					// Save aktive profile from Device in state
-					await this.set_DevieParameter(DeviceParameters.SelectedProfile, parseInt(String(currentAktiveProfile['getPRF'])), this.config.device_ip, this.config.device_port);
+					await this.set_DevieParameter(DeviceParameters.SelectedProfile, String(currentAktiveProfile['getPRF']));
 				}
 			}
 			//============================================================================
@@ -5819,28 +5819,28 @@ class wamo extends utils.Adapter {
 								// Restore availability parameter to 1 (on)
 								switch (stateChangeProfileNo) {
 									case 1:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA1, 1, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PA1, '1');
 										break;
 									case 2:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA2, 1, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PA2, '1');
 										break;
 									case 3:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA3, 1, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PA3, '1');
 										break;
 									case 4:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA4, 1, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PA4, '1');
 										break;
 									case 5:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA5, 1, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PA5, '1');
 										break;
 									case 6:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA6, 1, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PA6, '1');
 										break;
 									case 7:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA7, 1, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PA7, '1');
 										break;
 									case 8:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA8, 1, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PA8, '1');
 										break;
 								}
 								this.log.warn('Restored profile ' + String(stateChangeProfileNo) + 'availability to 1 (on)');
@@ -5854,28 +5854,28 @@ class wamo extends utils.Adapter {
 								}
 								switch (stateChangeProfileNo) {
 									case 1:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA1, profAvailableState, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PA1, String(profAvailableState));
 										break;
 									case 2:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA2, profAvailableState, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PA2, String(profAvailableState));
 										break;
 									case 3:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA3, profAvailableState, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PA3, String(profAvailableState));
 										break;
 									case 4:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA4, profAvailableState, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PA4, String(profAvailableState));
 										break;
 									case 5:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA5, profAvailableState, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PA5, String(profAvailableState));
 										break;
 									case 6:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA6, profAvailableState, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PA6, String(profAvailableState));
 										break;
 									case 7:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA7, profAvailableState, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PA7, String(profAvailableState));
 										break;
 									case 8:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA8, profAvailableState, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PA8, String(profAvailableState));
 										break;
 									default:
 										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PA');
@@ -5894,28 +5894,28 @@ class wamo extends utils.Adapter {
 								}
 								switch (stateChangeProfileNo) {
 									case 1:
-										await this.set_DevieParameter(DeviceParameters.Profile_PN1, newProfileName, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PN1, newProfileName);
 										break;
 									case 2:
-										await this.set_DevieParameter(DeviceParameters.Profile_PN2, newProfileName, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PN2, newProfileName);
 										break;
 									case 3:
-										await this.set_DevieParameter(DeviceParameters.Profile_PN3, newProfileName, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PN3, newProfileName);
 										break;
 									case 4:
-										await this.set_DevieParameter(DeviceParameters.Profile_PN4, newProfileName, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PN4, newProfileName);
 										break;
 									case 5:
-										await this.set_DevieParameter(DeviceParameters.Profile_PN5, newProfileName, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PN5, newProfileName);
 										break;
 									case 6:
-										await this.set_DevieParameter(DeviceParameters.Profile_PN6, newProfileName, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PN6, newProfileName);
 										break;
 									case 7:
-										await this.set_DevieParameter(DeviceParameters.Profile_PN7, newProfileName, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PN7, newProfileName);
 										break;
 									case 8:
-										await this.set_DevieParameter(DeviceParameters.Profile_PN8, newProfileName, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PN8, newProfileName);
 										break;
 									default:
 										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PN');
@@ -5932,28 +5932,28 @@ class wamo extends utils.Adapter {
 								}
 								switch (stateChangeProfileNo) {
 									case 1:
-										await this.set_DevieParameter(DeviceParameters.Profile_PB1, profileBuzzer, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PB1, String(profileBuzzer));
 										break;
 									case 2:
-										await this.set_DevieParameter(DeviceParameters.Profile_PB2, profileBuzzer, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PB2, String(profileBuzzer));
 										break;
 									case 3:
-										await this.set_DevieParameter(DeviceParameters.Profile_PB3, profileBuzzer, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PB3, String(profileBuzzer));
 										break;
 									case 4:
-										await this.set_DevieParameter(DeviceParameters.Profile_PB4, profileBuzzer, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PB4, String(profileBuzzer));
 										break;
 									case 5:
-										await this.set_DevieParameter(DeviceParameters.Profile_PB5, profileBuzzer, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PB5, String(profileBuzzer));
 										break;
 									case 6:
-										await this.set_DevieParameter(DeviceParameters.Profile_PB6, profileBuzzer, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PB6, String(profileBuzzer));
 										break;
 									case 7:
-										await this.set_DevieParameter(DeviceParameters.Profile_PB7, profileBuzzer, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PB7, String(profileBuzzer));
 										break;
 									case 8:
-										await this.set_DevieParameter(DeviceParameters.Profile_PB8, profileBuzzer, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PB8, String(profileBuzzer));
 										break;
 									default:
 										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PB');
@@ -5973,28 +5973,28 @@ class wamo extends utils.Adapter {
 								}
 								switch (stateChangeProfileNo) {
 									case 1:
-										await this.set_DevieParameter(DeviceParameters.Profile_PF1, profileMaxFlow, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PF1, String(profileMaxFlow));
 										break;
 									case 2:
-										await this.set_DevieParameter(DeviceParameters.Profile_PF2, profileMaxFlow, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PF2, String(profileMaxFlow));
 										break;
 									case 3:
-										await this.set_DevieParameter(DeviceParameters.Profile_PF3, profileMaxFlow, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PF3, String(profileMaxFlow));
 										break;
 									case 4:
-										await this.set_DevieParameter(DeviceParameters.Profile_PF4, profileMaxFlow, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PF4, String(profileMaxFlow));
 										break;
 									case 5:
-										await this.set_DevieParameter(DeviceParameters.Profile_PF5, profileMaxFlow, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PF5, String(profileMaxFlow));
 										break;
 									case 6:
-										await this.set_DevieParameter(DeviceParameters.Profile_PF6, profileMaxFlow, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PF6, String(profileMaxFlow));
 										break;
 									case 7:
-										await this.set_DevieParameter(DeviceParameters.Profile_PF7, profileMaxFlow, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PF7, String(profileMaxFlow));
 										break;
 									case 8:
-										await this.set_DevieParameter(DeviceParameters.Profile_PF8, profileMaxFlow, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PF8, String(profileMaxFlow));
 										break;
 									default:
 										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PF');
@@ -6014,28 +6014,28 @@ class wamo extends utils.Adapter {
 								}
 								switch (stateChangeProfileNo) {
 									case 1:
-										await this.set_DevieParameter(DeviceParameters.Profile_PM1, profileMicroLeak, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PM1, String(profileMicroLeak));
 										break;
 									case 2:
-										await this.set_DevieParameter(DeviceParameters.Profile_PM2, profileMicroLeak, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PM2, String(profileMicroLeak));
 										break;
 									case 3:
-										await this.set_DevieParameter(DeviceParameters.Profile_PM3, profileMicroLeak, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PM3, String(profileMicroLeak));
 										break;
 									case 4:
-										await this.set_DevieParameter(DeviceParameters.Profile_PM4, profileMicroLeak, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PM4, String(profileMicroLeak));
 										break;
 									case 5:
-										await this.set_DevieParameter(DeviceParameters.Profile_PM5, profileMicroLeak, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PM5, String(profileMicroLeak));
 										break;
 									case 6:
-										await this.set_DevieParameter(DeviceParameters.Profile_PM6, profileMicroLeak, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PM6, String(profileMicroLeak));
 										break;
 									case 7:
-										await this.set_DevieParameter(DeviceParameters.Profile_PM7, profileMicroLeak, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PM7, String(profileMicroLeak));
 										break;
 									case 8:
-										await this.set_DevieParameter(DeviceParameters.Profile_PM8, profileMicroLeak, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PM8, String(profileMicroLeak));
 										break;
 									default:
 										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PM');
@@ -6055,28 +6055,28 @@ class wamo extends utils.Adapter {
 								}
 								switch (stateChangeProfileNo) {
 									case 1:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR1, profileTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PR1, String(profileTimeBackStandardProfile));
 										break;
 									case 2:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR2, profileTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PR2, String(profileTimeBackStandardProfile));
 										break;
 									case 3:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR3, profileTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PR3, String(profileTimeBackStandardProfile));
 										break;
 									case 4:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR4, profileTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PR4, String(profileTimeBackStandardProfile));
 										break;
 									case 5:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR5, profileTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PR5, String(profileTimeBackStandardProfile));
 										break;
 									case 6:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR6, profileTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PR6, String(profileTimeBackStandardProfile));
 										break;
 									case 7:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR7, profileTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PR7, String(profileTimeBackStandardProfile));
 										break;
 									case 8:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR8, profileTimeBackStandardProfile, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PR8, String(profileTimeBackStandardProfile));
 										break;
 									default:
 										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PR');
@@ -6096,28 +6096,28 @@ class wamo extends utils.Adapter {
 								}
 								switch (stateChangeProfileNo) {
 									case 1:
-										await this.set_DevieParameter(DeviceParameters.Profile_PT1, profileLeakageTimeLimit, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PT1, String(profileLeakageTimeLimit));
 										break;
 									case 2:
-										await this.set_DevieParameter(DeviceParameters.Profile_PT2, profileLeakageTimeLimit, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PT2, String(profileLeakageTimeLimit));
 										break;
 									case 3:
-										await this.set_DevieParameter(DeviceParameters.Profile_PT3, profileLeakageTimeLimit, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PT3, String(profileLeakageTimeLimit));
 										break;
 									case 4:
-										await this.set_DevieParameter(DeviceParameters.Profile_PT4, profileLeakageTimeLimit, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PT4, String(profileLeakageTimeLimit));
 										break;
 									case 5:
-										await this.set_DevieParameter(DeviceParameters.Profile_PT5, profileLeakageTimeLimit, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PT5, String(profileLeakageTimeLimit));
 										break;
 									case 6:
-										await this.set_DevieParameter(DeviceParameters.Profile_PT6, profileLeakageTimeLimit, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PT6, String(profileLeakageTimeLimit));
 										break;
 									case 7:
-										await this.set_DevieParameter(DeviceParameters.Profile_PT7, profileLeakageTimeLimit, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PT7, String(profileLeakageTimeLimit));
 										break;
 									case 8:
-										await this.set_DevieParameter(DeviceParameters.Profile_PT8, profileLeakageTimeLimit, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PT8, String(profileLeakageTimeLimit));
 										break;
 									default:
 										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PT');
@@ -6137,28 +6137,28 @@ class wamo extends utils.Adapter {
 								}
 								switch (stateChangeProfileNo) {
 									case 1:
-										await this.set_DevieParameter(DeviceParameters.Profile_PV1, profileLeakageVolumeLimit, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PV1, String(profileLeakageVolumeLimit));
 										break;
 									case 2:
-										await this.set_DevieParameter(DeviceParameters.Profile_PV2, profileLeakageVolumeLimit, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PV2, String(profileLeakageVolumeLimit));
 										break;
 									case 3:
-										await this.set_DevieParameter(DeviceParameters.Profile_PV3, profileLeakageVolumeLimit, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PV3, String(profileLeakageVolumeLimit));
 										break;
 									case 4:
-										await this.set_DevieParameter(DeviceParameters.Profile_PV4, profileLeakageVolumeLimit, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PV4, String(profileLeakageVolumeLimit));
 										break;
 									case 5:
-										await this.set_DevieParameter(DeviceParameters.Profile_PV5, profileLeakageVolumeLimit, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PV5, String(profileLeakageVolumeLimit));
 										break;
 									case 6:
-										await this.set_DevieParameter(DeviceParameters.Profile_PV6, profileLeakageVolumeLimit, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PV6, String(profileLeakageVolumeLimit));
 										break;
 									case 7:
-										await this.set_DevieParameter(DeviceParameters.Profile_PV7, profileLeakageVolumeLimit, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PV7, String(profileLeakageVolumeLimit));
 										break;
 									case 8:
-										await this.set_DevieParameter(DeviceParameters.Profile_PV8, profileLeakageVolumeLimit, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PV8, String(profileLeakageVolumeLimit));
 										break;
 									default:
 										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PV');
@@ -6178,28 +6178,28 @@ class wamo extends utils.Adapter {
 								}
 								switch (stateChangeProfileNo) {
 									case 1:
-										await this.set_DevieParameter(DeviceParameters.Profile_PW1, profileLeakageWarning, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PW1, String(profileLeakageWarning));
 										break;
 									case 2:
-										await this.set_DevieParameter(DeviceParameters.Profile_PW2, profileLeakageWarning, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PW2, String(profileLeakageWarning));
 										break;
 									case 3:
-										await this.set_DevieParameter(DeviceParameters.Profile_PW3, profileLeakageWarning, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PW3, String(profileLeakageWarning));
 										break;
 									case 4:
-										await this.set_DevieParameter(DeviceParameters.Profile_PW4, profileLeakageWarning, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PW4, String(profileLeakageWarning));
 										break;
 									case 5:
-										await this.set_DevieParameter(DeviceParameters.Profile_PW5, profileLeakageWarning, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PW5, String(profileLeakageWarning));
 										break;
 									case 6:
-										await this.set_DevieParameter(DeviceParameters.Profile_PW6, profileLeakageWarning, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PW6, String(profileLeakageWarning));
 										break;
 									case 7:
-										await this.set_DevieParameter(DeviceParameters.Profile_PW7, profileLeakageWarning, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PW7, String(profileLeakageWarning));
 										break;
 									case 8:
-										await this.set_DevieParameter(DeviceParameters.Profile_PW8, profileLeakageWarning, this.config.device_ip, this.config.device_port);
+										await this.set_DevieParameter(DeviceParameters.Profile_PW8, String(profileLeakageWarning));
 										break;
 									default:
 										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PW');
@@ -6607,7 +6607,7 @@ class wamo extends utils.Adapter {
 					while (!gotDeviceParameter) {
 						// Read out parameter from device
 						try {
-							DeviceParameterReturn = await this.get_DevieParameter(deviceParametersToGet[i], this.config.device_ip, this.config.device_port);
+							DeviceParameterReturn = await this.get_DevieParameter(deviceParametersToGet[i]);
 							gotDeviceParameter = true;
 						}
 						catch (err) {
@@ -7875,173 +7875,168 @@ class wamo extends utils.Adapter {
 	/**
 	 * Pulls the Information from the device
 	 * @param {Object} Parameter - DeviceParameter Object
-	 * @param {string} IPadress - Device IP Adress
-	 * @param {string} Port - Device port number
 	 * @returns Readed Value from Device (JSON Format) or ERROR
 	 */
-	async get_DevieParameter(Parameter, IPadress, Port) {
-		return new Promise(async (resolve, reject) => {
+	async get_DevieParameter(Parameter) {
 
-			// Flag indicating if we had to modifiy Admin Mode
-			let readModeChanged = false;
-			this.log.debug(`[getDevieParameter(ParameterID)] ${Parameter.id}`);
+		// Flag indicating if we had to switch into SERVICE or FACTORY mode
+		let readModeChanged = false;
+		this.log.debug(`[getDevieParameter(ParameterID)] ${Parameter.id}`);
 
-			// is parameter readable?
-			if (Parameter.readCommand === null) {
-				this.log.warn('[async get_DevieParameter(Parameter, IPadress, Port)] Parameter ID ' + String(Parameter.id) + ' can\'t be read!');
-				reject('Parameter ID ' + String(Parameter.id) + ' can\'t be read!');
-			}
+		// is parameter readable?
+		if (Parameter.readCommand === null) {
+			this.log.warn('[async get_DevieParameter(Parameter)] Parameter ID ' + String(Parameter.id) + ' can\'t be read!');
+			throw new Error('Parameter ID ' + String(Parameter.id) + ' can\'t be read!');
+		}
 
-			// Do we need special permission to read this parameter?
-			if (Parameter.levelRead === 'SERVICE') {
-				try {
-					await this.set_SERVICE_Mode();
-					readModeChanged = true;
-				}
-				catch (err) {
-					this.log.error('get_DevieParameter -> set_SERVICE_Mode() ERROR: ' + err);
-				}
+		// Do we need special permission to read this parameter?
+		if (Parameter.levelRead === 'SERVICE') {
+			try {
+				await this.set_SERVICE_Mode();
+				readModeChanged = true;
+			}catch (err) {
+				this.log.error('get_DevieParameter -> set_SERVICE_Mode() ERROR: ' + err);
 			}
-			else if (Parameter.levelRead === 'FACTORY') {
-				try {
-					await this.set_FACTORY_Mode();
-					readModeChanged = true;
-				}
-				catch (err) {
-					this.log.error('get_DevieParameter -> set_FACTORY_Mode() ERROR: ' + err);
-				}
+		}
+		else if (Parameter.levelRead === 'FACTORY') {
+			try {
+				await this.set_FACTORY_Mode();
+				readModeChanged = true;
+			}catch (err) {
+				this.log.error('get_DevieParameter -> set_FACTORY_Mode() ERROR: ' + err);
 			}
-			interfaceBussy = true;
-			axios({ method: 'get', url: 'Http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/get/' + String(Parameter.id), timeout: 10000, responseType: 'json' }
-			).then(async (response) => {
+		}
+
+		try {
+			if (moreMessages) { this.log.info('Reading Parameter ' + String(Parameter.id) + ' from device'); }
+			if (this.syrApiClient != null) {
+				interfaceBussy = true;
+				const deviceResponse = await this.syrApiClient.get('get/' + String(Parameter.id));
 				interfaceBussy = false;
-
-				if (readModeChanged) {
-					try {
-						await this.clear_SERVICE_FACTORY_Mode();
+				if (deviceResponse.status === 200) {
+					if (moreMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
+					if (readModeChanged) {
+						try {await this.clear_SERVICE_FACTORY_Mode();}
+						catch (err) {this.log.error('async get_DevieParameter(Parameter) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err);}
 					}
-					catch (err) {
-						this.log.error('async get_DevieParameter(Parameter, IPadress, Port) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err);
-					}
+					return deviceResponse.data;
 				}
-				resolve(response.data);
+				throw new Error('Error reading device parameter '+ String(Parameter.id) + ': response status: ' + String(deviceResponse.status) + ' ' + String(deviceResponse.statusText));
 			}
-			).catch(async (error) => {
-				if (error.response) {
-					// The request was made and the server responded with a status code
-					this.log.error('async get_DevieParameter(Parameter, IPadress, Port): Response Code: ' + String(error.message));
-				} else if (error.request) {
-					// The request was made but no response was received
-					// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-					// http.ClientRequest in node.js<div></div>
-					this.log.error('async get_DevieParameter(Parameter, IPadress, Port): Request got no response: ' + error.message);
-				} else {
-					// Something happened in setting up the request that triggered an Error
-					this.log.error('async get_DevieParameter(Parameter, IPadress, Port): Error: ' + error.message);
-				}
-				interfaceBussy = false;
-				reject('axios ERROR: ' + error.message);
-			});
-		});
+			else {
+				throw new Error('syrApiClient is not initialized!');
+			}
+		} catch (err) {
+			if(err.response){
+				// The request was made and the server responded with a status code
+				this.log.error('async get_DevieParameter(Parameter): Response Code: ' + String(err.message));
+			} else if (err.request) {
+				// The request was made but no response was received
+				// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+				// http.ClientRequest in node.js<div></div>
+				this.log.error('async get_DevieParameter(Parameter): Request got no response: ' + err.message);
+			} else {
+				// Something happened in setting up the request that triggered an Error
+				this.log.error('async get_DevieParameter(Parameter): Error: ' + err.message);
+			}			//throw new Error(err.message);
+			throw new Error(err.message);
+		}
 	}
 
 	/**
 	 * Putts the a value to the Device
 	 * @param {Object} Parameter - DeviceParameter Object
 	 * @param {String} Value - Value to send to the device
-	 * @param {string} IPadress - Device IP Adress
-	 * @param {string} Port - Device port number
 	 * @returns axios response data OR error
 	 */
-	async set_DevieParameter(Parameter, Value, IPadress, Port) {
-		return new Promise(async (resolve, reject) => {
+	async set_DevieParameter(Parameter, Value) {
 
-			const oldParameter = await this.get_DevieParameter(Parameter, IPadress, Port);
+		const oldParameter = await this.get_DevieParameter(Parameter);
 
-			// Flag indicating if we had to modifiy Admin Mode
-			let writeModeChanged = false;
+		// Flag indicating if we had to modifiy Admin Mode
+		let writeModeChanged = false;
 
-			this.log.debug(`[set_DevieParameter(ParameterID)] ${Parameter.id} Value: ${Value}`);
+		this.log.debug(`[set_DevieParameter(Parameter, Value)] ${Parameter.id} Value: ${Value}`);
 
-			// is parameter writable?
-			if (Parameter.writeCommand === null) {
-				this.log.warn('[async set_DevieParameter(Parameter, IPadress, Port)] Parameter ID ' + String(Parameter.id) + ' can not be written!');
-				reject('Parameter ID ' + String(Parameter.id) + ' can not be written!');
+		// is parameter writable?
+		if (Parameter.writeCommand === null) {
+			this.log.warn('[async set_DevieParameter(Parameter, Value)] Parameter ID ' + String(Parameter.id) + ' can not be written!');
+			reject('Parameter ID ' + String(Parameter.id) + ' can not be written!');
+		}
+
+		// Do we need special permission to write this parameter?
+		if (Parameter.levelWrite === 'SERVICE') {
+			try {
+				await this.set_SERVICE_Mode();
+				writeModeChanged = true;
 			}
-
-			// Do we need special permission to write this parameter?
-			if (Parameter.levelWrite === 'SERVICE') {
-				try {
-					await this.set_SERVICE_Mode();
-					writeModeChanged = true;
-				}
-				catch (err) {
-					this.log.error('async set_DevieParameter(Parameter, Value, IPadress, Port) -> await this.set_SERVICE_Mode() ERROR: ' + err);
-				}
+			catch (err) {
+				this.log.error('async set_DevieParameter(Parameter, Value) -> await this.set_SERVICE_Mode() ERROR: ' + err);
 			}
-			else if (Parameter.levelWrite === 'FACTORY') {
-				try {
-					await this.set_FACTORY_Mode();
-					writeModeChanged = true;
-				}
-				catch (err) {
-					this.log.error('async set_DevieParameter(Parameter, Value, IPadress, Port) -> await this.set_FACTORY_Mode() ERROR: ' + err);
-				}
+		}
+		else if (Parameter.levelWrite === 'FACTORY') {
+			try {
+				await this.set_FACTORY_Mode();
+				writeModeChanged = true;
 			}
-			this.log.debug('set_DevieParameter -> url: http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/set/' + String(Parameter.id) + '/' + String(Value));
-
-			axios({
-				method: 'get', url: 'http://' + String(IPadress) + ':' + String(Port) + '/safe-tec/set/' + String(Parameter.id) + '/' + String(Value), timeout: 10000, responseType: 'json'
+			catch (err) {
+				this.log.error('async set_DevieParameter(Parameter, Value) -> await this.set_FACTORY_Mode() ERROR: ' + err);
 			}
-			).then(async (response) => {
+		}
 
-				if (writeModeChanged) {
-					try {
-						await this.clear_SERVICE_FACTORY_Mode();
+		try {
+			if (moreMessages) { this.log.info('Writing Parameter ' + String(Parameter.id) + ' from device'); }
+			if (this.syrApiClient != null) {
+				interfaceBussy = true;
+				const deviceResponse = await this.syrApiClient.get('set/' + String(Parameter.id));
+				interfaceBussy = false;
+				if (deviceResponse.status === 200) {
+					if (moreMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
+					if (writeModeChanged) {
+						try { await this.clear_SERVICE_FACTORY_Mode(); }
+						catch (err) { this.log.error('async get_DevieParameter(Parameter) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err); }
 					}
-					catch (err) {
-						this.log.error('async set_DevieParameter(Parameter, Value, IPadress, Port) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err);
-					}
-				}
 
-				// did we have a problem?
-				if ((JSON.stringify(content)).includes('ERROR')) {
-					try {
-						this.log.warn('Restoring old content: ' + String(oldParameter['get' + Parameter.id]));
-						await this.setStateAsync(Parameter.statePath + '.' + Parameter.id, { val: oldParameter, ack: true });
-					} catch (err) {
-						this.log.error('async set_DevieParameter(Parameter, Value, IPadress, Port) -> await this.setStateAsync(Parameter.statePath + \'.\' + Parameter.id, { val: oldParameter, ack: true }); ERROR: ' + err);
+					// did we have a problem?
+					if ((JSON.stringify(deviceResponse.data)).includes('ERROR')) {
+						try {
+							this.log.warn('Restoring old content: ' + String(oldParameter['get' + Parameter.id]));
+							await this.setStateAsync(Parameter.statePath + '.' + Parameter.id, { val: oldParameter, ack: true });
+						} catch (err) {
+							this.log.error('async set_DevieParameter(Parameter, Value) -> await this.setStateAsync(Parameter.statePath + \'.\' + Parameter.id, { val: oldParameter, ack: true }); ERROR: ' + err);
+						}
+						throw new Error(('Error modifiing device parameter: ' + JSON.stringify(deviceResponse.data)));
 					}
-					reject('Error modifiing device parameter: ' + JSON.stringify(content));
-				}
-				else {
-					// writing value ACKNOWLAGED back into state
-					try {
-						await this.setStateAsync(Parameter.statePath + '.' + Parameter.id, { val: Value, ack: true });
-					} catch (err) {
-						this.log.error('async set_DevieParameter(Parameter, Value, IPadress, Port) -> await this.setStateAsync(Parameter.statePath + \'.\' + Parameter.id, { val: Value, ack: true }) ERROR: ' + err);
+					else {
+						// writing value ACKNOWLAGED back into state
+						try {
+							await this.setStateAsync(Parameter.statePath + '.' + Parameter.id, { val: Value, ack: true });
+						} catch (err) {
+							this.log.error('async set_DevieParameter(Parameter, Value) -> await this.setStateAsync(Parameter.statePath + \'.\' + Parameter.id, { val: Value, ack: true }) ERROR: ' + err);
+						}
 					}
+					return deviceResponse.data;
 				}
-				resolve(response.data);
+				throw new Error('Error reading device parameter ' + String(Parameter.id) + ': response status: ' + String(deviceResponse.status) + ' ' + String(deviceResponse.statusText));
 			}
-			).catch(async (error) => {
-				if (error.response) {
-					// The request was made and the server responded with a status code
-
-					this.log.warn(`Warnmeldung`);
-				} else if (error.request) {
-					// The request was made but no response was received
-					// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-					// http.ClientRequest in node.js<div></div>
-					this.log.error(error.message);
-				} else {
-					// Something happened in setting up the request that triggered an Error
-					this.log.error(error.message);
-				}
-				reject(error);
-			});
-
-		});
+			else {
+				throw new Error('syrApiClient is not initialized!');
+			}
+		} catch (err) {
+			if (err.response) {
+				// The request was made and the server responded with a status code
+				this.log.error('async get_DevieParameter(Parameter): Response Code: ' + String(err.message));
+			} else if (err.request) {
+				// The request was made but no response was received
+				// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+				// http.ClientRequest in node.js<div></div>
+				this.log.error('async get_DevieParameter(Parameter): Request got no response: ' + err.message);
+			} else {
+				// Something happened in setting up the request that triggered an Error
+				this.log.error('async get_DevieParameter(Parameter): Error: ' + err.message);
+			}			//throw new Error(err.message);
+			throw new Error(err.message);
+		}
 	}
 
 	/**
