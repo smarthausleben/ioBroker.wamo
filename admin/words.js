@@ -100,7 +100,7 @@ systemDictionary = {
 	},
 	'show api response as info logging messages': {
 		'en': 'show api response as info logging messages',
-		'de': 'api-antwort als info-logging-nachrichten anzeigen',
+		'de': 'Api Antwort als log info Nachrichten anzeigen',
 		'ru': 'показать ответ api как сообщения для входа информации',
 		'pt': 'mostrar api resposta como info mensagens de registro',
 		'nl': 'toon api reactie als infologende berichten',
@@ -124,7 +124,7 @@ systemDictionary = {
 	},
 	'show values as log info messages':{
 		'en': 'show values as log info messages',
-		'de': 'werte als log-info-nachrichten anzeigen',
+		'de': 'Werte als log info Nachrichten anzeigen',
 		'ru': 'показать значения как сообщения информации журнала',
 		'pt': 'mostrar valores como mensagens de log info',
 		'nl': 'toon waarden als log info berichten',

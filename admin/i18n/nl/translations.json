@@ -10,5 +10,7 @@
     "factor german water hardness": "factor duitse waterhardheid",
     "IP or hostname of your SYR SaveTech Connect 2422 or your POLYGONVATRO leakage protection device.": "IP of hostnaam van uw SYR SaveTech Connect 2422 of uw POLYGONVATRO lekkagebeveiligingsapparaat.",
     "Port of your SYR SaveTech Connect 2422 or your POLYGONVATRO leakage protection device": "Poort van uw SYR SaveTech Connect 2422 of uw POLYGONVATRO lekbeschermingsapparaat",
-    "Factor to calculate German water hardnes from conductivity.": "Factor om de Duitse waterhardheid te berekenen op basis van geleidbaarheid."
+    "Factor to calculate German water hardnes from conductivity.": "Factor om de Duitse waterhardheid te berekenen op basis van geleidbaarheid.",
+    "show values as log info messages": "waarden weergeven als loginfo-berichten",
+    "show api response as info logging messages": "toon api-reactie als info-logberichten"
 }

@@ -5616,7 +5616,7 @@ class wamo extends utils.Adapter {
 		// reference to Adapter
 		myAdapter = this;
 
-		this.log.info('wamo adapter is running');
+		if(moreMessages){this.log.info('wamo adapter is running');}
 	}
 
 	/**
