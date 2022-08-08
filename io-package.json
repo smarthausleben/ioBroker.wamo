@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "wamo",
-        "version": "0.2.7",
+        "version": "0.2.8",
         "news": {
+            "0.2.8": {
+                "en": "release cosmetics",
+                "de": "freisetzen kosmetisches",
+                "ru": "выпустить косметику",
+                "pt": "liberar cosméticos",
+                "nl": "vertaling:",
+                "fr": "libérer les cosmétiques",
+                "it": "rilascio cosmetici",
+                "es": "liberación cosmética",
+                "pl": "uwalnianie kosmetyków",
+                "zh-cn": "释放联合材料"
+            },
             "0.2.7": {
                 "en": "added 2 additional options to define lof.info messages\nchange using single api client to communicate with the device\nsome code optimizations and cleanups",
                 "de": "zusätzlich 2 optionen zur definition von lof.info-nachrichten\nmit einem einzigen api-client ändern, um mit dem gerät zu kommunizieren\neinige codeoptimierungen und -reinigungen",
