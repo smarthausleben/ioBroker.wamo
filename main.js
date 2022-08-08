@@ -5396,6 +5396,7 @@ class wamo extends utils.Adapter {
 	 */
 	async onReady() {
 
+		/*
 		// The adapters config (in the instance object everything under the attribute "native") is accessible via
 		// this.config:
 		this.log.debug('config Device IP: ' + this.config.device_ip);
@@ -5405,6 +5406,7 @@ class wamo extends utils.Adapter {
 		this.log.warn('this.config.apireaponsemessages; is: ' + String(this.config.apiresponsemessages));
 		this.log.warn('Option apiResponseInfoMessages is: ' + String(apiResponseInfoMessages));
 		this.log.debug('More log messages: ' + String(this.config.moremessages));
+		*/
 
 		//=================================================================================================
 		// getting system language
@@ -5434,8 +5436,6 @@ class wamo extends utils.Adapter {
 		} catch (err) {
 			this.log.error('Error initStatesAndChanels: ' + err);
 		}
-
-
 
 
 		//=================================================================================================
