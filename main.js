@@ -12,7 +12,7 @@ const http = require('http');
 const schedule = require('node-schedule');
 const { join } = require('path');
 const { stringify } = require('querystring');
-const {adapterChannels, calculatedStates, StatisticStates, DeviceParameters, initStates, alarmPeriod, shortPeriod, longPeriode} = require('./device-parameters');
+const {adapterChannels, calculatedStates, StatisticStates, DeviceParameters, initStates, alarmPeriod, shortPeriod, longPeriode} = require('./lib/device-parameters');
 
 const adapterName = require('./package.json').name.split('.').pop();
 
