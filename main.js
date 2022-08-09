@@ -400,8 +400,12 @@ class wamo extends utils.Adapter {
 					// Rerstore old active Profile back to State
 					// Read selected Profile from Device
 					const currentAktiveProfile = await this.get_DevieParameter(DeviceParameters.SelectedProfile);
-					// Save aktive profile from Device in state
-					await this.set_DevieParameter(DeviceParameters.SelectedProfile, String(currentAktiveProfile['getPRF']));
+					if(currentAktiveProfile != null){
+						// Save aktive profile from Device in state
+						await this.set_DevieParameter(DeviceParameters.SelectedProfile, String(currentAktiveProfile['getPRF']));
+					}else{
+						this.log.debug('couldn\'t read aktive Profile Parameter');
+					}
 				}
 			}
 			//============================================================================
@@ -1225,8 +1229,8 @@ class wamo extends utils.Adapter {
 					// Read out parameter from device
 					try {
 						DeviceParameterReturn = await this.get_DevieParameter(deviceParametersToGet[i]);
-						// Data received
 						gotDeviceParameter = true;
+						// Data received
 					}
 					catch (err) {
 						this.log.error('async getData(' + deviceParametersToGet[i].id + ', ' + this.config.device_ip + ':' + this.config.device_port + ' ERROR: ' + err);
@@ -1238,7 +1242,11 @@ class wamo extends utils.Adapter {
 				}
 				// Update object states
 				try {
-					await this.updateState(deviceParametersToGet[i], DeviceParameterReturn);
+					if(DeviceParameterReturn == null){
+						this.log.debug('Device parameter returned NULL -> skipped');
+					}else{
+						await this.updateState(deviceParametersToGet[i], DeviceParameterReturn);
+					}
 				}
 				catch (err) {
 					// something went wrong during state update
@@ -2470,6 +2478,7 @@ class wamo extends utils.Adapter {
 	async get_DevieParameter(Parameter) {
 		// Flag indicating if we had to switch into SERVICE or FACTORY mode
 		let readModeChanged = false;
+		let skipp = false;
 		this.log.debug(`[getDevieParameter(ParameterID)] ${Parameter.id}`);
 
 		// is parameter readable?
@@ -2496,40 +2505,48 @@ class wamo extends utils.Adapter {
 			}
 		}
 
-		try {
-			if (moreMessages) { this.log.info('Reading Parameter ' + String(Parameter.id) + ' from device'); }
-			if (this.syrApiClient != null) {
-				interfaceBussy = true;
-				const deviceResponse = await this.syrApiClient.get('get/' + String(Parameter.id));
-				interfaceBussy = false;
-				if (deviceResponse.status === 200) {
-					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
-					if (readModeChanged) {
-						try {await this.clear_SERVICE_FACTORY_Mode();}
-						catch (err) {this.log.error('async get_DevieParameter(Parameter) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err);}
+		if((String(Parameter.id) == 'CEL') && (sensor_temperature_present == false)){skipp = true;}
+		if((String(Parameter.id) == 'BAR') && (sensor_pressure_present == false)){skipp = true;}
+		if((String(Parameter.id) == 'CND') && (sensor_conductivity_present == false)){skipp = true;}
+
+		if (!skipp) {
+			try {
+				if (moreMessages) { this.log.info('Reading Parameter ' + String(Parameter.id) + ' from device'); }
+				if (this.syrApiClient != null) {
+					interfaceBussy = true;
+					const deviceResponse = await this.syrApiClient.get('get/' + String(Parameter.id));
+					interfaceBussy = false;
+					if (deviceResponse.status === 200) {
+						if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
+						if (readModeChanged) {
+							try { await this.clear_SERVICE_FACTORY_Mode(); }
+							catch (err) { this.log.error('async get_DevieParameter(Parameter) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err); }
+						}
+						return deviceResponse.data;
 					}
-					return deviceResponse.data;
+					throw new Error('Error reading device parameter ' + String(Parameter.id) + ': response status: ' + String(deviceResponse.status) + ' ' + String(deviceResponse.statusText));
 				}
-				throw new Error('Error reading device parameter '+ String(Parameter.id) + ': response status: ' + String(deviceResponse.status) + ' ' + String(deviceResponse.statusText));
+				else {
+					throw new Error('syrApiClient is not initialized!');
+				}
+			} catch (err) {
+				if (err.response) {
+					// The request was made and the server responded with a status code
+					this.log.error('async get_DevieParameter(Parameter): Response Code: ' + String(err.message));
+				} else if (err.request) {
+					// The request was made but no response was received
+					// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+					// http.ClientRequest in node.js<div></div>
+					this.log.error('async get_DevieParameter(Parameter): Request got no response: ' + err.message);
+				} else {
+					// Something happened in setting up the request that triggered an Error
+					this.log.error('async get_DevieParameter(Parameter): Error: ' + err.message);
+				}			//throw new Error(err.message);
+				throw new Error(err.message);
 			}
-			else {
-				throw new Error('syrApiClient is not initialized!');
-			}
-		} catch (err) {
-			if(err.response){
-				// The request was made and the server responded with a status code
-				this.log.error('async get_DevieParameter(Parameter): Response Code: ' + String(err.message));
-			} else if (err.request) {
-				// The request was made but no response was received
-				// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-				// http.ClientRequest in node.js<div></div>
-				this.log.error('async get_DevieParameter(Parameter): Request got no response: ' + err.message);
-			} else {
-				// Something happened in setting up the request that triggered an Error
-				this.log.error('async get_DevieParameter(Parameter): Error: ' + err.message);
-			}			//throw new Error(err.message);
-			throw new Error(err.message);
-		}
+		}else{
+			this.log.debug('Sensor ' + String(Parameter.id) + ' not present -> readout skipped');
+			return null;}
 	}
 
 	/**
@@ -2588,8 +2605,12 @@ class wamo extends utils.Adapter {
 					// did we have a problem?
 					if ((JSON.stringify(deviceResponse.data)).includes('ERROR')) {
 						try {
-							this.log.warn('Restoring old content: ' + String(oldParameter['get' + Parameter.id]));
-							await this.setStateAsync(Parameter.statePath + '.' + Parameter.id, { val: oldParameter, ack: true });
+							// was there an old parameter we can restore?
+							if(oldParameter != null)
+							{
+								this.log.warn('Restoring old content: ' + String(oldParameter['get' + Parameter.id]));
+								await this.setStateAsync(Parameter.statePath + '.' + Parameter.id, { val: oldParameter, ack: true });
+							}
 						} catch (err) {
 							this.log.error('async set_DevieParameter(Parameter, Value) -> await this.setStateAsync(Parameter.statePath + \'.\' + Parameter.id, { val: oldParameter, ack: true }); ERROR: ' + err);
 						}
