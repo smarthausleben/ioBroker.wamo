@@ -26,8 +26,9 @@ The POLYGONVATRO unit is,under the hood, a SYR SaveTech Connect 2422 unit but wi
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+* (smarthausleben) added options to define timeout for axios request 
+* (smarthausleben) added options for delay time between reconection try to device if connection got lost
 * (smarthausleben) change - exported Parameter declarations and parameter collections for timer into a seperate file 'lib/device-parameters.js'
-* (smarthausleben) added additional options for delay time between reconection try to device if connection got lost
 
 ### 0.2.8 (2022-08-08)
 * (smarthausleben) release cosmetics

@@ -14,5 +14,6 @@
     "show values as log info messages": "将值显示为日志信息消息",
     "show API response as info logging messages": "将 api 响应显示为信息记录消息",
     "more logging messages": "更多日志信息",
-    "Seconds to retry connection to device": "重试连接到设备的秒数"
+    "Seconds to retry connection to device": "重试连接到设备的秒数",
+    "Timeout device data request in seconds": "以秒为单位的超时设备数据请求"
 }

@@ -149,16 +149,17 @@
     },
     "native": {
         "device_ip": "0.0.0.0",
-        "device_port": "5333",
-        "factor_german_water_hardnes": "0.03030303",
-        "device_alarm_poll_interval": "30",
-        "device_short_poll_interval": "60",
-        "device_long_poll_interval": "120",
-        "device_very_long_poll_interval": "300",
+        "device_port": 5333,
+        "factor_german_water_hardnes": 0.03030303,
+        "device_alarm_poll_interval": 30,
+        "device_short_poll_interval": 60,
+        "device_long_poll_interval": 120,
+        "device_very_long_poll_interval": 300,
         "moremessages": false,
         "apiresponsemessages": false,
         "valueinfomessages": true,
-        "reconnectingdelaytime": "5"
+        "reconnectingdelaytime": 5,
+        "requesttimeout": 5
     },
     "objects": [],
     "instanceObjects": [

@@ -14,5 +14,6 @@
     "show values as log info messages": "waarden weergeven als loginfo-berichten",
     "show API response as info logging messages": "toon api-reactie als info-logberichten",
     "more logging messages": "meer logberichten",
-    "Seconds to retry connection to device": "Seconden om opnieuw verbinding te maken met het apparaat"
+    "Seconds to retry connection to device": "Seconden om opnieuw verbinding te maken met het apparaat",
+    "Timeout device data request in seconds": "Verzoek om time-out apparaatgegevens in seconden"
 }

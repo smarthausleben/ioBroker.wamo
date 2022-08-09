@@ -45,6 +45,7 @@ let long_Intervall_ID;
 let very_long_Intervall_ID;
 let delay_Timer_ID;
 let delay_reconnection;
+let timeout_axios_request;
 
 let sensor_temperature_present = false;
 let sensor_pressure_present = false;
@@ -92,6 +93,7 @@ class wamo extends utils.Adapter {
 		apiResponseInfoMessages = this.config.apiresponsemessages;
 		valuesInfoMessages = this.config.valueinfomessages;
 		delay_reconnection = this.config.reconnectingdelaytime;
+		timeout_axios_request = this.config.requesttimeout;
 		this.log.debug('More log messages: ' + String(this.config.moremessages));
 
 		//=================================================================================================
@@ -129,7 +131,7 @@ class wamo extends utils.Adapter {
 		//=================================================================================================
 		this.syrApiClient = axios.create({
 			baseURL: `http://${this.config.device_ip}:${this.config.device_port}/safe-tec/`,
-			timeout: 8000,
+			timeout: timeout_axios_request * 1000,
 			responseType: 'json',
 			responseEncoding: 'utf8',
 			httpAgent: new http.Agent({
@@ -853,7 +855,7 @@ class wamo extends utils.Adapter {
 		try {
 
 			// Die Timer für das Polling starten
-			alarm_Intervall_ID = this.setInterval(alarm_poll, parseInt(this.config.device_alarm_poll_interval) * 1000);
+			alarm_Intervall_ID = this.setInterval(alarm_poll, this.config.device_alarm_poll_interval * 1000);
 			if (moreMessages) { this.log.info('Alarm timer initialized'); }
 
 			try {
@@ -867,7 +869,7 @@ class wamo extends utils.Adapter {
 				}
 				this.log.error('await sleep(3000) ERROR: ' + err);
 			}
-			short_Intervall_ID = this.setInterval(short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
+			short_Intervall_ID = this.setInterval(short_poll, this.config.device_short_poll_interval * 1000);
 			if (moreMessages) { this.log.info('Short timer initialized'); }
 
 			try {
@@ -881,7 +883,7 @@ class wamo extends utils.Adapter {
 				}
 				this.log.error('await sleep(3000) ERROR: ' + err);
 			}
-			long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
+			long_Intervall_ID = this.setInterval(long_poll, this.config.device_long_poll_interval * 1000);
 			if (moreMessages) { this.log.info('Long timer initialized'); }
 
 			try {
@@ -895,7 +897,7 @@ class wamo extends utils.Adapter {
 				}
 				this.log.error('await sleep(2000) ERROR: ' + err);
 			}
-			very_long_Intervall_ID = this.setInterval(very_long_poll, parseInt(this.config.device_very_long_poll_interval) * 1000);
+			very_long_Intervall_ID = this.setInterval(very_long_poll, this.config.device_very_long_poll_interval * 1000);
 			if (moreMessages) { this.log.info('Very Long timer initialized'); }
 			return 'Alarm timer ID = ' + alarm_Intervall_ID + ' / Short timer ID = ' + short_Intervall_ID + ' / Long timer ID = ' + long_Intervall_ID + ' / Very long timer ID = ' + very_long_Intervall_ID;
 		} catch (err) {
@@ -1199,7 +1201,7 @@ class wamo extends utils.Adapter {
 					this.log.error('Axios response.status: ' + String(deviceResponse.status) + ' ' + String(deviceResponse.statusText));
 					// we wail some time before we return the bad news
 					this.log.warn('device ping delay successfull response ...');
-					await this.delay(1000);
+					await this.delay(delay_reconnection * 1000);
 					return false;
 				}
 			} else {
@@ -1208,7 +1210,7 @@ class wamo extends utils.Adapter {
 		} catch (err) {
 			this.log.error(String(err));
 			this.log.warn('device ping delay on response error ...');
-			await this.delay(delay_reconnection);
+			await this.delay(delay_reconnection * 1000);
 			return false;
 		}
 	}
@@ -2351,11 +2353,11 @@ class wamo extends utils.Adapter {
 
 			if (_WaterConductivity_EC25 === 0) {
 				// Water hardnes NOT temperatur compensated
-				german_hardnes = parseFloat((_WaterConductivity * parseFloat(this.config.factor_german_water_hardnes)).toFixed(2));
+				german_hardnes = parseFloat((_WaterConductivity * this.config.factor_german_water_hardnes).toFixed(2));
 				if (valuesInfoMessages) { this.log.info('German water hardness: ' + german_hardnes + ' (NOT temperature compensated)'); }
 			} else {
 				// Water hardnes temperatur compensated
-				german_hardnes = parseFloat((_WaterConductivity_EC25 * parseFloat(this.config.factor_german_water_hardnes)).toFixed(2));
+				german_hardnes = parseFloat((_WaterConductivity_EC25 * this.config.factor_german_water_hardnes).toFixed(2));
 				if (valuesInfoMessages) { this.log.info('German water hardness: ' + german_hardnes + ' (Temperature compensated)'); }
 			}
 

@@ -14,5 +14,6 @@
     "show values as log info messages": "afficher les valeurs sous forme de messages d'informations de journal",
     "show API response as info logging messages": "afficher la réponse de l'api sous forme de messages de journalisation d'informations",
     "more logging messages": "plus de messages de journalisation",
-    "Seconds to retry connection to device": "Secondes pour réessayer la connexion à l'appareil"
+    "Seconds to retry connection to device": "Secondes pour réessayer la connexion à l'appareil",
+    "Timeout device data request in seconds": "Expiration de la demande de données de l'appareil en secondes"
 }

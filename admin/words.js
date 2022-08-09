@@ -145,5 +145,17 @@ systemDictionary = {
 		'es': 'segundos para reiniciar la conexión al dispositivo',
 		'pl': 'sekunda do ponownego połączenia z urządzeniami',
 		'zh-cn': '二. 重用装置'
+	},
+	'Timeout device data request in seconds':{
+		'en': 'Timeout device data request in seconds',
+		'de': 'Timeout Gerätedatenanfrage in Sekunden',
+		'ru': 'Запрос данных устройства Timeout за считанные секунды',
+		'pt': 'Pedido de dados do dispositivo de tempo limite em segundos',
+		'nl': 'Quality over Quantity (QoQ) Releases Vertaling:',
+		'fr': 'Demande de données du dispositif de timeout en quelques secondes',
+		'it': 'Richiesta di dati del dispositivo timeout in pochi secondi',
+		'es': 'Solicitud de datos del dispositivo de Timeout en segundos',
+		'pl': 'Dane dotyczące urządzenia czasowego',
+		'zh-cn': '三. 第二阶段的及时装置数据'
 	}
 };
