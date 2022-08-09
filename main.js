@@ -11,6 +11,7 @@ const axios = require('axios').default;
 const http = require('http');
 const schedule = require('node-schedule');
 const { join } = require('path');
+const { nextTick } = require('process');
 const { stringify } = require('querystring');
 const adapterName = require('./package.json').name.split('.').pop();
 
@@ -141,17 +142,7 @@ class wamo extends utils.Adapter {
 		//=================================================================================================
 		try {
 			while(!await this.devicePing()) {
-				this.log.info('Leakage protection device is present at: ' + String(this.config.device_ip) + ':' + String(this.config.device_port));
-				//=========================================================================================
-				//===  Connection LED to GREEN															===
-				//=========================================================================================
-				try {
-					await this.setStateAsync('info.connection', { val: true, ack: true });
-					this.log.debug('info.connection set');
-				}
-				catch (err) {
-					this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
-				}
+				this.log.warn('waiting till device becomes available again ...');
 			}
 		}
 		catch (err) {
@@ -175,39 +166,6 @@ class wamo extends utils.Adapter {
 			}
 			catch (err) {
 				this.log.error('this.getData(initStates) ERROR: ' + err);
-
-				//=========================================================================================
-				//===  Connection LED to RED															===
-				//=========================================================================================
-				try {
-					await this.setStateAsync('info.connection', { val: false, ack: true });
-					this.log.debug('info.connection set to false');
-				}
-				catch (err) {
-					this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
-				}
-
-				//=================================================================================================
-				// Waiting till device is responding again
-				//=================================================================================================
-				try {
-					while (!await this.devicePing()) {
-						//=========================================================================================
-						//===  Connection LED to GREEN															===
-						//=========================================================================================
-						try {
-							await this.setStateAsync('info.connection', { val: true, ack: true });
-							this.log.debug('info.connection set');
-						}
-						catch (err) {
-							this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
-						}
-					}
-				}
-				catch (err) {
-					this.log.error(err);
-				}
-
 			}
 		}
 
@@ -228,36 +186,6 @@ class wamo extends utils.Adapter {
 			}
 			catch (err) {
 				this.log.error('getDeviceProfilesData() ERROR: ' + err);
-				//=========================================================================================
-				//===  Connection LED to RED															===
-				//=========================================================================================
-				try {
-					await this.setStateAsync('info.connection', { val: false, ack: true });
-					this.log.debug('info.connection set to false');
-				}
-				catch (err) {
-					this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
-				}
-
-				//=================================================================================================
-				// Waiting till device is responding again
-				//=================================================================================================
-				try{
-					while (!await this.devicePing()) {
-						//=========================================================================================
-						//===  Connection LED to GREEN															===
-						//=========================================================================================
-						try {
-							await this.setStateAsync('info.connection', { val: true, ack: true });
-							this.log.debug('info.connection set');
-						} catch (err) {
-							this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
-						}
-					}
-				}
-				catch (err) {
-					this.log.error(err);
-				}
 			}
 		}
 
@@ -1228,23 +1156,46 @@ class wamo extends utils.Adapter {
 	 * @returns true if device is present, false if not
 	 */
 	async devicePing() {
+		interfaceBussy = true; // to informe other timer calls that the can't perfromn request and therefore have to skipp.
+		this.log.info('Leakage protection device is present at: ' + String(this.config.device_ip) + ':' + String(this.config.device_port));
+
+		//=========================================================================================
+		//===  Connection LED to RED															===
+		//=========================================================================================
+		try {
+			await this.setStateAsync('info.connection', { val: true, ack: false });
+		}
+		catch (err) {
+			this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
+		}
+
 		if(moreMessages){this.log.info('async devicePing() -> hit');}
 		try {
 			if (this.syrApiClient != null) {
-				interfaceBussy = true; // to informe other timer calls that the can't perfromn request and therefore have to skipp.
 				this.log.debug('this.syrApiClientbaseURL: ' + String(this.syrApiClient.defaults.baseURL));
 				this.log.debug('this.syrApiClientbaseURL: ' + String(this.syrApiClient.defaults.timeout));
 				this.log.debug('this.syrApiClientbaseURL: ' + String(this.syrApiClient.defaults.responseType));
 
 				const deviceResponse = await this.syrApiClient.get('get/');
-				interfaceBussy = false; // to informe other timer calls that they can perform request to the device.
-
-				if(apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
 
 				if (deviceResponse.status === 200) {
+					if(apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
+					//=========================================================================================
+					//===  Connection LED to GREEN															===
+					//=========================================================================================
+					try {
+						await this.setStateAsync('info.connection', { val: true, ack: true });
+					}
+					catch (err) {
+						this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
+					}
+					interfaceBussy = false; // to informe other timer calls that they can perform request to the device.
 					return true;
 				} else {
 					this.log.error('Axios response.status: ' + String(deviceResponse.status) + ' ' + String(deviceResponse.statusText));
+					// we wail some time before we return the bad news
+					this.log.warn('device ping delay successfull response ...');
+					await this.delay(1000);
 					return false;
 				}
 			} else {
@@ -1252,6 +1203,8 @@ class wamo extends utils.Adapter {
 			}
 		} catch (err) {
 			this.log.error(String(err));
+			this.log.warn('device ping delay on response error ...');
+			await this.delay(1000);
 			throw err;
 		}
 	}
@@ -1261,32 +1214,25 @@ class wamo extends utils.Adapter {
 	* @param {Object[]} deviceParametersToGet - Array of DeviceParameters Objects
 	*/
 	async getData(deviceParametersToGet) {
-		let parnumber = 0;
+		let parNumber = 0;
 		try {
 			// iterate through all requested Parameters
 			for (let i = 0; i < deviceParametersToGet.length; i++) {
-				parnumber = i;
+				parNumber = i;
 				let DeviceParameterReturn = null;
 				let gotDeviceParameter = false;
 				while (!gotDeviceParameter) {
 					// Read out parameter from device
 					try {
 						DeviceParameterReturn = await this.get_DevieParameter(deviceParametersToGet[i]);
+						// Data received
 						gotDeviceParameter = true;
 					}
 					catch (err) {
 						this.log.error('async getData(' + deviceParametersToGet[i].id + ', ' + this.config.device_ip + ':' + this.config.device_port + ' ERROR: ' + err);
-						//=================================================================================================
-						// Waiting till device is responding again
-						//=================================================================================================
-						try {
-							while (!await this.devicePing()) {
-								await sleep(500);
-								this.log.debug('getData() ping loop');
-							}
-						}
-						catch (err) {
-							this.log.error(err);
+						// is device available?
+						while(!await this.devicePing()){
+							this.log.warn('waiting till device becomes available again ...');
 						}
 					}
 				}
@@ -1302,7 +1248,7 @@ class wamo extends utils.Adapter {
 			return true;
 		} catch (err) {
 			// something else and unhandled went wrong
-			this.log.error('getData(deviceParametersToGet) -> somthing else went wrong at ID ' + deviceParametersToGet[parnumber].id + '! ERROR: ' + err);
+			this.log.error('getData(deviceParametersToGet) -> somthing else went wrong at ID ' + deviceParametersToGet[parNumber].id + '! ERROR: ' + err);
 			throw new Error(err);
 		}
 	}
