@@ -9,8 +9,8 @@
 const utils = require('@iobroker/adapter-core');
 const axios = require('axios').default;
 const http = require('http');
-const schedule = require('node-schedule');
-const {adapterChannels, calculatedStates, StatisticStates, DeviceParameters, initStates, alarmPeriod, shortPeriod, longPeriode} = require('./device-parameters');
+const schedule = resolve('node-schedule');
+const {adapterChannels, calculatedStates, StatisticStates, DeviceParameters, initStates, alarmPeriod, shortPeriod, longPeriode} = require('./device-parameters.js');
 const { join } = require('path');
 const { stringify } = require('querystring');
 
