@@ -12,9 +12,10 @@ const http = require('http');
 const schedule = require('node-schedule');
 const { join } = require('path');
 const { stringify } = require('querystring');
-const {adapterChannels, calculatedStates, StatisticStates, DeviceParameters, initStates, alarmPeriod, shortPeriod, longPeriode} = require('./lib/device-parameters');
-
 const adapterName = require('./package.json').name.split('.').pop();
+
+// my own modules
+const {adapterChannels, calculatedStates, StatisticStates, DeviceParameters, initStates, alarmPeriod, shortPeriod, longPeriode} = require('./lib/device-parameters');
 
 /* cron definitions for the varius cron timers.
 (cron timers are for statistik data collection) */
@@ -907,68 +908,66 @@ class wamo extends utils.Adapter {
 	 * start all timers
 	 */
 	async timerStarts() {
-		return new Promise(async (resolve, reject) => {
+		try {
+			schedule.scheduleJob(cron_Day, cron_poll_day);
+			schedule.scheduleJob(cron_Week, cron_poll_week);
+			schedule.scheduleJob(cron_Month, cron_poll_month);
+			schedule.scheduleJob(cron_Year, cron_poll_year);
+			if (moreMessages) { this.log.info('Cron timer started'); }
+		} catch (err) {
+			this.log.error('Cron timer start error: ' + err);
+		}
+		try {
+
+			// Die Timer für das Polling starten
+			alarm_Intervall_ID = this.setInterval(alarm_poll, parseInt(this.config.device_alarm_poll_interval) * 1000);
+			if (moreMessages) { this.log.info('Alarm timer initialized'); }
+
 			try {
-				schedule.scheduleJob(cron_Day, cron_poll_day);
-				schedule.scheduleJob(cron_Week, cron_poll_week);
-				schedule.scheduleJob(cron_Month, cron_poll_month);
-				schedule.scheduleJob(cron_Year, cron_poll_year);
-				if (moreMessages) { this.log.info('Cron timer started'); }
-			} catch (err) {
-				this.log.error('Cron timer start error: ' + err);
+				await sleep(3000); // Warten um einen Versatz zu erzeugen
 			}
+			catch (err) {
+				// Tieout to clear?
+				if (delay_Timer_ID != null) {
+					try { this.clearTimeout(delay_Timer_ID); }
+					catch (err) { this.log.error('Error clear Timeout'); }
+				}
+				this.log.error('await sleep(3000) ERROR: ' + err);
+			}
+			short_Intervall_ID = this.setInterval(short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
+			if (moreMessages) { this.log.info('Short timer initialized'); }
+
 			try {
-
-				// Die Timer für das Polling starten
-				alarm_Intervall_ID = this.setInterval(alarm_poll, parseInt(this.config.device_alarm_poll_interval) * 1000);
-				if (moreMessages) { this.log.info('Alarm timer initialized'); }
-
-				try {
-					await sleep(3000); // Warten um einen Versatz zu erzeugen
-				}
-				catch (err) {
-					// Tieout to clear?
-					if (delay_Timer_ID != null) {
-						try { this.clearTimeout(delay_Timer_ID); }
-						catch (err) { this.log.error('Error clear Timeout'); }
-					}
-					this.log.error('await sleep(3000) ERROR: ' + err);
-				}
-				short_Intervall_ID = this.setInterval(short_poll, parseInt(this.config.device_short_poll_interval) * 1000);
-				if (moreMessages) { this.log.info('Short timer initialized'); }
-
-				try {
-					await sleep(3000); // Warten um einen Versatz zu erzeugen
-				}
-				catch (err) {
-					// Tieout to clear?
-					if (delay_Timer_ID != null) {
-						try { this.clearTimeout(delay_Timer_ID); }
-						catch (err) { this.log.error('Error clear Timeout'); }
-					}
-					this.log.error('await sleep(3000) ERROR: ' + err);
-				}
-				long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
-				if (moreMessages) { this.log.info('Long timer initialized'); }
-
-				try {
-					await sleep(2000); // Warten um einen Versatz zu erzeugen
-				}
-				catch (err) {
-					// Tieout to clear?
-					if (delay_Timer_ID != null) {
-						try { this.clearTimeout(delay_Timer_ID); }
-						catch (err) { this.log.error('Error clear Timeout'); }
-					}
-					this.log.error('await sleep(2000) ERROR: ' + err);
-				}
-				very_long_Intervall_ID = this.setInterval(very_long_poll, parseInt(this.config.device_very_long_poll_interval) * 1000);
-				if (moreMessages) { this.log.info('Very Long timer initialized'); }
-				resolve('Alarm timer ID = ' + alarm_Intervall_ID + ' / Short timer ID = ' + short_Intervall_ID + ' / Long timer ID = ' + long_Intervall_ID + ' / Very long timer ID = ' + very_long_Intervall_ID);
-			} catch (err) {
-				reject(err);
+				await sleep(3000); // Warten um einen Versatz zu erzeugen
 			}
-		});
+			catch (err) {
+				// Tieout to clear?
+				if (delay_Timer_ID != null) {
+					try { this.clearTimeout(delay_Timer_ID); }
+					catch (err) { this.log.error('Error clear Timeout'); }
+				}
+				this.log.error('await sleep(3000) ERROR: ' + err);
+			}
+			long_Intervall_ID = this.setInterval(long_poll, parseInt(this.config.device_long_poll_interval) * 1000);
+			if (moreMessages) { this.log.info('Long timer initialized'); }
+
+			try {
+				await sleep(2000); // Warten um einen Versatz zu erzeugen
+			}
+			catch (err) {
+				// Tieout to clear?
+				if (delay_Timer_ID != null) {
+					try { this.clearTimeout(delay_Timer_ID); }
+					catch (err) { this.log.error('Error clear Timeout'); }
+				}
+				this.log.error('await sleep(2000) ERROR: ' + err);
+			}
+			very_long_Intervall_ID = this.setInterval(very_long_poll, parseInt(this.config.device_very_long_poll_interval) * 1000);
+			if (moreMessages) { this.log.info('Very Long timer initialized'); }
+			return 'Alarm timer ID = ' + alarm_Intervall_ID + ' / Short timer ID = ' + short_Intervall_ID + ' / Long timer ID = ' + long_Intervall_ID + ' / Very long timer ID = ' + very_long_Intervall_ID;
+		} catch (err) {
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -976,60 +975,58 @@ class wamo extends utils.Adapter {
 	 * [daily]
 	 */
 	async alarm_cron_day_Tick() {
-		return new Promise(async (resolve, reject) => {
+		try {
+			if (moreMessages) { this.log.info('Cron day tick'); }
+
+			// ================================================
+			// Dayly sum reset
+			// ================================================
+			// here we save the sumary and the we reset it to 0
+			// ================================================
+
+			let TotalDayState = null;
+
 			try {
-				if (moreMessages) { this.log.info('Cron day tick'); }
-
-				// ================================================
-				// Dayly sum reset
-				// ================================================
-				// here we save the sumary and the we reset it to 0
-				// ================================================
-
-				let TotalDayState = null;
-
-				try {
-					// getting saved Total state
-					TotalDayState = await this.getStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id);
-				}
-				catch (err) {
-					this.log.error('await this.getStateAsync(' + StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id + ') ERROR: ' + err);
-				}
-
-				// saving sum to "past" State
-				try {
-					await this.setObjectNotExistsAsync(StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id, Object(StatisticStates.TotalPastDay.objectdefinition));
-				}
-				catch (err) {
-					this.log.error('await this.setObjectNotExistsAsync(' + StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id + ',' + StatisticStates.TotalPastDay.objectdefinition + ' ) ERROR: ' + err);
-				}
-				if ((TotalDayState != null) && (TotalDayState.val != null)) {
-					try {
-						await this.setStateAsync(StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id, { val: TotalDayState.val, ack: true });
-					}
-					catch (err) {
-						this.log.error('setStateAsync(' + StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id + ',' + '{ val: parseFloat(' + TotalDayState.val + '), ack: true }) ERROR: ' + err);
-					}
-				}
-				// resetting sum to 0
-				try {
-					await this.setObjectNotExistsAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, Object(StatisticStates.TotalDay.objectdefinition));
-				}
-				catch (err) {
-					this.log.error('await this.setObjectNotExistsAsync(' + StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id + ',' + StatisticStates.TotalDay.objectdefinition + ' ) ERROR: ' + err);
-				}
-				try {
-					await this.setStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, { val: 0, ack: true });
-				}
-				catch (err) {
-					this.log.error('setStateAsync(' + StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id + ',' + '{ val: 0, ack: true }) ERROR: ' + err);
-				}
-
-				resolve(true);
-			} catch (err) {
-				reject(err);
+				// getting saved Total state
+				TotalDayState = await this.getStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id);
 			}
-		});
+			catch (err) {
+				this.log.error('await this.getStateAsync(' + StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id + ') ERROR: ' + err);
+			}
+
+			// saving sum to "past" State
+			try {
+				await this.setObjectNotExistsAsync(StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id, Object(StatisticStates.TotalPastDay.objectdefinition));
+			}
+			catch (err) {
+				this.log.error('await this.setObjectNotExistsAsync(' + StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id + ',' + StatisticStates.TotalPastDay.objectdefinition + ' ) ERROR: ' + err);
+			}
+			if ((TotalDayState != null) && (TotalDayState.val != null)) {
+				try {
+					await this.setStateAsync(StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id, { val: TotalDayState.val, ack: true });
+				}
+				catch (err) {
+					this.log.error('setStateAsync(' + StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id + ',' + '{ val: parseFloat(' + TotalDayState.val + '), ack: true }) ERROR: ' + err);
+				}
+			}
+			// resetting sum to 0
+			try {
+				await this.setObjectNotExistsAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, Object(StatisticStates.TotalDay.objectdefinition));
+			}
+			catch (err) {
+				this.log.error('await this.setObjectNotExistsAsync(' + StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id + ',' + StatisticStates.TotalDay.objectdefinition + ' ) ERROR: ' + err);
+			}
+			try {
+				await this.setStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, { val: 0, ack: true });
+			}
+			catch (err) {
+				this.log.error('setStateAsync(' + StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id + ',' + '{ val: 0, ack: true }) ERROR: ' + err);
+			}
+
+			return true;
+		} catch (err) {
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -1037,33 +1034,31 @@ class wamo extends utils.Adapter {
 	 * [weekly]
 	 */
 	async alarm_cron_week_Tick() {
-		return new Promise(async (resolve, reject) => {
-			try {
-				if (moreMessages) { this.log.info('Cron week tick'); }
+		try {
+			if (moreMessages) { this.log.info('Cron week tick'); }
 
-				// ================================================
-				// Week sum reset
-				// ================================================
-				// here we save the sumary and the we reset it to 0
-				// ================================================
+			// ================================================
+			// Week sum reset
+			// ================================================
+			// here we save the sumary and the we reset it to 0
+			// ================================================
 
-				// getting saved Total state
-				const TotalWeekState = await this.getStateAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id);
+			// getting saved Total state
+			const TotalWeekState = await this.getStateAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id);
 
-				if ((TotalWeekState != null) && (TotalWeekState.val != null)) {
-					// saving sum to "past" State
-					await this.setObjectNotExistsAsync(StatisticStates.TotalPastWeek.statePath + '.' + StatisticStates.TotalPastWeek.id, Object(StatisticStates.TotalPastWeek.objectdefinition));
-					await this.setStateAsync(StatisticStates.TotalPastWeek.statePath + '.' + StatisticStates.TotalPastWeek.id, { val: TotalWeekState.val, ack: true });
+			if ((TotalWeekState != null) && (TotalWeekState.val != null)) {
+				// saving sum to "past" State
+				await this.setObjectNotExistsAsync(StatisticStates.TotalPastWeek.statePath + '.' + StatisticStates.TotalPastWeek.id, Object(StatisticStates.TotalPastWeek.objectdefinition));
+				await this.setStateAsync(StatisticStates.TotalPastWeek.statePath + '.' + StatisticStates.TotalPastWeek.id, { val: TotalWeekState.val, ack: true });
 
-					// resetting sum to 0
-					await this.setObjectNotExistsAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id, Object(StatisticStates.TotalWeek.objectdefinition));
-					await this.setStateAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id, { val: 0, ack: true });
-				}
-				resolve(true);
-			} catch (err) {
-				reject(err);
+				// resetting sum to 0
+				await this.setObjectNotExistsAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id, Object(StatisticStates.TotalWeek.objectdefinition));
+				await this.setStateAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id, { val: 0, ack: true });
 			}
-		});
+			return true;
+		} catch (err) {
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -1071,33 +1066,31 @@ class wamo extends utils.Adapter {
 	 * [monthly]
 	 */
 	async alarm_cron_month_Tick() {
-		return new Promise(async (resolve, reject) => {
-			try {
-				if (moreMessages) { this.log.info('Cron month tick'); }
+		try {
+			if (moreMessages) { this.log.info('Cron month tick'); }
 
-				// ================================================
-				// Month sum reset
-				// ================================================
-				// here we save the sumary and the we reset it to 0
-				// ================================================
+			// ================================================
+			// Month sum reset
+			// ================================================
+			// here we save the sumary and the we reset it to 0
+			// ================================================
 
-				// getting saved Total state
-				const TotalMonthState = await this.getStateAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id);
+			// getting saved Total state
+			const TotalMonthState = await this.getStateAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id);
 
-				if ((TotalMonthState != null) && (TotalMonthState.val != null)) {
-					// saving sum to "past" State
-					await this.setObjectNotExistsAsync(StatisticStates.TotalPastMonth.statePath + '.' + StatisticStates.TotalPastMonth.id, Object(StatisticStates.TotalPastMonth.objectdefinition));
-					await this.setStateAsync(StatisticStates.TotalPastMonth.statePath + '.' + StatisticStates.TotalPastMonth.id, { val: TotalMonthState.val, ack: true });
+			if ((TotalMonthState != null) && (TotalMonthState.val != null)) {
+				// saving sum to "past" State
+				await this.setObjectNotExistsAsync(StatisticStates.TotalPastMonth.statePath + '.' + StatisticStates.TotalPastMonth.id, Object(StatisticStates.TotalPastMonth.objectdefinition));
+				await this.setStateAsync(StatisticStates.TotalPastMonth.statePath + '.' + StatisticStates.TotalPastMonth.id, { val: TotalMonthState.val, ack: true });
 
-					// resetting sum to 0
-					await this.setObjectNotExistsAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id, Object(StatisticStates.TotalMonth.objectdefinition));
-					await this.setStateAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id, { val: 0, ack: true });
-				}
-				resolve(true);
-			} catch (err) {
-				reject(err);
+				// resetting sum to 0
+				await this.setObjectNotExistsAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id, Object(StatisticStates.TotalMonth.objectdefinition));
+				await this.setStateAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id, { val: 0, ack: true });
 			}
-		});
+			return true;
+		} catch (err) {
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -1105,33 +1098,31 @@ class wamo extends utils.Adapter {
 	 * [yearly]
 	 */
 	async alarm_cron_year_Tick() {
-		return new Promise(async (resolve, reject) => {
-			try {
-				if (moreMessages) { this.log.info('Cron year tick'); }
+		try {
+			if (moreMessages) { this.log.info('Cron year tick'); }
 
-				// ================================================
-				// Year sum reset
-				// ================================================
-				// here we save the sumary and the we reset it to 0
-				// ================================================
+			// ================================================
+			// Year sum reset
+			// ================================================
+			// here we save the sumary and the we reset it to 0
+			// ================================================
 
-				// getting saved Total state
-				const TotalYearState = await this.getStateAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id);
+			// getting saved Total state
+			const TotalYearState = await this.getStateAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id);
 
-				if((TotalYearState != null) && (TotalYearState.val != null)){
-					// saving sum to "past" State
-					await this.setObjectNotExistsAsync(StatisticStates.TotalPastYear.statePath + '.' + StatisticStates.TotalPastYear.id, Object(StatisticStates.TotalPastYear.objectdefinition));
-					await this.setStateAsync(StatisticStates.TotalPastYear.statePath + '.' + StatisticStates.TotalPastYear.id, { val: TotalYearState.val, ack: true });
+			if ((TotalYearState != null) && (TotalYearState.val != null)) {
+				// saving sum to "past" State
+				await this.setObjectNotExistsAsync(StatisticStates.TotalPastYear.statePath + '.' + StatisticStates.TotalPastYear.id, Object(StatisticStates.TotalPastYear.objectdefinition));
+				await this.setStateAsync(StatisticStates.TotalPastYear.statePath + '.' + StatisticStates.TotalPastYear.id, { val: TotalYearState.val, ack: true });
 
-					// resetting sum to 0
-					await this.setObjectNotExistsAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id, Object(StatisticStates.TotalYear.objectdefinition));
-					await this.setStateAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id, { val: 0, ack: true });
-				}
-				resolve(true);
-			} catch (err) {
-				reject(err);
+				// resetting sum to 0
+				await this.setObjectNotExistsAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id, Object(StatisticStates.TotalYear.objectdefinition));
+				await this.setStateAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id, { val: 0, ack: true });
 			}
-		});
+			return true;
+		} catch (err) {
+			throw new Error(err);
+		}
 	}
 
 	/**
