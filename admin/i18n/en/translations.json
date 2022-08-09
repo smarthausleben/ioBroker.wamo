@@ -8,9 +8,10 @@
     "fast polling time in seconds": "fast polling time in seconds",
 	"slow polling time in seconds": "slow polling time in seconds",
 	"very slow polling time in seconds": "very slow polling time in seconds",
-	"more loging messages": "more loging messages",
+	"more logging messages": "more loging messages",
 	"factor german water hardness": "factor german water hardness",
     "Factor to calculate German water hardnes from conductivity.": "Factor to calculate German water hardnes from conductivity.",
     "show values as log info messages": "show values as log info messages",
-    "show API response as info logging messages": "show api response as info logging messages"
+    "show API response as info logging messages": "show api response as info logging messages",
+    "Seconds to retry connection to device": "Seconds to retry connection to device"
 }

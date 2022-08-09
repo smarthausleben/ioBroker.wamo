@@ -12,5 +12,7 @@
     "Port of your SYR SaveTech Connect 2422 or your POLYGONVATRO leakage protection device": "Puerto de su SYR SaveTech Connect 2422 o su dispositivo de protección contra fugas POLYGONVATRO",
     "Factor to calculate German water hardnes from conductivity.": "Factor para calcular la dureza del agua alemana a partir de la conductividad.",
     "show values as log info messages": "mostrar valores como mensajes de información de registro",
-    "show API response as info logging messages": "mostrar la respuesta de la API como mensajes de registro de información"
+    "show API response as info logging messages": "mostrar la respuesta de la API como mensajes de registro de información",
+    "more logging messages": "más mensajes de registro",
+    "Seconds to retry connection to device": "Segundos para reintentar la conexión al dispositivo"
 }

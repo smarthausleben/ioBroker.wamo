@@ -157,7 +157,8 @@
         "device_very_long_poll_interval": "300",
         "moremessages": false,
         "apiresponsemessages": false,
-        "valueinfomessages": true
+        "valueinfomessages": true,
+        "reconnectingdelaytime": "5"
     },
     "objects": [],
     "instanceObjects": [

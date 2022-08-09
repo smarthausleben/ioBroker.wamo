@@ -1,16 +1,17 @@
 {
     "Options": "Optionen",
     "Device IP Address": "IP-Adresse des Geräts",
+    "IP or hostname of your SYR SaveTech Connect 2422 or your POLYGONVATRO leakage protection device.": "IP oder Hostname Ihres SYR SaveTech Connect 2422 oder Ihres POLYGONVATRO Leckageschutz.",
     "Device Port": "Geräte-Port",
+    "Port of your SYR SaveTech Connect 2422 or your POLYGONVATRO leakage protection device": "Port Ihres SYR SaveTech Connect 2422 oder Ihres POLYGONVATRO Leckageschutz",
     "alarm polling time in seconds": "Alarmabfragezeit in Sekunden",
     "fast polling time in seconds": "schnelle Abfragezeit in Sekunden",
     "slow polling time in seconds": "langsame Abfragezeit in Sekunden",
     "very slow polling time in seconds": "sehr langsame Abfragezeit in Sekunden",
-    "more loging messages": "mehr Logging-Meldungen",
+    "more logging messages": "mehr Logging-Meldungen",
     "factor german water hardness": "Faktor deutsche Wasserhärte",
-    "IP or hostname of your SYR SaveTech Connect 2422 or your POLYGONVATRO leakage protection device.": "IP oder Hostname Ihres SYR SaveTech Connect 2422 oder Ihres POLYGONVATRO Leckageschutz.",
-    "Port of your SYR SaveTech Connect 2422 or your POLYGONVATRO leakage protection device": "Port Ihres SYR SaveTech Connect 2422 oder Ihres POLYGONVATRO Leckageschutz",
     "Factor to calculate German water hardnes from conductivity.": "Faktor zur Berechnung der deutschen Wasserhärte aus der Leitfähigkeit.",
     "show values as log info messages": "Werte als log info Nachrichten anzeigen",
-    "show API response as info logging messages": "Api Antwort als log info Nachrichten anzeigen"
+    "show API response as info logging messages": "Api Antwort als log info Nachrichten anzeigen",
+    "Seconds to retry connection to device": "Sekunden, um die Verbindung zum Gerät wiederherzustellen"
 }

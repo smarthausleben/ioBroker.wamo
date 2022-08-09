@@ -44,6 +44,7 @@ let short_Intervall_ID;
 let long_Intervall_ID;
 let very_long_Intervall_ID;
 let delay_Timer_ID;
+let delay_reconnection;
 
 let sensor_temperature_present = false;
 let sensor_pressure_present = false;
@@ -90,8 +91,7 @@ class wamo extends utils.Adapter {
 		moreMessages = this.config.moremessages;
 		apiResponseInfoMessages = this.config.apiresponsemessages;
 		valuesInfoMessages = this.config.valueinfomessages;
-		//this.log.warn('this.config.apireaponsemessages; is: ' + String(this.config.apiresponsemessages));
-		//this.log.warn('Option apiResponseInfoMessages is: ' + String(apiResponseInfoMessages));
+		delay_reconnection = this.config.reconnectingdelaytime;
 		this.log.debug('More log messages: ' + String(this.config.moremessages));
 
 		//=================================================================================================
@@ -1208,7 +1208,7 @@ class wamo extends utils.Adapter {
 		} catch (err) {
 			this.log.error(String(err));
 			this.log.warn('device ping delay on response error ...');
-			await this.delay(1000);
+			await this.delay(delay_reconnection);
 			return false;
 		}
 	}

@@ -133,5 +133,17 @@ systemDictionary = {
 		'es': 'mostrar valores como los mensajes de información de registro',
 		'pl': 'pokazuje wartości jako wiadomości logiczne',
 		'zh-cn': '导 言'
+	},
+	'Seconds to retry connection to device':{
+		'en': 'Seconds to retry connection to device',
+		'de': 'Sekunden, um die Verbindung zum Gerät wiederherzustellen',
+		'ru': 'секунды для повторного подключения к устройству',
+		'pt': 'segundos para retira a conexão com o dispositivo',
+		'nl': 'een paar seconden om de connectie te herstellen',
+		'fr': "secondes à la connexion à l'appareil",
+		'it': 'secondi per ripristinare la connessione al dispositivo',
+		'es': 'segundos para reiniciar la conexión al dispositivo',
+		'pl': 'sekunda do ponownego połączenia z urządzeniami',
+		'zh-cn': '二. 重用装置'
 	}
 };

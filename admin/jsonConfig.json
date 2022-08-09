@@ -68,6 +68,16 @@
                     "min": 120,
                     "label": "very slow polling time in seconds"
                 },
+                "reconnectingdelaytime":{
+                    "newLine": true,
+                    "type": "number",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "min": 1,
+                    "max": 60,
+                    "label": "Seconds to retry connection to device"
+                },
                 "valueinfomessages":{
                     "newLine": true,
                     "type": "checkbox",
