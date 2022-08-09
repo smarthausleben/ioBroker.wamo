@@ -222,7 +222,7 @@ class wamo extends utils.Adapter {
 				//===============================================
 				//= Getting all Profile 'DeviceParameters' data =
 				//===============================================
-				const responseInitProfiles = await this.getDeviceProfilesData(this.config.device_ip, this.config.device_port);
+				const responseInitProfiles = await this.getDeviceProfilesData();
 				this.log.debug(`[async onReady() - getDeviceProfilesData -> getDeviceProfilesData] Response:  ${responseInitProfiles}`);
 				gotDeviceProfileData = true;
 			}
@@ -1130,23 +1130,21 @@ class wamo extends utils.Adapter {
 	 * [alarm]
 	 */
 	async alarm_TimerTick() {
-		return new Promise(async (resolve, reject) => {
-			try {
-				if (moreMessages) { this.log.info('Alarm Timer tick'); }
-				// get alarmPeriode data
-				if (!interfaceBussy) {
-					await this.getData(Object(alarmPeriod));
-					resolve(true);
-				}
-				else {
-					this.log.warn('Interface bussy during ALARM TIMER data request');
-					resolve(false);
-				}
-			} catch (err) {
-				interfaceBussy = false;	// CLEAR flag that device interface is bussy
-				reject(err);
+		try {
+			if (moreMessages) { this.log.info('Alarm Timer tick'); }
+			// get alarmPeriode data
+			if (!interfaceBussy) {
+				await this.getData(Object(alarmPeriod));
+				return true;
 			}
-		});
+			else {
+				this.log.warn('Interface bussy during ALARM TIMER data request');
+				return false;
+			}
+		} catch (err) {
+			interfaceBussy = false;	// CLEAR flag that device interface is bussy
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -1154,29 +1152,27 @@ class wamo extends utils.Adapter {
 	 * [short]
 	 */
 	async short_TimerTick() {
-		return new Promise(async (resolve, reject) => {
-			try {
-				if (moreMessages) { this.log.info('Short Timer tick'); }
-				// get longPeriode data
-				if (!interfaceBussy) {
-					await this.getData(Object(shortPeriod));
-					try {
-						await this.updateStatistics();
-					} catch (err) {
-						this.log.error('Statistics Error: ' + err);
-					}
-					resolve(true);
+		try {
+			if (moreMessages) { this.log.info('Short Timer tick'); }
+			// get longPeriode data
+			if (!interfaceBussy) {
+				await this.getData(Object(shortPeriod));
+				try {
+					await this.updateStatistics();
+				} catch (err) {
+					this.log.error('Statistics Error: ' + err);
 				}
-				else {
-					this.log.warn('Interface bussy during SHORT TIMER data request');
-					resolve(false);
-				}
+				return true;
 			}
-			catch (err) {
-				interfaceBussy = false;	// CLEAR flag that device interface is bussy
-				reject(err);
+			else {
+				this.log.warn('Interface bussy during SHORT TIMER data request');
+				return false;
 			}
-		});
+		}
+		catch (err) {
+			interfaceBussy = false;	// CLEAR flag that device interface is bussy
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -1184,23 +1180,21 @@ class wamo extends utils.Adapter {
 	 * [long]
 	 */
 	async long_TimerTick() {
-		return new Promise(async (resolve, reject) => {
-			try {
-				if (moreMessages) { this.log.info('Long Timer tick'); }
-				// get longPeriode data
-				if (!interfaceBussy) {
-					await this.getData(Object(longPeriode));
-					resolve(true);
-				}
-				else {
-					this.log.warn('Interface bussy during LONG TIMER data request');
-					resolve(false);
-				}
-			} catch (err) {
-				interfaceBussy = false;	// CLEAR flag that device interface is bussy
-				reject(err);
+		try {
+			if (moreMessages) { this.log.info('Long Timer tick'); }
+			// get longPeriode data
+			if (!interfaceBussy) {
+				await this.getData(Object(longPeriode));
+				return true;
 			}
-		});
+			else {
+				this.log.warn('Interface bussy during LONG TIMER data request');
+				return false;
+			}
+		} catch (err) {
+			interfaceBussy = false;	// CLEAR flag that device interface is bussy
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -1208,27 +1202,24 @@ class wamo extends utils.Adapter {
 	 * [very long]
 	 */
 	async very_long_TimerTick() {
-		return new Promise(async (resolve, reject) => {
-			try {
-				if (moreMessages) { this.log.info('Very Long Timer tick'); }
-				// get longPeriode data
-				if (!interfaceBussy) {
-					if (moreMessages) { this.log.info('Get initStates'); }
-					await this.getData(Object(initStates));
-					if (moreMessages) { this.log.info('Get Device Profiles'); }
-					await this.getDeviceProfilesData(this.config.device_ip, this.config.device_port);
-					resolve(true);
-				}
-				else {
-					this.log.warn('Interface bussy during VERY LONG TIMER data request');
-					resolve(false);
-				}
-			} catch (err) {
-				interfaceBussy = false;	// CLEAR flag that device interface is bussy
-				reject(err);
+		try {
+			if (moreMessages) { this.log.info('Very Long Timer tick'); }
+			// get longPeriode data
+			if (!interfaceBussy) {
+				if (moreMessages) { this.log.info('Get initStates'); }
+				await this.getData(Object(initStates));
+				if (moreMessages) { this.log.info('Get Device Profiles'); }
+				await this.getDeviceProfilesData();
+				return true;
 			}
-
-		});
+			else {
+				this.log.warn('Interface bussy during VERY LONG TIMER data request');
+				return false;
+			}
+		} catch (err) {
+			interfaceBussy = false;	// CLEAR flag that device interface is bussy
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -1270,52 +1261,50 @@ class wamo extends utils.Adapter {
 	* @param {Object[]} deviceParametersToGet - Array of DeviceParameters Objects
 	*/
 	async getData(deviceParametersToGet) {
-		return new Promise(async (resolve, reject) => {
-			let parnumber = 0;
-			try {
-				// iterate through all requested Parameters
-				for (let i = 0; i < deviceParametersToGet.length; i++) {
-					parnumber = i;
-					let DeviceParameterReturn = null;
-					let gotDeviceParameter = false;
-					while (!gotDeviceParameter) {
-						// Read out parameter from device
-						try {
-							DeviceParameterReturn = await this.get_DevieParameter(deviceParametersToGet[i]);
-							gotDeviceParameter = true;
-						}
-						catch (err) {
-							this.log.error('async getData(' + deviceParametersToGet[i].id + ', ' + this.config.device_ip + ':' + this.config.device_port + ' ERROR: ' + err);
-							//=================================================================================================
-							// Waiting till device is responding again
-							//=================================================================================================
-							try {
-								while (!await this.devicePing()) {
-									await sleep(500);
-									this.log.debug('getData() ping loop');
-								}
-							}
-							catch (err) {
-								this.log.error(err);
-							}
-						}
-					}
-					// Update object states
+		let parnumber = 0;
+		try {
+			// iterate through all requested Parameters
+			for (let i = 0; i < deviceParametersToGet.length; i++) {
+				parnumber = i;
+				let DeviceParameterReturn = null;
+				let gotDeviceParameter = false;
+				while (!gotDeviceParameter) {
+					// Read out parameter from device
 					try {
-						await this.updateState(deviceParametersToGet[i], DeviceParameterReturn);
+						DeviceParameterReturn = await this.get_DevieParameter(deviceParametersToGet[i]);
+						gotDeviceParameter = true;
 					}
 					catch (err) {
-						// something went wrong during state update
-						this.log.error('Error [updateState] (' + deviceParametersToGet[i].id + ', ' + DeviceParameterReturn + ') within [getData] ERROR: ' + err);
+						this.log.error('async getData(' + deviceParametersToGet[i].id + ', ' + this.config.device_ip + ':' + this.config.device_port + ' ERROR: ' + err);
+						//=================================================================================================
+						// Waiting till device is responding again
+						//=================================================================================================
+						try {
+							while (!await this.devicePing()) {
+								await sleep(500);
+								this.log.debug('getData() ping loop');
+							}
+						}
+						catch (err) {
+							this.log.error(err);
+						}
 					}
 				}
-				resolve(true);
-			} catch (err) {
-				// something else and unhandled went wrong
-				this.log.error('getData(deviceParametersToGet) -> somthing else went wrong at ID ' + deviceParametersToGet[parnumber].id + '! ERROR: ' + err);
-				reject(err);
+				// Update object states
+				try {
+					await this.updateState(deviceParametersToGet[i], DeviceParameterReturn);
+				}
+				catch (err) {
+					// something went wrong during state update
+					this.log.error('Error [updateState] (' + deviceParametersToGet[i].id + ', ' + DeviceParameterReturn + ') within [getData] ERROR: ' + err);
+				}
 			}
-		});
+			return true;
+		} catch (err) {
+			// something else and unhandled went wrong
+			this.log.error('getData(deviceParametersToGet) -> somthing else went wrong at ID ' + deviceParametersToGet[parnumber].id + '! ERROR: ' + err);
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -1323,88 +1312,83 @@ class wamo extends utils.Adapter {
 	 * @returns true OR error
 	 */
 	async initDevicesAndChanels() {
-		return new Promise(async (resolve, reject) => {
+		try {
 			try {
-				try {
-					await this.setObjectNotExistsAsync('Device', {
-						type: 'device',
-						common: {
-							name: 'Device'
-						},
-						native: {}
-					});
-					this.log.debug('[async initDevicesAndChanels()] Device object created');
-				} catch (err) {
-					this.log.error('[async initDevicesAndChanels()] ERROR Device: ]' + err);
-				}
-
-				for (const key in adapterChannels) {
-					try {
-						await this.setObjectNotExistsAsync(String(adapterChannels[key].path), adapterChannels[key].channel);
-						this.log.debug('Channel ' + String(adapterChannels[key].path) + ' created');
-					} catch (err) {
-						this.log.error('[async initDevicesAndChanels()] ERROR Channel: ]' + err);
-					}
-				}
-				resolve(true);
+				await this.setObjectNotExistsAsync('Device', {
+					type: 'device',
+					common: {
+						name: 'Device'
+					},
+					native: {}
+				});
+				this.log.debug('[async initDevicesAndChanels()] Device object created');
 			} catch (err) {
-				reject(err);
+				this.log.error('[async initDevicesAndChanels()] ERROR Device: ]' + err);
 			}
-		});
+
+			for (const key in adapterChannels) {
+				try {
+					await this.setObjectNotExistsAsync(String(adapterChannels[key].path), adapterChannels[key].channel);
+					this.log.debug('Channel ' + String(adapterChannels[key].path) + ' created');
+				} catch (err) {
+					this.log.error('[async initDevicesAndChanels()] ERROR Channel: ]' + err);
+				}
+			}
+			return true;
+		} catch (err) {
+			throw new Error(err);
+		}
 	}
 
 	/**
 	 * get data of all profiles from the device
-	 * @param {string} DeviceIP - device IP address
-	 * @param {string} DevicePort - device port number */
-	async getDeviceProfilesData(DeviceIP, DevicePort,) {
-		return new Promise(async (resolve, reject) => {
-			try {
+	 */
+	async getDeviceProfilesData() {
+		try {
 
-				if (moreMessages) { this.log.info('reading device profiles'); }
-				// alle 8 möglichen Profile durchlaufen
-				for (let ProfileNumber = 1; ProfileNumber < 9; ProfileNumber++) {
+			if (moreMessages) { this.log.info('reading device profiles'); }
+			// alle 8 möglichen Profile durchlaufen
+			for (let ProfileNumber = 1; ProfileNumber < 9; ProfileNumber++) {
 
-					this.log.debug('[async getDeviceProfilesData(DeviceIP, DevicePort)] Profil ' + ProfileNumber);
+				this.log.debug('[async getDeviceProfilesData(DeviceIP, DevicePort)] Profil ' + ProfileNumber);
 
-					const listOfParameter = [
-						'Device.Profiles.' + String(ProfileNumber) + '.PA' + String(ProfileNumber),
-						'Device.Profiles.' + String(ProfileNumber) + '.PN' + String(ProfileNumber),
-						'Device.Profiles.' + String(ProfileNumber) + '.PV' + String(ProfileNumber),
-						'Device.Profiles.' + String(ProfileNumber) + '.PT' + String(ProfileNumber),
-						'Device.Profiles.' + String(ProfileNumber) + '.PF' + String(ProfileNumber),
-						'Device.Profiles.' + String(ProfileNumber) + '.PM' + String(ProfileNumber),
-						'Device.Profiles.' + String(ProfileNumber) + '.PR' + String(ProfileNumber),
-						'Device.Profiles.' + String(ProfileNumber) + '.PB' + String(ProfileNumber),
-						'Device.Profiles.' + String(ProfileNumber) + '.PW' + String(ProfileNumber)];
+				const listOfParameter = [
+					'Device.Profiles.' + String(ProfileNumber) + '.PA' + String(ProfileNumber),
+					'Device.Profiles.' + String(ProfileNumber) + '.PN' + String(ProfileNumber),
+					'Device.Profiles.' + String(ProfileNumber) + '.PV' + String(ProfileNumber),
+					'Device.Profiles.' + String(ProfileNumber) + '.PT' + String(ProfileNumber),
+					'Device.Profiles.' + String(ProfileNumber) + '.PF' + String(ProfileNumber),
+					'Device.Profiles.' + String(ProfileNumber) + '.PM' + String(ProfileNumber),
+					'Device.Profiles.' + String(ProfileNumber) + '.PR' + String(ProfileNumber),
+					'Device.Profiles.' + String(ProfileNumber) + '.PB' + String(ProfileNumber),
+					'Device.Profiles.' + String(ProfileNumber) + '.PW' + String(ProfileNumber)];
 
-					this.log.debug(`[getDeviceProfilesData()] Profil ` + ProfileNumber);
-					for (const stateID of listOfParameter) {
-						const parameterIDs = stateID.split('.');
-						this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
-						let result = null;
-						try {
-							result = await this.get_DevieProfileParameter(ProfileNumber, parameterIDs[parameterIDs.length - 1], DeviceIP, DevicePort);
-							this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
-						}
-						catch (err) {
-							this.log.error('getDeviceProfilesData -> Error from get_DevieProfileParameter Profile Number:' + String(ProfileNumber) + ' ParameterID:' + String(parameterIDs[parameterIDs.length - 1]));
-						}
-						try {
-							await this.UpdateProfileState(ProfileNumber, stateID, result);
-							this.log.debug('Profil ' + ProfileNumber + ' Parameter ' + parameterIDs[parameterIDs.length - 1]);
-						}
-						catch (err) {
-							this.log.error('getDeviceProfilesData -> Error from UpdateProfileState -> Profile Number:' + String(ProfileNumber) + ' stateID:' + String(stateID) + ' ParameterID:' + String(parameterIDs[parameterIDs.length - 1]));
-						}
+				this.log.debug(`[getDeviceProfilesData()] Profil ` + ProfileNumber);
+				for (const stateID of listOfParameter) {
+					const parameterIDs = stateID.split('.');
+					this.log.debug('current Parameter ID: ' + parameterIDs[parameterIDs.length - 1]);
+					let result = null;
+					try {
+						result = await this.get_DevieProfileParameter(ProfileNumber, parameterIDs[parameterIDs.length - 1]);
+						this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
+					}
+					catch (err) {
+						this.log.error('getDeviceProfilesData -> Error from get_DevieProfileParameter Profile Number:' + String(ProfileNumber) + ' ParameterID:' + String(parameterIDs[parameterIDs.length - 1]));
+					}
+					try {
+						await this.UpdateProfileState(ProfileNumber, stateID, result);
+						this.log.debug('Profil ' + ProfileNumber + ' Parameter ' + parameterIDs[parameterIDs.length - 1]);
+					}
+					catch (err) {
+						this.log.error('getDeviceProfilesData -> Error from UpdateProfileState -> Profile Number:' + String(ProfileNumber) + ' stateID:' + String(stateID) + ' ParameterID:' + String(parameterIDs[parameterIDs.length - 1]));
 					}
 				}
-				resolve(true);
-			} catch (err) {
-				this.log.error(err.message);
-				reject(err);
 			}
-		});
+			return true;
+		} catch (err) {
+			this.log.error(err.message);
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -1413,121 +1397,118 @@ class wamo extends utils.Adapter {
 	 * @param {JSON} deviceValue - JSON return value from Device eg {"getCND": "269"}
 	 */
 	async updateState(deviceParameterToUpdate, deviceValue) {
-		return new Promise(async (resolve, reject) => {
-			try {
+		try {
 
-				let cur_ParameterID;	// Parameter ID
-				let cur_StatePath;		// State Path
+			let cur_ParameterID;	// Parameter ID
+			let cur_StatePath;		// State Path
 
-				// Parameter ID ermitteln, wenn nciht vorhanden, Error auslösen und abbrechen
-				if (deviceParameterToUpdate == null) { reject('[async updateState(deviceParameterToUpdate, deviceValue)] deviceParameterToUpdate is null'); }
+			// Parameter ID ermitteln, wenn nciht vorhanden, Error auslösen und abbrechen
+			if (deviceParameterToUpdate == null) { throw new Error('[async updateState(deviceParameterToUpdate, deviceValue)] deviceParameterToUpdate is null'); }
 
-				if ('id' in deviceParameterToUpdate) {
-					if (deviceParameterToUpdate.id == null || deviceParameterToUpdate.id == '') { reject(String(deviceParameterToUpdate) + ' [async updateState(deviceParameterToUpdate, deviceValue)] has no valid [id] key (null or empty)'); }
-					cur_ParameterID = deviceParameterToUpdate.id;
-					this.log.debug('id key Value is: ' + cur_ParameterID);
-				} else {
-					reject(String(deviceParameterToUpdate) + ' [async updateState(deviceParameterToUpdate, deviceValue)] has no [id] key');
-				}
-
-				// Den Pafad des States ermittlen -> wenn nicht vorhanden, Error auslösen und abbrechen
-				if ('statePath' in deviceParameterToUpdate) {
-					if (deviceParameterToUpdate.statePath == null || deviceParameterToUpdate.statePath == '') { reject(String(deviceParameterToUpdate) + ' [async updateState(deviceParameterToUpdate, deviceValue)] has no valid (statePath) key'); }
-					cur_StatePath = deviceParameterToUpdate.statePath;
-					this.log.debug('(statePath) key Value is: ' + cur_StatePath);
-				} else {
-					reject(String(deviceParameterToUpdate) + ' [async updateState(deviceParameterToUpdate, deviceValue)] has no id statePath');
-				}
-
-				// Path for state object
-				const state_ID = cur_StatePath + '.' + cur_ParameterID;
-
-				let skipp = false;
-
-				if (cur_ParameterID === DeviceParameters.WaterConductivity.id && sensor_conductivity_present === false) { skipp = true; }
-				else if (cur_ParameterID === DeviceParameters.WaterPressure.id && sensor_pressure_present === false) { skipp = true; }
-				else if (cur_ParameterID === DeviceParameters.WaterTemperature.id && sensor_temperature_present === false) { skipp = true; }
-
-				if (skipp) {
-					this.log.debug('Sensor not Present ... skipped');
-					resolve(true);
-					return;
-				}
-
-				try {
-					await this.setObjectNotExistsAsync(state_ID, deviceParameterToUpdate.objectdefinition);
-					this.log.debug('deviceParameterToUpdate.objectdefinition.common.type = ' + deviceParameterToUpdate.objectdefinition.common.type);
-				}
-				catch (err) {
-					this.log.error('updateState -> await this.setObjectNotExistsAsync(state_ID, deviceParameterToUpdate.objectdefinition) returned ERROR: ' + err);
-				}
-				// Path for RAW state object
-				const state_ID_RAW = adapterChannels.DeviceRawData.path + '.' + cur_ParameterID;
-
-				// RAW object handling
-				const raw_objectdefinition = {
-					type: 'state',
-					common: {
-						name: {
-						},
-						type: 'string',
-						unit: null,
-						role: 'json',
-						read: true,
-						write: false
-					},
-					native: {}
-				};
-				raw_objectdefinition.common.name = deviceParameterToUpdate.objectdefinition.common.name;
-				try {
-					await this.setObjectNotExistsAsync(state_ID_RAW, Object(raw_objectdefinition));
-					this.log.debug('RAW deviceParameterToUpdate.objectdefinition.common.type = ' + raw_objectdefinition);
-				}
-				catch (err) {
-					this.log.error('updateState -> await this.setObjectNotExistsAsync(state_ID_RAW, Object(raw_objectdefinition) returned ERROR: ' + err);
-				}
-				// save RAW State
-				try {
-					this.setStateAsync(state_ID_RAW, { val: JSON.stringify(deviceValue), ack: true });
-				}
-				catch (err) {
-					this.log.error('[async updateState(deviceParameterToUpdate, deviceValue)] ERROR saving RAW state. State ID=' + String(state_ID_RAW) + ' Value=' + String(deviceValue));
-				}
-
-				// convert into final value
-				let finalValue;
-				try {
-					finalValue = await this.convertDeviceReturnValue(deviceParameterToUpdate.id, deviceValue['get' + deviceParameterToUpdate.id]);
-					this.log.debug('finalValue = ' + String(finalValue));
-				}
-				catch (err) {
-					this.log.error('[async updateState(deviceParameterToUpdate, deviceValue)] Error: ' + String(err));
-					reject(err);
-				}
-
-				switch (deviceParameterToUpdate.objectdefinition.common.type) {
-					case 'number':
-						this.log.debug('[async updateState(deviceParameterToUpdate, deviceValue)] value is NUMBER');
-						this.setStateAsync(state_ID, { val: parseFloat(String(finalValue)), ack: true });
-						break;
-					default:
-						// handle as string
-						this.log.debug('[async updateState(deviceParameterToUpdate, deviceValue)] value is STRING');
-						this.setStateAsync(state_ID, { val: String(finalValue), ack: true });
-				}
-
-				if (deviceParameterToUpdate.objectdefinition.common.unit !== null) {
-					this.log.debug('[async updateState(deviceParameterToUpdate, deviceValue)] info: ' + String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue) + ' ' + String(deviceParameterToUpdate.objectdefinition.common.unit));
-				}
-				else {
-					this.log.debug('[async updateState(deviceParameterToUpdate, deviceValue)] info: ' + String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
-				}
-				resolve(true);
-			} catch (err) {
-				this.log.error('[async updateState(deviceParameterToUpdate, deviceValue)] Error: ' + String(err));
-				reject(err);
+			if ('id' in deviceParameterToUpdate) {
+				if (deviceParameterToUpdate.id == null || deviceParameterToUpdate.id == '') { throw new Error(String(deviceParameterToUpdate) + ' [async updateState(deviceParameterToUpdate, deviceValue)] has no valid [id] key (null or empty)'); }
+				cur_ParameterID = deviceParameterToUpdate.id;
+				this.log.debug('id key Value is: ' + cur_ParameterID);
+			} else {
+				throw new Error(String(deviceParameterToUpdate) + ' [async updateState(deviceParameterToUpdate, deviceValue)] has no [id] key');
 			}
-		});
+
+			// Den Pafad des States ermittlen -> wenn nicht vorhanden, Error auslösen und abbrechen
+			if ('statePath' in deviceParameterToUpdate) {
+				if (deviceParameterToUpdate.statePath == null || deviceParameterToUpdate.statePath == '') { throw new Error(String(deviceParameterToUpdate) + ' [async updateState(deviceParameterToUpdate, deviceValue)] has no valid (statePath) key'); }
+				cur_StatePath = deviceParameterToUpdate.statePath;
+				this.log.debug('(statePath) key Value is: ' + cur_StatePath);
+			} else {
+				throw new Error(String(deviceParameterToUpdate) + ' [async updateState(deviceParameterToUpdate, deviceValue)] has no id statePath');
+			}
+
+			// Path for state object
+			const state_ID = cur_StatePath + '.' + cur_ParameterID;
+
+			let skipp = false;
+
+			if (cur_ParameterID === DeviceParameters.WaterConductivity.id && sensor_conductivity_present === false) { skipp = true; }
+			else if (cur_ParameterID === DeviceParameters.WaterPressure.id && sensor_pressure_present === false) { skipp = true; }
+			else if (cur_ParameterID === DeviceParameters.WaterTemperature.id && sensor_temperature_present === false) { skipp = true; }
+
+			if (skipp) {
+				this.log.debug('Sensor not Present ... skipped');
+				return true;
+			}
+
+			try {
+				await this.setObjectNotExistsAsync(state_ID, deviceParameterToUpdate.objectdefinition);
+				this.log.debug('deviceParameterToUpdate.objectdefinition.common.type = ' + deviceParameterToUpdate.objectdefinition.common.type);
+			}
+			catch (err) {
+				this.log.error('updateState -> await this.setObjectNotExistsAsync(state_ID, deviceParameterToUpdate.objectdefinition) returned ERROR: ' + err);
+			}
+			// Path for RAW state object
+			const state_ID_RAW = adapterChannels.DeviceRawData.path + '.' + cur_ParameterID;
+
+			// RAW object handling
+			const raw_objectdefinition = {
+				type: 'state',
+				common: {
+					name: {
+					},
+					type: 'string',
+					unit: null,
+					role: 'json',
+					read: true,
+					write: false
+				},
+				native: {}
+			};
+			raw_objectdefinition.common.name = deviceParameterToUpdate.objectdefinition.common.name;
+			try {
+				await this.setObjectNotExistsAsync(state_ID_RAW, Object(raw_objectdefinition));
+				this.log.debug('RAW deviceParameterToUpdate.objectdefinition.common.type = ' + raw_objectdefinition);
+			}
+			catch (err) {
+				this.log.error('updateState -> await this.setObjectNotExistsAsync(state_ID_RAW, Object(raw_objectdefinition) returned ERROR: ' + err);
+			}
+			// save RAW State
+			try {
+				this.setStateAsync(state_ID_RAW, { val: JSON.stringify(deviceValue), ack: true });
+			}
+			catch (err) {
+				this.log.error('[async updateState(deviceParameterToUpdate, deviceValue)] ERROR saving RAW state. State ID=' + String(state_ID_RAW) + ' Value=' + String(deviceValue));
+			}
+
+			// convert into final value
+			let finalValue;
+			try {
+				finalValue = await this.convertDeviceReturnValue(deviceParameterToUpdate.id, deviceValue['get' + deviceParameterToUpdate.id]);
+				this.log.debug('finalValue = ' + String(finalValue));
+			}
+			catch (err) {
+				this.log.error('[async updateState(deviceParameterToUpdate, deviceValue)] Error: ' + String(err));
+				throw new Error(err);
+			}
+
+			switch (deviceParameterToUpdate.objectdefinition.common.type) {
+				case 'number':
+					this.log.debug('[async updateState(deviceParameterToUpdate, deviceValue)] value is NUMBER');
+					this.setStateAsync(state_ID, { val: parseFloat(String(finalValue)), ack: true });
+					break;
+				default:
+					// handle as string
+					this.log.debug('[async updateState(deviceParameterToUpdate, deviceValue)] value is STRING');
+					this.setStateAsync(state_ID, { val: String(finalValue), ack: true });
+			}
+
+			if (deviceParameterToUpdate.objectdefinition.common.unit !== null) {
+				this.log.debug('[async updateState(deviceParameterToUpdate, deviceValue)] info: ' + String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue) + ' ' + String(deviceParameterToUpdate.objectdefinition.common.unit));
+			}
+			else {
+				this.log.debug('[async updateState(deviceParameterToUpdate, deviceValue)] info: ' + String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue));
+			}
+			return true;
+		} catch (err) {
+			this.log.error('[async updateState(deviceParameterToUpdate, deviceValue)] Error: ' + String(err));
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -1537,32 +1518,30 @@ class wamo extends utils.Adapter {
 	 * @returns translated result value or NULL if ther is no translation
 	 */
 	async getGlobalisedValue(ParameterObject, value) {
-		return new Promise(async (resolve, reject) => {
-			try {
-				let result;
+		try {
+			let result;
 
-				if ('rangevalues' in ParameterObject) {	// do we have globalised values?
-					if (String(value) in ParameterObject.rangevalues) {	// ist the current value globalised?
-						if (SystemLanguage in ParameterObject.rangevalues[String(value)]) { // value in current system language available?
-							result = ParameterObject.rangevalues[String(value)][SystemLanguage]; // OK we take it
-						}
-						else {
-							this.log.debug('Parameter id : ' + String(ParameterObject.id) + ' value is not globalised');
-							result = null;
-						}
-					} else {
-						this.log.debug('Parameter id: ' + String(ParameterObject.id) + ' value is not globalised');
+			if ('rangevalues' in ParameterObject) {	// do we have globalised values?
+				if (String(value) in ParameterObject.rangevalues) {	// ist the current value globalised?
+					if (SystemLanguage in ParameterObject.rangevalues[String(value)]) { // value in current system language available?
+						result = ParameterObject.rangevalues[String(value)][SystemLanguage]; // OK we take it
+					}
+					else {
+						this.log.debug('Parameter id : ' + String(ParameterObject.id) + ' value is not globalised');
 						result = null;
 					}
 				} else {
 					this.log.debug('Parameter id: ' + String(ParameterObject.id) + ' value is not globalised');
 					result = null;
 				}
-				resolve(result);
-			} catch (err) {
-				reject(err);
+			} else {
+				this.log.debug('Parameter id: ' + String(ParameterObject.id) + ' value is not globalised');
+				result = null;
 			}
-		});
+			return result;
+		} catch (err) {
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -1573,566 +1552,564 @@ class wamo extends utils.Adapter {
 	 * @returns final value or an error
 	 */
 	async convertDeviceReturnValue(valueKey, value) {
-		return new Promise(async (resolve, reject) => {
-			try {
-				let finalValue;
-				switch (String(valueKey)) {
-					case DeviceParameters.Units.id:						// UNI - Units
-						finalValue = await this.getGlobalisedValue(DeviceParameters.Units, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							if (parseInt(value) === 0) {
-								finalValue = 'metric units';
-							} else {
-								finalValue = 'imperial units';
-							}
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.Units, finalValue); }
-						break;
-					case DeviceParameters.Language.id:					// LNG - Language
-						finalValue = await this.getGlobalisedValue(DeviceParameters.Language, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							switch (parseInt(String(value).substring(0, 1))) {
-								case 0:
-									finalValue = 'de';
-									break;
-								case 1:
-									finalValue = 'en';
-									break;
-								case 2:
-									finalValue = 'es';
-									break;
-								case 3:
-									finalValue = 'it';
-									break;
-								case 4:
-									finalValue = 'pl';
-									break;
-								default:
-									this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Value (' + String(value) + ') for Key (' + String(valueKey) + ') is not defined!');
-									finalValue = null;
-							}
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.Language, finalValue); }
-						break;
-					case DeviceParameters.AvailableProfiles.id: 		// PRN - available profiles
-						finalValue = await this.getGlobalisedValue(DeviceParameters.AvailableProfiles, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = parseInt(value);
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.AvailableProfiles, finalValue); }
-						break;
-					case DeviceParameters.SelectedProfile.id: 			// PRF - selected profile
-						finalValue = await this.getGlobalisedValue(DeviceParameters.SelectedProfile, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = parseInt(value);
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SelectedProfile, finalValue); }
-						break;
-					case DeviceParameters.DeactivateTemperatureSensor.id:	// TSD - Temp sensor present
-						if (parseInt(value) == 0) { sensor_temperature_present = true; } else { sensor_temperature_present = false; }
-						finalValue = await this.getGlobalisedValue(DeviceParameters.DeactivateTemperatureSensor, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							if (parseInt(value) == 0) {
-								sensor_temperature_present = true;
-								finalValue = 'Sensor active';
-							} else {
-								sensor_temperature_present = false;
-								finalValue = 'Sensor deactivated';
-							}
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DeactivateTemperatureSensor, finalValue); }
-						break;
-					case DeviceParameters.DeactivateConductivitySensor.id:	// CSD - conductivity sensor present
-						if (parseInt(value) == 0) { sensor_conductivity_present = true; } else { sensor_conductivity_present = false; }
-						finalValue = await this.getGlobalisedValue(DeviceParameters.DeactivateConductivitySensor, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							if (parseInt(value) == 0) {
-								sensor_conductivity_present = true;
-								finalValue = 'Sensor active';
-							} else {
-								sensor_conductivity_present = false;
-								finalValue = 'Sensor deactivated';
-							}
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DeactivateConductivitySensor, finalValue); }
-						break;
-					case DeviceParameters.DeactivatePressureSensor.id:	// PSD - Pressure sensor present
-						if (parseInt(value) == 0) { sensor_pressure_present = true; } else { sensor_pressure_present = false; }
-						finalValue = await this.getGlobalisedValue(DeviceParameters.DeactivatePressureSensor, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							if (parseInt(value) == 0) {
-								sensor_pressure_present = true;
-								finalValue = 'Sensor active';
-							} else {
-								sensor_pressure_present = false;
-								finalValue = 'Sensor deactivated';
-							}
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DeactivatePressureSensor, finalValue); }
-						break;
-					case DeviceParameters.CurrentAlarmStatus.id:		// ALA Alarm status
-						finalValue = await this.getGlobalisedValue(DeviceParameters.CurrentAlarmStatus, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							switch (String(value)) {
-								case 'FF':
-									finalValue = 'NO ALARM';
-									break;
-								case 'A1':
-									finalValue = 'ALARM END SWITCH';
-									break;
-								case 'A2':
-									finalValue = 'NO NETWORK';
-									break;
-								case 'A3':
-									finalValue = 'ALARM VOLUME LEAKAGE';
-									break;
-								case 'A4':
-									finalValue = 'ALARM TIME LEAKAGE';
-									break;
-								case 'A5':
-									finalValue = 'ALARM MAX FLOW LEAKAGE';
-									break;
-								case 'A6':
-									finalValue = 'ALARM MICRO LEAKAGE';
-									break;
-								case 'A7':
-									finalValue = 'ALARM EXT. SENSOR LEAKAGE';
-									break;
-								case 'A8':
-									finalValue = 'ALARM TURBINE BLOCKED';
-									break;
-								case 'A9':
-									finalValue = 'ALARM PRESSURE SENSOR ERROR';
-									break;
-								case 'AA':
-									finalValue = 'ALARM TEMPERATURE SENSOR ERROR';
-									break;
-								case 'AB':
-									finalValue = 'ALARM CONDUCTIVITY SENSOR ERROR';
-									break;
-								case 'AC':
-									finalValue = 'ALARM TO HIGH CONDUCTIVITY';
-									break;
-								case 'AD':
-									finalValue = 'LOW BATTERY';
-									break;
-								case 'AE':
-									finalValue = 'WARNING VOLUME LEAKAGE';
-									break;
-								case 'AF':
-									finalValue = 'ALARM NO POWER SUPPLY';
-									break;
-								default:
-									finalValue = 'undefined';
-							}
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CurrentAlarmStatus, finalValue); }
-						break;
-					case DeviceParameters.CurrentValveStatus.id:		// VLV - Current Valve Status
-						finalValue = await this.getGlobalisedValue(DeviceParameters.CurrentValveStatus, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							switch (String(value)) {
-								case '10':
-									finalValue = 'Closed';
-									break;
-								case '11':
-									finalValue = 'Closing';
-									break;
-								case '20':
-									finalValue = 'Open';
-									break;
-								case '21':
-									finalValue = 'Opening';
-									break;
-								case '30':
-									finalValue = 'Undefined';
-									break;
-								default:
-									this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Value (' + String(value) + ') for Key (' + String(valueKey) + ') is not defined!');
-									finalValue = null;
-							}
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CurrentValveStatus, finalValue); }
-						break;
-					case DeviceParameters.SystemTime.id:				// RTC - System Time
-						finalValue = await this.getGlobalisedValue(DeviceParameters.SystemTime, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = (new Date(parseInt(value) * 1000)).toLocaleString();
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SystemTime, finalValue); }
-						break;
-					case DeviceParameters.WaterTemperature.id:			// CEL - Water temperature
-						if (sensor_temperature_present) {
-							finalValue = await this.getGlobalisedValue(DeviceParameters.WaterTemperature, value);
-							if (finalValue === null) {	// did we get a globalised Value back?
-								finalValue = parseFloat(value) / 10;
-								_WaterTemperature = finalValue;
-							}
-							if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WaterTemperature, finalValue); }
-						}
-						break;
-					case DeviceParameters.WaterPressure.id:				// BAR Water pressure
-						if (sensor_pressure_present) {
-							value = parseFloat(String(value).replace(',', '.'));
-							finalValue = await this.getGlobalisedValue(DeviceParameters.WaterPressure, value);
-							if (finalValue === null) {	// did we get a globalised Value back?
-								finalValue = parseFloat(value);
-								_WaterPressure = finalValue;
-							}
-							if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WaterPressure, finalValue); }
-						}
-						break;
-					case DeviceParameters.WaterConductivity.id:			// CND - Water conductivity
-						if (sensor_conductivity_present) {
-							try {
-								finalValue = await this.getGlobalisedValue(DeviceParameters.WaterConductivity, value);
-								if (finalValue === null) {	// did we get a globalised Value back?
-									finalValue = parseFloat(String(value).replace(',', '.'));
-									_WaterConductivity = finalValue;
-									// updatig German water hardness
-									if (sensor_temperature_present) {
-										try { await this.updateEC25conductivity(); } catch (err) { this.log.error('convertDeviceReturnValue -> WaterConductivity -> updateEC25conductivity ERROR: ' + err); }
-										if (valuesInfoMessages) { try { await this.moremessages(calculatedStates.conductivityEC25, _WaterConductivity_EC25); } catch (err) { this.log.error('convertDeviceReturnValue -> WaterConductivity -> moremessages ERROR: ' + err); } }
-									}
-									try { await this.updateGermanWaterHardnes(); } catch (err) { this.log.error('convertDeviceReturnValue -> WaterConductivity -> updateGermanWaterHardnes ERROR: ' + err); }
-								}
-								if (valuesInfoMessages) { try { await this.moremessages(DeviceParameters.WaterConductivity, _WaterConductivity); } catch (err) { this.log.error('convertDeviceReturnValue -> WaterConductivity -> moremessages ERROR: ' + err); } }
-							} catch (err) {
-								this.log.error('convertDeviceReturnValue -> WaterConductivity -> getGlobalisedValue ERROR: ' + err);
-							}
-						}
-						break;
-					case DeviceParameters.BatteryVoltage.id:			// BAT Batterie voltage
-						value = parseFloat(String(value).replace(',', '.'));
-						finalValue = await this.getGlobalisedValue(DeviceParameters.BatteryVoltage, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = parseFloat(value);
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BatteryVoltage, finalValue); }
-						break;
-					case DeviceParameters.PowerAdapterVoltage.id:		// NET - DC voltage (power adaptor)
-						value = parseFloat(String(value).replace(',', '.'));
-						finalValue = await this.getGlobalisedValue(DeviceParameters.PowerAdapterVoltage, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = parseFloat(value);
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.PowerAdapterVoltage, finalValue); }
-						break;
-					case DeviceParameters.LastTappedVolume.id:			// LTV - Last tapped Volume
-						value = parseFloat(String(value).replace(',', '.'));
-						finalValue = await this.getGlobalisedValue(DeviceParameters.LastTappedVolume, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = parseFloat(value);
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.LastTappedVolume, finalValue); }
-						break;
-					case DeviceParameters.TotalVolume.id:				// VOL - total consumed water
-						value = parseFloat(String(value).replace(',', '.').replace('Vol[L]', '')) / 1000;
-						finalValue = await this.getGlobalisedValue(DeviceParameters.TotalVolume, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = parseFloat(value);
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.TotalVolume, finalValue); }
-						break;
-					case DeviceParameters.CurrentVolume.id:				// AVO - current water volume
-						value = parseFloat(String(value).replace(',', '.').replace('mL', ''));
-						finalValue = await this.getGlobalisedValue(DeviceParameters.CurrentVolume, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = parseFloat(value);
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CurrentVolume, finalValue); }
-						break;
-					case DeviceParameters.APHidden.id:					// WAH - WiFi AP hidden
-						finalValue = await this.getGlobalisedValue(DeviceParameters.APHidden, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							if (parseInt(value) == 0) {
-								finalValue = 'AP not hidden (visible)';
-							} else {
-								finalValue = 'AP hidden';
-							}
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.APHidden, finalValue); }
-						break;
-					case DeviceParameters.APDisabled.id:				// WAD - WiFi AP dissabled
-						finalValue = await this.getGlobalisedValue(DeviceParameters.APDisabled, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							if (parseInt(value) == 0) {
-								finalValue = 'AP not disabled';
-							} else {
-								finalValue = 'AP disabled';
-							}
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.APDisabled, finalValue); }
-						break;
-					case DeviceParameters.APTimeout.id:					// APT - WiFi AP timeout
-						if (parseInt(value) == 0) {
-							finalValue = await this.getGlobalisedValue(DeviceParameters.APTimeout, value);
-							if (finalValue === null) {	// did we get a globalised Value back?
-								finalValue = 'AP timeout not active';
-							}
+		try {
+			let finalValue;
+			switch (String(valueKey)) {
+				case DeviceParameters.Units.id:						// UNI - Units
+					finalValue = await this.getGlobalisedValue(DeviceParameters.Units, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						if (parseInt(value) === 0) {
+							finalValue = 'metric units';
 						} else {
-							finalValue = await this.getGlobalisedValue(DeviceParameters.APTimeout, value);
-							if (finalValue === null) {	// did we get a globalised Value back?
-								finalValue = 'AP disabled after ' + String(value) + ' seconds after internet connection';
-							}
-							else {
-								finalValue = String(finalValue).replace('XX', String(value));
-							}
+							finalValue = 'imperial units';
 						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.APTimeout, finalValue); }
-						break;
-					case DeviceParameters.WiFiDeaktivate.id:			// DWL - WiFi deactivated
-						finalValue = await this.getGlobalisedValue(DeviceParameters.WiFiDeaktivate, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							if (parseInt(value) == 0) {
-								finalValue = 'active (default)';
-							} else {
-								finalValue = 'deactivated';
-							}
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.Units, finalValue); }
+					break;
+				case DeviceParameters.Language.id:					// LNG - Language
+					finalValue = await this.getGlobalisedValue(DeviceParameters.Language, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						switch (parseInt(String(value).substring(0, 1))) {
+							case 0:
+								finalValue = 'de';
+								break;
+							case 1:
+								finalValue = 'en';
+								break;
+							case 2:
+								finalValue = 'es';
+								break;
+							case 3:
+								finalValue = 'it';
+								break;
+							case 4:
+								finalValue = 'pl';
+								break;
+							default:
+								this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Value (' + String(value) + ') for Key (' + String(valueKey) + ') is not defined!');
+								finalValue = null;
 						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WiFiDeaktivate, finalValue); }
-						break;
-					case DeviceParameters.WiFiState.id:					// WFS - WiFi state
-						finalValue = await this.getGlobalisedValue(DeviceParameters.WiFiState, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							if (parseInt(value) == 0) {
-								finalValue = 'disconnected';
-							} else if (parseInt(value) == 1) {
-								finalValue = 'connecting';
-							} else if (parseInt(value) == 2) {
-								finalValue = 'connected';
-							} else {
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.Language, finalValue); }
+					break;
+				case DeviceParameters.AvailableProfiles.id: 		// PRN - available profiles
+					finalValue = await this.getGlobalisedValue(DeviceParameters.AvailableProfiles, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = parseInt(value);
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.AvailableProfiles, finalValue); }
+					break;
+				case DeviceParameters.SelectedProfile.id: 			// PRF - selected profile
+					finalValue = await this.getGlobalisedValue(DeviceParameters.SelectedProfile, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = parseInt(value);
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SelectedProfile, finalValue); }
+					break;
+				case DeviceParameters.DeactivateTemperatureSensor.id:	// TSD - Temp sensor present
+					if (parseInt(value) == 0) { sensor_temperature_present = true; } else { sensor_temperature_present = false; }
+					finalValue = await this.getGlobalisedValue(DeviceParameters.DeactivateTemperatureSensor, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						if (parseInt(value) == 0) {
+							sensor_temperature_present = true;
+							finalValue = 'Sensor active';
+						} else {
+							sensor_temperature_present = false;
+							finalValue = 'Sensor deactivated';
+						}
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DeactivateTemperatureSensor, finalValue); }
+					break;
+				case DeviceParameters.DeactivateConductivitySensor.id:	// CSD - conductivity sensor present
+					if (parseInt(value) == 0) { sensor_conductivity_present = true; } else { sensor_conductivity_present = false; }
+					finalValue = await this.getGlobalisedValue(DeviceParameters.DeactivateConductivitySensor, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						if (parseInt(value) == 0) {
+							sensor_conductivity_present = true;
+							finalValue = 'Sensor active';
+						} else {
+							sensor_conductivity_present = false;
+							finalValue = 'Sensor deactivated';
+						}
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DeactivateConductivitySensor, finalValue); }
+					break;
+				case DeviceParameters.DeactivatePressureSensor.id:	// PSD - Pressure sensor present
+					if (parseInt(value) == 0) { sensor_pressure_present = true; } else { sensor_pressure_present = false; }
+					finalValue = await this.getGlobalisedValue(DeviceParameters.DeactivatePressureSensor, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						if (parseInt(value) == 0) {
+							sensor_pressure_present = true;
+							finalValue = 'Sensor active';
+						} else {
+							sensor_pressure_present = false;
+							finalValue = 'Sensor deactivated';
+						}
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DeactivatePressureSensor, finalValue); }
+					break;
+				case DeviceParameters.CurrentAlarmStatus.id:		// ALA Alarm status
+					finalValue = await this.getGlobalisedValue(DeviceParameters.CurrentAlarmStatus, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						switch (String(value)) {
+							case 'FF':
+								finalValue = 'NO ALARM';
+								break;
+							case 'A1':
+								finalValue = 'ALARM END SWITCH';
+								break;
+							case 'A2':
+								finalValue = 'NO NETWORK';
+								break;
+							case 'A3':
+								finalValue = 'ALARM VOLUME LEAKAGE';
+								break;
+							case 'A4':
+								finalValue = 'ALARM TIME LEAKAGE';
+								break;
+							case 'A5':
+								finalValue = 'ALARM MAX FLOW LEAKAGE';
+								break;
+							case 'A6':
+								finalValue = 'ALARM MICRO LEAKAGE';
+								break;
+							case 'A7':
+								finalValue = 'ALARM EXT. SENSOR LEAKAGE';
+								break;
+							case 'A8':
+								finalValue = 'ALARM TURBINE BLOCKED';
+								break;
+							case 'A9':
+								finalValue = 'ALARM PRESSURE SENSOR ERROR';
+								break;
+							case 'AA':
+								finalValue = 'ALARM TEMPERATURE SENSOR ERROR';
+								break;
+							case 'AB':
+								finalValue = 'ALARM CONDUCTIVITY SENSOR ERROR';
+								break;
+							case 'AC':
+								finalValue = 'ALARM TO HIGH CONDUCTIVITY';
+								break;
+							case 'AD':
+								finalValue = 'LOW BATTERY';
+								break;
+							case 'AE':
+								finalValue = 'WARNING VOLUME LEAKAGE';
+								break;
+							case 'AF':
+								finalValue = 'ALARM NO POWER SUPPLY';
+								break;
+							default:
 								finalValue = 'undefined';
+						}
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CurrentAlarmStatus, finalValue); }
+					break;
+				case DeviceParameters.CurrentValveStatus.id:		// VLV - Current Valve Status
+					finalValue = await this.getGlobalisedValue(DeviceParameters.CurrentValveStatus, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						switch (String(value)) {
+							case '10':
+								finalValue = 'Closed';
+								break;
+							case '11':
+								finalValue = 'Closing';
+								break;
+							case '20':
+								finalValue = 'Open';
+								break;
+							case '21':
+								finalValue = 'Opening';
+								break;
+							case '30':
+								finalValue = 'Undefined';
+								break;
+							default:
+								this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Value (' + String(value) + ') for Key (' + String(valueKey) + ') is not defined!');
+								finalValue = null;
+						}
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CurrentValveStatus, finalValue); }
+					break;
+				case DeviceParameters.SystemTime.id:				// RTC - System Time
+					finalValue = await this.getGlobalisedValue(DeviceParameters.SystemTime, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = (new Date(parseInt(value) * 1000)).toLocaleString();
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SystemTime, finalValue); }
+					break;
+				case DeviceParameters.WaterTemperature.id:			// CEL - Water temperature
+					if (sensor_temperature_present) {
+						finalValue = await this.getGlobalisedValue(DeviceParameters.WaterTemperature, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = parseFloat(value) / 10;
+							_WaterTemperature = finalValue;
+						}
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WaterTemperature, finalValue); }
+					}
+					break;
+				case DeviceParameters.WaterPressure.id:				// BAR Water pressure
+					if (sensor_pressure_present) {
+						value = parseFloat(String(value).replace(',', '.'));
+						finalValue = await this.getGlobalisedValue(DeviceParameters.WaterPressure, value);
+						if (finalValue === null) {	// did we get a globalised Value back?
+							finalValue = parseFloat(value);
+							_WaterPressure = finalValue;
+						}
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WaterPressure, finalValue); }
+					}
+					break;
+				case DeviceParameters.WaterConductivity.id:			// CND - Water conductivity
+					if (sensor_conductivity_present) {
+						try {
+							finalValue = await this.getGlobalisedValue(DeviceParameters.WaterConductivity, value);
+							if (finalValue === null) {	// did we get a globalised Value back?
+								finalValue = parseFloat(String(value).replace(',', '.'));
+								_WaterConductivity = finalValue;
+								// updatig German water hardness
+								if (sensor_temperature_present) {
+									try { await this.updateEC25conductivity(); } catch (err) { this.log.error('convertDeviceReturnValue -> WaterConductivity -> updateEC25conductivity ERROR: ' + err); }
+									if (valuesInfoMessages) { try { await this.moremessages(calculatedStates.conductivityEC25, _WaterConductivity_EC25); } catch (err) { this.log.error('convertDeviceReturnValue -> WaterConductivity -> moremessages ERROR: ' + err); } }
+								}
+								try { await this.updateGermanWaterHardnes(); } catch (err) { this.log.error('convertDeviceReturnValue -> WaterConductivity -> updateGermanWaterHardnes ERROR: ' + err); }
 							}
+							if (valuesInfoMessages) { try { await this.moremessages(DeviceParameters.WaterConductivity, _WaterConductivity); } catch (err) { this.log.error('convertDeviceReturnValue -> WaterConductivity -> moremessages ERROR: ' + err); } }
+						} catch (err) {
+							this.log.error('convertDeviceReturnValue -> WaterConductivity -> getGlobalisedValue ERROR: ' + err);
 						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WiFiState, finalValue); }
-						break;
-					case DeviceParameters.DaylightSavingTime.id:		// IDS - Daylight saving time
-						finalValue = await this.getGlobalisedValue(DeviceParameters.DaylightSavingTime, value);
+					}
+					break;
+				case DeviceParameters.BatteryVoltage.id:			// BAT Batterie voltage
+					value = parseFloat(String(value).replace(',', '.'));
+					finalValue = await this.getGlobalisedValue(DeviceParameters.BatteryVoltage, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = parseFloat(value);
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BatteryVoltage, finalValue); }
+					break;
+				case DeviceParameters.PowerAdapterVoltage.id:		// NET - DC voltage (power adaptor)
+					value = parseFloat(String(value).replace(',', '.'));
+					finalValue = await this.getGlobalisedValue(DeviceParameters.PowerAdapterVoltage, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = parseFloat(value);
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.PowerAdapterVoltage, finalValue); }
+					break;
+				case DeviceParameters.LastTappedVolume.id:			// LTV - Last tapped Volume
+					value = parseFloat(String(value).replace(',', '.'));
+					finalValue = await this.getGlobalisedValue(DeviceParameters.LastTappedVolume, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = parseFloat(value);
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.LastTappedVolume, finalValue); }
+					break;
+				case DeviceParameters.TotalVolume.id:				// VOL - total consumed water
+					value = parseFloat(String(value).replace(',', '.').replace('Vol[L]', '')) / 1000;
+					finalValue = await this.getGlobalisedValue(DeviceParameters.TotalVolume, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = parseFloat(value);
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.TotalVolume, finalValue); }
+					break;
+				case DeviceParameters.CurrentVolume.id:				// AVO - current water volume
+					value = parseFloat(String(value).replace(',', '.').replace('mL', ''));
+					finalValue = await this.getGlobalisedValue(DeviceParameters.CurrentVolume, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = parseFloat(value);
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CurrentVolume, finalValue); }
+					break;
+				case DeviceParameters.APHidden.id:					// WAH - WiFi AP hidden
+					finalValue = await this.getGlobalisedValue(DeviceParameters.APHidden, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						if (parseInt(value) == 0) {
+							finalValue = 'AP not hidden (visible)';
+						} else {
+							finalValue = 'AP hidden';
+						}
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.APHidden, finalValue); }
+					break;
+				case DeviceParameters.APDisabled.id:				// WAD - WiFi AP dissabled
+					finalValue = await this.getGlobalisedValue(DeviceParameters.APDisabled, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						if (parseInt(value) == 0) {
+							finalValue = 'AP not disabled';
+						} else {
+							finalValue = 'AP disabled';
+						}
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.APDisabled, finalValue); }
+					break;
+				case DeviceParameters.APTimeout.id:					// APT - WiFi AP timeout
+					if (parseInt(value) == 0) {
+						finalValue = await this.getGlobalisedValue(DeviceParameters.APTimeout, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
-							if (parseInt(value) == 0) {
-								finalValue = 'disabled';
-							} else {
-								finalValue = 'enabled';
-							}
+							finalValue = 'AP timeout not active';
 						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DaylightSavingTime, finalValue); }
-						break;
-					case DeviceParameters.FirmwareVersion.id:			// VER -Firmware Version
-						finalValue = await this.getGlobalisedValue(DeviceParameters.FirmwareVersion, value);
+					} else {
+						finalValue = await this.getGlobalisedValue(DeviceParameters.APTimeout, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = value;
+							finalValue = 'AP disabled after ' + String(value) + ' seconds after internet connection';
 						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.FirmwareVersion, finalValue); }
-						break;
-					case DeviceParameters.IPAddress.id: 				// WIP - IP address
-						finalValue = await this.getGlobalisedValue(DeviceParameters.IPAddress, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = value;
+						else {
+							finalValue = String(finalValue).replace('XX', String(value));
 						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.IPAddress, finalValue); }
-						break;
-					case DeviceParameters.MACAddress.id:				// MAC -MAC address
-						finalValue = await this.getGlobalisedValue(DeviceParameters.MACAddress, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.APTimeout, finalValue); }
+					break;
+				case DeviceParameters.WiFiDeaktivate.id:			// DWL - WiFi deactivated
+					finalValue = await this.getGlobalisedValue(DeviceParameters.WiFiDeaktivate, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						if (parseInt(value) == 0) {
+							finalValue = 'active (default)';
+						} else {
+							finalValue = 'deactivated';
 						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MACAddress, finalValue); }
-						break;
-					case DeviceParameters.DefaultGateway.id:			// WGW - Default gateway
-						finalValue = await this.getGlobalisedValue(DeviceParameters.DefaultGateway, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WiFiDeaktivate, finalValue); }
+					break;
+				case DeviceParameters.WiFiState.id:					// WFS - WiFi state
+					finalValue = await this.getGlobalisedValue(DeviceParameters.WiFiState, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						if (parseInt(value) == 0) {
+							finalValue = 'disconnected';
+						} else if (parseInt(value) == 1) {
+							finalValue = 'connecting';
+						} else if (parseInt(value) == 2) {
+							finalValue = 'connected';
+						} else {
+							finalValue = 'undefined';
 						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DefaultGateway, finalValue); }
-						break;
-					case DeviceParameters.SerialNumber.id:				// SRN - Device serial number
-						finalValue = await this.getGlobalisedValue(DeviceParameters.SerialNumber, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WiFiState, finalValue); }
+					break;
+				case DeviceParameters.DaylightSavingTime.id:		// IDS - Daylight saving time
+					finalValue = await this.getGlobalisedValue(DeviceParameters.DaylightSavingTime, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						if (parseInt(value) == 0) {
+							finalValue = 'disabled';
+						} else {
+							finalValue = 'enabled';
 						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SerialNumber, finalValue); }
-						break;
-					case DeviceParameters.CodeNumber.id:				// CNO - Code Number
-						finalValue = await this.getGlobalisedValue(DeviceParameters.CodeNumber, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = value;
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CodeNumber, finalValue); }
-						break;
-					case DeviceParameters.WiFiRSSI.id:					// WFR - WiFi RSSI
-						finalValue = await this.getGlobalisedValue(DeviceParameters.WiFiRSSI, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = value;
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WiFiRSSI, finalValue); }
-						break;
-					case DeviceParameters.WiFiSSID.id:					// WFC - WiFi SSID
-						finalValue = await this.getGlobalisedValue(DeviceParameters.WiFiSSID, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = value;
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WiFiSSID, finalValue); }
-						break;
-					case DeviceParameters.NextMaintenance.id:			// SRV - Next Maintenance
-						finalValue = await this.getGlobalisedValue(DeviceParameters.NextMaintenance, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = value;
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.NextMaintenance, finalValue); }
-						break;
-					case DeviceParameters.FlorSensor.id:				// BSA - Floor Sensor
-						finalValue = await this.getGlobalisedValue(DeviceParameters.FlorSensor, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							if (parseInt(value) == 0) {
-								finalValue = 'Floor sensor disabled';
-							} else {
-								finalValue = 'Floor sensor enabled';
-							}
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.FlorSensor, finalValue); }
-						break;
-					case DeviceParameters.ShutOff.id:					// AB - Shutoff state
-						finalValue = await this.getGlobalisedValue(DeviceParameters.ShutOff, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							if (parseInt(value) == 1) {
-								finalValue = 1;
-							} else if (parseInt(value) == 2) {
-								finalValue = 2;
-							}
-							else {
-								finalValue = 'Shutoff undefined';
-							}
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ShutOff, finalValue); }
-						break;
-					case DeviceParameters.LeakProtectionTemporaryDeactivation.id:	// TMP Leackage protection temporary deactivation
-						finalValue = await this.getGlobalisedValue(DeviceParameters.LeakProtectionTemporaryDeactivation, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = value;
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.LeakProtectionTemporaryDeactivation, finalValue); }
-						break;
-					case DeviceParameters.MaxFlowLeakageTime.id:		// T2 - Max flow leakage time
-						finalValue = await this.getGlobalisedValue(DeviceParameters.MaxFlowLeakageTime, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = value;
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MaxFlowLeakageTime, finalValue); }
-						break;
-					case DeviceParameters.MicroLeakageTest.id:			// DMA - Micro leakage test
-						finalValue = await this.getGlobalisedValue(DeviceParameters.MicroLeakageTest, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							switch (String(value)) {
-								case '0':
-									finalValue = 'Disabled';
-									break;
-								case '1':
-									finalValue = 'Warning';
-									break;
-								case '2':
-									finalValue = 'Shutoff';
-									break;
-								default:
-									this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Value (' + String(value) + ') for Key (' + String(valueKey) + ') is not defined!');
-									finalValue = null;
-							}
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MicroLeakageTest, finalValue); }
-						break;
-					case DeviceParameters.MicroLeakageTestPeriod.id:	// DRP - Micro leakage test period
-						finalValue = await this.getGlobalisedValue(DeviceParameters.MicroLeakageTestPeriod, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							switch (String(value)) {
-								case '0':
-									finalValue = 'always';
-									break;
-								case '1':
-									finalValue = 'day';
-									break;
-								case '2':
-									finalValue = 'week';
-									break;
-								case '3':
-									finalValue = 'month';
-									break;
-								default:
-									this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Value (' + String(value) + ') for Key (' + String(valueKey) + ') is not defined!');
-									finalValue = null;
-							}
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MicroLeakageTestPeriod, finalValue); }
-						break;
-					case DeviceParameters.BuzzerOnAlarm.id:				// BUZ - Buzzer on alarm
-						finalValue = await this.getGlobalisedValue(DeviceParameters.BuzzerOnAlarm, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							if (parseInt(value) == 0) {
-								finalValue = 'Buzzer disabled';
-							} else {
-								finalValue = 'Buzzer enabled';
-							}
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BuzzerOnAlarm, finalValue); }
-						break;
-					case DeviceParameters.LeakageNotificationWarningThreshold.id:	// LWT - Leakage notification (warning) threshold
-						finalValue = await this.getGlobalisedValue(DeviceParameters.LeakageNotificationWarningThreshold, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = value;
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.LeakageNotificationWarningThreshold, finalValue); }
-						break;
-					case DeviceParameters.WaterFlow.id:					// FLO - Water flow
-						finalValue = await this.getGlobalisedValue(DeviceParameters.WaterFlow, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = value;
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WaterFlow, finalValue); }
-						break;
-					case DeviceParameters.TurbineNoPulseTime.id:		// NPS - Turbine no pulse time
-						finalValue = await this.getGlobalisedValue(DeviceParameters.TurbineNoPulseTime, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = value;
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.TurbineNoPulseTime, finalValue); }
-						break;
-					case DeviceParameters.ValveTestOngoing.id:			// VTO - Valve test ongoing
-						finalValue = await this.getGlobalisedValue(DeviceParameters.ValveTestOngoing, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							if (parseInt(value) == 0) {
-								finalValue = 'inactive';
-							} else {
-								finalValue = 'active';
-							}
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ValveTestOngoing, finalValue); }
-						break;
-					case DeviceParameters.FirmwareCheck.id:				// SFV - Check if new firmware is available
-						finalValue = await this.getGlobalisedValue(DeviceParameters.FirmwareCheck, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							if (parseInt(value) == 0) {
-								finalValue = 'new firmware not available';
-							} else {
-								finalValue = 'new firmware available';
-							}
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.FirmwareCheck, finalValue); }
-						break;
-					case DeviceParameters.ScreenRotation.id:			// SRO - Screen rotation
-						finalValue = await this.getGlobalisedValue(DeviceParameters.ScreenRotation, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = value;
-						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ScreenRotation, finalValue); }
-						break;
-					default:
-						this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DaylightSavingTime, finalValue); }
+					break;
+				case DeviceParameters.FirmwareVersion.id:			// VER -Firmware Version
+					finalValue = await this.getGlobalisedValue(DeviceParameters.FirmwareVersion, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
-				}
-				resolve(finalValue);
-			} catch (err) {
-				reject(err);
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.FirmwareVersion, finalValue); }
+					break;
+				case DeviceParameters.IPAddress.id: 				// WIP - IP address
+					finalValue = await this.getGlobalisedValue(DeviceParameters.IPAddress, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.IPAddress, finalValue); }
+					break;
+				case DeviceParameters.MACAddress.id:				// MAC -MAC address
+					finalValue = await this.getGlobalisedValue(DeviceParameters.MACAddress, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MACAddress, finalValue); }
+					break;
+				case DeviceParameters.DefaultGateway.id:			// WGW - Default gateway
+					finalValue = await this.getGlobalisedValue(DeviceParameters.DefaultGateway, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DefaultGateway, finalValue); }
+					break;
+				case DeviceParameters.SerialNumber.id:				// SRN - Device serial number
+					finalValue = await this.getGlobalisedValue(DeviceParameters.SerialNumber, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SerialNumber, finalValue); }
+					break;
+				case DeviceParameters.CodeNumber.id:				// CNO - Code Number
+					finalValue = await this.getGlobalisedValue(DeviceParameters.CodeNumber, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CodeNumber, finalValue); }
+					break;
+				case DeviceParameters.WiFiRSSI.id:					// WFR - WiFi RSSI
+					finalValue = await this.getGlobalisedValue(DeviceParameters.WiFiRSSI, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WiFiRSSI, finalValue); }
+					break;
+				case DeviceParameters.WiFiSSID.id:					// WFC - WiFi SSID
+					finalValue = await this.getGlobalisedValue(DeviceParameters.WiFiSSID, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WiFiSSID, finalValue); }
+					break;
+				case DeviceParameters.NextMaintenance.id:			// SRV - Next Maintenance
+					finalValue = await this.getGlobalisedValue(DeviceParameters.NextMaintenance, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.NextMaintenance, finalValue); }
+					break;
+				case DeviceParameters.FlorSensor.id:				// BSA - Floor Sensor
+					finalValue = await this.getGlobalisedValue(DeviceParameters.FlorSensor, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						if (parseInt(value) == 0) {
+							finalValue = 'Floor sensor disabled';
+						} else {
+							finalValue = 'Floor sensor enabled';
+						}
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.FlorSensor, finalValue); }
+					break;
+				case DeviceParameters.ShutOff.id:					// AB - Shutoff state
+					finalValue = await this.getGlobalisedValue(DeviceParameters.ShutOff, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						if (parseInt(value) == 1) {
+							finalValue = 1;
+						} else if (parseInt(value) == 2) {
+							finalValue = 2;
+						}
+						else {
+							finalValue = 'Shutoff undefined';
+						}
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ShutOff, finalValue); }
+					break;
+				case DeviceParameters.LeakProtectionTemporaryDeactivation.id:	// TMP Leackage protection temporary deactivation
+					finalValue = await this.getGlobalisedValue(DeviceParameters.LeakProtectionTemporaryDeactivation, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.LeakProtectionTemporaryDeactivation, finalValue); }
+					break;
+				case DeviceParameters.MaxFlowLeakageTime.id:		// T2 - Max flow leakage time
+					finalValue = await this.getGlobalisedValue(DeviceParameters.MaxFlowLeakageTime, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MaxFlowLeakageTime, finalValue); }
+					break;
+				case DeviceParameters.MicroLeakageTest.id:			// DMA - Micro leakage test
+					finalValue = await this.getGlobalisedValue(DeviceParameters.MicroLeakageTest, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						switch (String(value)) {
+							case '0':
+								finalValue = 'Disabled';
+								break;
+							case '1':
+								finalValue = 'Warning';
+								break;
+							case '2':
+								finalValue = 'Shutoff';
+								break;
+							default:
+								this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Value (' + String(value) + ') for Key (' + String(valueKey) + ') is not defined!');
+								finalValue = null;
+						}
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MicroLeakageTest, finalValue); }
+					break;
+				case DeviceParameters.MicroLeakageTestPeriod.id:	// DRP - Micro leakage test period
+					finalValue = await this.getGlobalisedValue(DeviceParameters.MicroLeakageTestPeriod, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						switch (String(value)) {
+							case '0':
+								finalValue = 'always';
+								break;
+							case '1':
+								finalValue = 'day';
+								break;
+							case '2':
+								finalValue = 'week';
+								break;
+							case '3':
+								finalValue = 'month';
+								break;
+							default:
+								this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Value (' + String(value) + ') for Key (' + String(valueKey) + ') is not defined!');
+								finalValue = null;
+						}
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MicroLeakageTestPeriod, finalValue); }
+					break;
+				case DeviceParameters.BuzzerOnAlarm.id:				// BUZ - Buzzer on alarm
+					finalValue = await this.getGlobalisedValue(DeviceParameters.BuzzerOnAlarm, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						if (parseInt(value) == 0) {
+							finalValue = 'Buzzer disabled';
+						} else {
+							finalValue = 'Buzzer enabled';
+						}
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BuzzerOnAlarm, finalValue); }
+					break;
+				case DeviceParameters.LeakageNotificationWarningThreshold.id:	// LWT - Leakage notification (warning) threshold
+					finalValue = await this.getGlobalisedValue(DeviceParameters.LeakageNotificationWarningThreshold, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.LeakageNotificationWarningThreshold, finalValue); }
+					break;
+				case DeviceParameters.WaterFlow.id:					// FLO - Water flow
+					finalValue = await this.getGlobalisedValue(DeviceParameters.WaterFlow, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WaterFlow, finalValue); }
+					break;
+				case DeviceParameters.TurbineNoPulseTime.id:		// NPS - Turbine no pulse time
+					finalValue = await this.getGlobalisedValue(DeviceParameters.TurbineNoPulseTime, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.TurbineNoPulseTime, finalValue); }
+					break;
+				case DeviceParameters.ValveTestOngoing.id:			// VTO - Valve test ongoing
+					finalValue = await this.getGlobalisedValue(DeviceParameters.ValveTestOngoing, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						if (parseInt(value) == 0) {
+							finalValue = 'inactive';
+						} else {
+							finalValue = 'active';
+						}
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ValveTestOngoing, finalValue); }
+					break;
+				case DeviceParameters.FirmwareCheck.id:				// SFV - Check if new firmware is available
+					finalValue = await this.getGlobalisedValue(DeviceParameters.FirmwareCheck, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						if (parseInt(value) == 0) {
+							finalValue = 'new firmware not available';
+						} else {
+							finalValue = 'new firmware available';
+						}
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.FirmwareCheck, finalValue); }
+					break;
+				case DeviceParameters.ScreenRotation.id:			// SRO - Screen rotation
+					finalValue = await this.getGlobalisedValue(DeviceParameters.ScreenRotation, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ScreenRotation, finalValue); }
+					break;
+				default:
+					this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
+					finalValue = value;
 			}
-		});
+			return finalValue;
+		} catch (err) {
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -2206,27 +2183,25 @@ class wamo extends utils.Adapter {
 	 * @returns true or error
 	 */
 	async moremessages(ParameterStruct, value) {
-		return new Promise(async (resolve, reject) => {
-			try {
-				const ID = ParameterStruct.id;
-				let nameWish;
-				if (SystemLanguage in ParameterStruct.objectdefinition.common.name) {
-					nameWish = SystemLanguage;
-				} else {
-					nameWish = 'en';
-				}
-				const Name = ParameterStruct.objectdefinition.common.name[nameWish];
-				const Unit = ParameterStruct.objectdefinition.common.unit;
-				if (Unit !== null) {
-					this.log.info(ID + ' - ' + Name + ': ' + String(value) + ' ' + String(Unit));
-				} else {
-					this.log.info(ID + ' - ' + Name + ': ' + String(value));
-				}
-				resolve(true);
-			} catch (err) {
-				reject(err);
+		try {
+			const ID = ParameterStruct.id;
+			let nameWish;
+			if (SystemLanguage in ParameterStruct.objectdefinition.common.name) {
+				nameWish = SystemLanguage;
+			} else {
+				nameWish = 'en';
 			}
-		});
+			const Name = ParameterStruct.objectdefinition.common.name[nameWish];
+			const Unit = ParameterStruct.objectdefinition.common.unit;
+			if (Unit !== null) {
+				this.log.info(ID + ' - ' + Name + ': ' + String(value) + ' ' + String(Unit));
+			} else {
+				this.log.info(ID + ' - ' + Name + ': ' + String(value));
+			}
+			return true;
+		} catch (err) {
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -2234,182 +2209,180 @@ class wamo extends utils.Adapter {
 	 * @returns true or error
 	 */
 	async updateStatistics() {
-		return new Promise(async (resolve, reject) => {
+		try {
+			this.log.debug('update Statistics');
+
+			let lastTotalValue = 0;
+			let currentTotalValue = 0;
+			let deltaValue = 0;
+			let current_Day = 0;
+			let current_Week = 0;
+			let current_Month = 0;
+			let current_Year = 0;
+
+			let lastTotalvalueState = null;
+			let currentTotalvalueState = null;
+			let current_Day_valueState = null;
+			let current_Week_valueState = null;
+			let current_Month_valueState = null;
+			let current_Year_valueState = null;
+
+			// getting states
 			try {
-				this.log.debug('update Statistics');
-
-				let lastTotalValue = 0;
-				let currentTotalValue = 0;
-				let deltaValue = 0;
-				let current_Day = 0;
-				let current_Week = 0;
-				let current_Month = 0;
-				let current_Year = 0;
-
-				let lastTotalvalueState = null;
-				let currentTotalvalueState = null;
-				let current_Day_valueState = null;
-				let current_Week_valueState = null;
-				let current_Month_valueState = null;
-				let current_Year_valueState = null;
-
-				// getting states
-				try {
-					lastTotalvalueState = await this.getStateAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id);
-					if ((lastTotalvalueState != null) && (lastTotalvalueState.val != null)) {
-						// pulling values from state if state already existed
-						lastTotalValue = parseFloat(String(lastTotalvalueState.val));
-					}
+				lastTotalvalueState = await this.getStateAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id);
+				if ((lastTotalvalueState != null) && (lastTotalvalueState.val != null)) {
+					// pulling values from state if state already existed
+					lastTotalValue = parseFloat(String(lastTotalvalueState.val));
 				}
-				catch (err) {
-					this.log.error('async updateStatistics() -> lastTotalvalueState = await this.getStateAsync(StatisticStates.TotalLastValue.statePath + \'.\' + StatisticStates.TotalLastValue.id) -> returned ERROR: ' + err);
-				}
-
-				try {
-					currentTotalvalueState = await this.getStateAsync(DeviceParameters.TotalVolume.statePath + '.' + DeviceParameters.TotalVolume.id);
-					if ((currentTotalvalueState != null) && (currentTotalvalueState.val != null)) {
-						// pulling values from state if state already existed
-						currentTotalValue = parseFloat(String(currentTotalvalueState.val)) * 1000;
-					}
-				}
-				catch (err) {
-					this.log.error('async updateStatistics() -> currentTotalvalueState = await this.getStateAsync(DeviceParameters.TotalVolume.statePath + \'.\' + DeviceParameters.TotalVolume.id) -> returned ERROR: ' + err);
-				}
-
-				try {
-					current_Day_valueState = await this.getStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id);
-					if ((current_Day_valueState != null) && (current_Day_valueState.val != null)) {
-						// pulling values from state if state already existed
-						current_Day = parseFloat(String(current_Day_valueState.val));
-					}
-				}
-				catch (err) {
-					this.log.error('async updateStatistics() -> current_Day_valueState = await this.getStateAsync(StatisticStates.TotalDay.statePath + \'.\' + StatisticStates.TotalDay.id) -> returned ERROR: ' + err);
-				}
-
-				try {
-					current_Week_valueState = await this.getStateAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id);
-					if ((current_Week_valueState != null) && (current_Week_valueState.val != null)) {
-						// pulling values from state if state already existed
-						current_Week = parseFloat(String(current_Week_valueState.val));
-					}
-				}
-				catch (err) {
-					this.log.error('async updateStatistics() -> current_Week_valueState = await this.getStateAsync(StatisticStates.TotalWeek.statePath + \'.\' + StatisticStates.TotalWeek.id) -> returned ERROR: ' + err);
-				}
-
-				try {
-					current_Month_valueState = await this.getStateAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id);
-					if ((current_Month_valueState != null) && (current_Month_valueState.val != null)) {
-						// pulling values from state if state already existed
-						current_Month = parseFloat(String(current_Month_valueState.val));
-					}
-				}
-				catch (err) {
-					this.log.error('async updateStatistics() -> current_Month_valueState = await this.getStateAsync(StatisticStates.TotalMonth.statePath + \'.\' + StatisticStates.TotalMonth.id) -> returned ERROR: ' + err);
-				}
-
-				try {
-					current_Year_valueState = await this.getStateAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id);
-					if ((current_Year_valueState != null) && (current_Year_valueState.val != null)) {
-						// pulling values from state if state already existed
-						current_Year = parseFloat(String(current_Year_valueState.val));
-					}
-				}
-				catch (err) {
-					this.log.error('async updateStatistics() -> current_Year_valueState = await this.getStateAsync(StatisticStates.TotalYear.statePath + \'.\' + StatisticStates.TotalYear.id) -> returned ERROR: ' + err);
-				}
-
-
-				// calculating the delta
-				deltaValue = currentTotalValue - lastTotalValue;
-				this.log.debug('old total = ' + String(lastTotalValue) + 'l / akt total = ' + String(currentTotalValue) + 'l / Delta = ' + String(deltaValue) + 'l');
-
-				// only update states if we hav a change in total consumption
-				if (deltaValue > 0) {
-					// adding delta to states
-					current_Day += deltaValue;
-					current_Week += deltaValue;
-					current_Month += deltaValue;
-					current_Year += (deltaValue / 1000);
-
-					// saving states
-					// new last total
-					try {
-						await this.setObjectNotExistsAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id, Object(StatisticStates.TotalLastValue.objectdefinition));
-					}
-					catch (err) {
-						this.log.error('updateStatistics() -> await this.setObjectNotExistsAsync(StatisticStates.TotalLastValue.statePath + \'.\' + StatisticStates.TotalLastValue.id, Object(StatisticStates.TotalLastValue.objectdefinition)) returned ERROR: ' + err);
-					}
-					try {
-						await this.setStateAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id, { val: currentTotalValue, ack: true });
-					}
-					catch (err) {
-						this.log.error('updateStatistics() -> await this.setStateAsync(StatisticStates.TotalLastValue.statePath + \'.\' + StatisticStates.TotalLastValue.id, { val: currentTotalValue, ack: true }) returned ERROR: ' + err);
-					}
-
-					// new day total
-					try {
-						await this.setObjectNotExistsAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, Object(StatisticStates.TotalDay.objectdefinition));
-					}
-					catch (err) {
-						this.log.error('updateStatistics() -> await this.setObjectNotExistsAsync(StatisticStates.TotalDay.statePath + \'.\' + StatisticStates.TotalDay.id, Object(StatisticStates.TotalDay.objectdefinition)) returned ERROR: ' + err);
-					}
-					try {
-						await this.setStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, { val: current_Day, ack: true });
-					}
-					catch (err) {
-						this.log.error('updateStatistics() -> await this.setStateAsync(StatisticStates.TotalDay.statePath + \'.\' + StatisticStates.TotalDay.id, { val: current_Day, ack: true }) returned ERROR: ' + err);
-					}
-
-					// new week total
-					try {
-						await this.setObjectNotExistsAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id, Object(StatisticStates.TotalWeek.objectdefinition));
-					}
-					catch (err) {
-						this.log.error('updateStatistics() -> await this.setObjectNotExistsAsync(StatisticStates.TotalWeek.statePath + \'.\' + StatisticStates.TotalWeek.id, Object(StatisticStates.TotalWeek.objectdefinition)) returned ERROR: ' + err);
-					}
-					try {
-						await this.setStateAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id, { val: current_Week, ack: true });
-					}
-					catch (err) {
-						this.log.error('updateStatistics() -> await this.setStateAsync(StatisticStates.TotalWeek.statePath + \'.\' + StatisticStates.TotalWeek.id, { val: current_Week, ack: true }) returned ERROR: ' + err);
-					}
-
-					// new month total
-					try {
-						await this.setObjectNotExistsAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id, Object(StatisticStates.TotalMonth.objectdefinition));
-					}
-					catch (err) {
-						this.log.error('updateStatistics() -> await this.setObjectNotExistsAsync(StatisticStates.TotalMonth.statePath + \'.\' + StatisticStates.TotalMonth.id, Object(StatisticStates.TotalMonth.objectdefinition)) returned ERROR: ' + err);
-					}
-					try {
-						await this.setStateAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id, { val: current_Month, ack: true });
-					}
-					catch (err) {
-						this.log.error('updateStatistics() -> await this.setStateAsync(StatisticStates.TotalMonth.statePath + \'.\' + StatisticStates.TotalMonth.id, { val: current_Month, ack: true }) returned ERROR: ' + err);
-					}
-
-					// new year total
-					try {
-						await this.setObjectNotExistsAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id, Object(StatisticStates.TotalYear.objectdefinition));
-					}
-					catch (err) {
-						this.log.error('updateStatistics() -> await this.setObjectNotExistsAsync(StatisticStates.TotalYear.statePath + \'.\' + StatisticStates.TotalYear.id, Object(StatisticStates.TotalYear.objectdefinition)) returned ERROR: ' + err);
-					}
-					try {
-						await this.setStateAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id, { val: current_Year, ack: true });
-					}
-					catch (err) {
-						this.log.error('updateStatistics() -> await this.setStateAsync(StatisticStates.TotalYear.statePath + \'.\' + StatisticStates.TotalYear.id, { val: current_Year, ack: true }) returned ERROR: ' + err);
-					}
-				}
-
-				resolve(true);
-			} catch (err) {
-				reject(err);
 			}
-		});
+			catch (err) {
+				this.log.error('async updateStatistics() -> lastTotalvalueState = await this.getStateAsync(StatisticStates.TotalLastValue.statePath + \'.\' + StatisticStates.TotalLastValue.id) -> returned ERROR: ' + err);
+			}
+
+			try {
+				currentTotalvalueState = await this.getStateAsync(DeviceParameters.TotalVolume.statePath + '.' + DeviceParameters.TotalVolume.id);
+				if ((currentTotalvalueState != null) && (currentTotalvalueState.val != null)) {
+					// pulling values from state if state already existed
+					currentTotalValue = parseFloat(String(currentTotalvalueState.val)) * 1000;
+				}
+			}
+			catch (err) {
+				this.log.error('async updateStatistics() -> currentTotalvalueState = await this.getStateAsync(DeviceParameters.TotalVolume.statePath + \'.\' + DeviceParameters.TotalVolume.id) -> returned ERROR: ' + err);
+			}
+
+			try {
+				current_Day_valueState = await this.getStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id);
+				if ((current_Day_valueState != null) && (current_Day_valueState.val != null)) {
+					// pulling values from state if state already existed
+					current_Day = parseFloat(String(current_Day_valueState.val));
+				}
+			}
+			catch (err) {
+				this.log.error('async updateStatistics() -> current_Day_valueState = await this.getStateAsync(StatisticStates.TotalDay.statePath + \'.\' + StatisticStates.TotalDay.id) -> returned ERROR: ' + err);
+			}
+
+			try {
+				current_Week_valueState = await this.getStateAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id);
+				if ((current_Week_valueState != null) && (current_Week_valueState.val != null)) {
+					// pulling values from state if state already existed
+					current_Week = parseFloat(String(current_Week_valueState.val));
+				}
+			}
+			catch (err) {
+				this.log.error('async updateStatistics() -> current_Week_valueState = await this.getStateAsync(StatisticStates.TotalWeek.statePath + \'.\' + StatisticStates.TotalWeek.id) -> returned ERROR: ' + err);
+			}
+
+			try {
+				current_Month_valueState = await this.getStateAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id);
+				if ((current_Month_valueState != null) && (current_Month_valueState.val != null)) {
+					// pulling values from state if state already existed
+					current_Month = parseFloat(String(current_Month_valueState.val));
+				}
+			}
+			catch (err) {
+				this.log.error('async updateStatistics() -> current_Month_valueState = await this.getStateAsync(StatisticStates.TotalMonth.statePath + \'.\' + StatisticStates.TotalMonth.id) -> returned ERROR: ' + err);
+			}
+
+			try {
+				current_Year_valueState = await this.getStateAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id);
+				if ((current_Year_valueState != null) && (current_Year_valueState.val != null)) {
+					// pulling values from state if state already existed
+					current_Year = parseFloat(String(current_Year_valueState.val));
+				}
+			}
+			catch (err) {
+				this.log.error('async updateStatistics() -> current_Year_valueState = await this.getStateAsync(StatisticStates.TotalYear.statePath + \'.\' + StatisticStates.TotalYear.id) -> returned ERROR: ' + err);
+			}
+
+
+			// calculating the delta
+			deltaValue = currentTotalValue - lastTotalValue;
+			this.log.debug('old total = ' + String(lastTotalValue) + 'l / akt total = ' + String(currentTotalValue) + 'l / Delta = ' + String(deltaValue) + 'l');
+
+			// only update states if we hav a change in total consumption
+			if (deltaValue > 0) {
+				// adding delta to states
+				current_Day += deltaValue;
+				current_Week += deltaValue;
+				current_Month += deltaValue;
+				current_Year += (deltaValue / 1000);
+
+				// saving states
+				// new last total
+				try {
+					await this.setObjectNotExistsAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id, Object(StatisticStates.TotalLastValue.objectdefinition));
+				}
+				catch (err) {
+					this.log.error('updateStatistics() -> await this.setObjectNotExistsAsync(StatisticStates.TotalLastValue.statePath + \'.\' + StatisticStates.TotalLastValue.id, Object(StatisticStates.TotalLastValue.objectdefinition)) returned ERROR: ' + err);
+				}
+				try {
+					await this.setStateAsync(StatisticStates.TotalLastValue.statePath + '.' + StatisticStates.TotalLastValue.id, { val: currentTotalValue, ack: true });
+				}
+				catch (err) {
+					this.log.error('updateStatistics() -> await this.setStateAsync(StatisticStates.TotalLastValue.statePath + \'.\' + StatisticStates.TotalLastValue.id, { val: currentTotalValue, ack: true }) returned ERROR: ' + err);
+				}
+
+				// new day total
+				try {
+					await this.setObjectNotExistsAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, Object(StatisticStates.TotalDay.objectdefinition));
+				}
+				catch (err) {
+					this.log.error('updateStatistics() -> await this.setObjectNotExistsAsync(StatisticStates.TotalDay.statePath + \'.\' + StatisticStates.TotalDay.id, Object(StatisticStates.TotalDay.objectdefinition)) returned ERROR: ' + err);
+				}
+				try {
+					await this.setStateAsync(StatisticStates.TotalDay.statePath + '.' + StatisticStates.TotalDay.id, { val: current_Day, ack: true });
+				}
+				catch (err) {
+					this.log.error('updateStatistics() -> await this.setStateAsync(StatisticStates.TotalDay.statePath + \'.\' + StatisticStates.TotalDay.id, { val: current_Day, ack: true }) returned ERROR: ' + err);
+				}
+
+				// new week total
+				try {
+					await this.setObjectNotExistsAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id, Object(StatisticStates.TotalWeek.objectdefinition));
+				}
+				catch (err) {
+					this.log.error('updateStatistics() -> await this.setObjectNotExistsAsync(StatisticStates.TotalWeek.statePath + \'.\' + StatisticStates.TotalWeek.id, Object(StatisticStates.TotalWeek.objectdefinition)) returned ERROR: ' + err);
+				}
+				try {
+					await this.setStateAsync(StatisticStates.TotalWeek.statePath + '.' + StatisticStates.TotalWeek.id, { val: current_Week, ack: true });
+				}
+				catch (err) {
+					this.log.error('updateStatistics() -> await this.setStateAsync(StatisticStates.TotalWeek.statePath + \'.\' + StatisticStates.TotalWeek.id, { val: current_Week, ack: true }) returned ERROR: ' + err);
+				}
+
+				// new month total
+				try {
+					await this.setObjectNotExistsAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id, Object(StatisticStates.TotalMonth.objectdefinition));
+				}
+				catch (err) {
+					this.log.error('updateStatistics() -> await this.setObjectNotExistsAsync(StatisticStates.TotalMonth.statePath + \'.\' + StatisticStates.TotalMonth.id, Object(StatisticStates.TotalMonth.objectdefinition)) returned ERROR: ' + err);
+				}
+				try {
+					await this.setStateAsync(StatisticStates.TotalMonth.statePath + '.' + StatisticStates.TotalMonth.id, { val: current_Month, ack: true });
+				}
+				catch (err) {
+					this.log.error('updateStatistics() -> await this.setStateAsync(StatisticStates.TotalMonth.statePath + \'.\' + StatisticStates.TotalMonth.id, { val: current_Month, ack: true }) returned ERROR: ' + err);
+				}
+
+				// new year total
+				try {
+					await this.setObjectNotExistsAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id, Object(StatisticStates.TotalYear.objectdefinition));
+				}
+				catch (err) {
+					this.log.error('updateStatistics() -> await this.setObjectNotExistsAsync(StatisticStates.TotalYear.statePath + \'.\' + StatisticStates.TotalYear.id, Object(StatisticStates.TotalYear.objectdefinition)) returned ERROR: ' + err);
+				}
+				try {
+					await this.setStateAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id, { val: current_Year, ack: true });
+				}
+				catch (err) {
+					this.log.error('updateStatistics() -> await this.setStateAsync(StatisticStates.TotalYear.statePath + \'.\' + StatisticStates.TotalYear.id, { val: current_Year, ack: true }) returned ERROR: ' + err);
+				}
+			}
+
+			return true;
+		} catch (err) {
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -2417,43 +2390,41 @@ class wamo extends utils.Adapter {
 	 * @returns true or error
 	 */
 	async updateGermanWaterHardnes() {
-		return new Promise(async (resolve, reject) => {
+		try {
+			this.log.debug('calculating german water hardness ...');
+			if ((_WaterConductivity === 0) || _WaterConductivity === null) { throw new Error('updateGermanWaterHardnes -> No valid water conductivity value'); }
+			let german_hardnes = 0;
+
+			if (_WaterConductivity_EC25 === 0) {
+				// Water hardnes NOT temperatur compensated
+				german_hardnes = parseFloat((_WaterConductivity * parseFloat(this.config.factor_german_water_hardnes)).toFixed(2));
+				if (valuesInfoMessages) { this.log.info('German water hardness: ' + german_hardnes + ' (NOT temperature compensated)'); }
+			} else {
+				// Water hardnes temperatur compensated
+				german_hardnes = parseFloat((_WaterConductivity_EC25 * parseFloat(this.config.factor_german_water_hardnes)).toFixed(2));
+				if (valuesInfoMessages) { this.log.info('German water hardness: ' + german_hardnes + ' (Temperature compensated)'); }
+			}
+
+			this.log.debug('calculated german water hardness = ' + String(german_hardnes));
+			// new last total
 			try {
-				this.log.debug('calculating german water hardness ...');
-				if ((_WaterConductivity === 0) || _WaterConductivity === null) { reject('updateGermanWaterHardnes -> No valid water conductivity value'); }
-				let german_hardnes = 0;
-
-				if (_WaterConductivity_EC25 === 0) {
-					// Water hardnes NOT temperatur compensated
-					german_hardnes = parseFloat((_WaterConductivity * parseFloat(this.config.factor_german_water_hardnes)).toFixed(2));
-					if (valuesInfoMessages) { this.log.info('German water hardness: ' + german_hardnes + ' (NOT temperature compensated)'); }
-				} else {
-					// Water hardnes temperatur compensated
-					german_hardnes = parseFloat((_WaterConductivity_EC25 * parseFloat(this.config.factor_german_water_hardnes)).toFixed(2));
-					if (valuesInfoMessages) { this.log.info('German water hardness: ' + german_hardnes + ' (Temperature compensated)'); }
-				}
-
-				this.log.debug('calculated german water hardness = ' + String(german_hardnes));
-				// new last total
-				try {
-					await this.setObjectNotExistsAsync(calculatedStates.germanWaterHardness.statePath + '.' + calculatedStates.germanWaterHardness.id, Object(calculatedStates.germanWaterHardness.objectdefinition));
-				}
-				catch (err) {
-					this.log.error('updateGermanWaterHardnes -> setObjectNotExistsAsync(calculatedStates.germanWaterHardness.statePath + \'.\' + calculatedStates.germanWaterHardness.id, Object(calculatedStates.germanWaterHardness.objectdefinition)) -> ERROR: ' + err);
-				}
-
-				try {
-					await this.setStateAsync(calculatedStates.germanWaterHardness.statePath + '.' + calculatedStates.germanWaterHardness.id, { val: german_hardnes, ack: true });
-				}
-				catch (err) {
-					this.log.error('updateGermanWaterHardnes -> setStateAsync(calculatedStates.germanWaterHardness.statePath + \'.\' + calculatedStates.germanWaterHardness.id, { val: german_hardnes, ack: true }) -> ERROR: ' + err);
-				}
-				resolve(true);
+				await this.setObjectNotExistsAsync(calculatedStates.germanWaterHardness.statePath + '.' + calculatedStates.germanWaterHardness.id, Object(calculatedStates.germanWaterHardness.objectdefinition));
 			}
 			catch (err) {
-				reject(err);
+				this.log.error('updateGermanWaterHardnes -> setObjectNotExistsAsync(calculatedStates.germanWaterHardness.statePath + \'.\' + calculatedStates.germanWaterHardness.id, Object(calculatedStates.germanWaterHardness.objectdefinition)) -> ERROR: ' + err);
 			}
-		});
+
+			try {
+				await this.setStateAsync(calculatedStates.germanWaterHardness.statePath + '.' + calculatedStates.germanWaterHardness.id, { val: german_hardnes, ack: true });
+			}
+			catch (err) {
+				this.log.error('updateGermanWaterHardnes -> setStateAsync(calculatedStates.germanWaterHardness.statePath + \'.\' + calculatedStates.germanWaterHardness.id, { val: german_hardnes, ack: true }) -> ERROR: ' + err);
+			}
+			return true;
+		}
+		catch (err) {
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -2461,40 +2432,38 @@ class wamo extends utils.Adapter {
 	 * @returns true or error
 	 */
 	async updateEC25conductivity() {
-		return new Promise(async (resolve, reject) => {
-			// The formula is:
-			// EC25 = EC / (1 + 0.020 * (t - 25))
-			// EC25: COnductivity at 25°C
-			// EC: Measured conductivity at Temperature t
-			// t: Temperature in °C
+		// The formula is:
+		// EC25 = EC / (1 + 0.020 * (t - 25))
+		// EC25: COnductivity at 25°C
+		// EC: Measured conductivity at Temperature t
+		// t: Temperature in °C
+		try {
+			if ((_WaterConductivity === 0) || _WaterConductivity === null) { throw new Error('updateEC25conductivity -> No valid water conductivity value'); }
+			if ((_WaterTemperature === 0) || _WaterTemperature === null) { throw new Error('updateEC25conductivity -> No valid water temperature value'); }
+
+			_WaterConductivity_EC25 = parseFloat((_WaterConductivity / (1 + 0.02 * (_WaterTemperature - 25))).toFixed(2));
+
+			this.log.debug('EC25 conductivity = ' + String(_WaterConductivity_EC25));
+
+			// Save Value
 			try {
-				if ((_WaterConductivity === 0) || _WaterConductivity === null) { reject('updateEC25conductivity -> No valid water conductivity value'); }
-				if ((_WaterTemperature === 0) || _WaterTemperature === null) { reject('updateEC25conductivity -> No valid water temperature value'); }
-
-				_WaterConductivity_EC25 = parseFloat((_WaterConductivity / (1 + 0.02 * (_WaterTemperature - 25))).toFixed(2));
-
-				this.log.debug('EC25 conductivity = ' + String(_WaterConductivity_EC25));
-
-				// Save Value
-				try {
-					await this.setObjectNotExistsAsync(calculatedStates.conductivityEC25.statePath + '.' + calculatedStates.conductivityEC25.id, Object(calculatedStates.conductivityEC25.objectdefinition));
-				}
-				catch (err) {
-					this.log.error('updateEC25conductivity -> setObjectNotExistsAsync(calculatedStates.conductivityEC25.statePath + \'.\' + calculatedStates.conductivityEC25.id, Object(calculatedStates.conductivityEC25.objectdefinition)) -> ERROR: ' + err);
-				}
-
-				try {
-					await this.setStateAsync(calculatedStates.conductivityEC25.statePath + '.' + calculatedStates.conductivityEC25.id, { val: _WaterConductivity_EC25, ack: true });
-				}
-				catch (err) {
-					this.log.error('updateEC25conductivity -> setStateAsync(calculatedStates.conductivityEC25.statePath + \'.\' + calculatedStates.conductivityEC25.id, { val: EC25conductivity, ack: true }) -> ERROR: ' + err);
-				}
-				resolve(true);
+				await this.setObjectNotExistsAsync(calculatedStates.conductivityEC25.statePath + '.' + calculatedStates.conductivityEC25.id, Object(calculatedStates.conductivityEC25.objectdefinition));
 			}
 			catch (err) {
-				reject(err);
+				this.log.error('updateEC25conductivity -> setObjectNotExistsAsync(calculatedStates.conductivityEC25.statePath + \'.\' + calculatedStates.conductivityEC25.id, Object(calculatedStates.conductivityEC25.objectdefinition)) -> ERROR: ' + err);
 			}
-		});
+
+			try {
+				await this.setStateAsync(calculatedStates.conductivityEC25.statePath + '.' + calculatedStates.conductivityEC25.id, { val: _WaterConductivity_EC25, ack: true });
+			}
+			catch (err) {
+				this.log.error('updateEC25conductivity -> setStateAsync(calculatedStates.conductivityEC25.statePath + \'.\' + calculatedStates.conductivityEC25.id, { val: EC25conductivity, ack: true }) -> ERROR: ' + err);
+			}
+			return true;
+		}
+		catch (err) {
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -2553,7 +2522,6 @@ class wamo extends utils.Adapter {
 	 * @returns Readed Value from Device (JSON Format) or ERROR
 	 */
 	async get_DevieParameter(Parameter) {
-
 		// Flag indicating if we had to switch into SERVICE or FACTORY mode
 		let readModeChanged = false;
 		this.log.debug(`[getDevieParameter(ParameterID)] ${Parameter.id}`);
@@ -2625,7 +2593,6 @@ class wamo extends utils.Adapter {
 	 * @returns axios response data OR error
 	 */
 	async set_DevieParameter(Parameter, Value) {
-
 		const oldParameter = await this.get_DevieParameter(Parameter);
 
 		// Flag indicating if we had to modifiy Admin Mode
@@ -2721,7 +2688,6 @@ class wamo extends utils.Adapter {
 	 * @returns Readed Value from Device (JSON Format) or ERROR
 	 */
 	async get_DevieProfileParameter(ProfileNumber, ParameterID) {
-
 		this.log.debug(`[getDevieParameter(ParameterID)] ${ParameterID} Profile ${ProfileNumber}`);
 
 		try {
@@ -2763,75 +2729,72 @@ class wamo extends utils.Adapter {
 	 * @returns true OR error
 	 */
 	async state_profile_PA(ProfileNumber, value) {
-		return new Promise(async (resolve, reject) => {
-			try {
+		try {
 
-				this.log.debug('async state_profile_PA(ProfileNumber, value) value: ' + JSON.stringify(value) + ' Profilnummer: ' + String(ProfileNumber));
-				const profileAvailable = parseInt(String(value['getPA' + String(ProfileNumber)]));
-				let crStaResult = null;
-				let stStaResult = null;
-				let currentStatePath = '';
-				let currentstateObject = '';
-				this.log.debug('async state_profile_PA(ProfileNumber, value) -> const profileAvailable = value[\'getPA\' + String(ProfileNumber)]; = ' + String(profileAvailable));
+			this.log.debug('async state_profile_PA(ProfileNumber, value) value: ' + JSON.stringify(value) + ' Profilnummer: ' + String(ProfileNumber));
+			const profileAvailable = parseInt(String(value['getPA' + String(ProfileNumber)]));
+			let crStaResult = null;
+			let stStaResult = null;
+			let currentStatePath = '';
+			let currentstateObject = '';
+			this.log.debug('async state_profile_PA(ProfileNumber, value) -> const profileAvailable = value[\'getPA\' + String(ProfileNumber)]; = ' + String(profileAvailable));
 
-				switch (ProfileNumber) {
-					case 1:
-						currentStatePath = String(DeviceParameters.Profile_PA1.statePath) + '.' + String(DeviceParameters.Profile_PA1.id);
-						currentstateObject = Object(DeviceParameters.Profile_PA1.objectdefinition);
-						break;
-					case 2:
-						currentStatePath = String(DeviceParameters.Profile_PA2.statePath) + '.' + String(DeviceParameters.Profile_PA2.id);
-						currentstateObject = Object(DeviceParameters.Profile_PA2.objectdefinition);
-						break;
-					case 3:
-						currentStatePath = String(DeviceParameters.Profile_PA3.statePath) + '.' + String(DeviceParameters.Profile_PA3.id);
-						currentstateObject = Object(DeviceParameters.Profile_PA3.objectdefinition);
-						break;
-					case 4:
-						currentStatePath = String(DeviceParameters.Profile_PA4.statePath) + '.' + String(DeviceParameters.Profile_PA4.id);
-						currentstateObject = Object(DeviceParameters.Profile_PA4.objectdefinition);
-						break;
-					case 5:
-						currentStatePath = String(DeviceParameters.Profile_PA5.statePath) + '.' + String(DeviceParameters.Profile_PA5.id);
-						currentstateObject = Object(DeviceParameters.Profile_PA5.objectdefinition);
-						break;
-					case 6:
-						currentStatePath = String(DeviceParameters.Profile_PA6.statePath) + '.' + String(DeviceParameters.Profile_PA6.id);
-						currentstateObject = Object(DeviceParameters.Profile_PA6.objectdefinition);
-						break;
-					case 7:
-						currentStatePath = String(DeviceParameters.Profile_PA7.statePath) + '.' + String(DeviceParameters.Profile_PA7.id);
-						currentstateObject = Object(DeviceParameters.Profile_PA7.objectdefinition);
-						break;
-					case 8:
-						currentStatePath = String(DeviceParameters.Profile_PA8.statePath) + '.' + String(DeviceParameters.Profile_PA8.id);
-						currentstateObject = Object(DeviceParameters.Profile_PA8.objectdefinition);
-						break;
-					default:
-						this.log.error('async state_profile_PA(ProfileNumber, value) -> switch (ProfileNumber) hit \'default:\'');
-						break;
-				}
-
-				this.log.debug('State path before setStateAsync = ' + currentStatePath);
-				this.log.debug('Value before setStateAsync = ' + String(profileAvailable));
-
-				crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
-				this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
-
-				stStaResult = await this.setStateAsync(currentStatePath, { val: profileAvailable, ack: true });
-				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
-
-				if (valuesInfoMessages) {
-					if (profileAvailable == 1) { this.log.info('Profile ' + String(ProfileNumber) + ' is available'); }
-					else { this.log.info('Profile ' + String(ProfileNumber) + ' is not available'); }
-				}
-				resolve(true);
-			} catch (err) {
-				this.log.error('async state_profile_PA(ProfileNumber, value) ERROR: ' + err);
-				reject(err);
+			switch (ProfileNumber) {
+				case 1:
+					currentStatePath = String(DeviceParameters.Profile_PA1.statePath) + '.' + String(DeviceParameters.Profile_PA1.id);
+					currentstateObject = Object(DeviceParameters.Profile_PA1.objectdefinition);
+					break;
+				case 2:
+					currentStatePath = String(DeviceParameters.Profile_PA2.statePath) + '.' + String(DeviceParameters.Profile_PA2.id);
+					currentstateObject = Object(DeviceParameters.Profile_PA2.objectdefinition);
+					break;
+				case 3:
+					currentStatePath = String(DeviceParameters.Profile_PA3.statePath) + '.' + String(DeviceParameters.Profile_PA3.id);
+					currentstateObject = Object(DeviceParameters.Profile_PA3.objectdefinition);
+					break;
+				case 4:
+					currentStatePath = String(DeviceParameters.Profile_PA4.statePath) + '.' + String(DeviceParameters.Profile_PA4.id);
+					currentstateObject = Object(DeviceParameters.Profile_PA4.objectdefinition);
+					break;
+				case 5:
+					currentStatePath = String(DeviceParameters.Profile_PA5.statePath) + '.' + String(DeviceParameters.Profile_PA5.id);
+					currentstateObject = Object(DeviceParameters.Profile_PA5.objectdefinition);
+					break;
+				case 6:
+					currentStatePath = String(DeviceParameters.Profile_PA6.statePath) + '.' + String(DeviceParameters.Profile_PA6.id);
+					currentstateObject = Object(DeviceParameters.Profile_PA6.objectdefinition);
+					break;
+				case 7:
+					currentStatePath = String(DeviceParameters.Profile_PA7.statePath) + '.' + String(DeviceParameters.Profile_PA7.id);
+					currentstateObject = Object(DeviceParameters.Profile_PA7.objectdefinition);
+					break;
+				case 8:
+					currentStatePath = String(DeviceParameters.Profile_PA8.statePath) + '.' + String(DeviceParameters.Profile_PA8.id);
+					currentstateObject = Object(DeviceParameters.Profile_PA8.objectdefinition);
+					break;
+				default:
+					this.log.error('async state_profile_PA(ProfileNumber, value) -> switch (ProfileNumber) hit \'default:\'');
+					break;
 			}
-		});
 
+			this.log.debug('State path before setStateAsync = ' + currentStatePath);
+			this.log.debug('Value before setStateAsync = ' + String(profileAvailable));
+
+			crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
+			this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
+
+			stStaResult = await this.setStateAsync(currentStatePath, { val: profileAvailable, ack: true });
+			this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
+
+			if (valuesInfoMessages) {
+				if (profileAvailable == 1) { this.log.info('Profile ' + String(ProfileNumber) + ' is available'); }
+				else { this.log.info('Profile ' + String(ProfileNumber) + ' is not available'); }
+			}
+			return true;
+		} catch (err) {
+			this.log.error('async state_profile_PA(ProfileNumber, value) ERROR: ' + err);
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -2841,66 +2804,63 @@ class wamo extends utils.Adapter {
 	 * @returns true OR error
 	 */
 	async state_profile_PN(ProfileNumber, value) {
-		return new Promise(async (resolve, reject) => {
-			try {
-				const profileName = String(value['getPN' + String(ProfileNumber)]);
-				let crStaResult = null;
-				let stStaResult = null;
-				let currentStatePath = '';
-				let currentstateObject = '';
+		try {
+			const profileName = String(value['getPN' + String(ProfileNumber)]);
+			let crStaResult = null;
+			let stStaResult = null;
+			let currentStatePath = '';
+			let currentstateObject = '';
 
-				switch (ProfileNumber) {
-					case 1:
-						currentStatePath = String(DeviceParameters.Profile_PN1.statePath) + '.' + String(DeviceParameters.Profile_PN1.id);
-						currentstateObject = Object(DeviceParameters.Profile_PN1.objectdefinition);
-						break;
-					case 2:
-						currentStatePath = String(DeviceParameters.Profile_PN2.statePath) + '.' + String(DeviceParameters.Profile_PN2.id);
-						currentstateObject = Object(DeviceParameters.Profile_PN2.objectdefinition);
-						break;
-					case 3:
-						currentStatePath = String(DeviceParameters.Profile_PN3.statePath) + '.' + String(DeviceParameters.Profile_PN3.id);
-						currentstateObject = Object(DeviceParameters.Profile_PN3.objectdefinition);
-						break;
-					case 4:
-						currentStatePath = String(DeviceParameters.Profile_PN4.statePath) + '.' + String(DeviceParameters.Profile_PN4.id);
-						currentstateObject = Object(DeviceParameters.Profile_PN4.objectdefinition);
-						break;
-					case 5:
-						currentStatePath = String(DeviceParameters.Profile_PN5.statePath) + '.' + String(DeviceParameters.Profile_PN5.id);
-						currentstateObject = Object(DeviceParameters.Profile_PN5.objectdefinition);
-						break;
-					case 6:
-						currentStatePath = String(DeviceParameters.Profile_PN6.statePath) + '.' + String(DeviceParameters.Profile_PN6.id);
-						currentstateObject = Object(DeviceParameters.Profile_PN6.objectdefinition);
-						break;
-					case 7:
-						currentStatePath = String(DeviceParameters.Profile_PN7.statePath) + '.' + String(DeviceParameters.Profile_PN7.id);
-						currentstateObject = Object(DeviceParameters.Profile_PN7.objectdefinition);
-						break;
-					case 8:
-						currentStatePath = String(DeviceParameters.Profile_PN8.statePath) + '.' + String(DeviceParameters.Profile_PN8.id);
-						currentstateObject = Object(DeviceParameters.Profile_PN8.objectdefinition);
-						break;
-				}
-
-				this.log.debug('State path before setStateAsync = ' + currentStatePath);
-				this.log.debug('Value before setStateAsync = ' + String(profileName));
-
-				crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
-				this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
-
-				stStaResult = await this.setStateAsync(currentStatePath, { val: profileName, ack: true });
-				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
-
-				if (valuesInfoMessages) { this.log.info('Profile ' + String(ProfileNumber) + ' name is ' + profileName); }
-				resolve(true);
-			} catch (err) {
-				this.log.error(err.message);
-				reject(err);
+			switch (ProfileNumber) {
+				case 1:
+					currentStatePath = String(DeviceParameters.Profile_PN1.statePath) + '.' + String(DeviceParameters.Profile_PN1.id);
+					currentstateObject = Object(DeviceParameters.Profile_PN1.objectdefinition);
+					break;
+				case 2:
+					currentStatePath = String(DeviceParameters.Profile_PN2.statePath) + '.' + String(DeviceParameters.Profile_PN2.id);
+					currentstateObject = Object(DeviceParameters.Profile_PN2.objectdefinition);
+					break;
+				case 3:
+					currentStatePath = String(DeviceParameters.Profile_PN3.statePath) + '.' + String(DeviceParameters.Profile_PN3.id);
+					currentstateObject = Object(DeviceParameters.Profile_PN3.objectdefinition);
+					break;
+				case 4:
+					currentStatePath = String(DeviceParameters.Profile_PN4.statePath) + '.' + String(DeviceParameters.Profile_PN4.id);
+					currentstateObject = Object(DeviceParameters.Profile_PN4.objectdefinition);
+					break;
+				case 5:
+					currentStatePath = String(DeviceParameters.Profile_PN5.statePath) + '.' + String(DeviceParameters.Profile_PN5.id);
+					currentstateObject = Object(DeviceParameters.Profile_PN5.objectdefinition);
+					break;
+				case 6:
+					currentStatePath = String(DeviceParameters.Profile_PN6.statePath) + '.' + String(DeviceParameters.Profile_PN6.id);
+					currentstateObject = Object(DeviceParameters.Profile_PN6.objectdefinition);
+					break;
+				case 7:
+					currentStatePath = String(DeviceParameters.Profile_PN7.statePath) + '.' + String(DeviceParameters.Profile_PN7.id);
+					currentstateObject = Object(DeviceParameters.Profile_PN7.objectdefinition);
+					break;
+				case 8:
+					currentStatePath = String(DeviceParameters.Profile_PN8.statePath) + '.' + String(DeviceParameters.Profile_PN8.id);
+					currentstateObject = Object(DeviceParameters.Profile_PN8.objectdefinition);
+					break;
 			}
-		});
 
+			this.log.debug('State path before setStateAsync = ' + currentStatePath);
+			this.log.debug('Value before setStateAsync = ' + String(profileName));
+
+			crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
+			this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
+
+			stStaResult = await this.setStateAsync(currentStatePath, { val: profileName, ack: true });
+			this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
+
+			if (valuesInfoMessages) { this.log.info('Profile ' + String(ProfileNumber) + ' name is ' + profileName); }
+			return true;
+		} catch (err) {
+			this.log.error(err.message);
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -2910,70 +2870,66 @@ class wamo extends utils.Adapter {
 	 * @returns true OR error
 	 */
 	async state_profile_PV(ProfileNumber, value) {
-		return new Promise(async (resolve, reject) => {
-			try {
+		try {
+			let currentStatePath = '';
+			let crStaResult = null;
+			let stStaResult = null;
+			let currentstateObject = '';
 
-				let currentStatePath = '';
-				let crStaResult = null;
-				let stStaResult = null;
-				let currentstateObject = '';
+			const profileQuantityLimitation = parseInt(String(value['getPV' + String(ProfileNumber)]));
+			this.log.debug('async state_profile_PV(ProfileNumber, value) -> const profileQuantityLimitation = ' + String(profileQuantityLimitation));
 
-				const profileQuantityLimitation = parseInt(String(value['getPV' + String(ProfileNumber)]));
-				this.log.debug('async state_profile_PV(ProfileNumber, value) -> const profileQuantityLimitation = ' + String(profileQuantityLimitation));
-
-				switch (ProfileNumber) {
-					case 1:
-						currentStatePath = String(DeviceParameters.Profile_PV1.statePath) + '.' + String(DeviceParameters.Profile_PV1.id);
-						currentstateObject = Object(DeviceParameters.Profile_PV1.objectdefinition);
-						break;
-					case 2:
-						currentStatePath = String(DeviceParameters.Profile_PV2.statePath) + '.' + String(DeviceParameters.Profile_PV2.id);
-						currentstateObject = Object(DeviceParameters.Profile_PV2.objectdefinition);
-						break;
-					case 3:
-						currentStatePath = String(DeviceParameters.Profile_PV3.statePath) + '.' + String(DeviceParameters.Profile_PV3.id);
-						currentstateObject = Object(DeviceParameters.Profile_PV3.objectdefinition);
-						break;
-					case 4:
-						currentStatePath = String(DeviceParameters.Profile_PV4.statePath) + '.' + String(DeviceParameters.Profile_PV4.id);
-						currentstateObject = Object(DeviceParameters.Profile_PV4.objectdefinition);
-						break;
-					case 5:
-						currentStatePath = String(DeviceParameters.Profile_PV5.statePath) + '.' + String(DeviceParameters.Profile_PV5.id);
-						currentstateObject = Object(DeviceParameters.Profile_PV5.objectdefinition);
-						break;
-					case 6:
-						currentStatePath = String(DeviceParameters.Profile_PV6.statePath) + '.' + String(DeviceParameters.Profile_PV6.id);
-						currentstateObject = Object(DeviceParameters.Profile_PV6.objectdefinition);
-						break;
-					case 7:
-						currentStatePath = String(DeviceParameters.Profile_PV7.statePath) + '.' + String(DeviceParameters.Profile_PV7.id);
-						currentstateObject = Object(DeviceParameters.Profile_PV7.objectdefinition);
-						break;
-					case 8:
-						currentStatePath = String(DeviceParameters.Profile_PV8.statePath) + '.' + String(DeviceParameters.Profile_PV8.id);
-						currentstateObject = Object(DeviceParameters.Profile_PV8.objectdefinition);
-						break;
-				}
-				this.log.debug('State path before setStateAsync = ' + currentStatePath);
-				this.log.debug('Value before setStateAsync = ' + String(profileQuantityLimitation));
-
-				crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
-				this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
-
-				stStaResult = await this.setStateAsync(currentStatePath, { val: profileQuantityLimitation, ack: true });
-				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
-				if (valuesInfoMessages) {
-					if (profileQuantityLimitation == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' maximum volume limit disabled'); }
-					else { this.log.info('Profile ' + String(ProfileNumber) + ' maximum volume limit is ' + String(profileQuantityLimitation) + 'l'); }
-				}
-				resolve(true);
-			} catch (err) {
-				this.log.error('async state_profile_PV(ProfileNumber, value) ERROR: ' + err);
-				reject(err);
+			switch (ProfileNumber) {
+				case 1:
+					currentStatePath = String(DeviceParameters.Profile_PV1.statePath) + '.' + String(DeviceParameters.Profile_PV1.id);
+					currentstateObject = Object(DeviceParameters.Profile_PV1.objectdefinition);
+					break;
+				case 2:
+					currentStatePath = String(DeviceParameters.Profile_PV2.statePath) + '.' + String(DeviceParameters.Profile_PV2.id);
+					currentstateObject = Object(DeviceParameters.Profile_PV2.objectdefinition);
+					break;
+				case 3:
+					currentStatePath = String(DeviceParameters.Profile_PV3.statePath) + '.' + String(DeviceParameters.Profile_PV3.id);
+					currentstateObject = Object(DeviceParameters.Profile_PV3.objectdefinition);
+					break;
+				case 4:
+					currentStatePath = String(DeviceParameters.Profile_PV4.statePath) + '.' + String(DeviceParameters.Profile_PV4.id);
+					currentstateObject = Object(DeviceParameters.Profile_PV4.objectdefinition);
+					break;
+				case 5:
+					currentStatePath = String(DeviceParameters.Profile_PV5.statePath) + '.' + String(DeviceParameters.Profile_PV5.id);
+					currentstateObject = Object(DeviceParameters.Profile_PV5.objectdefinition);
+					break;
+				case 6:
+					currentStatePath = String(DeviceParameters.Profile_PV6.statePath) + '.' + String(DeviceParameters.Profile_PV6.id);
+					currentstateObject = Object(DeviceParameters.Profile_PV6.objectdefinition);
+					break;
+				case 7:
+					currentStatePath = String(DeviceParameters.Profile_PV7.statePath) + '.' + String(DeviceParameters.Profile_PV7.id);
+					currentstateObject = Object(DeviceParameters.Profile_PV7.objectdefinition);
+					break;
+				case 8:
+					currentStatePath = String(DeviceParameters.Profile_PV8.statePath) + '.' + String(DeviceParameters.Profile_PV8.id);
+					currentstateObject = Object(DeviceParameters.Profile_PV8.objectdefinition);
+					break;
 			}
-		});
+			this.log.debug('State path before setStateAsync = ' + currentStatePath);
+			this.log.debug('Value before setStateAsync = ' + String(profileQuantityLimitation));
 
+			crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
+			this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
+
+			stStaResult = await this.setStateAsync(currentStatePath, { val: profileQuantityLimitation, ack: true });
+			this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
+			if (valuesInfoMessages) {
+				if (profileQuantityLimitation == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' maximum volume limit disabled'); }
+				else { this.log.info('Profile ' + String(ProfileNumber) + ' maximum volume limit is ' + String(profileQuantityLimitation) + 'l'); }
+			}
+			return true;
+		} catch (err) {
+			this.log.error('async state_profile_PV(ProfileNumber, value) ERROR: ' + err);
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -2983,71 +2939,67 @@ class wamo extends utils.Adapter {
 	 * @returns true OR error
 	 */
 	async state_profile_PT(ProfileNumber, value) {
-		return new Promise(async (resolve, reject) => {
-			try {
+		try {
+			let currentStatePath = '';
+			let crStaResult = null;
+			let stStaResult = null;
+			let currentstateObject = '';
 
-				let currentStatePath = '';
-				let crStaResult = null;
-				let stStaResult = null;
-				let currentstateObject = '';
+			const profileTimeLimitation = parseInt(String(value['getPT' + String(ProfileNumber)]));
+			this.log.debug('async state_profile_PT(ProfileNumber, value) -> const profileTimeLimitation = ' + String(profileTimeLimitation));
 
-				const profileTimeLimitation = parseInt(String(value['getPT' + String(ProfileNumber)]));
-				this.log.debug('async state_profile_PT(ProfileNumber, value) -> const profileTimeLimitation = ' + String(profileTimeLimitation));
-
-				switch (ProfileNumber) {
-					case 1:
-						currentStatePath = String(DeviceParameters.Profile_PT1.statePath) + '.' + String(DeviceParameters.Profile_PT1.id);
-						currentstateObject = Object(DeviceParameters.Profile_PT1.objectdefinition);
-						break;
-					case 2:
-						currentStatePath = String(DeviceParameters.Profile_PT2.statePath) + '.' + String(DeviceParameters.Profile_PT2.id);
-						currentstateObject = Object(DeviceParameters.Profile_PT2.objectdefinition);
-						break;
-					case 3:
-						currentStatePath = String(DeviceParameters.Profile_PT3.statePath) + '.' + String(DeviceParameters.Profile_PT3.id);
-						currentstateObject = Object(DeviceParameters.Profile_PT3.objectdefinition);
-						break;
-					case 4:
-						currentStatePath = String(DeviceParameters.Profile_PT4.statePath) + '.' + String(DeviceParameters.Profile_PT4.id);
-						currentstateObject = Object(DeviceParameters.Profile_PT4.objectdefinition);
-						break;
-					case 5:
-						currentStatePath = String(DeviceParameters.Profile_PT5.statePath) + '.' + String(DeviceParameters.Profile_PT5.id);
-						currentstateObject = Object(DeviceParameters.Profile_PT5.objectdefinition);
-						break;
-					case 6:
-						currentStatePath = String(DeviceParameters.Profile_PT6.statePath) + '.' + String(DeviceParameters.Profile_PT6.id);
-						currentstateObject = Object(DeviceParameters.Profile_PT6.objectdefinition);
-						break;
-					case 7:
-						currentStatePath = String(DeviceParameters.Profile_PT7.statePath) + '.' + String(DeviceParameters.Profile_PT7.id);
-						currentstateObject = Object(DeviceParameters.Profile_PT7.objectdefinition);
-						break;
-					case 8:
-						currentStatePath = String(DeviceParameters.Profile_PT8.statePath) + '.' + String(DeviceParameters.Profile_PT8.id);
-						currentstateObject = Object(DeviceParameters.Profile_PT8.objectdefinition);
-						break;
-				}
-				this.log.debug('State path before setStateAsync = ' + currentStatePath);
-				this.log.debug('Value before setStateAsync = ' + String(profileTimeLimitation));
-
-				crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
-				this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
-
-				stStaResult = await this.setStateAsync(currentStatePath, { val: profileTimeLimitation, ack: true });
-				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
-
-				if (valuesInfoMessages) {
-					if (profileTimeLimitation == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' maximum time limit is disabled'); }
-					else { this.log.info('Profile ' + String(ProfileNumber) + ' maximum time limit is ' + String(profileTimeLimitation) + 'min'); }
-				}
-				resolve(true);
-			} catch (err) {
-				this.log.error(err.message);
-				reject(err);
+			switch (ProfileNumber) {
+				case 1:
+					currentStatePath = String(DeviceParameters.Profile_PT1.statePath) + '.' + String(DeviceParameters.Profile_PT1.id);
+					currentstateObject = Object(DeviceParameters.Profile_PT1.objectdefinition);
+					break;
+				case 2:
+					currentStatePath = String(DeviceParameters.Profile_PT2.statePath) + '.' + String(DeviceParameters.Profile_PT2.id);
+					currentstateObject = Object(DeviceParameters.Profile_PT2.objectdefinition);
+					break;
+				case 3:
+					currentStatePath = String(DeviceParameters.Profile_PT3.statePath) + '.' + String(DeviceParameters.Profile_PT3.id);
+					currentstateObject = Object(DeviceParameters.Profile_PT3.objectdefinition);
+					break;
+				case 4:
+					currentStatePath = String(DeviceParameters.Profile_PT4.statePath) + '.' + String(DeviceParameters.Profile_PT4.id);
+					currentstateObject = Object(DeviceParameters.Profile_PT4.objectdefinition);
+					break;
+				case 5:
+					currentStatePath = String(DeviceParameters.Profile_PT5.statePath) + '.' + String(DeviceParameters.Profile_PT5.id);
+					currentstateObject = Object(DeviceParameters.Profile_PT5.objectdefinition);
+					break;
+				case 6:
+					currentStatePath = String(DeviceParameters.Profile_PT6.statePath) + '.' + String(DeviceParameters.Profile_PT6.id);
+					currentstateObject = Object(DeviceParameters.Profile_PT6.objectdefinition);
+					break;
+				case 7:
+					currentStatePath = String(DeviceParameters.Profile_PT7.statePath) + '.' + String(DeviceParameters.Profile_PT7.id);
+					currentstateObject = Object(DeviceParameters.Profile_PT7.objectdefinition);
+					break;
+				case 8:
+					currentStatePath = String(DeviceParameters.Profile_PT8.statePath) + '.' + String(DeviceParameters.Profile_PT8.id);
+					currentstateObject = Object(DeviceParameters.Profile_PT8.objectdefinition);
+					break;
 			}
-		});
+			this.log.debug('State path before setStateAsync = ' + currentStatePath);
+			this.log.debug('Value before setStateAsync = ' + String(profileTimeLimitation));
 
+			crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
+			this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
+
+			stStaResult = await this.setStateAsync(currentStatePath, { val: profileTimeLimitation, ack: true });
+			this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
+
+			if (valuesInfoMessages) {
+				if (profileTimeLimitation == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' maximum time limit is disabled'); }
+				else { this.log.info('Profile ' + String(ProfileNumber) + ' maximum time limit is ' + String(profileTimeLimitation) + 'min'); }
+			}
+			return true;
+		} catch (err) {
+			this.log.error(err.message);
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -3057,69 +3009,66 @@ class wamo extends utils.Adapter {
 	 * @returns true OR error
 	 */
 	async state_profile_PF(ProfileNumber, value) {
-		return new Promise(async (resolve, reject) => {
-			try {
+		try {
+			let currentStatePath = '';
+			let crStaResult = null;
+			let stStaResult = null;
+			let currentstateObject = '';
+			const profileMaximumFlow = parseInt(String(value['getPF' + String(ProfileNumber)]));
 
-				let currentStatePath = '';
-				let crStaResult = null;
-				let stStaResult = null;
-				let currentstateObject = '';
-				const profileMaximumFlow = parseInt(String(value['getPF' + String(ProfileNumber)]));
-
-				switch (ProfileNumber) {
-					case 1:
-						currentStatePath = String(DeviceParameters.Profile_PF1.statePath) + '.' + String(DeviceParameters.Profile_PF1.id);
-						currentstateObject = Object(DeviceParameters.Profile_PF1.objectdefinition);
-						break;
-					case 2:
-						currentStatePath = String(DeviceParameters.Profile_PF2.statePath) + '.' + String(DeviceParameters.Profile_PF2.id);
-						currentstateObject = Object(DeviceParameters.Profile_PF2.objectdefinition);
-						break;
-					case 3:
-						currentStatePath = String(DeviceParameters.Profile_PF3.statePath) + '.' + String(DeviceParameters.Profile_PF3.id);
-						currentstateObject = Object(DeviceParameters.Profile_PF3.objectdefinition);
-						break;
-					case 4:
-						currentStatePath = String(DeviceParameters.Profile_PF4.statePath) + '.' + String(DeviceParameters.Profile_PF4.id);
-						currentstateObject = Object(DeviceParameters.Profile_PF4.objectdefinition);
-						break;
-					case 5:
-						currentStatePath = String(DeviceParameters.Profile_PF5.statePath) + '.' + String(DeviceParameters.Profile_PF5.id);
-						currentstateObject = Object(DeviceParameters.Profile_PF5.objectdefinition);
-						break;
-					case 6:
-						currentStatePath = String(DeviceParameters.Profile_PF6.statePath) + '.' + String(DeviceParameters.Profile_PF6.id);
-						currentstateObject = Object(DeviceParameters.Profile_PF6.objectdefinition);
-						break;
-					case 7:
-						currentStatePath = String(DeviceParameters.Profile_PF7.statePath) + '.' + String(DeviceParameters.Profile_PF7.id);
-						currentstateObject = Object(DeviceParameters.Profile_PF7.objectdefinition);
-						break;
-					case 8:
-						currentStatePath = String(DeviceParameters.Profile_PF8.statePath) + '.' + String(DeviceParameters.Profile_PF8.id);
-						currentstateObject = Object(DeviceParameters.Profile_PF8.objectdefinition);
-						break;
-				}
-				this.log.debug('State path before setStateAsync = ' + currentStatePath);
-				this.log.debug('Value before setStateAsync = ' + String(profileMaximumFlow));
-
-				crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
-				this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
-
-				stStaResult = await this.setStateAsync(currentStatePath, { val: profileMaximumFlow, ack: true });
-				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
-
-				if (valuesInfoMessages) {
-					if (profileMaximumFlow == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' maximum flow is disabled'); }
-					else { this.log.info('Profile ' + String(ProfileNumber) + ' maximum flow is ' + String(profileMaximumFlow) + 'l/h'); }
-				}
-
-				resolve(true);
-			} catch (err) {
-				this.log.error(err.message);
-				reject(err);
+			switch (ProfileNumber) {
+				case 1:
+					currentStatePath = String(DeviceParameters.Profile_PF1.statePath) + '.' + String(DeviceParameters.Profile_PF1.id);
+					currentstateObject = Object(DeviceParameters.Profile_PF1.objectdefinition);
+					break;
+				case 2:
+					currentStatePath = String(DeviceParameters.Profile_PF2.statePath) + '.' + String(DeviceParameters.Profile_PF2.id);
+					currentstateObject = Object(DeviceParameters.Profile_PF2.objectdefinition);
+					break;
+				case 3:
+					currentStatePath = String(DeviceParameters.Profile_PF3.statePath) + '.' + String(DeviceParameters.Profile_PF3.id);
+					currentstateObject = Object(DeviceParameters.Profile_PF3.objectdefinition);
+					break;
+				case 4:
+					currentStatePath = String(DeviceParameters.Profile_PF4.statePath) + '.' + String(DeviceParameters.Profile_PF4.id);
+					currentstateObject = Object(DeviceParameters.Profile_PF4.objectdefinition);
+					break;
+				case 5:
+					currentStatePath = String(DeviceParameters.Profile_PF5.statePath) + '.' + String(DeviceParameters.Profile_PF5.id);
+					currentstateObject = Object(DeviceParameters.Profile_PF5.objectdefinition);
+					break;
+				case 6:
+					currentStatePath = String(DeviceParameters.Profile_PF6.statePath) + '.' + String(DeviceParameters.Profile_PF6.id);
+					currentstateObject = Object(DeviceParameters.Profile_PF6.objectdefinition);
+					break;
+				case 7:
+					currentStatePath = String(DeviceParameters.Profile_PF7.statePath) + '.' + String(DeviceParameters.Profile_PF7.id);
+					currentstateObject = Object(DeviceParameters.Profile_PF7.objectdefinition);
+					break;
+				case 8:
+					currentStatePath = String(DeviceParameters.Profile_PF8.statePath) + '.' + String(DeviceParameters.Profile_PF8.id);
+					currentstateObject = Object(DeviceParameters.Profile_PF8.objectdefinition);
+					break;
 			}
-		});
+			this.log.debug('State path before setStateAsync = ' + currentStatePath);
+			this.log.debug('Value before setStateAsync = ' + String(profileMaximumFlow));
+
+			crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
+			this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
+
+			stStaResult = await this.setStateAsync(currentStatePath, { val: profileMaximumFlow, ack: true });
+			this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
+
+			if (valuesInfoMessages) {
+				if (profileMaximumFlow == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' maximum flow is disabled'); }
+				else { this.log.info('Profile ' + String(ProfileNumber) + ' maximum flow is ' + String(profileMaximumFlow) + 'l/h'); }
+			}
+
+			return true;
+		} catch (err) {
+			this.log.error(err.message);
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -3129,72 +3078,69 @@ class wamo extends utils.Adapter {
 	 * @returns true OR error
 	 */
 	async state_profile_PM(ProfileNumber, value) {
-		return new Promise(async (resolve, reject) => {
-			try {
-				const profileMicroleackageDetection = parseInt(String(value['getPM' + String(ProfileNumber)]));
-				let crStaResult = null;
-				let stStaResult = null;
-				let currentStatePath = '';
-				let currentstateObject = '';
+		try {
+			const profileMicroleackageDetection = parseInt(String(value['getPM' + String(ProfileNumber)]));
+			let crStaResult = null;
+			let stStaResult = null;
+			let currentStatePath = '';
+			let currentstateObject = '';
 
-				switch (ProfileNumber) {
-					case 1:
-						currentStatePath = String(DeviceParameters.Profile_PM1.statePath) + '.' + String(DeviceParameters.Profile_PM1.id);
-						currentstateObject = Object(DeviceParameters.Profile_PM1.objectdefinition);
-						break;
-					case 2:
-						currentStatePath = String(DeviceParameters.Profile_PM2.statePath) + '.' + String(DeviceParameters.Profile_PM2.id);
-						currentstateObject = Object(DeviceParameters.Profile_PM2.objectdefinition);
-						break;
-					case 3:
-						currentStatePath = String(DeviceParameters.Profile_PM3.statePath) + '.' + String(DeviceParameters.Profile_PM3.id);
-						currentstateObject = Object(DeviceParameters.Profile_PM3.objectdefinition);
-						break;
-					case 4:
-						currentStatePath = String(DeviceParameters.Profile_PM4.statePath) + '.' + String(DeviceParameters.Profile_PM4.id);
-						currentstateObject = Object(DeviceParameters.Profile_PM4.objectdefinition);
-						break;
-					case 5:
-						currentStatePath = String(DeviceParameters.Profile_PM5.statePath) + '.' + String(DeviceParameters.Profile_PM5.id);
-						currentstateObject = Object(DeviceParameters.Profile_PM5.objectdefinition);
-						break;
-					case 6:
-						currentStatePath = String(DeviceParameters.Profile_PM6.statePath) + '.' + String(DeviceParameters.Profile_PM6.id);
-						currentstateObject = Object(DeviceParameters.Profile_PM6.objectdefinition);
-						break;
-					case 7:
-						currentStatePath = String(DeviceParameters.Profile_PM7.statePath) + '.' + String(DeviceParameters.Profile_PM7.id);
-						currentstateObject = Object(DeviceParameters.Profile_PM7.objectdefinition);
-						break;
-					case 8:
-						currentStatePath = String(DeviceParameters.Profile_PM8.statePath) + '.' + String(DeviceParameters.Profile_PM8.id);
-						currentstateObject = Object(DeviceParameters.Profile_PM8.objectdefinition);
-						break;
-					default:
-						this.log.error('async state_profile_PM(ProfileNumber, value) -> switch (ProfileNumber) hit \'default:\'');
-						break;
-				}
-
-				this.log.debug('State path before setStateAsync = ' + currentStatePath);
-				this.log.debug('Value before setStateAsync = ' + String(profileMicroleackageDetection));
-
-				crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
-				this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
-
-				stStaResult = await this.setStateAsync(currentStatePath, { val: profileMicroleackageDetection, ack: true });
-				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
-
-				if (valuesInfoMessages) {
-					if (profileMicroleackageDetection == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' Microleak Detektion is disabled'); }
-					else { this.log.info('Profile ' + String(ProfileNumber) + ' Microleak Detektion is enabled'); }
-				}
-				resolve(true);
-			} catch (err) {
-				this.log.error('async state_profile_PM(ProfileNumber, value) ERROR: ' + err);
-				reject(err);
+			switch (ProfileNumber) {
+				case 1:
+					currentStatePath = String(DeviceParameters.Profile_PM1.statePath) + '.' + String(DeviceParameters.Profile_PM1.id);
+					currentstateObject = Object(DeviceParameters.Profile_PM1.objectdefinition);
+					break;
+				case 2:
+					currentStatePath = String(DeviceParameters.Profile_PM2.statePath) + '.' + String(DeviceParameters.Profile_PM2.id);
+					currentstateObject = Object(DeviceParameters.Profile_PM2.objectdefinition);
+					break;
+				case 3:
+					currentStatePath = String(DeviceParameters.Profile_PM3.statePath) + '.' + String(DeviceParameters.Profile_PM3.id);
+					currentstateObject = Object(DeviceParameters.Profile_PM3.objectdefinition);
+					break;
+				case 4:
+					currentStatePath = String(DeviceParameters.Profile_PM4.statePath) + '.' + String(DeviceParameters.Profile_PM4.id);
+					currentstateObject = Object(DeviceParameters.Profile_PM4.objectdefinition);
+					break;
+				case 5:
+					currentStatePath = String(DeviceParameters.Profile_PM5.statePath) + '.' + String(DeviceParameters.Profile_PM5.id);
+					currentstateObject = Object(DeviceParameters.Profile_PM5.objectdefinition);
+					break;
+				case 6:
+					currentStatePath = String(DeviceParameters.Profile_PM6.statePath) + '.' + String(DeviceParameters.Profile_PM6.id);
+					currentstateObject = Object(DeviceParameters.Profile_PM6.objectdefinition);
+					break;
+				case 7:
+					currentStatePath = String(DeviceParameters.Profile_PM7.statePath) + '.' + String(DeviceParameters.Profile_PM7.id);
+					currentstateObject = Object(DeviceParameters.Profile_PM7.objectdefinition);
+					break;
+				case 8:
+					currentStatePath = String(DeviceParameters.Profile_PM8.statePath) + '.' + String(DeviceParameters.Profile_PM8.id);
+					currentstateObject = Object(DeviceParameters.Profile_PM8.objectdefinition);
+					break;
+				default:
+					this.log.error('async state_profile_PM(ProfileNumber, value) -> switch (ProfileNumber) hit \'default:\'');
+					break;
 			}
-		});
 
+			this.log.debug('State path before setStateAsync = ' + currentStatePath);
+			this.log.debug('Value before setStateAsync = ' + String(profileMicroleackageDetection));
+
+			crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
+			this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
+
+			stStaResult = await this.setStateAsync(currentStatePath, { val: profileMicroleackageDetection, ack: true });
+			this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
+
+			if (valuesInfoMessages) {
+				if (profileMicroleackageDetection == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' Microleak Detektion is disabled'); }
+				else { this.log.info('Profile ' + String(ProfileNumber) + ' Microleak Detektion is enabled'); }
+			}
+			return true;
+		} catch (err) {
+			this.log.error('async state_profile_PM(ProfileNumber, value) ERROR: ' + err);
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -3204,66 +3150,63 @@ class wamo extends utils.Adapter {
 	 * @returns true OR error
 	 */
 	async state_profile_PR(ProfileNumber, value) {
-		return new Promise(async (resolve, reject) => {
-			try {
+		try {
+			let currentStatePath = '';
+			let crStaResult = null;
+			let stStaResult = null;
+			let currentstateObject = '';
+			const profileReturnTime = parseInt(String(value['getPR' + String(ProfileNumber)]));
 
-				let currentStatePath = '';
-				let crStaResult = null;
-				let stStaResult = null;
-				let currentstateObject = '';
-				const profileReturnTime = parseInt(String(value['getPR' + String(ProfileNumber)]));
-
-				switch (ProfileNumber) {
-					case 1:
-						currentStatePath = String(DeviceParameters.Profile_PR1.statePath) + '.' + String(DeviceParameters.Profile_PR1.id);
-						currentstateObject = Object(DeviceParameters.Profile_PR1.objectdefinition);
-						break;
-					case 2:
-						currentStatePath = String(DeviceParameters.Profile_PR2.statePath) + '.' + String(DeviceParameters.Profile_PR2.id);
-						currentstateObject = Object(DeviceParameters.Profile_PR2.objectdefinition);
-						break;
-					case 3:
-						currentStatePath = String(DeviceParameters.Profile_PR3.statePath) + '.' + String(DeviceParameters.Profile_PR3.id);
-						currentstateObject = Object(DeviceParameters.Profile_PR3.objectdefinition);
-						break;
-					case 4:
-						currentStatePath = String(DeviceParameters.Profile_PR4.statePath) + '.' + String(DeviceParameters.Profile_PR4.id);
-						currentstateObject = Object(DeviceParameters.Profile_PR4.objectdefinition);
-						break;
-					case 5:
-						currentStatePath = String(DeviceParameters.Profile_PR5.statePath) + '.' + String(DeviceParameters.Profile_PR5.id);
-						currentstateObject = Object(DeviceParameters.Profile_PR5.objectdefinition);
-						break;
-					case 6:
-						currentStatePath = String(DeviceParameters.Profile_PR6.statePath) + '.' + String(DeviceParameters.Profile_PR6.id);
-						currentstateObject = Object(DeviceParameters.Profile_PR6.objectdefinition);
-						break;
-					case 7:
-						currentStatePath = String(DeviceParameters.Profile_PR7.statePath) + '.' + String(DeviceParameters.Profile_PR7.id);
-						currentstateObject = Object(DeviceParameters.Profile_PR7.objectdefinition);
-						break;
-					case 8:
-						currentStatePath = String(DeviceParameters.Profile_PR8.statePath) + '.' + String(DeviceParameters.Profile_PR8.id);
-						currentstateObject = Object(DeviceParameters.Profile_PR8.objectdefinition);
-						break;
-				}
-				this.log.debug('State path before setStateAsync = ' + currentStatePath);
-				this.log.debug('Value before setStateAsync = ' + String(profileReturnTime));
-
-				crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
-				this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
-
-				stStaResult = await this.setStateAsync(currentStatePath, { val: profileReturnTime, ack: true });
-				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
-
-				if (valuesInfoMessages) { this.log.info('Profile ' + String(ProfileNumber) + ' return time to default profile is ' + String(profileReturnTime) + 'h'); }
-
-				resolve(true);
-			} catch (err) {
-				this.log.error(err.message);
-				reject(err);
+			switch (ProfileNumber) {
+				case 1:
+					currentStatePath = String(DeviceParameters.Profile_PR1.statePath) + '.' + String(DeviceParameters.Profile_PR1.id);
+					currentstateObject = Object(DeviceParameters.Profile_PR1.objectdefinition);
+					break;
+				case 2:
+					currentStatePath = String(DeviceParameters.Profile_PR2.statePath) + '.' + String(DeviceParameters.Profile_PR2.id);
+					currentstateObject = Object(DeviceParameters.Profile_PR2.objectdefinition);
+					break;
+				case 3:
+					currentStatePath = String(DeviceParameters.Profile_PR3.statePath) + '.' + String(DeviceParameters.Profile_PR3.id);
+					currentstateObject = Object(DeviceParameters.Profile_PR3.objectdefinition);
+					break;
+				case 4:
+					currentStatePath = String(DeviceParameters.Profile_PR4.statePath) + '.' + String(DeviceParameters.Profile_PR4.id);
+					currentstateObject = Object(DeviceParameters.Profile_PR4.objectdefinition);
+					break;
+				case 5:
+					currentStatePath = String(DeviceParameters.Profile_PR5.statePath) + '.' + String(DeviceParameters.Profile_PR5.id);
+					currentstateObject = Object(DeviceParameters.Profile_PR5.objectdefinition);
+					break;
+				case 6:
+					currentStatePath = String(DeviceParameters.Profile_PR6.statePath) + '.' + String(DeviceParameters.Profile_PR6.id);
+					currentstateObject = Object(DeviceParameters.Profile_PR6.objectdefinition);
+					break;
+				case 7:
+					currentStatePath = String(DeviceParameters.Profile_PR7.statePath) + '.' + String(DeviceParameters.Profile_PR7.id);
+					currentstateObject = Object(DeviceParameters.Profile_PR7.objectdefinition);
+					break;
+				case 8:
+					currentStatePath = String(DeviceParameters.Profile_PR8.statePath) + '.' + String(DeviceParameters.Profile_PR8.id);
+					currentstateObject = Object(DeviceParameters.Profile_PR8.objectdefinition);
+					break;
 			}
-		});
+			this.log.debug('State path before setStateAsync = ' + currentStatePath);
+			this.log.debug('Value before setStateAsync = ' + String(profileReturnTime));
+
+			crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
+			this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
+
+			stStaResult = await this.setStateAsync(currentStatePath, { val: profileReturnTime, ack: true });
+			this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
+
+			if (valuesInfoMessages) { this.log.info('Profile ' + String(ProfileNumber) + ' return time to default profile is ' + String(profileReturnTime) + 'h'); }
+
+			return true;
+		} catch (err) {
+			this.log.error(err.message);
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -3273,71 +3216,67 @@ class wamo extends utils.Adapter {
 	 * @returns true OR error
 	 */
 	async state_profile_PB(ProfileNumber, value) {
-		return new Promise(async (resolve, reject) => {
-			try {
+		try {
+			const profileBuzzer = parseInt(String(value['getPB' + String(ProfileNumber)]));
+			let crStaResult = null;
+			let stStaResult = null;
+			let currentStatePath = '';
+			let currentstateObject = '';
 
-				const profileBuzzer = parseInt(String(value['getPB' + String(ProfileNumber)]));
-				let crStaResult = null;
-				let stStaResult = null;
-				let currentStatePath = '';
-				let currentstateObject = '';
-
-				switch (ProfileNumber) {
-					case 1:
-						currentStatePath = String(DeviceParameters.Profile_PB1.statePath) + '.' + String(DeviceParameters.Profile_PB1.id);
-						currentstateObject = Object(DeviceParameters.Profile_PB1.objectdefinition);
-						break;
-					case 2:
-						currentStatePath = String(DeviceParameters.Profile_PB2.statePath) + '.' + String(DeviceParameters.Profile_PB2.id);
-						currentstateObject = Object(DeviceParameters.Profile_PB2.objectdefinition);
-						break;
-					case 3:
-						currentStatePath = String(DeviceParameters.Profile_PB3.statePath) + '.' + String(DeviceParameters.Profile_PB3.id);
-						currentstateObject = Object(DeviceParameters.Profile_PB3.objectdefinition);
-						break;
-					case 4:
-						currentStatePath = String(DeviceParameters.Profile_PB4.statePath) + '.' + String(DeviceParameters.Profile_PB4.id);
-						currentstateObject = Object(DeviceParameters.Profile_PB4.objectdefinition);
-						break;
-					case 5:
-						currentStatePath = String(DeviceParameters.Profile_PB5.statePath) + '.' + String(DeviceParameters.Profile_PB5.id);
-						currentstateObject = Object(DeviceParameters.Profile_PB5.objectdefinition);
-						break;
-					case 6:
-						currentStatePath = String(DeviceParameters.Profile_PB6.statePath) + '.' + String(DeviceParameters.Profile_PB6.id);
-						currentstateObject = Object(DeviceParameters.Profile_PB6.objectdefinition);
-						break;
-					case 7:
-						currentStatePath = String(DeviceParameters.Profile_PB7.statePath) + '.' + String(DeviceParameters.Profile_PB7.id);
-						currentstateObject = Object(DeviceParameters.Profile_PB7.objectdefinition);
-						break;
-					case 8:
-						currentStatePath = String(DeviceParameters.Profile_PB8.statePath) + '.' + String(DeviceParameters.Profile_PB8.id);
-						currentstateObject = Object(DeviceParameters.Profile_PB7.objectdefinition);
-						break;
-				}
-
-
-				this.log.debug('State path before setStateAsync = ' + currentStatePath);
-				this.log.debug('Value before setStateAsync = ' + String(profileBuzzer));
-
-				crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
-				this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
-
-				stStaResult = await this.setStateAsync(currentStatePath, { val: profileBuzzer, ack: true });
-				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
-
-				if (valuesInfoMessages) {
-					if (profileBuzzer == 1) { this.log.info('Profile ' + String(ProfileNumber) + ' buzzer is on'); }
-					else { this.log.info('Profile ' + String(ProfileNumber) + ' buzzer is not on'); }
-				}
-				resolve(true);
-			} catch (err) {
-				this.log.error(err.message);
-				reject(err);
+			switch (ProfileNumber) {
+				case 1:
+					currentStatePath = String(DeviceParameters.Profile_PB1.statePath) + '.' + String(DeviceParameters.Profile_PB1.id);
+					currentstateObject = Object(DeviceParameters.Profile_PB1.objectdefinition);
+					break;
+				case 2:
+					currentStatePath = String(DeviceParameters.Profile_PB2.statePath) + '.' + String(DeviceParameters.Profile_PB2.id);
+					currentstateObject = Object(DeviceParameters.Profile_PB2.objectdefinition);
+					break;
+				case 3:
+					currentStatePath = String(DeviceParameters.Profile_PB3.statePath) + '.' + String(DeviceParameters.Profile_PB3.id);
+					currentstateObject = Object(DeviceParameters.Profile_PB3.objectdefinition);
+					break;
+				case 4:
+					currentStatePath = String(DeviceParameters.Profile_PB4.statePath) + '.' + String(DeviceParameters.Profile_PB4.id);
+					currentstateObject = Object(DeviceParameters.Profile_PB4.objectdefinition);
+					break;
+				case 5:
+					currentStatePath = String(DeviceParameters.Profile_PB5.statePath) + '.' + String(DeviceParameters.Profile_PB5.id);
+					currentstateObject = Object(DeviceParameters.Profile_PB5.objectdefinition);
+					break;
+				case 6:
+					currentStatePath = String(DeviceParameters.Profile_PB6.statePath) + '.' + String(DeviceParameters.Profile_PB6.id);
+					currentstateObject = Object(DeviceParameters.Profile_PB6.objectdefinition);
+					break;
+				case 7:
+					currentStatePath = String(DeviceParameters.Profile_PB7.statePath) + '.' + String(DeviceParameters.Profile_PB7.id);
+					currentstateObject = Object(DeviceParameters.Profile_PB7.objectdefinition);
+					break;
+				case 8:
+					currentStatePath = String(DeviceParameters.Profile_PB8.statePath) + '.' + String(DeviceParameters.Profile_PB8.id);
+					currentstateObject = Object(DeviceParameters.Profile_PB7.objectdefinition);
+					break;
 			}
-		});
 
+
+			this.log.debug('State path before setStateAsync = ' + currentStatePath);
+			this.log.debug('Value before setStateAsync = ' + String(profileBuzzer));
+
+			crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
+			this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
+
+			stStaResult = await this.setStateAsync(currentStatePath, { val: profileBuzzer, ack: true });
+			this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
+
+			if (valuesInfoMessages) {
+				if (profileBuzzer == 1) { this.log.info('Profile ' + String(ProfileNumber) + ' buzzer is on'); }
+				else { this.log.info('Profile ' + String(ProfileNumber) + ' buzzer is not on'); }
+			}
+			return true;
+		} catch (err) {
+			this.log.error(err.message);
+			throw new Error(err);
+		}
 	}
 
 	/**
@@ -3347,73 +3286,69 @@ class wamo extends utils.Adapter {
 	 * @returns true OR error
 	 */
 	async state_profile_PW(ProfileNumber, value) {
-		return new Promise(async (resolve, reject) => {
-			try {
+		try {
+			const profileLeackageWarning = parseInt(String(value['getPW' + String(ProfileNumber)]));
+			let crStaResult = null;
+			let stStaResult = null;
+			let currentStatePath = '';
+			let currentstateObject = '';
 
-				const profileLeackageWarning = parseInt(String(value['getPW' + String(ProfileNumber)]));
-				let crStaResult = null;
-				let stStaResult = null;
-				let currentStatePath = '';
-				let currentstateObject = '';
-
-				switch (ProfileNumber) {
-					case 1:
-						currentStatePath = String(DeviceParameters.Profile_PW1.statePath) + '.' + String(DeviceParameters.Profile_PW1.id);
-						currentstateObject = Object(DeviceParameters.Profile_PW1.objectdefinition);
-						break;
-					case 2:
-						currentStatePath = String(DeviceParameters.Profile_PW2.statePath) + '.' + String(DeviceParameters.Profile_PW2.id);
-						currentstateObject = Object(DeviceParameters.Profile_PW2.objectdefinition);
-						break;
-					case 3:
-						currentStatePath = String(DeviceParameters.Profile_PW3.statePath) + '.' + String(DeviceParameters.Profile_PW3.id);
-						currentstateObject = Object(DeviceParameters.Profile_PW3.objectdefinition);
-						break;
-					case 4:
-						currentStatePath = String(DeviceParameters.Profile_PW4.statePath) + '.' + String(DeviceParameters.Profile_PW4.id);
-						currentstateObject = Object(DeviceParameters.Profile_PW4.objectdefinition);
-						break;
-					case 5:
-						currentStatePath = String(DeviceParameters.Profile_PW5.statePath) + '.' + String(DeviceParameters.Profile_PW5.id);
-						currentstateObject = Object(DeviceParameters.Profile_PW5.objectdefinition);
-						break;
-					case 6:
-						currentStatePath = String(DeviceParameters.Profile_PW6.statePath) + '.' + String(DeviceParameters.Profile_PW6.id);
-						currentstateObject = Object(DeviceParameters.Profile_PW6.objectdefinition);
-						break;
-					case 7:
-						currentStatePath = String(DeviceParameters.Profile_PW7.statePath) + '.' + String(DeviceParameters.Profile_PW7.id);
-						currentstateObject = Object(DeviceParameters.Profile_PW7.objectdefinition);
-						break;
-					case 8:
-						currentStatePath = String(DeviceParameters.Profile_PW8.statePath) + '.' + String(DeviceParameters.Profile_PW8.id);
-						currentstateObject = Object(DeviceParameters.Profile_PW8.objectdefinition);
-						break;
-					default:
-						this.log.error('async state_profile_PA(ProfileNumber, value) -> switch (ProfileNumber) hit \'default:\'');
-						break;
-				}
-
-				this.log.debug('State path before setStateAsync = ' + currentStatePath);
-				this.log.debug('Value before setStateAsync = ' + String(profileLeackageWarning));
-
-				crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
-				this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
-
-				stStaResult = await this.setStateAsync(currentStatePath, { val: profileLeackageWarning, ack: true });
-				this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
-
-				if (valuesInfoMessages) {
-					if (profileLeackageWarning == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' Leakage Warning disabled'); }
-					else { this.log.info('Profile ' + String(ProfileNumber) + ' Leakage Warning is enabled'); }
-				}
-				resolve(true);
-			} catch (err) {
-				this.log.error(err.message);
-				reject(err);
+			switch (ProfileNumber) {
+				case 1:
+					currentStatePath = String(DeviceParameters.Profile_PW1.statePath) + '.' + String(DeviceParameters.Profile_PW1.id);
+					currentstateObject = Object(DeviceParameters.Profile_PW1.objectdefinition);
+					break;
+				case 2:
+					currentStatePath = String(DeviceParameters.Profile_PW2.statePath) + '.' + String(DeviceParameters.Profile_PW2.id);
+					currentstateObject = Object(DeviceParameters.Profile_PW2.objectdefinition);
+					break;
+				case 3:
+					currentStatePath = String(DeviceParameters.Profile_PW3.statePath) + '.' + String(DeviceParameters.Profile_PW3.id);
+					currentstateObject = Object(DeviceParameters.Profile_PW3.objectdefinition);
+					break;
+				case 4:
+					currentStatePath = String(DeviceParameters.Profile_PW4.statePath) + '.' + String(DeviceParameters.Profile_PW4.id);
+					currentstateObject = Object(DeviceParameters.Profile_PW4.objectdefinition);
+					break;
+				case 5:
+					currentStatePath = String(DeviceParameters.Profile_PW5.statePath) + '.' + String(DeviceParameters.Profile_PW5.id);
+					currentstateObject = Object(DeviceParameters.Profile_PW5.objectdefinition);
+					break;
+				case 6:
+					currentStatePath = String(DeviceParameters.Profile_PW6.statePath) + '.' + String(DeviceParameters.Profile_PW6.id);
+					currentstateObject = Object(DeviceParameters.Profile_PW6.objectdefinition);
+					break;
+				case 7:
+					currentStatePath = String(DeviceParameters.Profile_PW7.statePath) + '.' + String(DeviceParameters.Profile_PW7.id);
+					currentstateObject = Object(DeviceParameters.Profile_PW7.objectdefinition);
+					break;
+				case 8:
+					currentStatePath = String(DeviceParameters.Profile_PW8.statePath) + '.' + String(DeviceParameters.Profile_PW8.id);
+					currentstateObject = Object(DeviceParameters.Profile_PW8.objectdefinition);
+					break;
+				default:
+					this.log.error('async state_profile_PA(ProfileNumber, value) -> switch (ProfileNumber) hit \'default:\'');
+					break;
 			}
-		});
 
+			this.log.debug('State path before setStateAsync = ' + currentStatePath);
+			this.log.debug('Value before setStateAsync = ' + String(profileLeackageWarning));
+
+			crStaResult = await this.setObjectNotExistsAsync(currentStatePath, Object(currentstateObject));
+			this.log.debug('result from setObjectNotExistsAsync = ' + JSON.stringify(crStaResult));
+
+			stStaResult = await this.setStateAsync(currentStatePath, { val: profileLeackageWarning, ack: true });
+			this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
+
+			if (valuesInfoMessages) {
+				if (profileLeackageWarning == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' Leakage Warning disabled'); }
+				else { this.log.info('Profile ' + String(ProfileNumber) + ' Leakage Warning is enabled'); }
+			}
+			return true;
+		} catch (err) {
+			this.log.error(err.message);
+			throw new Error(err);
+		}
 	}
 }
 
