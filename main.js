@@ -144,6 +144,7 @@ class wamo extends utils.Adapter {
 			while(!await this.devicePing()) {
 				this.log.warn('waiting till device becomes available again ...');
 			}
+			this.log.info('Leakage protection device is present at: ' + String(this.config.device_ip) + ':' + String(this.config.device_port));
 		}
 		catch (err) {
 			this.log.error(err);
@@ -1157,13 +1158,12 @@ class wamo extends utils.Adapter {
 	 */
 	async devicePing() {
 		interfaceBussy = true; // to informe other timer calls that the can't perfromn request and therefore have to skipp.
-		this.log.info('Leakage protection device is present at: ' + String(this.config.device_ip) + ':' + String(this.config.device_port));
 
 		//=========================================================================================
 		//===  Connection LED to RED															===
 		//=========================================================================================
 		try {
-			await this.setStateAsync('info.connection', { val: true, ack: false });
+			await this.setStateAsync('info.connection', { val: false, ack: true });
 		}
 		catch (err) {
 			this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
@@ -1205,7 +1205,7 @@ class wamo extends utils.Adapter {
 			this.log.error(String(err));
 			this.log.warn('device ping delay on response error ...');
 			await this.delay(1000);
-			throw err;
+			return false;
 		}
 	}
 
