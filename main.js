@@ -2114,6 +2114,13 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SelfLearningFlowValue, finalValue); }
 					break;
+				case DeviceParameters.TimeZone.id:					// TMZ - Time zone
+					finalValue = await this.getGlobalisedValue(DeviceParameters.TimeZone, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.TimeZone, finalValue); }
+					break;
 				default:
 					this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
 					finalValue = value;
