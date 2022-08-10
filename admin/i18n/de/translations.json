@@ -14,5 +14,6 @@
     "show values as log info messages": "Werte als log info Nachrichten anzeigen",
     "show API response as info logging messages": "Api Antwort als log info Nachrichten anzeigen",
     "Seconds to retry connection to device": "Wartezeit um die Verbindung zum Gerät wiederherzustellen in Sekunden",
-    "Timeout device data request in seconds": "Timeout für Datenabfragen an das Gerät in Sekunden"
+    "Timeout device data request in seconds": "Timeout für Datenabfragen an das Gerät in Sekunden",
+    "Advanced Options": "Erweiterte Optionen"
 }

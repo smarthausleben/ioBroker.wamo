@@ -14,5 +14,6 @@
     "show values as log info messages": "show values as log info messages",
     "show API response as info logging messages": "show api response as info logging messages",
     "Seconds to retry connection to device": "Seconds to retry connection to device",
-    "Timeout device data request in seconds": "Timeout device data request in seconds"
+    "Timeout device data request in seconds": "Timeout device data request in seconds",
+    "Advanced Options": "Advanced Options"
 }

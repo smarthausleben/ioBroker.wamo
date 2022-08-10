@@ -15,5 +15,6 @@
     "show API response as info logging messages": "mostre a resposta da API como mensagens de registro de informações",
     "more logging messages": "mais mensagens de registro",
     "Seconds to retry connection to device": "Segundos para tentar novamente a conexão com o dispositivo",
-    "Timeout device data request in seconds": "Tempo limite da solicitação de dados do dispositivo em segundos"
+    "Timeout device data request in seconds": "Tempo limite da solicitação de dados do dispositivo em segundos",
+    "Advanced Options": "Opções avançadas"
 }

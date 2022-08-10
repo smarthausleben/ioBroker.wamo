@@ -67,9 +67,14 @@
                     "lg": 6,
                     "min": 120,
                     "label": "very slow polling time in seconds"
-                },
-                "reconnectingdelaytime":{
-                    "newLine": true,
+                }
+            }
+        },
+        "_advanced": {
+            "type": "panel",
+            "label": "Advanced Options",
+            "items":{
+                "reconnectingdelaytime": {
                     "type": "number",
                     "sm": 12,
                     "md": 6,
@@ -78,7 +83,7 @@
                     "max": 60,
                     "label": "Seconds to retry connection to device"
                 },
-                "requesttimeout":{
+                "requesttimeout": {
                     "type": "number",
                     "sm": 12,
                     "md": 6,
@@ -87,7 +92,7 @@
                     "max": 10,
                     "label": "Timeout device data request in seconds"
                 },
-                "valueinfomessages":{
+                "valueinfomessages": {
                     "newLine": true,
                     "type": "checkbox",
                     "sm": 12,
@@ -95,14 +100,14 @@
                     "lg": 6,
                     "label": "show values as log info messages"
                 },
-                "moremessages":{
+                "moremessages": {
                     "type": "checkbox",
                     "sm": 12,
                     "md": 6,
                     "lg": 6,
                     "label": "more logging messages"
                 },
-                "apiresponsemessages":{
+                "apiresponsemessages": {
                     "newLine": true,
                     "type": "checkbox",
                     "sm": 12,

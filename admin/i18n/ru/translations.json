@@ -15,5 +15,6 @@
     "show API response as info logging messages": "показать ответ API в виде сообщений регистрации информации",
     "more logging messages": "больше сообщений журнала",
     "Seconds to retry connection to device": "Секунд для повторной попытки подключения к устройству",
-    "Timeout device data request in seconds": "Время ожидания запроса данных устройства в секундах"
+    "Timeout device data request in seconds": "Время ожидания запроса данных устройства в секундах",
+    "Advanced Options": "Расширенные опции"
 }
