@@ -26,7 +26,7 @@ The POLYGONVATRO unit is,under the hood, a SYR SaveTech Connect 2422 unit but wi
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-* (smarthausleben) added states TMZ, TN, 71
+* (smarthausleben) added states TMZ, TN, 71, ALD
 * (smarthausleben) added self learning states: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF
 * (smarthausleben) change splitted options into two tabs 
 * (smarthausleben) added options to define timeout for axios request 
