@@ -67,6 +67,15 @@
                     "lg": 6,
                     "min": 120,
                     "label": "very slow polling time in seconds"
+                },
+                "_ioBrokerKursBanner": {
+                    "newLine": true,
+                    "type": "staticImage",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "href": "https://www.youtube.com/playlist?list=PLu9oGP55p6LhhHyQ3G5bHsfFxQVIwKeiE",
+                    "src": "https://smarthausleben.de/adds/Wasserw%C3%A4chter%20Videoreihe.png"
                 }
             }
         },
@@ -114,15 +123,6 @@
                     "md": 6,
                     "lg": 6,
                     "label": "show API response as info logging messages"
-                },
-                "_ioBrokerKursBanner": {
-                    "newLine": true,
-                    "type": "staticImage",
-                    "sm": 12,
-                    "md": 6,
-                    "lg": 6,
-                    "href": "https://www.youtube.com/playlist?list=PLu9oGP55p6LhhHyQ3G5bHsfFxQVIwKeiE",
-                    "src": "https://smarthausleben.de/adds/Wasserw%C3%A4chter%20Videoreihe.png"
                 }
             }
         }

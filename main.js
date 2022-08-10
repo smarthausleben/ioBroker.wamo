@@ -87,14 +87,18 @@ class wamo extends utils.Adapter {
 
 		// The adapters config (in the instance object everything under the attribute "native") is accessible via
 		// this.config:
-		this.log.debug('config Device IP: ' + this.config.device_ip);
-		this.log.debug('config Device Port: ' + this.config.device_port);
 		moreMessages = this.config.moremessages;
 		apiResponseInfoMessages = this.config.apiresponsemessages;
 		valuesInfoMessages = this.config.valueinfomessages;
 		delay_reconnection = this.config.reconnectingdelaytime;
 		timeout_axios_request = this.config.requesttimeout;
+		this.log.debug('config Device IP: ' + String(this.config.device_ip));
+		this.log.debug('config Device Port: ' + String(this.config.device_port));
 		this.log.debug('More log messages: ' + String(this.config.moremessages));
+		this.log.debug('show API response messages: ' + String(this.config.apiresponsemessages));
+		this.log.debug('show value messages from device: ' + String(this.config.valueinfomessages));
+		this.log.debug('Reconnection time after lost connection to the device is ' + String(this.config.reconnectingdelaytime) +' seconds');
+		this.log.debug('Timeout for axios requests is ' + String(this.config.requesttimeout) +' seconds');
 
 		//=================================================================================================
 		// getting system language
@@ -125,7 +129,6 @@ class wamo extends utils.Adapter {
 			this.log.error('Error initStatesAndChanels: ' + err);
 		}
 
-
 		//=================================================================================================
 		// Initialize Axios Client
 		//=================================================================================================
@@ -144,8 +147,7 @@ class wamo extends utils.Adapter {
 		//=================================================================================================
 		try {
 			while(!await this.devicePing()) {
-				this.log.warn('waiting till device becomes available again ...');
-			}
+				this.log.warn('waiting till device becomes available again ...');}
 			this.log.info('Leakage protection device is present at: ' + String(this.config.device_ip) + ':' + String(this.config.device_port));
 		}
 		catch (err) {
@@ -165,8 +167,7 @@ class wamo extends utils.Adapter {
 				//==================================================================
 				if (moreMessages) { this.log.info('reading DeviceParameters in [initStates]'); }
 				await this.getData(initStates);
-				gotDeviceData = true;
-			}
+				gotDeviceData = true;}
 			catch (err) {
 				this.log.error('this.getData(initStates) ERROR: ' + err);
 			}
@@ -185,8 +186,7 @@ class wamo extends utils.Adapter {
 				//===============================================
 				const responseInitProfiles = await this.getDeviceProfilesData();
 				this.log.debug(`[async onReady() - getDeviceProfilesData -> getDeviceProfilesData] Response:  ${responseInitProfiles}`);
-				gotDeviceProfileData = true;
-			}
+				gotDeviceProfileData = true;}
 			catch (err) {
 				this.log.error('getDeviceProfilesData() ERROR: ' + err);
 			}
@@ -2057,6 +2057,13 @@ class wamo extends utils.Adapter {
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ScreenRotation, finalValue); }
+					break;
+				case DeviceParameters.SelfLearningPhase.id:			// SLP - Self learning phase
+					finalValue = await this.getGlobalisedValue(DeviceParameters.SelfLearningPhase, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SelfLearningPhase, finalValue); }
 					break;
 				default:
 					this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
