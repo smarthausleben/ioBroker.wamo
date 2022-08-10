@@ -2128,6 +2128,13 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.TimeMotorOverrunZone, finalValue); }
 					break;
+				case DeviceParameters.LeakageProtectionDeactivated.id:	// 71 - Leakage protection deactivated
+					finalValue = await this.getGlobalisedValue(DeviceParameters.LeakageProtectionDeactivated, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.LeakageProtectionDeactivated, finalValue); }
+					break;
 				default:
 					this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
 					finalValue = value;
