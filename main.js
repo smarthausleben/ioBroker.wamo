@@ -2100,6 +2100,20 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SelfLearningVolumeValue, finalValue); }
 					break;
+				case DeviceParameters.SelfLearningTimeValue.id:		// SLF - Self learning max flow volume
+					finalValue = await this.getGlobalisedValue(DeviceParameters.SelfLearningTimeValue, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SelfLearningVolumeValue, finalValue); }
+					break;
+				case DeviceParameters.SelfLearningFlowValue.id:		// SLT - Self learning Time volume
+					finalValue = await this.getGlobalisedValue(DeviceParameters.SelfLearningFlowValue, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SelfLearningFlowValue, finalValue); }
+					break;
 				default:
 					this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
 					finalValue = value;
