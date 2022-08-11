@@ -2149,6 +2149,13 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ClusterProfile, finalValue); }
 					break;
+				case DeviceParameters.ButtonProfileChange.id:		// BPB - Profile change by button
+					finalValue = await this.getGlobalisedValue(DeviceParameters.ButtonProfileChange, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ButtonProfileChange, finalValue); }
+					break;
 				default:
 					this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
 					finalValue = value;
