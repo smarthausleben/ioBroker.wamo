@@ -2142,6 +2142,13 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.AlarmDuration, finalValue); }
 					break;
+				case DeviceParameters.ClusterProfile.id:			// CLP - Cluster Profile
+					finalValue = await this.getGlobalisedValue(DeviceParameters.ClusterProfile, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ClusterProfile, finalValue); }
+					break;
 				default:
 					this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
 					finalValue = value;
