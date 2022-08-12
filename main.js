@@ -232,6 +232,7 @@ class wamo extends utils.Adapter {
 		this.subscribeStates(DeviceParameters.BuzzerOnAlarm.statePath + '.' + DeviceParameters.BuzzerOnAlarm.id); // [BUZ] Buzzer on alarm
 		this.subscribeStates(DeviceParameters.MicroLeakageTest.statePath + '.' + DeviceParameters.MicroLeakageTest.id); // [BUZ] Buzzer on alarm
 		this.subscribeStates(DeviceParameters.MicroLeakageTestPeriod.statePath + '.' + DeviceParameters.MicroLeakageTestPeriod.id); // [DRP] Micro-Leakage-Test period
+		this.subscribeStates(DeviceParameters.DaylightSavingTime.statePath + '.' + DeviceParameters.DaylightSavingTime.id); // [IDS] Daylight saving time
 		this.subscribeStates(DeviceParameters.LeakProtectionTemporaryDeactivation.statePath + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id);// [TMP] temporary protection deactivation
 		this.subscribeStates(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id); // [PRF] Selected profile
 		this.subscribeStates(adapterChannels.DevicePofiles.path + '.*'); // ALL profile states
@@ -425,6 +426,23 @@ class wamo extends utils.Adapter {
 						else{this.log.error(DeviceParameters.MicroLeakageTestPeriod.id + ' new value [' + String(state.val) + '] is out of range!');}
 					} catch (err) {
 						this.log.error('ERROR setting [DRP]: ' + err.message);
+					}
+				}
+			}
+			//============================================================================
+			// IDS Daylight saving time
+			//============================================================================
+			else if((id == statePrefix + DeviceParameters.DaylightSavingTime.statePath + '.' + DeviceParameters.DaylightSavingTime.id) && (state.ack == false)){
+				if(state.val != null)
+				{
+					try {
+						if ((state.val >= DeviceParameters.DaylightSavingTime.objectdefinition.common.min) && state.val <= DeviceParameters.DaylightSavingTime.objectdefinition.common.max) {
+							await this.set_DevieParameter(DeviceParameters.DaylightSavingTime, state.val);
+							if (moreMessages) {this.log.info(DeviceParameters.DaylightSavingTime.id + ' changed to ' + String(state.val)); }
+						}
+						else{this.log.error(DeviceParameters.DaylightSavingTime.id + ' new value [' + String(state.val) + '] is out of range!');}
+					} catch (err) {
+						this.log.error('ERROR setting [IDS]: ' + err.message);
 					}
 				}
 			}
@@ -1915,11 +1933,7 @@ class wamo extends utils.Adapter {
 				case DeviceParameters.WiFiDeaktivate.id:			// DWL - WiFi deactivated
 					finalValue = await this.getGlobalisedValue(DeviceParameters.WiFiDeaktivate, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
-						if (parseInt(value) == 0) {
-							finalValue = 'active (default)';
-						} else {
-							finalValue = 'deactivated';
-						}
+						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WiFiDeaktivate, finalValue); }
 					break;
@@ -1941,11 +1955,7 @@ class wamo extends utils.Adapter {
 				case DeviceParameters.DaylightSavingTime.id:		// IDS - Daylight saving time
 					finalValue = await this.getGlobalisedValue(DeviceParameters.DaylightSavingTime, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
-						if (parseInt(value) == 0) {
-							finalValue = 'disabled';
-						} else {
-							finalValue = 'enabled';
-						}
+						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DaylightSavingTime, finalValue); }
 					break;
