@@ -26,8 +26,9 @@ The POLYGONVATRO unit is,under the hood, a SYR SaveTech Connect 2422 unit but wi
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-* (smarthausleben) added states TMZ, TN, 71, ALD
-* (smarthausleben) added self learning states: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF
+* (smarthausleben) state types changed ATP
+* (smarthausleben) added states TMZ, TN, 71, ALD, CLP, BPB
+* (smarthausleben) added channel and states for self learning: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF
 * (smarthausleben) change splitted options into two tabs 
 * (smarthausleben) added options to define timeout for axios request 
 * (smarthausleben) added options for delay time between reconection try to device if connection got lost

@@ -322,6 +322,12 @@ class wamo extends utils.Adapter {
 				}
 			}
 			//============================================================================
+			// WiFi AP timeout changed
+			//============================================================================
+			else if((id == statePrefix + DeviceParameters.APTimeout.statePath + '.' + DeviceParameters.APTimeout.id) && (state.ack == false)){
+				this.log.warn('State Change: ' +DeviceParameters.APTimeout.id + ' not implemented yet');
+			}
+			//============================================================================
 			// Leakage protection deactivation time
 			//============================================================================
 			else if ((id == statePrefix + DeviceParameters.LeakProtectionTemporaryDeactivation.statePath + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id) && state.ack == false) {
