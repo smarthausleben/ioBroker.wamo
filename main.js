@@ -227,6 +227,7 @@ class wamo extends utils.Adapter {
 		this.subscribeStates(DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id); // [SRO] Screen Rotation
 		this.subscribeStates(DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id); // [AB] Shutoff valve
 		this.subscribeStates(DeviceParameters.APTimeout.statePath + '.' + DeviceParameters.APTimeout.id); // [APT] WiFi AP timeout
+		this.subscribeStates(DeviceParameters.ButtonProfileChange.statePath + '.' + DeviceParameters.ButtonProfileChange.id); // [BPB] Enable profile changes by button (0 = blocked, 1 = possible)
 		this.subscribeStates(DeviceParameters.LeakProtectionTemporaryDeactivation.statePath + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id);// [TMP] temporary protection deactivation
 		this.subscribeStates(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id); // [PRF] Selected profile
 		this.subscribeStates(adapterChannels.DevicePofiles.path + '.*'); // ALL profile states
@@ -327,9 +328,19 @@ class wamo extends utils.Adapter {
 			//============================================================================
 			else if((id == statePrefix + DeviceParameters.APTimeout.statePath + '.' + DeviceParameters.APTimeout.id) && (state.ack == false)){
 				try{
-					await this.set_DevieParameter(DeviceParameters.APTimeout,  state.val);
+					await this.set_DevieParameter(DeviceParameters.APTimeout, state.val);
 				}catch(err){
-					this.log.error('Error changing WiFi AP timeout: ' + err.message);
+					this.log.error('EERROR setting [APT]: ' + err.message);
+				}
+			}
+			//============================================================================
+			// ButtonProfileChange
+			//============================================================================
+			else if((id == statePrefix + DeviceParameters.ButtonProfileChange.statePath + '.' + DeviceParameters.ButtonProfileChange.id) && (state.ack == false)){
+				try{
+					await this.set_DevieParameter(DeviceParameters.ButtonProfileChange, state.val);
+				}catch(err){
+					this.log.error('ERROR setting [BPB]: ' + err.message);
 				}
 			}
 			//============================================================================
@@ -2127,7 +2138,7 @@ class wamo extends utils.Adapter {
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.TimeMotorOverrunZone, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MotorOverrun, finalValue); }
 					break;
 				case DeviceParameters.LeakageProtectionDeactivated.id:	// 71 - Leakage protection deactivated
 					finalValue = await this.getGlobalisedValue(DeviceParameters.LeakageProtectionDeactivated, value);
