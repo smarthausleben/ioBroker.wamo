@@ -230,6 +230,7 @@ class wamo extends utils.Adapter {
 		this.subscribeStates(DeviceParameters.ButtonProfileChange.statePath + '.' + DeviceParameters.ButtonProfileChange.id); // [BPB] Enable profile changes by button (0 = blocked, 1 = possible)
 		this.subscribeStates(DeviceParameters.FlorSensor.statePath + '.' + DeviceParameters.FlorSensor.id); // [BSE] Floor sensor
 		this.subscribeStates(DeviceParameters.BuzzerOnAlarm.statePath + '.' + DeviceParameters.BuzzerOnAlarm.id); // [BUZ] Buzzer on alarm
+		this.subscribeStates(DeviceParameters.MicroLeakageTest.statePath + '.' + DeviceParameters.MicroLeakageTest.id); // [BUZ] Buzzer on alarm
 		this.subscribeStates(DeviceParameters.LeakProtectionTemporaryDeactivation.statePath + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id);// [TMP] temporary protection deactivation
 		this.subscribeStates(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id); // [PRF] Selected profile
 		this.subscribeStates(adapterChannels.DevicePofiles.path + '.*'); // ALL profile states
@@ -387,6 +388,23 @@ class wamo extends utils.Adapter {
 							if (moreMessages) {this.log.info(DeviceParameters.BuzzerOnAlarm.id + ' changed to ' + String(state.val)); }
 						}
 						else{this.log.error(DeviceParameters.BuzzerOnAlarm.id + ' new value [' + String(state.val) + '] is out of range!');}
+					} catch (err) {
+						this.log.error('ERROR setting [BUZ]: ' + err.message);
+					}
+				}
+			}
+			//============================================================================
+			// DMA Micro-Leakage-Test
+			//============================================================================
+			else if((id == statePrefix + DeviceParameters.MicroLeakageTest.statePath + '.' + DeviceParameters.MicroLeakageTest.id) && (state.ack == false)){
+				if(state.val != null)
+				{
+					try {
+						if ((state.val >= DeviceParameters.MicroLeakageTest.objectdefinition.common.min) && state.val <= DeviceParameters.MicroLeakageTest.objectdefinition.common.max) {
+							await this.set_DevieParameter(DeviceParameters.MicroLeakageTest, state.val);
+							if (moreMessages) {this.log.info(DeviceParameters.MicroLeakageTest.id + ' changed to ' + String(state.val)); }
+						}
+						else{this.log.error(DeviceParameters.MicroLeakageTest.id + ' new value [' + String(state.val) + '] is out of range!');}
 					} catch (err) {
 						this.log.error('ERROR setting [BUZ]: ' + err.message);
 					}
@@ -2014,20 +2032,7 @@ class wamo extends utils.Adapter {
 				case DeviceParameters.MicroLeakageTest.id:			// DMA - Micro leakage test
 					finalValue = await this.getGlobalisedValue(DeviceParameters.MicroLeakageTest, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
-						switch (String(value)) {
-							case '0':
-								finalValue = 'Disabled';
-								break;
-							case '1':
-								finalValue = 'Warning';
-								break;
-							case '2':
-								finalValue = 'Shutoff';
-								break;
-							default:
-								this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Value (' + String(value) + ') for Key (' + String(valueKey) + ') is not defined!');
-								finalValue = null;
-						}
+						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MicroLeakageTest, finalValue); }
 					break;
