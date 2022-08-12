@@ -1,3 +1,10 @@
-chore: release v0.2.8
+chore: release v0.2.9
 
-release cosmetics
+states changable ATP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT
+state types changed ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT
+added states TMZ, TN, 71, ALD, CLP, BPB
+added channel and states for self learning: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF
+change splitted options into two tabs 
+added options to define timeout for axios request 
+added options for delay time between reconection try to device if connection got lost
+change - exported Parameter declarations and parameter collections for timer into a seperate file 'lib/device-parameters.js'
