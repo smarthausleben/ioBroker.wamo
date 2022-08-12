@@ -233,6 +233,7 @@ class wamo extends utils.Adapter {
 		this.subscribeStates(DeviceParameters.MicroLeakageTest.statePath + '.' + DeviceParameters.MicroLeakageTest.id); // [BUZ] Buzzer on alarm
 		this.subscribeStates(DeviceParameters.MicroLeakageTestPeriod.statePath + '.' + DeviceParameters.MicroLeakageTestPeriod.id); // [DRP] Micro-Leakage-Test period
 		this.subscribeStates(DeviceParameters.DaylightSavingTime.statePath + '.' + DeviceParameters.DaylightSavingTime.id); // [IDS] Daylight saving time
+		this.subscribeStates(DeviceParameters.Language.statePath + '.' + DeviceParameters.Language.id); // [LNG] Language
 		this.subscribeStates(DeviceParameters.LeakProtectionTemporaryDeactivation.statePath + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id);// [TMP] temporary protection deactivation
 		this.subscribeStates(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id); // [PRF] Selected profile
 		this.subscribeStates(adapterChannels.DevicePofiles.path + '.*'); // ALL profile states
@@ -443,6 +444,23 @@ class wamo extends utils.Adapter {
 						else{this.log.error(DeviceParameters.DaylightSavingTime.id + ' new value [' + String(state.val) + '] is out of range!');}
 					} catch (err) {
 						this.log.error('ERROR setting [IDS]: ' + err.message);
+					}
+				}
+			}
+			//============================================================================
+			// LNG Language
+			//============================================================================
+			else if((id == statePrefix + DeviceParameters.Language.statePath + '.' + DeviceParameters.Language.id) && (state.ack == false)){
+				if(state.val != null)
+				{
+					try {
+						if ((state.val >= DeviceParameters.Language.objectdefinition.common.min) && state.val <= DeviceParameters.Language.objectdefinition.common.max) {
+							await this.set_DevieParameter(DeviceParameters.Language, state.val);
+							if (moreMessages) {this.log.info(DeviceParameters.Language.id + ' changed to ' + String(state.val)); }
+						}
+						else{this.log.error(DeviceParameters.Language.id + ' new value [' + String(state.val) + '] is out of range!');}
+					} catch (err) {
+						this.log.error('ERROR setting [LNG]: ' + err.message);
 					}
 				}
 			}
@@ -1650,26 +1668,7 @@ class wamo extends utils.Adapter {
 				case DeviceParameters.Language.id:					// LNG - Language
 					finalValue = await this.getGlobalisedValue(DeviceParameters.Language, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
-						switch (parseInt(String(value).substring(0, 1))) {
-							case 0:
-								finalValue = 'de';
-								break;
-							case 1:
-								finalValue = 'en';
-								break;
-							case 2:
-								finalValue = 'es';
-								break;
-							case 3:
-								finalValue = 'it';
-								break;
-							case 4:
-								finalValue = 'pl';
-								break;
-							default:
-								this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Value (' + String(value) + ') for Key (' + String(valueKey) + ') is not defined!');
-								finalValue = null;
-						}
+						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.Language, finalValue); }
 					break;
