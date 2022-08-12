@@ -228,6 +228,7 @@ class wamo extends utils.Adapter {
 		this.subscribeStates(DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id); // [AB] Shutoff valve
 		this.subscribeStates(DeviceParameters.APTimeout.statePath + '.' + DeviceParameters.APTimeout.id); // [APT] WiFi AP timeout
 		this.subscribeStates(DeviceParameters.ButtonProfileChange.statePath + '.' + DeviceParameters.ButtonProfileChange.id); // [BPB] Enable profile changes by button (0 = blocked, 1 = possible)
+		this.subscribeStates(DeviceParameters.FlorSensor.statePath + '.' + DeviceParameters.FlorSensor.id); // [BSE] Floor sensor
 		this.subscribeStates(DeviceParameters.LeakProtectionTemporaryDeactivation.statePath + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id);// [TMP] temporary protection deactivation
 		this.subscribeStates(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id); // [PRF] Selected profile
 		this.subscribeStates(adapterChannels.DevicePofiles.path + '.*'); // ALL profile states
@@ -324,23 +325,53 @@ class wamo extends utils.Adapter {
 				}
 			}
 			//============================================================================
-			// WiFi AP timeout changed
+			// APT WiFi AP timeout changed
 			//============================================================================
-			else if((id == statePrefix + DeviceParameters.APTimeout.statePath + '.' + DeviceParameters.APTimeout.id) && (state.ack == false)){
-				try{
-					await this.set_DevieParameter(DeviceParameters.APTimeout, state.val);
-				}catch(err){
-					this.log.error('EERROR setting [APT]: ' + err.message);
+			else if ((id == statePrefix + DeviceParameters.APTimeout.statePath + '.' + DeviceParameters.APTimeout.id) && (state.ack == false)) {
+				if (state.val != null) {
+					try {
+						if ((state.val >= DeviceParameters.APTimeout.objectdefinition.common.min) && state.val <= DeviceParameters.APTimeout.objectdefinition.common.max) {
+							await this.set_DevieParameter(DeviceParameters.APTimeout, state.val);
+							if (moreMessages) {this.log.info(DeviceParameters.APTimeout.id + ' changed to ' + String(state.val)); }
+						}
+						else{this.log.error(DeviceParameters.ButtonProAPTimeoutfileChange.id + ' new value [' + String(state.val) + '] is out of range!');}
+					} catch (err) {
+						this.log.error('EERROR setting [APT]: ' + err.message);
+					}
 				}
 			}
 			//============================================================================
-			// ButtonProfileChange
+			// BPB ButtonProfileChange
 			//============================================================================
 			else if((id == statePrefix + DeviceParameters.ButtonProfileChange.statePath + '.' + DeviceParameters.ButtonProfileChange.id) && (state.ack == false)){
-				try{
-					await this.set_DevieParameter(DeviceParameters.ButtonProfileChange, state.val);
-				}catch(err){
-					this.log.error('ERROR setting [BPB]: ' + err.message);
+				if(state.val != null)
+				{
+					try {
+						if ((state.val >= DeviceParameters.ButtonProfileChange.objectdefinition.common.min) && state.val <= DeviceParameters.ButtonProfileChange.objectdefinition.common.max) {
+							await this.set_DevieParameter(DeviceParameters.ButtonProfileChange, state.val);
+							if (moreMessages) {this.log.info(DeviceParameters.ButtonProfileChange.id + ' changed to ' + String(state.val)); }
+						}
+						else{this.log.error(DeviceParameters.ButtonProfileChange.id + ' new value [' + String(state.val) + '] is out of range!');}
+					} catch (err) {
+						this.log.error('ERROR setting [BPB]: ' + err.message);
+					}
+				}
+			}
+			//============================================================================
+			// BSA Floor Sensor
+			//============================================================================
+			else if((id == statePrefix + DeviceParameters.FlorSensor.statePath + '.' + DeviceParameters.FlorSensor.id) && (state.ack == false)){
+				if(state.val != null)
+				{
+					try {
+						if ((state.val >= DeviceParameters.FlorSensor.objectdefinition.common.min) && state.val <= DeviceParameters.FlorSensor.objectdefinition.common.max) {
+							await this.set_DevieParameter(DeviceParameters.FlorSensor, state.val);
+							if (moreMessages) {this.log.info(DeviceParameters.FlorSensor.id + ' changed to ' + String(state.val)); }
+						}
+						else{this.log.error(DeviceParameters.FlorSensor.id + ' new value [' + String(state.val) + '] is out of range!');}
+					} catch (err) {
+						this.log.error('ERROR setting [BSA]: ' + err.message);
+					}
 				}
 			}
 			//============================================================================
@@ -2711,9 +2742,10 @@ class wamo extends utils.Adapter {
 				interfaceBussy = false;
 				if (deviceResponse.status === 200) {
 					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
+
 					if (writeModeChanged) {
 						try { await this.clear_SERVICE_FACTORY_Mode(); }
-						catch (err) { this.log.error('async get_DevieParameter(Parameter) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err); }
+						catch (err) { this.log.error('async set_DevieParameter(Parameter) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err); }
 					}
 
 					// did we have a problem?
@@ -2748,15 +2780,15 @@ class wamo extends utils.Adapter {
 		} catch (err) {
 			if (err.response) {
 				// The request was made and the server responded with a status code
-				this.log.error('async get_DevieParameter(Parameter): Response Code: ' + String(err.message));
+				this.log.error('async set_DevieParameter(Parameter): Response Code: ' + String(err.message));
 			} else if (err.request) {
 				// The request was made but no response was received
 				// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
 				// http.ClientRequest in node.js<div></div>
-				this.log.error('async get_DevieParameter(Parameter): Request got no response: ' + err.message);
+				this.log.error('async set_DevieParameter(Parameter): Request got no response: ' + err.message);
 			} else {
 				// Something happened in setting up the request that triggered an Error
-				this.log.error('async get_DevieParameter(Parameter): Error: ' + err.message);
+				this.log.error('async set_DevieParameter(Parameter): Error: ' + err.message);
 			}			//throw new Error(err.message);
 			throw new Error(err.message);
 		}
