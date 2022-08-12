@@ -235,6 +235,7 @@ class wamo extends utils.Adapter {
 		this.subscribeStates(DeviceParameters.DaylightSavingTime.statePath + '.' + DeviceParameters.DaylightSavingTime.id); // [IDS] Daylight saving time
 		this.subscribeStates(DeviceParameters.Language.statePath + '.' + DeviceParameters.Language.id); // [LNG] Language
 		this.subscribeStates(DeviceParameters.LeakProtectionTemporaryDeactivation.statePath + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id);// [TMP] temporary protection deactivation
+		this.subscribeStates(DeviceParameters.LeakageNotificationWarningThreshold.statePath + '.' + DeviceParameters.LeakageNotificationWarningThreshold.id); // [LWT] Leakage notification (warning) threshold
 		this.subscribeStates(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id); // [PRF] Selected profile
 		this.subscribeStates(adapterChannels.DevicePofiles.path + '.*'); // ALL profile states
 
@@ -461,6 +462,23 @@ class wamo extends utils.Adapter {
 						else{this.log.error(DeviceParameters.Language.id + ' new value [' + String(state.val) + '] is out of range!');}
 					} catch (err) {
 						this.log.error('ERROR setting [LNG]: ' + err.message);
+					}
+				}
+			}
+			//============================================================================
+			// LWT Leakage notification (warning) threshold
+			//============================================================================
+			else if((id == statePrefix + DeviceParameters.LeakageNotificationWarningThreshold.statePath + '.' + DeviceParameters.LeakageNotificationWarningThreshold.id) && (state.ack == false)){
+				if(state.val != null)
+				{
+					try {
+						if ((state.val >= DeviceParameters.LeakageNotificationWarningThreshold.objectdefinition.common.min) && state.val <= DeviceParameters.LeakageNotificationWarningThreshold.objectdefinition.common.max) {
+							await this.set_DevieParameter(DeviceParameters.LeakageNotificationWarningThreshold, state.val);
+							if (moreMessages) {this.log.info(DeviceParameters.LeakageNotificationWarningThreshold.id + ' changed to ' + String(state.val)); }
+						}
+						else{this.log.error(DeviceParameters.LeakageNotificationWarningThreshold.id + ' new value [' + String(state.val) + '] is out of range!');}
+					} catch (err) {
+						this.log.error('ERROR setting [LWT]: ' + err.message);
 					}
 				}
 			}
