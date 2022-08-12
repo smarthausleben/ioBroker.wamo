@@ -229,6 +229,7 @@ class wamo extends utils.Adapter {
 		this.subscribeStates(DeviceParameters.APTimeout.statePath + '.' + DeviceParameters.APTimeout.id); // [APT] WiFi AP timeout
 		this.subscribeStates(DeviceParameters.ButtonProfileChange.statePath + '.' + DeviceParameters.ButtonProfileChange.id); // [BPB] Enable profile changes by button (0 = blocked, 1 = possible)
 		this.subscribeStates(DeviceParameters.FlorSensor.statePath + '.' + DeviceParameters.FlorSensor.id); // [BSE] Floor sensor
+		this.subscribeStates(DeviceParameters.BuzzerOnAlarm.statePath + '.' + DeviceParameters.BuzzerOnAlarm.id); // [BUZ] Buzzer on alarm
 		this.subscribeStates(DeviceParameters.LeakProtectionTemporaryDeactivation.statePath + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id);// [TMP] temporary protection deactivation
 		this.subscribeStates(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id); // [PRF] Selected profile
 		this.subscribeStates(adapterChannels.DevicePofiles.path + '.*'); // ALL profile states
@@ -371,6 +372,23 @@ class wamo extends utils.Adapter {
 						else{this.log.error(DeviceParameters.FlorSensor.id + ' new value [' + String(state.val) + '] is out of range!');}
 					} catch (err) {
 						this.log.error('ERROR setting [BSA]: ' + err.message);
+					}
+				}
+			}
+			//============================================================================
+			// BUZ Buzzer on alarm
+			//============================================================================
+			else if((id == statePrefix + DeviceParameters.BuzzerOnAlarm.statePath + '.' + DeviceParameters.BuzzerOnAlarm.id) && (state.ack == false)){
+				if(state.val != null)
+				{
+					try {
+						if ((state.val >= DeviceParameters.BuzzerOnAlarm.objectdefinition.common.min) && state.val <= DeviceParameters.BuzzerOnAlarm.objectdefinition.common.max) {
+							await this.set_DevieParameter(DeviceParameters.BuzzerOnAlarm, state.val);
+							if (moreMessages) {this.log.info(DeviceParameters.BuzzerOnAlarm.id + ' changed to ' + String(state.val)); }
+						}
+						else{this.log.error(DeviceParameters.BuzzerOnAlarm.id + ' new value [' + String(state.val) + '] is out of range!');}
+					} catch (err) {
+						this.log.error('ERROR setting [BUZ]: ' + err.message);
 					}
 				}
 			}
@@ -1961,11 +1979,7 @@ class wamo extends utils.Adapter {
 				case DeviceParameters.FlorSensor.id:				// BSA - Floor Sensor
 					finalValue = await this.getGlobalisedValue(DeviceParameters.FlorSensor, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
-						if (parseInt(value) == 0) {
-							finalValue = 'Floor sensor disabled';
-						} else {
-							finalValue = 'Floor sensor enabled';
-						}
+						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.FlorSensor, finalValue); }
 					break;
@@ -2043,11 +2057,7 @@ class wamo extends utils.Adapter {
 				case DeviceParameters.BuzzerOnAlarm.id:				// BUZ - Buzzer on alarm
 					finalValue = await this.getGlobalisedValue(DeviceParameters.BuzzerOnAlarm, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
-						if (parseInt(value) == 0) {
-							finalValue = 'Buzzer disabled';
-						} else {
-							finalValue = 'Buzzer enabled';
-						}
+						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BuzzerOnAlarm, finalValue); }
 					break;
