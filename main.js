@@ -2255,7 +2255,8 @@ class wamo extends utils.Adapter {
 			}
 			return true;
 		} catch (err) {
-			throw new Error(err);
+			this.log.error('ERROR at [async moremessages(ParameterStruct, value)]: ' + err );
+			return false;
 		}
 	}
 
