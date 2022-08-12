@@ -226,6 +226,7 @@ class wamo extends utils.Adapter {
 
 		this.subscribeStates(DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id); // [SRO] Screen Rotation
 		this.subscribeStates(DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id); // [AB] Shutoff valve
+		this.subscribeStates(DeviceParameters.APTimeout.statePath + '.' + DeviceParameters.APTimeout.id); // [APT] WiFi AP timeout
 		this.subscribeStates(DeviceParameters.LeakProtectionTemporaryDeactivation.statePath + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id);// [TMP] temporary protection deactivation
 		this.subscribeStates(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id); // [PRF] Selected profile
 		this.subscribeStates(adapterChannels.DevicePofiles.path + '.*'); // ALL profile states
@@ -1805,19 +1806,9 @@ class wamo extends utils.Adapter {
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.APDisabled, finalValue); }
 					break;
 				case DeviceParameters.APTimeout.id:					// APT - WiFi AP timeout
-					if (parseInt(value) == 0) {
-						finalValue = await this.getGlobalisedValue(DeviceParameters.APTimeout, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = 'AP timeout not active';
-						}
-					} else {
-						finalValue = await this.getGlobalisedValue(DeviceParameters.APTimeout, value);
-						if (finalValue === null) {	// did we get a globalised Value back?
-							finalValue = 'AP disabled after ' + String(value) + ' seconds after internet connection';
-						}
-						else {
-							finalValue = String(finalValue).replace('XX', String(value));
-						}
+					finalValue = await this.getGlobalisedValue(DeviceParameters.APTimeout, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.APTimeout, finalValue); }
 					break;
