@@ -26,6 +26,7 @@ The POLYGONVATRO unit is,under the hood, a SYR SaveTech Connect 2422 unit but wi
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+* (smarthausleben) states changable ATP
 * (smarthausleben) state types changed ATP
 * (smarthausleben) added states TMZ, TN, 71, ALD, CLP, BPB
 * (smarthausleben) added channel and states for self learning: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF
