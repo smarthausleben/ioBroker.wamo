@@ -327,7 +327,7 @@ class wamo extends utils.Adapter {
 			//============================================================================
 			else if((id == statePrefix + DeviceParameters.APTimeout.statePath + '.' + DeviceParameters.APTimeout.id) && (state.ack == false)){
 				try{
-					await this.set_DevieParameter(DeviceParameters.APTimeout,  String(state.val));
+					await this.set_DevieParameter(DeviceParameters.APTimeout,  state.val);
 				}catch(err){
 					this.log.error('Error changing WiFi AP timeout: ' + err.message);
 				}
@@ -2653,7 +2653,7 @@ class wamo extends utils.Adapter {
 	/**
 	 * Putts the a value to the Device
 	 * @param {Object} Parameter - DeviceParameter Object
-	 * @param {String} Value - Value to send to the device
+	 * @param {any} Value - Value to send to the device
 	 * @returns axios response data OR error
 	 */
 	async set_DevieParameter(Parameter, Value) {
@@ -2662,7 +2662,7 @@ class wamo extends utils.Adapter {
 		// Flag indicating if we had to modifiy Admin Mode
 		let writeModeChanged = false;
 
-		this.log.debug(`[set_DevieParameter(Parameter, Value)] ${Parameter.id} Value: ${Value}`);
+		this.log.debug(`[set_DevieParameter(Parameter, Value)] ${Parameter.id} Value: ${String(Value)}`);
 
 		// is parameter writable?
 		if (Parameter.writeCommand === null) {
@@ -2691,10 +2691,11 @@ class wamo extends utils.Adapter {
 		}
 
 		try {
-			if (moreMessages) { this.log.info('Writing Parameter ' + String(Parameter.id) + ' from device'); }
+			if (moreMessages) { this.log.info('Writing Parameter ' + String(Parameter.id) + ' value: ' + String(Value) +' to device'); }
+
 			if (this.syrApiClient != null) {
 				interfaceBussy = true;
-				const deviceResponse = await this.syrApiClient.get('set/' + String(Parameter.id));
+				const deviceResponse = await this.syrApiClient.get('set/' + String(Parameter.id) + '/' + String(Value));
 				interfaceBussy = false;
 				if (deviceResponse.status === 200) {
 					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
