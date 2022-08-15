@@ -129,6 +129,14 @@ class wamo extends utils.Adapter {
 			this.log.error('Error initStatesAndChanels: ' + err);
 		}
 
+		try{
+			await this.setObjectNotExistsAsync(DeviceParameters.gerWaterHardnessFactor.statePath + '.' + DeviceParameters.gerWaterHardnessFactor.id, Object(DeviceParameters.gerWaterHardnessFactor.objectdefinition));
+			await this.setStateAsync(DeviceParameters.gerWaterHardnessFactor.statePath + '.' + DeviceParameters.gerWaterHardnessFactor.id, { val: this.config.factor_german_water_hardnes, ack: true });
+
+		}
+		catch(err){
+			this.log.error('Error creating Object \'' + DeviceParameters.gerWaterHardnessFactor.statePath + '.' + DeviceParameters.gerWaterHardnessFactor.id + ': ' + err);
+		}
 		//=================================================================================================
 		// Initialize Axios Client
 		//=================================================================================================
