@@ -224,6 +224,7 @@ class wamo extends utils.Adapter {
 		//=== Subscribe to user changable states ===
 		//==========================================
 
+		this.subscribeStates(DeviceParameters.Units.statePath + '.' + DeviceParameters.Units.id); // [UNI] units
 		this.subscribeStates(DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id); // [SRO] Screen Rotation
 		this.subscribeStates(DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id); // [AB] Shutoff valve
 		this.subscribeStates(DeviceParameters.APTimeout.statePath + '.' + DeviceParameters.APTimeout.id); // [APT] WiFi AP timeout
@@ -479,6 +480,23 @@ class wamo extends utils.Adapter {
 						else{this.log.error(DeviceParameters.LeakageNotificationWarningThreshold.id + ' new value [' + String(state.val) + '] is out of range!');}
 					} catch (err) {
 						this.log.error('ERROR setting [LWT]: ' + err.message);
+					}
+				}
+			}
+			//============================================================================
+			// UNI Units
+			//============================================================================
+			else if((id == statePrefix + DeviceParameters.Units.statePath + '.' + DeviceParameters.Units.id) && (state.ack == false)){
+				if(state.val != null)
+				{
+					try {
+						if ((state.val >= DeviceParameters.Units.objectdefinition.common.min) && state.val <= DeviceParameters.Units.objectdefinition.common.max) {
+							await this.set_DevieParameter(DeviceParameters.Units, state.val);
+							if (moreMessages) {this.log.info(DeviceParameters.Units.id + ' changed to ' + String(state.val)); }
+						}
+						else{this.log.error(DeviceParameters.Units.id + ' new value [' + String(state.val) + '] is out of range!');}
+					} catch (err) {
+						this.log.error('ERROR setting [UNI]: ' + err.message);
 					}
 				}
 			}
@@ -1675,11 +1693,7 @@ class wamo extends utils.Adapter {
 				case DeviceParameters.Units.id:						// UNI - Units
 					finalValue = await this.getGlobalisedValue(DeviceParameters.Units, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
-						if (parseInt(value) === 0) {
-							finalValue = 'metric units';
-						} else {
-							finalValue = 'imperial units';
-						}
+						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.Units, finalValue); }
 					break;

@@ -18,13 +18,18 @@ This adapter adds "wamo" leakage protection monitoring to your ioBroker installa
 The adapter connects to your **SYR SafeTech Connect 2422** or **POLYGONVATRO** leakage protection device in order to read data from the device and create some statistic data like water consumption history.
 
 SYR SaveTech Connect 2422: https://www.syr.de/de/Produkte/CB9D9A72-BC51-40CE-840E-73401981A519/SafeTech-Connect
-The POLYGONVATRO unit is,under the hood, a SYR SaveTech Connect 2422 unit but without pressure- temperature- and conductivity sensor. The POLYGONVATRO unit is currently not available.  
+The POLYGONVATRO unit is, under the hood, a SYR SaveTech Connect 2422 unit but without pressure-, temperature- and conductivity sensor. The POLYGONVATRO unit is currently not available.  
 
 ## Changelog
 <!--
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+* (smarthausleben) state types changed UNI
+* (smarthausleben) states changable UNI
+
 ### 0.2.9 (2022-08-12)
 * (smarthausleben) states changable ATP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT
 * (smarthausleben) state types changed ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT
