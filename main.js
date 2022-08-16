@@ -227,6 +227,7 @@ class wamo extends utils.Adapter {
 		this.subscribeStates(DeviceParameters.DeactivateConductivitySensor.statePath + '.' + DeviceParameters.DeactivateConductivitySensor.id); // [CSD] Deactivate conductivity sensor
 		this.subscribeStates(DeviceParameters.DeactivatePressureSensor.statePath + '.' + DeviceParameters.DeactivatePressureSensor.id); // [PSD] Deactivate pressure sensor
 		this.subscribeStates(DeviceParameters.DeactivateTemperatureSensor.statePath + '.' + DeviceParameters.DeactivateTemperatureSensor.id); // [TSD] Deactivate temperature sensor
+		this.subscribeStates(DeviceParameters.MaxFlowLeakageTime.statePath + '.' + DeviceParameters.MaxFlowLeakageTime.id); // [T2] Max flow leakage time
 		this.subscribeStates(DeviceParameters.Units.statePath + '.' + DeviceParameters.Units.id); // [UNI] units
 		this.subscribeStates(DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id); // [SRO] Screen Rotation
 		this.subscribeStates(DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id); // [AB] Shutoff valve
@@ -551,6 +552,23 @@ class wamo extends utils.Adapter {
 						else{this.log.error(DeviceParameters.DeactivateTemperatureSensor.id + ' new value [' + String(state.val) + '] is out of range!');}
 					} catch (err) {
 						this.log.error('ERROR setting [TSD]: ' + err.message);
+					}
+				}
+			}
+			//============================================================================
+			// T2 Max flow leakage time
+			//============================================================================
+			else if((id == statePrefix + DeviceParameters.MaxFlowLeakageTime.statePath + '.' + DeviceParameters.MaxFlowLeakageTime.id) && (state.ack == false)){
+				if(state.val != null)
+				{
+					try {
+						if ((state.val >= DeviceParameters.MaxFlowLeakageTime.objectdefinition.common.min) && state.val <= DeviceParameters.MaxFlowLeakageTime.objectdefinition.common.max) {
+							await this.set_DevieParameter(DeviceParameters.MaxFlowLeakageTime, state.val);
+							if (moreMessages) {this.log.info(DeviceParameters.MaxFlowLeakageTime.id + ' changed to ' + String(state.val)); }
+						}
+						else{this.log.error(DeviceParameters.MaxFlowLeakageTime.id + ' new value [' + String(state.val) + '] is out of range!');}
+					} catch (err) {
+						this.log.error('ERROR setting [T2]: ' + err.message);
 					}
 				}
 			}
