@@ -600,10 +600,8 @@ class wamo extends utils.Adapter {
 					try {
 						if(state.val)
 						{
-							await this.set_SERVICE_Mode();	// bring device into SERVICE mode
 							this.log.warn('System restart initiated by user!');
 							await this.set_DevieParameter(DeviceParameters.systemRestart, state.val);	// send restart command to device
-							await this.clear_SERVICE_FACTORY_Mode();	// clear Service mode
 							if (moreMessages) {this.log.info(DeviceParameters.systemRestart.id + ' changed to ' + String(state.val)); }
 						}
 					} catch (err) {
@@ -2882,8 +2880,12 @@ class wamo extends utils.Adapter {
 	 * @returns axios response data OR error
 	 */
 	async set_DevieParameter(Parameter, Value) {
-		const oldParameter = await this.get_DevieParameter(Parameter);
+		let oldParameter = null;
 
+		if(Parameter.readCommand != null)
+		{
+			oldParameter = await this.get_DevieParameter(Parameter);
+		}
 		// Flag indicating if we had to modifiy Admin Mode
 		let writeModeChanged = false;
 
