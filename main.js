@@ -366,7 +366,7 @@ class wamo extends utils.Adapter {
 						}
 						else{this.log.error(DeviceParameters.ButtonProAPTimeoutfileChange.id + ' new value [' + String(state.val) + '] is out of range!');}
 					} catch (err) {
-						this.log.error('EERROR setting [APT]: ' + err.message);
+						this.log.error('ERROR setting [APT]: ' + err.message);
 					}
 				}
 			}
@@ -603,13 +603,14 @@ class wamo extends utils.Adapter {
 							this.log.warn('System restart initiated by user!');
 							// send restart command (1 as number) to device
 							await this.set_DevieParameter(DeviceParameters.systemRestart, state.val);
+							this.log.warn('Setting ystem restart RST back to 0!');
 							// set state back to 0
 							await this.setStateAsync(StatisticStates.systemRestart.statePath + '.' + StatisticStates.systemRestart.id, { val: 0, ack: true });
 
 							if (moreMessages) {this.log.info(DeviceParameters.systemRestart.id + ' changed to ' + String(state.val)); }
 						}
 					} catch (err) {
-						this.log.error('ERROR setting [T2]: ' + err.message);
+						this.log.error('ERROR setting [RST]: ' + err.message);
 					}
 				}
 			}
@@ -2884,6 +2885,7 @@ class wamo extends utils.Adapter {
 	 * @returns axios response data OR error
 	 */
 	async set_DevieParameter(Parameter, Value) {
+
 		let oldParameter = null;
 
 		if(Parameter.readCommand != null)
