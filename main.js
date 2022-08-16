@@ -16,7 +16,17 @@ const { stringify } = require('querystring');
 const adapterName = require('./package.json').name.split('.').pop();
 
 // my own modules
-const {adapterChannels, calculatedStates, StatisticStates, DeviceParameters, initStates, alarmPeriod, shortPeriod, longPeriode} = require('./lib/device-parameters');
+const {
+	deviceControlStates,
+	adapterChannels,
+	calculatedStates,
+	StatisticStates,
+	DeviceParameters,
+	initStates,
+	alarmPeriod,
+	shortPeriod,
+	longPeriode
+} = require('./lib/device-parameters');
 
 /* cron definitions for the varius cron timers.
 (cron timers are for statistik data collection) */
@@ -129,6 +139,14 @@ class wamo extends utils.Adapter {
 			this.log.error('Error initStatesAndChanels: ' + err);
 		}
 
+		//=================================================================================================
+		//===  Create device control states																===
+		//=================================================================================================
+		try {
+			await this.createDeviceControlStates();
+		} catch (err) {
+			this.log.error('Error creating device control states: ' + err);
+		}
 		//=================================================================================================
 		// Initialize Axios Client
 		//=================================================================================================
@@ -1549,6 +1567,22 @@ class wamo extends utils.Adapter {
 					this.log.debug('Channel ' + String(adapterChannels[key].path) + ' created');
 				} catch (err) {
 					this.log.error('[async initDevicesAndChanels()] ERROR Channel: ]' + err);
+				}
+			}
+			return true;
+		} catch (err) {
+			throw new Error(err);
+		}
+	}
+
+	async createDeviceControlStates(){
+		try {
+			for (const key in deviceControlStates) {
+				try {
+					await this.setObjectNotExistsAsync(String(deviceControlStates[key].path), Object(deviceControlStates[key].objectdefinition));
+					this.log.debug('Device control state ' + String(deviceControlStates[key].id) + ' created');
+				} catch (err) {
+					this.log.error('[async createDeviceControlStates()] ERROR Channel: ]' + err);
 				}
 			}
 			return true;
