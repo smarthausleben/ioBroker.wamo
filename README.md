@@ -29,7 +29,7 @@ The POLYGONVATRO unit is, under the hood, a SYR SaveTech Connect 2422 unit but w
 ### **WORK IN PROGRESS**
 * (smarthausleben) state types changed UNI, PSD, CSD, TSD, T2
 * (smarthausleben) states changable UNI, PSD, CSD, TSD, T2
-* (smarthausleben) added DeviceControl RST
+* (smarthausleben) added DeviceControls RST (restart device)
 * (smarthausleben) new channel DeviceControl
 * (smarthausleben) added unit for GHARDNESS (°dH)
 * (smarthausleben) new state GHARDFACTOR (calculation factor German water hardnes)
