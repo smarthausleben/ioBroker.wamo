@@ -129,14 +129,6 @@ class wamo extends utils.Adapter {
 			this.log.error('Error initStatesAndChanels: ' + err);
 		}
 
-		try{
-			await this.setObjectNotExistsAsync(DeviceParameters.gerWaterHardnessFactor.statePath + '.' + DeviceParameters.gerWaterHardnessFactor.id, Object(DeviceParameters.gerWaterHardnessFactor.objectdefinition));
-			await this.setStateAsync(DeviceParameters.gerWaterHardnessFactor.statePath + '.' + DeviceParameters.gerWaterHardnessFactor.id, { val: this.config.factor_german_water_hardnes, ack: true });
-
-		}
-		catch(err){
-			this.log.error('Error creating Object \'' + DeviceParameters.gerWaterHardnessFactor.statePath + '.' + DeviceParameters.gerWaterHardnessFactor.id + ': ' + err);
-		}
 		//=================================================================================================
 		// Initialize Axios Client
 		//=================================================================================================
@@ -232,6 +224,9 @@ class wamo extends utils.Adapter {
 		//=== Subscribe to user changable states ===
 		//==========================================
 
+		this.subscribeStates(DeviceParameters.DeactivateConductivitySensor.statePath + '.' + DeviceParameters.DeactivateConductivitySensor.id); // [CSD] Deactivate conductivity sensor
+		this.subscribeStates(DeviceParameters.DeactivatePressureSensor.statePath + '.' + DeviceParameters.DeactivatePressureSensor.id); // [PSD] Deactivate pressure sensor
+		this.subscribeStates(DeviceParameters.DeactivateTemperatureSensor.statePath + '.' + DeviceParameters.DeactivateTemperatureSensor.id); // [TSD] Deactivate temperature sensor
 		this.subscribeStates(DeviceParameters.Units.statePath + '.' + DeviceParameters.Units.id); // [UNI] units
 		this.subscribeStates(DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id); // [SRO] Screen Rotation
 		this.subscribeStates(DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id); // [AB] Shutoff valve
@@ -505,6 +500,57 @@ class wamo extends utils.Adapter {
 						else{this.log.error(DeviceParameters.Units.id + ' new value [' + String(state.val) + '] is out of range!');}
 					} catch (err) {
 						this.log.error('ERROR setting [UNI]: ' + err.message);
+					}
+				}
+			}
+			//============================================================================
+			// CSD Deactivate conductivity sensor
+			//============================================================================
+			else if((id == statePrefix + DeviceParameters.DeactivateConductivitySensor.statePath + '.' + DeviceParameters.DeactivateConductivitySensor.id) && (state.ack == false)){
+				if(state.val != null)
+				{
+					try {
+						if ((state.val >= DeviceParameters.DeactivateConductivitySensor.objectdefinition.common.min) && state.val <= DeviceParameters.DeactivateConductivitySensor.objectdefinition.common.max) {
+							await this.set_DevieParameter(DeviceParameters.DeactivateConductivitySensor, state.val);
+							if (moreMessages) {this.log.info(DeviceParameters.DeactivateConductivitySensor.id + ' changed to ' + String(state.val)); }
+						}
+						else{this.log.error(DeviceParameters.DeactivateConductivitySensor.id + ' new value [' + String(state.val) + '] is out of range!');}
+					} catch (err) {
+						this.log.error('ERROR setting [CSD]: ' + err.message);
+					}
+				}
+			}
+			//============================================================================
+			// PSD Deactivate pressure sensor
+			//============================================================================
+			else if((id == statePrefix + DeviceParameters.DeactivatePressureSensor.statePath + '.' + DeviceParameters.DeactivatePressureSensor.id) && (state.ack == false)){
+				if(state.val != null)
+				{
+					try {
+						if ((state.val >= DeviceParameters.DeactivatePressureSensor.objectdefinition.common.min) && state.val <= DeviceParameters.DeactivatePressureSensor.objectdefinition.common.max) {
+							await this.set_DevieParameter(DeviceParameters.DeactivatePressureSensor, state.val);
+							if (moreMessages) {this.log.info(DeviceParameters.DeactivatePressureSensor.id + ' changed to ' + String(state.val)); }
+						}
+						else{this.log.error(DeviceParameters.DeactivatePressureSensor.id + ' new value [' + String(state.val) + '] is out of range!');}
+					} catch (err) {
+						this.log.error('ERROR setting [PSD]: ' + err.message);
+					}
+				}
+			}
+			//============================================================================
+			// TSD Deactivate temperature sensor
+			//============================================================================
+			else if((id == statePrefix + DeviceParameters.DeactivateTemperatureSensor.statePath + '.' + DeviceParameters.DeactivateTemperatureSensor.id) && (state.ack == false)){
+				if(state.val != null)
+				{
+					try {
+						if ((state.val >= DeviceParameters.DeactivateTemperatureSensor.objectdefinition.common.min) && state.val <= DeviceParameters.DeactivateTemperatureSensor.objectdefinition.common.max) {
+							await this.set_DevieParameter(DeviceParameters.DeactivateTemperatureSensor, state.val);
+							if (moreMessages) {this.log.info(DeviceParameters.DeactivateTemperatureSensor.id + ' changed to ' + String(state.val)); }
+						}
+						else{this.log.error(DeviceParameters.DeactivateTemperatureSensor.id + ' new value [' + String(state.val) + '] is out of range!');}
+					} catch (err) {
+						this.log.error('ERROR setting [TSD]: ' + err.message);
 					}
 				}
 			}
@@ -1329,7 +1375,17 @@ class wamo extends utils.Adapter {
 			// get longPeriode data
 			if (!interfaceBussy) {
 				if (moreMessages) { this.log.info('Get initStates'); }
+				//=================================================================
+				// update state: German hardnes calculation factor from settings
+				//=================================================================
+				await this.setObjectNotExistsAsync(DeviceParameters.gerWaterHardnessFactor.statePath + '.' + DeviceParameters.gerWaterHardnessFactor.id, Object(DeviceParameters.gerWaterHardnessFactor.objectdefinition));
+				await this.setStateAsync(DeviceParameters.gerWaterHardnessFactor.statePath + '.' + DeviceParameters.gerWaterHardnessFactor.id, { val: this.config.factor_german_water_hardnes, ack: true });
+
+				//=================================================================
+				// Read all values, defined in 'initStates' from device
+				//=================================================================
 				await this.getData(Object(initStates));
+
 				if (moreMessages) { this.log.info('Get Device Profiles'); }
 				await this.getDeviceProfilesData();
 				return true;
@@ -1730,13 +1786,7 @@ class wamo extends utils.Adapter {
 					if (parseInt(value) == 0) { sensor_temperature_present = true; } else { sensor_temperature_present = false; }
 					finalValue = await this.getGlobalisedValue(DeviceParameters.DeactivateTemperatureSensor, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
-						if (parseInt(value) == 0) {
-							sensor_temperature_present = true;
-							finalValue = 'Sensor active';
-						} else {
-							sensor_temperature_present = false;
-							finalValue = 'Sensor deactivated';
-						}
+						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DeactivateTemperatureSensor, finalValue); }
 					break;
@@ -1744,13 +1794,7 @@ class wamo extends utils.Adapter {
 					if (parseInt(value) == 0) { sensor_conductivity_present = true; } else { sensor_conductivity_present = false; }
 					finalValue = await this.getGlobalisedValue(DeviceParameters.DeactivateConductivitySensor, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
-						if (parseInt(value) == 0) {
-							sensor_conductivity_present = true;
-							finalValue = 'Sensor active';
-						} else {
-							sensor_conductivity_present = false;
-							finalValue = 'Sensor deactivated';
-						}
+						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DeactivateConductivitySensor, finalValue); }
 					break;
@@ -1758,13 +1802,7 @@ class wamo extends utils.Adapter {
 					if (parseInt(value) == 0) { sensor_pressure_present = true; } else { sensor_pressure_present = false; }
 					finalValue = await this.getGlobalisedValue(DeviceParameters.DeactivatePressureSensor, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
-						if (parseInt(value) == 0) {
-							sensor_pressure_present = true;
-							finalValue = 'Sensor active';
-						} else {
-							sensor_pressure_present = false;
-							finalValue = 'Sensor deactivated';
-						}
+						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DeactivatePressureSensor, finalValue); }
 					break;
