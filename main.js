@@ -1579,10 +1579,10 @@ class wamo extends utils.Adapter {
 		try {
 			for (let i = 0; i < deviceControlStates.length; i++) {
 				try {
-					await this.setObjectNotExistsAsync(deviceControlStates[i].statePath + '.' + DeviceParameters[i].id, Object(deviceControlStates[i].objectdefinition));
+					await this.setObjectNotExistsAsync(deviceControlStates[i].statePath + '.' + deviceControlStates[i].id, Object(deviceControlStates[i].objectdefinition));
 					this.log.debug('Device control state ' + deviceControlStates[i].id + ' created');
 				} catch (err) {
-					this.log.error('[async createDeviceControlStates()] ERROR Channel: ]' + err);
+					this.log.error('[async createDeviceControlStates()] ERROR: ]' + err);
 				}
 			}
 			return true;
