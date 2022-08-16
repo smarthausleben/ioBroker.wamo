@@ -603,9 +603,9 @@ class wamo extends utils.Adapter {
 							this.log.warn('System restart initiated by user!');
 							// send restart command (1 as number) to device
 							await this.set_DevieParameter(DeviceParameters.systemRestart, state.val);
-							this.log.warn('Setting ystem restart RST back to 0!');
+							this.log.debug('Setting state RST (sytem restart) back to 0!');
 							// set state back to 0
-							await this.setStateAsync(StatisticStates.systemRestart.statePath + '.' + StatisticStates.systemRestart.id, { val: 0, ack: true });
+							await this.setStateAsync(DeviceParameters.systemRestart.statePath + '.' + DeviceParameters.systemRestart.id, { val: 0, ack: true });
 
 							if (moreMessages) {this.log.info(DeviceParameters.systemRestart.id + ' changed to ' + String(state.val)); }
 						}
@@ -2932,10 +2932,6 @@ class wamo extends utils.Adapter {
 				interfaceBussy = false;
 				if (deviceResponse.status === 200) {
 					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
-
-					if (writeModeChanged) {
-						try { await this.clear_SERVICE_FACTORY_Mode(); }
-						catch (err) { this.log.error('async set_DevieParameter(Parameter) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err); }}
 
 					// did we have a problem?
 					if ((JSON.stringify(deviceResponse.data)).includes('ERROR')) {
