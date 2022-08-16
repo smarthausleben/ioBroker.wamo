@@ -242,6 +242,7 @@ class wamo extends utils.Adapter {
 		//=== Subscribe to user changable states ===
 		//==========================================
 
+		this.subscribeStates(DeviceParameters.systemRestart.statePath + '.' + DeviceParameters.systemRestart.id); // [RST] System Restart
 		this.subscribeStates(DeviceParameters.DeactivateConductivitySensor.statePath + '.' + DeviceParameters.DeactivateConductivitySensor.id); // [CSD] Deactivate conductivity sensor
 		this.subscribeStates(DeviceParameters.DeactivatePressureSensor.statePath + '.' + DeviceParameters.DeactivatePressureSensor.id); // [PSD] Deactivate pressure sensor
 		this.subscribeStates(DeviceParameters.DeactivateTemperatureSensor.statePath + '.' + DeviceParameters.DeactivateTemperatureSensor.id); // [TSD] Deactivate temperature sensor
@@ -585,6 +586,26 @@ class wamo extends utils.Adapter {
 							if (moreMessages) {this.log.info(DeviceParameters.MaxFlowLeakageTime.id + ' changed to ' + String(state.val)); }
 						}
 						else{this.log.error(DeviceParameters.MaxFlowLeakageTime.id + ' new value [' + String(state.val) + '] is out of range!');}
+					} catch (err) {
+						this.log.error('ERROR setting [T2]: ' + err.message);
+					}
+				}
+			}
+			//============================================================================
+			// RST System restart
+			//============================================================================
+			else if((id == statePrefix + DeviceParameters.systemRestart.statePath + '.' + DeviceParameters.systemRestart.id) && (state.ack == false)){
+				if(state.val != null)
+				{
+					try {
+						if(state.val)
+						{
+							await this.set_SERVICE_Mode();	// bring device into SERVICE mode
+							this.log.warn('System restart initiated by user!');
+							await this.set_DevieParameter(DeviceParameters.systemRestart, state.val);	// send restart command to device
+							await this.clear_SERVICE_FACTORY_Mode();	// clear Service mode
+							if (moreMessages) {this.log.info(DeviceParameters.systemRestart.id + ' changed to ' + String(state.val)); }
+						}
 					} catch (err) {
 						this.log.error('ERROR setting [T2]: ' + err.message);
 					}
@@ -1575,6 +1596,10 @@ class wamo extends utils.Adapter {
 		}
 	}
 
+	/**
+	 * Creating device control objects
+	 * @returns true OR error
+	 */
 	async createDeviceControlStates(){
 		try {
 			for (let i = 0; i < deviceControlStates.length; i++) {
