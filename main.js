@@ -598,13 +598,13 @@ class wamo extends utils.Adapter {
 				if(state.val != null)
 				{
 					try {
-						if(state.val)
+						if(state.val == 1)
 						{
 							this.log.warn('System restart initiated by user!');
 							// send restart command (1 as number) to device
-							await this.set_DevieParameter(DeviceParameters.systemRestart, 1);
-							// set state back to false
-							await this.setStateAsync(StatisticStates.systemRestart.statePath + '.' + StatisticStates.systemRestart.id, { val: false, ack: true });
+							await this.set_DevieParameter(DeviceParameters.systemRestart, state.val);
+							// set state back to 0
+							await this.setStateAsync(StatisticStates.systemRestart.statePath + '.' + StatisticStates.systemRestart.id, { val: 0, ack: true });
 
 							if (moreMessages) {this.log.info(DeviceParameters.systemRestart.id + ' changed to ' + String(state.val)); }
 						}
@@ -2933,8 +2933,7 @@ class wamo extends utils.Adapter {
 
 					if (writeModeChanged) {
 						try { await this.clear_SERVICE_FACTORY_Mode(); }
-						catch (err) { this.log.error('async set_DevieParameter(Parameter) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err); }
-					}
+						catch (err) { this.log.error('async set_DevieParameter(Parameter) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err); }}
 
 					// did we have a problem?
 					if ((JSON.stringify(deviceResponse.data)).includes('ERROR')) {
@@ -2958,8 +2957,17 @@ class wamo extends utils.Adapter {
 							this.log.error('async set_DevieParameter(Parameter, Value) -> await this.setStateAsync(Parameter.statePath + \'.\' + Parameter.id, { val: Value, ack: true }) ERROR: ' + err);
 						}
 					}
+					if (writeModeChanged) {
+						try { await this.clear_SERVICE_FACTORY_Mode(); }
+						catch (err) { this.log.error('async set_DevieParameter(Parameter) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err); }
+					}
 					return deviceResponse.data;
 				}
+				if (writeModeChanged) {
+					try { await this.clear_SERVICE_FACTORY_Mode(); }
+					catch (err) { this.log.error('async set_DevieParameter(Parameter) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err); }
+				}
+
 				throw new Error('Error reading device parameter ' + String(Parameter.id) + ': response status: ' + String(deviceResponse.status) + ' ' + String(deviceResponse.statusText));
 			}
 			else {
