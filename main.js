@@ -601,8 +601,8 @@ class wamo extends utils.Adapter {
 						if(state.val)
 						{
 							this.log.warn('System restart initiated by user!');
-							// send restart command to device
-							await this.set_DevieParameter(DeviceParameters.systemRestart, state.val);
+							// send restart command (1 as number) to device
+							await this.set_DevieParameter(DeviceParameters.systemRestart, 1);
 							// set state back to false
 							await this.setStateAsync(StatisticStates.systemRestart.statePath + '.' + StatisticStates.systemRestart.id, { val: false, ack: true });
 
