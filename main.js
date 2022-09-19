@@ -1152,7 +1152,7 @@ class wamo extends utils.Adapter {
 			if (moreMessages) { this.log.info('Alarm timer initialized'); }
 
 			try {
-				await sleep(3000); // Warten um einen Versatz zu erzeugen
+				await this.delay(3000); // Warten um einen Versatz zu erzeugen
 			}
 			catch (err) {
 				// Tieout to clear?
@@ -1166,7 +1166,7 @@ class wamo extends utils.Adapter {
 			if (moreMessages) { this.log.info('Short timer initialized'); }
 
 			try {
-				await sleep(3000); // Warten um einen Versatz zu erzeugen
+				await this.delay(3000); // Warten um einen Versatz zu erzeugen
 			}
 			catch (err) {
 				// Tieout to clear?
@@ -1180,7 +1180,7 @@ class wamo extends utils.Adapter {
 			if (moreMessages) { this.log.info('Long timer initialized'); }
 
 			try {
-				await sleep(2000); // Warten um einen Versatz zu erzeugen
+				await this.delay(3000); // Warten um einen Versatz zu erzeugen
 			}
 			catch (err) {
 				// Tieout to clear?
