@@ -26,7 +26,7 @@ The POLYGONVATRO unit is, under the hood, a SYR SaveTech Connect 2422 unit but w
     ### **WORK IN PROGRESS**
 -->
 
-### **WORK IN PROGRESS**
+### 0.2.10 (2022-09-19)
 * (smarthausleben) state types changed UNI, PSD, CSD, TSD, T2
 * (smarthausleben) states changable UNI, PSD, CSD, TSD, T2
 * (smarthausleben) added DeviceControls RST (restart device)
