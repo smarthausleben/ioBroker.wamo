@@ -1,10 +1,8 @@
-chore: release v0.2.9
+chore: release v0.2.10
 
-states changable ATP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT
-state types changed ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT
-added states TMZ, TN, 71, ALD, CLP, BPB
-added channel and states for self learning: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF
-change splitted options into two tabs 
-added options to define timeout for axios request 
-added options for delay time between reconection try to device if connection got lost
-change - exported Parameter declarations and parameter collections for timer into a seperate file 'lib/device-parameters.js'
+state types changed UNI, PSD, CSD, TSD, T2
+states changable UNI, PSD, CSD, TSD, T2
+added DeviceControls RST (restart device)
+new channel DeviceControl
+added unit for GHARDNESS (°dH)
+new state GHARDFACTOR (calculation factor German water hardnes)
