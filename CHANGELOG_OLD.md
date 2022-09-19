@@ -1,5 +1,8 @@
 # Older changes
 
+## 0.2.4 (2022-08-05)
+* (smarthausleben) Admin 5 support, TMP changable, connection status
+
 ## 0.2.3 (2022-08-04)
 * (smarthausleben) change all RAW states -> new role: json
 * (smarthausleben) change all RAW states -> new common.type: string
