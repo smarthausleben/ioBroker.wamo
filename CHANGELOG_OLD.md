@@ -1,5 +1,8 @@
 # Older changes
 
+## 0.2.5 (2022-08-05)
+* (smarthausleben) Version and README cleane up
+
 ## 0.2.4 (2022-08-05)
 * (smarthausleben) Admin 5 support, TMP changable, connection status
 

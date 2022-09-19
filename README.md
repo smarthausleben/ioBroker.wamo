@@ -25,7 +25,7 @@ The POLYGONVATRO unit is, under the hood, a SYR SaveTech Connect 2422 unit but w
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.2.11 (2022-09-19)
 * (smarthausleben) Release 0.2.11
 
 ### 0.2.10 (2022-09-19)
@@ -53,9 +53,6 @@ The POLYGONVATRO unit is, under the hood, a SYR SaveTech Connect 2422 unit but w
 * (smarthausleben) added 2 additional options to define lof.info messages
 * (smarthausleben) change using single api client to communicate with the device
 * (smarthausleben) some code optimizations and cleanups
-
-### 0.2.5 (2022-08-05)
-* (smarthausleben) Version and README cleane up
 
 ## License
 MIT License

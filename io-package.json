@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "wamo",
-        "version": "0.2.10",
+        "version": "0.2.11",
         "news": {
+            "0.2.11": {
+                "en": "Release 0.2.11",
+                "de": "Release 0.2.11",
+                "ru": "Релиз 0.2.11",
+                "pt": "Lançamento 0.2.11",
+                "nl": "Los 0.2.11",
+                "fr": "Sortie 0.2.11",
+                "it": "Rilasciare 0.2.11",
+                "es": "Liberación 0.2.11",
+                "pl": "0.2.11",
+                "zh-cn": "排放0.1.211"
+            },
             "0.2.10": {
                 "en": "state types changed UNI, PSD, CSD, TSD, T2\nstates changable UNI, PSD, CSD, TSD, T2\nadded DeviceControls RST (restart device)\nnew channel DeviceControl\nadded unit for GHARDNESS (°dH)\nnew state GHARDFACTOR (calculation factor German water hardnes)",
                 "de": "zustandstypen geändert UNI, PSD, CSD, TSD, T2\nzustände changable UNI, PSD, CSD, TSD, T2\nhinzugefügt DeviceControls RST (Neustartgerät)\nneuer Kanal DeviceControl\nzusatzeinheit für GHARDNESS (°dH)\nneuer Zustand GHARDFACTOR (Berechnungsfaktor deutsche Wasserhärten)",
