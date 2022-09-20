@@ -25,6 +25,9 @@ The POLYGONVATRO unit is, under the hood, a SYR SaveTech Connect 2422 unit but w
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (smarthausleben) 
+
 ### 0.2.12 (2022-09-20)
 * (smarthausleben) Release 0.2.12
 
