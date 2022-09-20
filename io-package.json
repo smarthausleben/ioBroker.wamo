@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "wamo",
-        "version": "0.2.11",
+        "version": "0.2.12",
         "news": {
+            "0.2.12": {
+                "en": "Release 0.2.12",
+                "de": "Release 0.2.12",
+                "ru": "Релиз 0.2.12",
+                "pt": "Lançamento: 0,2.12",
+                "nl": "Los 0.2.12",
+                "fr": "Release 0.2.12",
+                "it": "Rilasciare 0.2.12",
+                "es": "Liberación 0,2.12",
+                "pl": "Wydanie 0.2.12",
+                "zh-cn": "导 言"
+            },
             "0.2.11": {
                 "en": "Release 0.2.11",
                 "de": "Release 0.2.11",

@@ -1,5 +1,10 @@
 # Older changes
 
+## 0.2.7 (2022-08-08)
+* (smarthausleben) added 2 additional options to define lof.info messages
+* (smarthausleben) change using single api client to communicate with the device
+* (smarthausleben) some code optimizations and cleanups
+
 ## 0.2.5 (2022-08-05)
 * (smarthausleben) Version and README cleane up
 
