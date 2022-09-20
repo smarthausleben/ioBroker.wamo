@@ -1,8 +1,3 @@
-chore: release v0.2.10
+chore: release v0.2.11
 
-state types changed UNI, PSD, CSD, TSD, T2
-states changable UNI, PSD, CSD, TSD, T2
-added DeviceControls RST (restart device)
-new channel DeviceControl
-added unit for GHARDNESS (°dH)
-new state GHARDFACTOR (calculation factor German water hardnes)
+Release 0.2.11
