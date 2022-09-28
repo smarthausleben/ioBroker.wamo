@@ -191,6 +191,11 @@ class wamo extends utils.Adapter {
 			}
 		}
 
+		//=================================================================
+		// update state: German hardnes calculation factor from settings
+		//=================================================================
+		await this.updateHardnesFactorObject();
+
 		//=================================================================================================
 		//===  Getting device Profiles data																===
 		//=================================================================================================
@@ -1438,8 +1443,7 @@ class wamo extends utils.Adapter {
 				//=================================================================
 				// update state: German hardnes calculation factor from settings
 				//=================================================================
-				await this.setObjectNotExistsAsync(DeviceParameters.gerWaterHardnessFactor.statePath + '.' + DeviceParameters.gerWaterHardnessFactor.id, Object(DeviceParameters.gerWaterHardnessFactor.objectdefinition));
-				await this.setStateAsync(DeviceParameters.gerWaterHardnessFactor.statePath + '.' + DeviceParameters.gerWaterHardnessFactor.id, { val: this.config.factor_german_water_hardnes, ack: true });
+				await this.updateHardnesFactorObject();
 
 				//=================================================================
 				// Read all values, defined in 'initStates' from device
@@ -1458,6 +1462,14 @@ class wamo extends utils.Adapter {
 			interfaceBussy = false;	// CLEAR flag that device interface is bussy
 			throw new Error(err);
 		}
+	}
+
+	/**
+	 * Updates the object containing Hardnes Factor calculation
+	 */
+	async updateHardnesFactorObject() {
+		await this.setObjectNotExistsAsync(DeviceParameters.gerWaterHardnessFactor.statePath + '.' + DeviceParameters.gerWaterHardnessFactor.id, Object(DeviceParameters.gerWaterHardnessFactor.objectdefinition));
+		await this.setStateAsync(DeviceParameters.gerWaterHardnessFactor.statePath + '.' + DeviceParameters.gerWaterHardnessFactor.id, { val: this.config.factor_german_water_hardnes, ack: true });
 	}
 
 	/**
