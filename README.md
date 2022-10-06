@@ -26,7 +26,7 @@ The POLYGONVATRO unit is, under the hood, a SYR SaveTech Connect 2422 unit but w
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-* (smarthausleben) fix update german water hardnes factor object (GHARDFACTOR) during startup 
+* (smarthausleben) FIX update german water hardnes factor object (GHARDFACTOR) during startup 
 
 ### 0.2.12 (2022-09-20)
 * (smarthausleben) Release 0.2.12
