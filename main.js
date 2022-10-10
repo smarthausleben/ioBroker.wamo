@@ -1228,17 +1228,21 @@ class wamo extends utils.Adapter {
 			}
 
 			// saving sum to "past" State
-			try {
-				await this.setObjectNotExistsAsync(StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id, Object(StatisticStates.TotalPastDay.objectdefinition));
-			}
-			catch (err) {
-				this.log.error('await this.setObjectNotExistsAsync(' + StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id + ',' + StatisticStates.TotalPastDay.objectdefinition + ' ) ERROR: ' + err);
-			}
 			if ((TotalDayState != null) && (TotalDayState.val != null)) {
 				try {
 					await this.setStateAsync(StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id, { val: TotalDayState.val, ack: true });
 				}
 				catch (err) {
+					// maybe object is not existing ...
+					try {
+						// so let's create it ...
+						await this.setObjectNotExistsAsync(StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id, Object(StatisticStates.TotalPastDay.objectdefinition));
+						// and write ist again
+						await this.setStateAsync(StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id, { val: TotalDayState.val, ack: true });
+					}
+					catch (err) {
+						this.log.error('In Catch of setStateAsync ... await this.setObjectNotExistsAsync(' + StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id + ',' + StatisticStates.TotalPastDay.objectdefinition + ' ) ERROR: ' + err);
+					}
 					this.log.error('setStateAsync(' + StatisticStates.TotalPastDay.statePath + '.' + StatisticStates.TotalPastDay.id + ',' + '{ val: parseFloat(' + TotalDayState.val + '), ack: true }) ERROR: ' + err);
 				}
 			}
