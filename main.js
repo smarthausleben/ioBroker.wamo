@@ -1634,25 +1634,36 @@ class wamo extends utils.Adapter {
 		try {
 			this.log.debug('creating state objects ...');
 			// Creating device parameter states
-			this.log.debug('num DeviceParameters = ' + String(DeviceParameters.length));
-			for (let i = 0; i < DeviceParameters.length; i++) {
-				try{
-					this.log.debug('creating state object: ' + String(DeviceParameters[i].id));
-					await this.setObjectNotExistsAsync(DeviceParameters[i].statePath + DeviceParameters[i].id, Object(DeviceParameters[i].objectdefinition));
-					await this.createRawStateObject(DeviceParameters[i]);
+
+			for (const key in DeviceParameters) {
+				try {
+					await this.setObjectNotExistsAsync(String(DeviceParameters[key].statePath) + String(DeviceParameters[key].id), DeviceParameters[key].objectdefinition);
+					this.log.debug('Channel ' + String(DeviceParameters[key].path) + String(DeviceParameters[key].id) + ' created');
+				} catch (err) {
+					this.log.error('[async initDevicesAndChanels()] ERROR Channel: ]' + err);
 				}
-				catch (err){this.log.error('ERROR at async createAlloObjects() [DeviceParameters]: StateID: ' + String(DeviceParameters[i].id) + ' Message: ' + err);}
 			}
+
 			// Creating calculated states
-			for (let i = 0; i < calculatedStates.length; i++) {
-				try{await this.setObjectNotExistsAsync(calculatedStates[i].statePath + calculatedStates[i].id, Object(calculatedStates[i].objectdefinition));}
-				catch (err){this.log.error('ERROR at async createAlloObjects() [calculatedStates]: StateID: ' + String(calculatedStates[i].id) + ' Message: ' + err);}
+			for (const key in calculatedStates) {
+				try {
+					await this.setObjectNotExistsAsync(String(calculatedStates[key].statePath) + String(calculatedStates[key].id), calculatedStates[key].objectdefinition);
+					this.log.debug('Channel ' + String(calculatedStates[key].path) + String(calculatedStates[key].id) + ' created');
+				} catch (err) {
+					this.log.error('[async initDevicesAndChanels()] ERROR Channel: ]' + err);
+				}
 			}
+
 			// Creating statistic states
-			for (let i = 0; i < StatisticStates.length; i++) {
-				try{await this.setObjectNotExistsAsync(StatisticStates[i].statePath + StatisticStates[i].id, Object(StatisticStates[i].objectdefinition));}
-				catch (err){this.log.error('ERROR at async createAlloObjects() [StatisticStates]: StateID: ' + String(StatisticStates[i].id) + ' Message: ' + err);}
+			for (const key in StatisticStates) {
+				try {
+					await this.setObjectNotExistsAsync(String(StatisticStates[key].statePath) + String(StatisticStates[key].id), StatisticStates[key].objectdefinition);
+					this.log.debug('Channel ' + String(StatisticStates[key].path) + String(StatisticStates[key].id) + ' created');
+				} catch (err) {
+					this.log.error('[async initDevicesAndChanels()] ERROR Channel: ]' + err);
+				}
 			}
+
 			this.log.debug('creating state objects -> done');
 		}
 		catch (err) {this.log.error('ERROR at async createAlloObjects(): ' + err);}
