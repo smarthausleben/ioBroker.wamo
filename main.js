@@ -144,9 +144,9 @@ class wamo extends utils.Adapter {
 		//===  Create "Device-Control" states (Objects to send commands to the device)					===
 		//=================================================================================================
 		try {
-			await this.createDeviceControlStates();
+			// await this.createDeviceControlStates();
 		} catch (err) {
-			this.log.error('Error creating device control states: ' + err);
+			// this.log.error('Error creating device control states: ' + err);
 		}
 
 		//=================================================================================================
@@ -1636,31 +1636,37 @@ class wamo extends utils.Adapter {
 			// Creating device parameter states
 
 			for (const key in DeviceParameters) {
+				const stateID = String(DeviceParameters[key].statePath) + '.' + String(DeviceParameters[key].id);
 				try {
-					await this.setObjectNotExistsAsync(String(DeviceParameters[key].statePath) + String(DeviceParameters[key].id), DeviceParameters[key].objectdefinition);
-					this.log.debug('Channel ' + String(DeviceParameters[key].path) + String(DeviceParameters[key].id) + ' created');
+					await this.setObjectNotExistsAsync(stateID, DeviceParameters[key].objectdefinition);
+					this.log.debug('State: "' + stateID + '" created');
+					// creating matching RAW State objects
+					await this.createRawStateObject(DeviceParameters[key]);
+					this.log.debug('Raw State: "' + stateID + '" created');
 				} catch (err) {
-					this.log.error('[async initDevicesAndChanels()] ERROR Channel: ]' + err);
+					this.log.error('[async initDevicesAndChanels()] STATE: ' + stateID + ' ERROR: ' + err);
 				}
 			}
 
 			// Creating calculated states
 			for (const key in calculatedStates) {
+				const stateID = String(calculatedStates[key].statePath) + '.' + String(calculatedStates[key].id);
 				try {
-					await this.setObjectNotExistsAsync(String(calculatedStates[key].statePath) + String(calculatedStates[key].id), calculatedStates[key].objectdefinition);
-					this.log.debug('Channel ' + String(calculatedStates[key].path) + String(calculatedStates[key].id) + ' created');
+					await this.setObjectNotExistsAsync(stateID, calculatedStates[key].objectdefinition);
+					this.log.debug('State: "' + stateID + '" created');
 				} catch (err) {
-					this.log.error('[async initDevicesAndChanels()] ERROR Channel: ]' + err);
+					this.log.error('[async initDevicesAndChanels()] STATE: ' + stateID + ' ERROR: ' + err);
 				}
 			}
 
 			// Creating statistic states
 			for (const key in StatisticStates) {
+				const stateID = String(StatisticStates[key].statePath) + '.' + String(StatisticStates[key].id);
 				try {
-					await this.setObjectNotExistsAsync(String(StatisticStates[key].statePath) + String(StatisticStates[key].id), StatisticStates[key].objectdefinition);
-					this.log.debug('Channel ' + String(StatisticStates[key].path) + String(StatisticStates[key].id) + ' created');
+					await this.setObjectNotExistsAsync(stateID, StatisticStates[key].objectdefinition);
+					this.log.debug('State: "' + stateID + '" created');
 				} catch (err) {
-					this.log.error('[async initDevicesAndChanels()] ERROR Channel: ]' + err);
+					this.log.error('[async initDevicesAndChanels()] STATE: ' + stateID + ' ERROR: ' + err);
 				}
 			}
 
@@ -1681,8 +1687,7 @@ class wamo extends utils.Adapter {
 			const raw_objectdefinition = {
 				type: 'state',
 				common: {
-					name: {
-					},
+					name: DeviceParameter.common.name,
 					type: 'string',
 					unit: null,
 					role: 'json',
@@ -1691,11 +1696,10 @@ class wamo extends utils.Adapter {
 				},
 				native: {}
 			};
-			raw_objectdefinition.common.name = DeviceParameter.objectdefinition.common.name;
 			await this.setObjectNotExistsAsync(adapterChannels.DeviceRawData.path + '.' + DeviceParameter.id, Object(raw_objectdefinition));
 		}
 		catch (err) {
-			this.log.error('ERROR at async createRawStateObject(DeviceParameter): ' + err);
+			this.log.error('ERROR at async createRawStateObject(DeviceParameter): Parameter ID = ' + String(DeviceParameter.id) + ' ERROR: ' + err);
 		}
 	}
 
