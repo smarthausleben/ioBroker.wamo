@@ -26,6 +26,7 @@ The POLYGONVATRO unit is, under the hood, a SYR SaveTech Connect 2422 unit but w
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+* (smarthausleben) change: default value for "factor_german_water_hardnes" changed to 0.0296041666666667
 * (smarthausleben) FIX update german water hardnes factor object (GHARDFACTOR) during startup 
 
 ### 0.2.12 (2022-09-20)
