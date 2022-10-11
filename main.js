@@ -7,6 +7,7 @@
 // The adapter-core module gives you access to the core ioBroker functions
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
+const { info } = require('console');
 const axios = require('axios').default;
 const http = require('http');
 const schedule = require('node-schedule');
@@ -147,6 +148,16 @@ class wamo extends utils.Adapter {
 		} catch (err) {
 			this.log.error('Error creating device control states: ' + err);
 		}
+
+		//=================================================================================================
+		//===  Create All state Objects in order to avoid later use of "setObjectNotExistsAsync"		===
+		//=================================================================================================
+		try {
+			await this.createAlloObjects();
+		} catch (err) {
+			this.log.error('Error initStatesAndChanels: ' + err);
+		}
+
 		//=================================================================================================
 		// Initialize Axios Client (this client will be used to communicate with the device)			===
 		//=================================================================================================
@@ -1616,6 +1627,66 @@ class wamo extends utils.Adapter {
 	}
 
 	/**
+	 * Creating all object in order to avoid the function createObjectifnot exists in later states
+	 * @returns true OR error
+	 */
+	async createAlloObjects() {
+		try {
+			this.log.debug('creating state objects ...');
+			// Creating device parameter states
+			for (let i = 0; i < DeviceParameters.length; i++) {
+				try{
+					await this.setObjectNotExistsAsync(DeviceParameters[i].statePath + DeviceParameters[i].id, Object(DeviceParameters[i].objectdefinition));
+					await this.createRawStateObject(DeviceParameters[i]);
+				}
+				catch (err){this.log.error('ERROR at async createAlloObjects() [DeviceParameters]: StateID: ' + String(DeviceParameters[i].id) + ' Message: ' + err);}
+			}
+			// Creating calculated states
+			for (let i = 0; i < calculatedStates.length; i++) {
+				try{await this.setObjectNotExistsAsync(calculatedStates[i].statePath + calculatedStates[i].id, Object(calculatedStates[i].objectdefinition));}
+				catch (err){this.log.error('ERROR at async createAlloObjects() [calculatedStates]: StateID: ' + String(calculatedStates[i].id) + ' Message: ' + err);}
+			}
+			// Creating statistic states
+			for (let i = 0; i < StatisticStates.length; i++) {
+				try{await this.setObjectNotExistsAsync(StatisticStates[i].statePath + StatisticStates[i].id, Object(StatisticStates[i].objectdefinition));}
+				catch (err){this.log.error('ERROR at async createAlloObjects() [StatisticStates]: StateID: ' + String(StatisticStates[i].id) + ' Message: ' + err);}
+			}
+			this.log.debug('creating state objects -> done');
+		}
+		catch (err) {this.log.error('ERROR at async createAlloObjects(): ' + err);}
+	}
+
+	/**
+	 * this method creats the sate object for the RAW value
+	 * of the handed over device parameter
+	 * @param {*} DeviceParameter - DeviceParameter Object
+	 */
+	async createRawStateObject(DeviceParameter)
+	{
+		try {
+			// basic RAW object definition
+			const raw_objectdefinition = {
+				type: 'state',
+				common: {
+					name: {
+					},
+					type: 'string',
+					unit: null,
+					role: 'json',
+					read: true,
+					write: false
+				},
+				native: {}
+			};
+			raw_objectdefinition.common.name = DeviceParameter.objectdefinition.common.name;
+			await this.setObjectNotExistsAsync(adapterChannels.DeviceRawData.path + '.' + DeviceParameter.id, Object(raw_objectdefinition));
+		}
+		catch (err) {
+			this.log.error('ERROR at async createRawStateObject(DeviceParameter): ' + err);
+		}
+	}
+
+	/**
 	 * Creating device control objects
 	 * @returns true OR error
 	 */
@@ -1736,45 +1807,12 @@ class wamo extends utils.Adapter {
 				return true;
 			}
 
-			//=========================
-			// RAW DATA HANDLING	===
-			//=========================
-
-			// Path for RAW state object
-			const state_ID_RAW = adapterChannels.DeviceRawData.path + '.' + cur_ParameterID;
-
-			// basic RAW object definition
-			const raw_objectdefinition = {
-				type: 'state',
-				common: {
-					name: {
-					},
-					type: 'string',
-					unit: null,
-					role: 'json',
-					read: true,
-					write: false
-				},
-				native: {}
-			};
-			raw_objectdefinition.common.name = deviceParameterToUpdate.objectdefinition.common.name;
 			// save RAW State
 			try {
-				this.setStateAsync(state_ID_RAW, { val: JSON.stringify(deviceValue), ack: true });
+				this.setStateAsync(adapterChannels.DeviceRawData.path + '.' + cur_ParameterID, { val: JSON.stringify(deviceValue), ack: true });
 			}
 			catch (err) {
-				this.log.warn('[async updateState(deviceParameterToUpdate, deviceValue)] ERROR saving RAW state. State ID=' + String(state_ID_RAW) + ' Value=' + String(deviceValue)) + ' maybe object dose not exist. -> creating object ...';
-				try {
-					// RAW State seems not to exist -> we create this oject now
-					await this.setObjectNotExistsAsync(state_ID_RAW, Object(raw_objectdefinition));
-
-					this.log.debug('RAW deviceParameterToUpdate.objectdefinition.common.type = ' + raw_objectdefinition);
-					// trying to save the state now again
-					this.setStateAsync(state_ID_RAW, { val: JSON.stringify(deviceValue), ack: true });
-				}
-				catch (err) {
-					this.log.error('updateState -> await this.setObjectNotExistsAsync(state_ID_RAW, Object(raw_objectdefinition) returned ERROR: ' + err);
-				}
+				this.log.warn('[async updateState(deviceParameterToUpdate, deviceValue)] ERROR saving RAW state. State ID=' + String(adapterChannels.DeviceRawData.path + '.' + cur_ParameterID) + ' Value=' + String(deviceValue)) + ' maybe object dose not exist. -> creating object ...';
 			}
 			//=========================
 
@@ -1798,16 +1836,7 @@ class wamo extends utils.Adapter {
 						this.setStateAsync(state_ID, { val: parseFloat(String(finalValue)), ack: true });
 					}
 					catch (err) {
-						try {
-							this.log.warn('[async updateState(deviceParameterToUpdate, deviceValue)]: State "' + String(deviceParameterToUpdate.id) + '" couldn\'t be saved ... trying to create state ... returned ERROR: ' + err);
-							// State object seems not to exist yet -> we create this oject now
-							await this.setObjectNotExistsAsync(state_ID, deviceParameterToUpdate.objectdefinition);
-							// trying to save the state now again
-							this.setStateAsync(state_ID, { val: parseFloat(String(finalValue)), ack: true });
-						}
-						catch (err) {
-							this.log.error('updateState -> await this.setObjectNotExistsAsync(state_ID, deviceParameterToUpdate.objectdefinition) returned ERROR: ' + err);
-						}
+						this.log.error('[async updateState(deviceParameterToUpdate, deviceValue)]: State "' + String(deviceParameterToUpdate.id) + '" couldn\'t be saved ERROR: ' + err);
 					}
 					break;
 				default:	// handle as string
@@ -1817,16 +1846,7 @@ class wamo extends utils.Adapter {
 						this.setStateAsync(state_ID, { val: String(finalValue), ack: true });
 					}
 					catch (err) {
-						try {
-							this.log.warn('[async updateState(deviceParameterToUpdate, deviceValue)]: State "' + String(deviceParameterToUpdate.id) + '" couldn\'t be saved ... trying to create state ... returned ERROR: ' + err);
-							// State object seems not to exist yet -> we create this oject now
-							await this.setObjectNotExistsAsync(state_ID, deviceParameterToUpdate.objectdefinition);
-							// trying to save the state now again
-							this.setStateAsync(state_ID, { val: String(finalValue), ack: true });
-						}
-						catch (err) {
-							this.log.error('updateState -> await this.setObjectNotExistsAsync(state_ID, deviceParameterToUpdate.objectdefinition) returned ERROR: ' + err);
-						}
+						this.log.warn('[async updateState(deviceParameterToUpdate, deviceValue)]: State "' + String(deviceParameterToUpdate.id) + '" couldn\'t be saved ERROR: ' + err);
 					}
 			}
 			if (deviceParameterToUpdate.objectdefinition.common.unit !== null) {
