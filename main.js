@@ -131,7 +131,7 @@ class wamo extends utils.Adapter {
 		}
 
 		//=================================================================================================
-		//===  Create device object and all channel objects												===
+		//===  Create the "Device" object and all channel objects										===
 		//=================================================================================================
 		try {
 			await this.initDevicesAndChanels();
@@ -140,7 +140,7 @@ class wamo extends utils.Adapter {
 		}
 
 		//=================================================================================================
-		//===  Create device control states																===
+		//===  Create "Device-Control" states (Objects to send commands to the device)					===
 		//=================================================================================================
 		try {
 			await this.createDeviceControlStates();
@@ -148,7 +148,7 @@ class wamo extends utils.Adapter {
 			this.log.error('Error creating device control states: ' + err);
 		}
 		//=================================================================================================
-		// Initialize Axios Client
+		// Initialize Axios Client (this client will be used to communicate with the device)			===
 		//=================================================================================================
 		this.syrApiClient = axios.create({
 			baseURL: `http://${this.config.device_ip}:${this.config.device_port}/safe-tec/`,
@@ -161,7 +161,7 @@ class wamo extends utils.Adapter {
 		});
 
 		//=================================================================================================
-		// Test if device is responding
+		// Test if device is responding																	===
 		//=================================================================================================
 		try {
 			while(!await this.devicePing()) {
@@ -179,11 +179,11 @@ class wamo extends utils.Adapter {
 		let gotDeviceData = false;
 		while (!gotDeviceData) {
 			try {
-				this.log.debug('async onReady() - initComckeck -> Getting data from device at ' + this.config.device_ip + ':' + this.config.device_port);
+				this.log.debug('async onReady() at "while (!gotDeviceData)" -> Getting data from device at ' + this.config.device_ip + ':' + this.config.device_port);
 				//==================================================================
 				//= Getting all datas for 'DeviceParameters' in [const initStates] =
 				//==================================================================
-				if (moreMessages) { this.log.info('reading DeviceParameters in [initStates]'); }
+				if (moreMessages) { this.log.info('reading device parameters defined in object [initStates]'); }
 				await this.getData(initStates);
 				gotDeviceData = true;}
 			catch (err) {
@@ -1698,7 +1698,7 @@ class wamo extends utils.Adapter {
 			let cur_ParameterID;	// Parameter ID
 			let cur_StatePath;		// State Path
 
-			// Parameter ID ermitteln, wenn nciht vorhanden, Error auslösen und abbrechen
+			// determin parameter ID, if not defined, throw Error and return
 			if (deviceParameterToUpdate == null) { throw new Error('[async updateState(deviceParameterToUpdate, deviceValue)] deviceParameterToUpdate is null'); }
 
 			if ('id' in deviceParameterToUpdate) {
@@ -1709,7 +1709,7 @@ class wamo extends utils.Adapter {
 				throw new Error(String(deviceParameterToUpdate) + ' [async updateState(deviceParameterToUpdate, deviceValue)] has no [id] key');
 			}
 
-			// Den Pafad des States ermittlen -> wenn nicht vorhanden, Error auslösen und abbrechen
+			// determin state path -> if not defined, throw Error and return
 			if ('statePath' in deviceParameterToUpdate) {
 				if (deviceParameterToUpdate.statePath == null || deviceParameterToUpdate.statePath == '') { throw new Error(String(deviceParameterToUpdate) + ' [async updateState(deviceParameterToUpdate, deviceValue)] has no valid (statePath) key'); }
 				cur_StatePath = deviceParameterToUpdate.statePath;
@@ -1721,28 +1721,29 @@ class wamo extends utils.Adapter {
 			// Path for state object
 			const state_ID = cur_StatePath + '.' + cur_ParameterID;
 
-			let skipp = false;
+			// clear flag to signalize to skip some later operations
+			let skip = false;
 
-			if (cur_ParameterID === DeviceParameters.WaterConductivity.id && sensor_conductivity_present === false) { skipp = true; }
-			else if (cur_ParameterID === DeviceParameters.WaterPressure.id && sensor_pressure_present === false) { skipp = true; }
-			else if (cur_ParameterID === DeviceParameters.WaterTemperature.id && sensor_temperature_present === false) { skipp = true; }
+			// checking if we deal with parameters which need to skip some later operations
+			if (cur_ParameterID === DeviceParameters.WaterConductivity.id && sensor_conductivity_present === false) { skip = true; }
+			else if (cur_ParameterID === DeviceParameters.WaterPressure.id && sensor_pressure_present === false) { skip = true; }
+			else if (cur_ParameterID === DeviceParameters.WaterTemperature.id && sensor_temperature_present === false) { skip = true; }
 
-			if (skipp) {
+			// do we need to skip this parameter?
+			if (skip) {
+				// sensor for this parameter is not present in the system ... return
 				this.log.debug('Sensor not Present ... skipped');
 				return true;
 			}
 
-			try {
-				await this.setObjectNotExistsAsync(state_ID, deviceParameterToUpdate.objectdefinition);
-				this.log.debug('deviceParameterToUpdate.objectdefinition.common.type = ' + deviceParameterToUpdate.objectdefinition.common.type);
-			}
-			catch (err) {
-				this.log.error('updateState -> await this.setObjectNotExistsAsync(state_ID, deviceParameterToUpdate.objectdefinition) returned ERROR: ' + err);
-			}
+			//=========================
+			// RAW DATA HANDLING	===
+			//=========================
+
 			// Path for RAW state object
 			const state_ID_RAW = adapterChannels.DeviceRawData.path + '.' + cur_ParameterID;
 
-			// RAW object handling
+			// basic RAW object definition
 			const raw_objectdefinition = {
 				type: 'state',
 				common: {
@@ -1757,20 +1758,25 @@ class wamo extends utils.Adapter {
 				native: {}
 			};
 			raw_objectdefinition.common.name = deviceParameterToUpdate.objectdefinition.common.name;
-			try {
-				await this.setObjectNotExistsAsync(state_ID_RAW, Object(raw_objectdefinition));
-				this.log.debug('RAW deviceParameterToUpdate.objectdefinition.common.type = ' + raw_objectdefinition);
-			}
-			catch (err) {
-				this.log.error('updateState -> await this.setObjectNotExistsAsync(state_ID_RAW, Object(raw_objectdefinition) returned ERROR: ' + err);
-			}
 			// save RAW State
 			try {
 				this.setStateAsync(state_ID_RAW, { val: JSON.stringify(deviceValue), ack: true });
 			}
 			catch (err) {
-				this.log.error('[async updateState(deviceParameterToUpdate, deviceValue)] ERROR saving RAW state. State ID=' + String(state_ID_RAW) + ' Value=' + String(deviceValue));
+				this.log.warn('[async updateState(deviceParameterToUpdate, deviceValue)] ERROR saving RAW state. State ID=' + String(state_ID_RAW) + ' Value=' + String(deviceValue)) + ' maybe object dose not exist. -> creating object ...';
+				try {
+					// RAW State seems not to exist -> we create this oject now
+					await this.setObjectNotExistsAsync(state_ID_RAW, Object(raw_objectdefinition));
+
+					this.log.debug('RAW deviceParameterToUpdate.objectdefinition.common.type = ' + raw_objectdefinition);
+					// trying to save the state now again
+					this.setStateAsync(state_ID_RAW, { val: JSON.stringify(deviceValue), ack: true });
+				}
+				catch (err) {
+					this.log.error('updateState -> await this.setObjectNotExistsAsync(state_ID_RAW, Object(raw_objectdefinition) returned ERROR: ' + err);
+				}
 			}
+			//=========================
 
 			// convert into final value
 			let finalValue;
@@ -1784,16 +1790,45 @@ class wamo extends utils.Adapter {
 			}
 
 			switch (deviceParameterToUpdate.objectdefinition.common.type) {
-				case 'number':
+				case 'number':	// handle as number
 					this.log.debug('[async updateState(deviceParameterToUpdate, deviceValue)] value is NUMBER');
-					this.setStateAsync(state_ID, { val: parseFloat(String(finalValue)), ack: true });
+					try{
+						// trying to write value into state object
+						this.log.debug('deviceParameterToUpdate.objectdefinition.common.type = ' + deviceParameterToUpdate.objectdefinition.common.type);
+						this.setStateAsync(state_ID, { val: parseFloat(String(finalValue)), ack: true });
+					}
+					catch (err) {
+						try {
+							this.log.warn('[async updateState(deviceParameterToUpdate, deviceValue)]: State "' + String(deviceParameterToUpdate.id) + '" couldn\'t be saved ... trying to create state ... returned ERROR: ' + err);
+							// State object seems not to exist yet -> we create this oject now
+							await this.setObjectNotExistsAsync(state_ID, deviceParameterToUpdate.objectdefinition);
+							// trying to save the state now again
+							this.setStateAsync(state_ID, { val: parseFloat(String(finalValue)), ack: true });
+						}
+						catch (err) {
+							this.log.error('updateState -> await this.setObjectNotExistsAsync(state_ID, deviceParameterToUpdate.objectdefinition) returned ERROR: ' + err);
+						}
+					}
 					break;
-				default:
-					// handle as string
+				default:	// handle as string
 					this.log.debug('[async updateState(deviceParameterToUpdate, deviceValue)] value is STRING');
-					this.setStateAsync(state_ID, { val: String(finalValue), ack: true });
+					try{
+						this.log.debug('deviceParameterToUpdate.objectdefinition.common.type = ' + deviceParameterToUpdate.objectdefinition.common.type);
+						this.setStateAsync(state_ID, { val: String(finalValue), ack: true });
+					}
+					catch (err) {
+						try {
+							this.log.warn('[async updateState(deviceParameterToUpdate, deviceValue)]: State "' + String(deviceParameterToUpdate.id) + '" couldn\'t be saved ... trying to create state ... returned ERROR: ' + err);
+							// State object seems not to exist yet -> we create this oject now
+							await this.setObjectNotExistsAsync(state_ID, deviceParameterToUpdate.objectdefinition);
+							// trying to save the state now again
+							this.setStateAsync(state_ID, { val: String(finalValue), ack: true });
+						}
+						catch (err) {
+							this.log.error('updateState -> await this.setObjectNotExistsAsync(state_ID, deviceParameterToUpdate.objectdefinition) returned ERROR: ' + err);
+						}
+					}
 			}
-
 			if (deviceParameterToUpdate.objectdefinition.common.unit !== null) {
 				this.log.debug('[async updateState(deviceParameterToUpdate, deviceValue)] info: ' + String(cur_StatePath) + ' ' + String(cur_ParameterID) + ' ' + String(finalValue) + ' ' + String(deviceParameterToUpdate.objectdefinition.common.unit));
 			}
