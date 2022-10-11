@@ -1634,8 +1634,10 @@ class wamo extends utils.Adapter {
 		try {
 			this.log.debug('creating state objects ...');
 			// Creating device parameter states
+			this.log.debug('num DeviceParameters = ' + String(DeviceParameters.length));
 			for (let i = 0; i < DeviceParameters.length; i++) {
 				try{
+					this.log.debug('creating state object: ' + String(DeviceParameters[i].id));
 					await this.setObjectNotExistsAsync(DeviceParameters[i].statePath + DeviceParameters[i].id, Object(DeviceParameters[i].objectdefinition));
 					await this.createRawStateObject(DeviceParameters[i]);
 				}
