@@ -141,15 +141,6 @@ class wamo extends utils.Adapter {
 		}
 
 		//=================================================================================================
-		//===  Create "Device-Control" states (Objects to send commands to the device)					===
-		//=================================================================================================
-		try {
-			// await this.createDeviceControlStates();
-		} catch (err) {
-			// this.log.error('Error creating device control states: ' + err);
-		}
-
-		//=================================================================================================
 		//===  Create All state Objects in order to avoid later use of "setObjectNotExistsAsync"		===
 		//=================================================================================================
 		try {
@@ -1705,27 +1696,6 @@ class wamo extends utils.Adapter {
 	}
 
 	/**
-	 * Creating device control objects
-	 * @returns true OR error
-	 */
-	async createDeviceControlStates(){
-		try {
-			for (let i = 0; i < deviceControlStates.length; i++) {
-				try {
-					await this.setObjectNotExistsAsync(deviceControlStates[i].statePath + '.' + deviceControlStates[i].id, Object(deviceControlStates[i].objectdefinition));
-					await this.setStateAsync(deviceControlStates[i].statePath + '.' + deviceControlStates[i].id, { val: deviceControlStates[i].initialValue, ack: true });
-					this.log.debug('Device control state ' + deviceControlStates[i].id + ' created');
-				} catch (err) {
-					this.log.error('[async createDeviceControlStates()] ERROR: ]' + err);
-				}
-			}
-			return true;
-		} catch (err) {
-			throw new Error(err);
-		}
-	}
-
-	/**
 	 * get data of all profiles from the device
 	 */
 	async getDeviceProfilesData() {
@@ -3182,6 +3152,9 @@ class wamo extends utils.Adapter {
 			stStaResult = await this.setStateAsync(currentStatePath, { val: profileAvailable, ack: true });
 			this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
+			// update RAW state
+			this.setStateAsync(adapterChannels.DeviceRawData.path + '.' + currentStatePath.substring(currentStatePath.lastIndexOf('.') + 1, currentStatePath.length - 1), { val: JSON.stringify(value), ack: true });
+
 			if (valuesInfoMessages) {
 				if (profileAvailable == 1) { this.log.info('Profile ' + String(ProfileNumber) + ' is available'); }
 				else { this.log.info('Profile ' + String(ProfileNumber) + ' is not available'); }
@@ -3251,6 +3224,9 @@ class wamo extends utils.Adapter {
 			stStaResult = await this.setStateAsync(currentStatePath, { val: profileName, ack: true });
 			this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
+			// update RAW state
+			this.setStateAsync(adapterChannels.DeviceRawData.path + '.' + currentStatePath.substring(currentStatePath.lastIndexOf('.') + 1, currentStatePath.length - 1), { val: JSON.stringify(value), ack: true });
+
 			if (valuesInfoMessages) { this.log.info('Profile ' + String(ProfileNumber) + ' name is ' + profileName); }
 			return true;
 		} catch (err) {
@@ -3317,6 +3293,10 @@ class wamo extends utils.Adapter {
 
 			stStaResult = await this.setStateAsync(currentStatePath, { val: profileQuantityLimitation, ack: true });
 			this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
+
+			// update RAW state
+			this.setStateAsync(adapterChannels.DeviceRawData.path + '.' + currentStatePath.substring(currentStatePath.lastIndexOf('.') + 1, currentStatePath.length - 1), { val: JSON.stringify(value), ack: true });
+
 			if (valuesInfoMessages) {
 				if (profileQuantityLimitation == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' maximum volume limit disabled'); }
 				else { this.log.info('Profile ' + String(ProfileNumber) + ' maximum volume limit is ' + String(profileQuantityLimitation) + 'l'); }
@@ -3387,6 +3367,9 @@ class wamo extends utils.Adapter {
 			stStaResult = await this.setStateAsync(currentStatePath, { val: profileTimeLimitation, ack: true });
 			this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
+			// update RAW state
+			this.setStateAsync(adapterChannels.DeviceRawData.path + '.' + currentStatePath.substring(currentStatePath.lastIndexOf('.') + 1, currentStatePath.length - 1), { val: JSON.stringify(value), ack: true });
+
 			if (valuesInfoMessages) {
 				if (profileTimeLimitation == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' maximum time limit is disabled'); }
 				else { this.log.info('Profile ' + String(ProfileNumber) + ' maximum time limit is ' + String(profileTimeLimitation) + 'min'); }
@@ -3454,6 +3437,9 @@ class wamo extends utils.Adapter {
 
 			stStaResult = await this.setStateAsync(currentStatePath, { val: profileMaximumFlow, ack: true });
 			this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
+
+			// update RAW state
+			this.setStateAsync(adapterChannels.DeviceRawData.path + '.' + currentStatePath.substring(currentStatePath.lastIndexOf('.') + 1, currentStatePath.length - 1), { val: JSON.stringify(value), ack: true });
 
 			if (valuesInfoMessages) {
 				if (profileMaximumFlow == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' maximum flow is disabled'); }
@@ -3528,6 +3514,9 @@ class wamo extends utils.Adapter {
 			stStaResult = await this.setStateAsync(currentStatePath, { val: profileMicroleackageDetection, ack: true });
 			this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
+			// update RAW state
+			this.setStateAsync(adapterChannels.DeviceRawData.path + '.' + currentStatePath.substring(currentStatePath.lastIndexOf('.') + 1, currentStatePath.length - 1), { val: JSON.stringify(value), ack: true });
+
 			if (valuesInfoMessages) {
 				if (profileMicroleackageDetection == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' Microleak Detektion is disabled'); }
 				else { this.log.info('Profile ' + String(ProfileNumber) + ' Microleak Detektion is enabled'); }
@@ -3596,6 +3585,9 @@ class wamo extends utils.Adapter {
 			stStaResult = await this.setStateAsync(currentStatePath, { val: profileReturnTime, ack: true });
 			this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
 
+			// update RAW state
+			this.setStateAsync(adapterChannels.DeviceRawData.path + '.' + currentStatePath.substring(currentStatePath.lastIndexOf('.') + 1, currentStatePath.length - 1), { val: JSON.stringify(value), ack: true });
+
 			if (valuesInfoMessages) { this.log.info('Profile ' + String(ProfileNumber) + ' return time to default profile is ' + String(profileReturnTime) + 'h'); }
 
 			return true;
@@ -3663,6 +3655,9 @@ class wamo extends utils.Adapter {
 
 			stStaResult = await this.setStateAsync(currentStatePath, { val: profileBuzzer, ack: true });
 			this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
+
+			// update RAW state
+			this.setStateAsync(adapterChannels.DeviceRawData.path + '.' + currentStatePath.substring(currentStatePath.lastIndexOf('.') + 1, currentStatePath.length - 1), { val: JSON.stringify(value), ack: true });
 
 			if (valuesInfoMessages) {
 				if (profileBuzzer == 1) { this.log.info('Profile ' + String(ProfileNumber) + ' buzzer is on'); }
@@ -3735,6 +3730,9 @@ class wamo extends utils.Adapter {
 
 			stStaResult = await this.setStateAsync(currentStatePath, { val: profileLeackageWarning, ack: true });
 			this.log.debug('result from setStateAsync = ' + JSON.stringify(stStaResult));
+
+			// update RAW state
+			this.setStateAsync(adapterChannels.DeviceRawData.path + '.' + currentStatePath.substring(currentStatePath.lastIndexOf('.') + 1, currentStatePath.length - 1), { val: JSON.stringify(value), ack: true });
 
 			if (valuesInfoMessages) {
 				if (profileLeackageWarning == 0) { this.log.info('Profile ' + String(ProfileNumber) + ' Leakage Warning disabled'); }
