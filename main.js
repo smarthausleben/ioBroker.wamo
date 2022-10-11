@@ -1687,8 +1687,7 @@ class wamo extends utils.Adapter {
 			const raw_objectdefinition = {
 				type: 'state',
 				common: {
-					name: {
-					},
+					name: DeviceParameter.objectdefinition.common.name,
 					type: 'string',
 					unit: null,
 					role: 'json',
@@ -1697,7 +1696,7 @@ class wamo extends utils.Adapter {
 				},
 				native: {}
 			};
-			raw_objectdefinition.common.name = DeviceParameter.common.name;
+			raw_objectdefinition.common.name = DeviceParameter.objectdefinition.common.name;
 			await this.setObjectNotExistsAsync(adapterChannels.DeviceRawData.path + '.' + DeviceParameter.id, Object(raw_objectdefinition));
 		}
 		catch (err) {
