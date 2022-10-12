@@ -182,6 +182,7 @@ class wamo extends utils.Adapter {
 		let gotSensorPreasence = false;
 		while (!gotSensorPreasence) {
 			try {
+				this.log.info('checking sensor presence ...');
 				this.log.debug('async onReady() at "while (!gotSensorPreasence)" -> Getting sensor presence');
 				//==================================================================
 				//= Getting data for 'DeviceParameters' in [const sensorPresence]  =
@@ -202,6 +203,7 @@ class wamo extends utils.Adapter {
 		let gotDeviceData = false;
 		while (!gotDeviceData) {
 			try {
+				this.log.info('initial reading device data ...');
 				this.log.debug('async onReady() at "while (!gotDeviceData)" -> Getting initial data');
 				//==================================================================
 				//= Getting all datas for 'DeviceParameters' in [const initStates] =
@@ -225,6 +227,7 @@ class wamo extends utils.Adapter {
 		let gotDeviceProfileData = false;
 		while (!gotDeviceProfileData) {
 			try {
+				this.log.info('initial reading profile data ...');
 				// Device Profiles Initialisation
 				this.log.debug('async onReady() - getDeviceProfilesData -> Getting Profiles data from device at ' + this.config.device_ip + ':' + this.config.device_port);
 				//===============================================
@@ -1859,7 +1862,7 @@ class wamo extends utils.Adapter {
 						else {
 							// Sensor is not present
 							sensor_pressure_present = false;
-							this.log.info('Coductivity sensor not present');
+							this.log.info('Pressure sensor not present');
 						}
 					}
 					break;
