@@ -1658,7 +1658,7 @@ class wamo extends utils.Adapter {
 						this.log.debug('Raw State: "' + stateID + '" created');
 					}
 				} catch (err) {
-					this.log.error('[async initDevicesAndChanels()] STATE: ' + stateID + ' ERROR: ' + err);
+					this.log.error('[async createAlloObjects()] STATE: ' + stateID + ' ERROR: ' + err);
 				}
 			}
 
@@ -1667,12 +1667,12 @@ class wamo extends utils.Adapter {
 				const stateID = String(calculatedStates[key].statePath) + '.' + String(calculatedStates[key].id);
 				try {
 					// do we need to crate this object on startup?
-					if (DeviceParameters[key].createOnStartup) {
+					if (calculatedStates[key].createOnStartup) {
 						await this.setObjectNotExistsAsync(stateID, calculatedStates[key].objectdefinition);
 						this.log.debug('State: "' + stateID + '" created');
 					}
 				} catch (err) {
-					this.log.error('[async initDevicesAndChanels()] STATE: ' + stateID + ' ERROR: ' + err);
+					this.log.error('[async createAlloObjects()] STATE: ' + stateID + ' ERROR: ' + err);
 				}
 			}
 
@@ -1681,12 +1681,12 @@ class wamo extends utils.Adapter {
 				const stateID = String(StatisticStates[key].statePath) + '.' + String(StatisticStates[key].id);
 				try {
 					// do we need to crate this object on startup?
-					if (DeviceParameters[key].createOnStartup) {
+					if (calculatedStates[key].createOnStartup) {
 						await this.setObjectNotExistsAsync(stateID, StatisticStates[key].objectdefinition);
 						this.log.debug('State: "' + stateID + '" created');
 					}
 				} catch (err) {
-					this.log.error('[async initDevicesAndChanels()] STATE: ' + stateID + ' ERROR: ' + err);
+					this.log.error('[async createAlloObjects()] STATE: ' + stateID + ' ERROR: ' + err);
 				}
 			}
 
