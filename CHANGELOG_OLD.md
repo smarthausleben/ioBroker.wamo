@@ -1,5 +1,8 @@
 # Older changes
 
+## 0.2.8 (2022-08-08)
+* (smarthausleben) release cosmetics
+
 ## 0.2.7 (2022-08-08)
 * (smarthausleben) added 2 additional options to define lof.info messages
 * (smarthausleben) change using single api client to communicate with the device
