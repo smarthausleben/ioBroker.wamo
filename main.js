@@ -1610,6 +1610,7 @@ class wamo extends utils.Adapter {
 	 * @returns true OR error
 	 */
 	async initDevicesAndChanels() {
+		this.log.info('creating channel objects ...');
 		try {
 			try {
 				await this.setObjectNotExistsAsync('Device', {
@@ -1644,7 +1645,7 @@ class wamo extends utils.Adapter {
 	 */
 	async createAlloObjects() {
 		try {
-			this.log.debug('creating state objects ...');
+			this.log.info('creating state objects ...');
 			// Creating device parameter states
 			for (const key in DeviceParameters) {
 				const stateID = String(DeviceParameters[key].statePath) + '.' + String(DeviceParameters[key].id);
@@ -1734,6 +1735,7 @@ class wamo extends utils.Adapter {
 	 */
 	async createSensorSpecificObjects()
 	{
+		this.log.info('creating sensor related objects ...');
 		for(let i = 0; i < sensorPresence.length; i++)
 		{
 			let precence_return_value = null;
@@ -1742,10 +1744,11 @@ class wamo extends utils.Adapter {
 				case 'CSD':	// conductivity sensor
 					precence_return_value = await this.getStateAsync(sensorPresence[i].statePath + '.' + sensorPresence[i].id);
 					if (precence_return_value != null) {
-						this.log.warn('CSD presence return value: ' + String(precence_return_value.val));
+						this.log.debug('CSD presence return value: ' + String(precence_return_value.val));
 						if (parseInt(String(precence_return_value.val)) === 0) {
 							// Sensor is present
 							sensor_conductivity_present = true;
+							this.log.info('Coductivity sensor is present');
 							try {
 								// create Object for conductivity value
 								await this.setObjectNotExistsAsync(DeviceParameters.WaterConductivity.statePath + '.' + DeviceParameters.WaterConductivity.id, Object(DeviceParameters.WaterConductivity.objectdefinition));
@@ -1774,6 +1777,7 @@ class wamo extends utils.Adapter {
 						else {
 							// Sensor is not present
 							sensor_conductivity_present = false;
+							this.log.info('Conductivity sensor not present');
 						}
 					}
 					break;
@@ -1781,9 +1785,11 @@ class wamo extends utils.Adapter {
 				case 'TSD':	// temperature sensor
 					precence_return_value = await this.getStateAsync(sensorPresence[i].statePath + '.' + sensorPresence[i].id);
 					if (precence_return_value != null) {
+						this.log.debug('TSD presence return value: ' + String(precence_return_value.val));
 						if (parseInt(String(precence_return_value.val)) === 0) {
 							// Sensor is present
 							sensor_temperature_present = true;
+							this.log.info('Temperature sensor is present');
 							try {
 								// create Object for temperature value
 								await this.setObjectNotExistsAsync(DeviceParameters.WaterTemperature.statePath + '.' + DeviceParameters.WaterTemperature.id, Object(DeviceParameters.WaterTemperature.objectdefinition));
@@ -1812,6 +1818,7 @@ class wamo extends utils.Adapter {
 						else {
 							// Sensor is not present
 							sensor_temperature_present = false;
+							this.log.info('Temperature sensor not present');
 						}
 					}
 					break;
@@ -1819,9 +1826,11 @@ class wamo extends utils.Adapter {
 				case 'PSD':	// pressure sensor
 					precence_return_value = await this.getStateAsync(sensorPresence[i].statePath + '.' + sensorPresence[i].id);
 					if (precence_return_value != null) {
+						this.log.debug('TSD presence return value: ' + String(precence_return_value.val));
 						if (parseInt(String(precence_return_value.val)) === 0) {
 							// Sensor is present
 							sensor_pressure_present = true;
+							this.log.info('Pressure sensor is present');
 							try {
 								// create Object for pressure value
 								await this.setObjectNotExistsAsync(DeviceParameters.WaterPressure.statePath + '.' + DeviceParameters.WaterPressure.id, Object(DeviceParameters.WaterPressure.objectdefinition));
@@ -1850,6 +1859,7 @@ class wamo extends utils.Adapter {
 						else {
 							// Sensor is not present
 							sensor_pressure_present = false;
+							this.log.info('Coductivity sensor not present');
 						}
 					}
 					break;
@@ -1877,6 +1887,7 @@ class wamo extends utils.Adapter {
 	 */
 	async getDeviceProfilesData() {
 		try {
+			this.log.info('reading profiles ...');
 
 			if (moreMessages) { this.log.info('reading device profiles'); }
 			// alle 8 möglichen Profile durchlaufen
