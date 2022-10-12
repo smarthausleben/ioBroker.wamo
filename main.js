@@ -190,6 +190,9 @@ class wamo extends utils.Adapter {
 				if (moreMessages) { this.log.info('reading device parameters defined in object [sensorPresence]'); }
 				await this.getData(sensorPresence);
 				gotSensorPreasence = true;
+				// we need to wait some seconds to make sure sensor objects are created
+				await sleep(3000);
+				// now we can create the sensor specific objects
 				await this.createSensorSpecificObjects();
 			}
 			catch (err) {
