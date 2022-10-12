@@ -1736,9 +1736,12 @@ class wamo extends utils.Adapter {
 	{
 		for(let i = 0; i < sensorPresence.length; i++)
 		{
+			let precence_return_value = null;
 			switch (sensorPresence[i].id)
 			{
 				case 'CSD':	// conductivity sensor
+					precence_return_value = await this.getStateAsync(sensorPresence[i].statePath + '.' + sensorPresence[i].id);
+					this.log.warn('CSD presence return value: ' +String(precence_return_value));
 					if(parseInt(String(await this.getStateAsync(sensorPresence[i].statePath +'.' + sensorPresence[i].id))) === 0){
 						// Sensor is present
 						sensor_conductivity_present = true;
