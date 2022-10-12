@@ -1741,111 +1741,116 @@ class wamo extends utils.Adapter {
 			{
 				case 'CSD':	// conductivity sensor
 					precence_return_value = await this.getStateAsync(sensorPresence[i].statePath + '.' + sensorPresence[i].id);
-					this.log.warn('CSD presence return value: ' +String(precence_return_value));
-					if(parseInt(String(await this.getStateAsync(sensorPresence[i].statePath +'.' + sensorPresence[i].id))) === 0){
-						// Sensor is present
-						sensor_conductivity_present = true;
-						try{
-							// create Object for conductivity value
-							await this.setObjectNotExistsAsync(DeviceParameters.WaterConductivity.statePath + '.' + DeviceParameters.WaterConductivity.id, Object(DeviceParameters.WaterConductivity.objectdefinition));
-							// create RAW data object if needed
-							if (DeviceParameters.WaterConductivity.saveRawData) {
-								// basic RAW object definition
-								const raw_objectdefinition = {
-									type: 'state',
-									common: {
-										name: DeviceParameters.WaterConductivity.objectdefinition.common.name,
-										type: 'string',
-										unit: null,
-										role: 'json',
-										read: true,
-										write: false
-									},
-									native: {}
-								};
-								await this.setObjectNotExistsAsync(adapterChannels.DeviceRawData.path + '.' + DeviceParameters.WaterConductivity.id, Object(raw_objectdefinition));
+					if (precence_return_value != null) {
+						this.log.warn('CSD presence return value: ' + String(precence_return_value.val));
+						if (parseInt(String(precence_return_value.val)) === 0) {
+							// Sensor is present
+							sensor_conductivity_present = true;
+							try {
+								// create Object for conductivity value
+								await this.setObjectNotExistsAsync(DeviceParameters.WaterConductivity.statePath + '.' + DeviceParameters.WaterConductivity.id, Object(DeviceParameters.WaterConductivity.objectdefinition));
+								// create RAW data object if needed
+								if (DeviceParameters.WaterConductivity.saveRawData) {
+									// basic RAW object definition
+									const raw_objectdefinition = {
+										type: 'state',
+										common: {
+											name: DeviceParameters.WaterConductivity.objectdefinition.common.name,
+											type: 'string',
+											unit: null,
+											role: 'json',
+											read: true,
+											write: false
+										},
+										native: {}
+									};
+									await this.setObjectNotExistsAsync(adapterChannels.DeviceRawData.path + '.' + DeviceParameters.WaterConductivity.id, Object(raw_objectdefinition));
+								}
+							}
+							catch (err) {
+								this.log.error('[async createSensorSpecificObjects()] Error case \'CSD\' ERROR: ' + err);
 							}
 						}
-						catch (err){
-							this.log.error('[async createSensorSpecificObjects()] Error case \'CSD\' ERROR: ' + err);
+						else {
+							// Sensor is not present
+							sensor_conductivity_present = false;
 						}
-					}
-					else
-					{
-						// Sensor is not present
-						sensor_conductivity_present = false;
 					}
 					break;
 
 				case 'TSD':	// temperature sensor
-					if(parseInt(String(await this.getStateAsync(sensorPresence[i].statePath +'.' + sensorPresence[i].id))) === 0){
-						// Sensor is present
-						sensor_temperature_present = true;
-						try{
-							// create Object for temperature value
-							await this.setObjectNotExistsAsync(DeviceParameters.WaterTemperature.statePath + '.' + DeviceParameters.WaterTemperature.id, Object(DeviceParameters.WaterTemperature.objectdefinition));
-							// create RAW data object if needed
-							if (DeviceParameters.WaterTemperature.saveRawData) {
-								// basic RAW object definition
-								const raw_objectdefinition = {
-									type: 'state',
-									common: {
-										name: DeviceParameters.WaterTemperature.objectdefinition.common.name,
-										type: 'string',
-										unit: null,
-										role: 'json',
-										read: true,
-										write: false
-									},
-									native: {}
-								};
-								await this.setObjectNotExistsAsync(adapterChannels.DeviceRawData.path + '.' + DeviceParameters.WaterTemperature.id, Object(raw_objectdefinition));
+					precence_return_value = await this.getStateAsync(sensorPresence[i].statePath + '.' + sensorPresence[i].id);
+					if (precence_return_value != null) {
+						if (parseInt(String(precence_return_value.val)) === 0) {
+							// Sensor is present
+							sensor_temperature_present = true;
+							try {
+								// create Object for temperature value
+								await this.setObjectNotExistsAsync(DeviceParameters.WaterTemperature.statePath + '.' + DeviceParameters.WaterTemperature.id, Object(DeviceParameters.WaterTemperature.objectdefinition));
+								// create RAW data object if needed
+								if (DeviceParameters.WaterTemperature.saveRawData) {
+									// basic RAW object definition
+									const raw_objectdefinition = {
+										type: 'state',
+										common: {
+											name: DeviceParameters.WaterTemperature.objectdefinition.common.name,
+											type: 'string',
+											unit: null,
+											role: 'json',
+											read: true,
+											write: false
+										},
+										native: {}
+									};
+									await this.setObjectNotExistsAsync(adapterChannels.DeviceRawData.path + '.' + DeviceParameters.WaterTemperature.id, Object(raw_objectdefinition));
+								}
+							}
+							catch (err) {
+								this.log.error('[async createSensorSpecificObjects()] Error case \'TSD\' ERROR: ' + err);
 							}
 						}
-						catch (err){
-							this.log.error('[async createSensorSpecificObjects()] Error case \'TSD\' ERROR: ' + err);
+						else {
+							// Sensor is not present
+							sensor_temperature_present = false;
 						}
-					}
-					else
-					{
-						// Sensor is not present
-						sensor_temperature_present = false;
 					}
 					break;
 
 				case 'PSD':	// pressure sensor
-					if(parseInt(String(await this.getStateAsync(sensorPresence[i].statePath +'.' + sensorPresence[i].id))) === 0){
-						// Sensor is present
-						sensor_pressure_present = true;
-						try{
-							// create Object for pressure value
-							await this.setObjectNotExistsAsync(DeviceParameters.WaterPressure.statePath + '.' + DeviceParameters.WaterPressure.id, Object(DeviceParameters.WaterPressure.objectdefinition));
-							// create RAW data object if needed
-							if (DeviceParameters.WaterPressure.saveRawData) {
-								// basic RAW object definition
-								const raw_objectdefinition = {
-									type: 'state',
-									common: {
-										name: DeviceParameters.WaterPressure.objectdefinition.common.name,
-										type: 'string',
-										unit: null,
-										role: 'json',
-										read: true,
-										write: false
-									},
-									native: {}
-								};
-								await this.setObjectNotExistsAsync(adapterChannels.DeviceRawData.path + '.' + DeviceParameters.WaterPressure.id, Object(raw_objectdefinition));
+					precence_return_value = await this.getStateAsync(sensorPresence[i].statePath + '.' + sensorPresence[i].id);
+					if (precence_return_value != null) {
+						if (parseInt(String(precence_return_value.val)) === 0) {
+							// Sensor is present
+							sensor_pressure_present = true;
+							try {
+								// create Object for pressure value
+								await this.setObjectNotExistsAsync(DeviceParameters.WaterPressure.statePath + '.' + DeviceParameters.WaterPressure.id, Object(DeviceParameters.WaterPressure.objectdefinition));
+								// create RAW data object if needed
+								if (DeviceParameters.WaterPressure.saveRawData) {
+									// basic RAW object definition
+									const raw_objectdefinition = {
+										type: 'state',
+										common: {
+											name: DeviceParameters.WaterPressure.objectdefinition.common.name,
+											type: 'string',
+											unit: null,
+											role: 'json',
+											read: true,
+											write: false
+										},
+										native: {}
+									};
+									await this.setObjectNotExistsAsync(adapterChannels.DeviceRawData.path + '.' + DeviceParameters.WaterPressure.id, Object(raw_objectdefinition));
+								}
+							}
+							catch (err) {
+								this.log.error('[async createSensorSpecificObjects()] Error case \'TSD\' ERROR: ' + err);
 							}
 						}
-						catch (err){
-							this.log.error('[async createSensorSpecificObjects()] Error case \'TSD\' ERROR: ' + err);
+						else {
+							// Sensor is not present
+							sensor_pressure_present = false;
 						}
-					}
-					else
-					{
-						// Sensor is not present
-						sensor_pressure_present = false;
 					}
 					break;
 
