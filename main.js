@@ -1681,7 +1681,7 @@ class wamo extends utils.Adapter {
 				const stateID = String(StatisticStates[key].statePath) + '.' + String(StatisticStates[key].id);
 				try {
 					// do we need to crate this object on startup?
-					if (calculatedStates[key].createOnStartup) {
+					if (StatisticStates[key].createOnStartup) {
 						await this.setObjectNotExistsAsync(stateID, StatisticStates[key].objectdefinition);
 						this.log.debug('State: "' + stateID + '" created');
 					}
