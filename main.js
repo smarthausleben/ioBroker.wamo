@@ -26,7 +26,8 @@ const {
 	initStates,
 	alarmPeriod,
 	shortPeriod,
-	longPeriode
+	longPeriode,
+	sensorPresence
 } = require('./lib/device-parameters');
 
 /* cron definitions for the varius cron timers.
@@ -176,12 +177,32 @@ class wamo extends utils.Adapter {
 		}
 
 		//=================================================================================================
+		//===  Getting sensor presence																	===
+		//=================================================================================================
+		let gotSensorPreasence = false;
+		while (!gotSensorPreasence) {
+			try {
+				this.log.debug('async onReady() at "while (!gotSensorPreasence)" -> Getting sensor presence');
+				//==================================================================
+				//= Getting data for 'DeviceParameters' in [const sensorPresence]  =
+				//==================================================================
+				if (moreMessages) { this.log.info('reading device parameters defined in object [sensorPresence]'); }
+				await this.getData(sensorPresence);
+				gotSensorPreasence = true;
+				await this.createSensorSpecificObjects();
+			}
+			catch (err) {
+				this.log.error('this.getData(sensorPresence) ERROR: ' + err);
+			}
+		}
+
+		//=================================================================================================
 		//===  Getting device data																		===
 		//=================================================================================================
 		let gotDeviceData = false;
 		while (!gotDeviceData) {
 			try {
-				this.log.debug('async onReady() at "while (!gotDeviceData)" -> Getting data from device at ' + this.config.device_ip + ':' + this.config.device_port);
+				this.log.debug('async onReady() at "while (!gotDeviceData)" -> Getting initial data');
 				//==================================================================
 				//= Getting all datas for 'DeviceParameters' in [const initStates] =
 				//==================================================================
@@ -1625,39 +1646,47 @@ class wamo extends utils.Adapter {
 		try {
 			this.log.debug('creating state objects ...');
 			// Creating device parameter states
-
 			for (const key in DeviceParameters) {
-				const stateID = String(DeviceParameters[key].statePath) + '.' + String(DeviceParameters[key].id);
-				try {
-					await this.setObjectNotExistsAsync(stateID, DeviceParameters[key].objectdefinition);
-					this.log.debug('State: "' + stateID + '" created');
-					// creating matching RAW State objects
-					await this.createRawStateObject(DeviceParameters[key]);
-					this.log.debug('Raw State: "' + stateID + '" created');
-				} catch (err) {
-					this.log.error('[async initDevicesAndChanels()] STATE: ' + stateID + ' ERROR: ' + err);
+				// do we need to crate this object on startup?
+				if (DeviceParameters[key].createoOnStartup) {
+					const stateID = String(DeviceParameters[key].statePath) + '.' + String(DeviceParameters[key].id);
+					try {
+						await this.setObjectNotExistsAsync(stateID, DeviceParameters[key].objectdefinition);
+						this.log.debug('State: "' + stateID + '" created');
+						// creating matching RAW State objects
+						await this.createRawStateObject(DeviceParameters[key]);
+						this.log.debug('Raw State: "' + stateID + '" created');
+					} catch (err) {
+						this.log.error('[async initDevicesAndChanels()] STATE: ' + stateID + ' ERROR: ' + err);
+					}
 				}
 			}
 
 			// Creating calculated states
 			for (const key in calculatedStates) {
-				const stateID = String(calculatedStates[key].statePath) + '.' + String(calculatedStates[key].id);
-				try {
-					await this.setObjectNotExistsAsync(stateID, calculatedStates[key].objectdefinition);
-					this.log.debug('State: "' + stateID + '" created');
-				} catch (err) {
-					this.log.error('[async initDevicesAndChanels()] STATE: ' + stateID + ' ERROR: ' + err);
+				// do we need to crate this object on startup?
+				if (DeviceParameters[key].createoOnStartup) {
+					const stateID = String(calculatedStates[key].statePath) + '.' + String(calculatedStates[key].id);
+					try {
+						await this.setObjectNotExistsAsync(stateID, calculatedStates[key].objectdefinition);
+						this.log.debug('State: "' + stateID + '" created');
+					} catch (err) {
+						this.log.error('[async initDevicesAndChanels()] STATE: ' + stateID + ' ERROR: ' + err);
+					}
 				}
 			}
 
 			// Creating statistic states
 			for (const key in StatisticStates) {
-				const stateID = String(StatisticStates[key].statePath) + '.' + String(StatisticStates[key].id);
-				try {
-					await this.setObjectNotExistsAsync(stateID, StatisticStates[key].objectdefinition);
-					this.log.debug('State: "' + stateID + '" created');
-				} catch (err) {
-					this.log.error('[async initDevicesAndChanels()] STATE: ' + stateID + ' ERROR: ' + err);
+				// do we need to crate this object on startup?
+				if (DeviceParameters[key].createoOnStartup) {
+					const stateID = String(StatisticStates[key].statePath) + '.' + String(StatisticStates[key].id);
+					try {
+						await this.setObjectNotExistsAsync(stateID, StatisticStates[key].objectdefinition);
+						this.log.debug('State: "' + stateID + '" created');
+					} catch (err) {
+						this.log.error('[async initDevicesAndChanels()] STATE: ' + stateID + ' ERROR: ' + err);
+					}
 				}
 			}
 
@@ -1674,24 +1703,158 @@ class wamo extends utils.Adapter {
 	async createRawStateObject(DeviceParameter)
 	{
 		try {
-			// basic RAW object definition
-			const raw_objectdefinition = {
-				type: 'state',
-				common: {
-					name: DeviceParameter.objectdefinition.common.name,
-					type: 'string',
-					unit: null,
-					role: 'json',
-					read: true,
-					write: false
-				},
-				native: {}
-			};
-			raw_objectdefinition.common.name = DeviceParameter.objectdefinition.common.name;
-			await this.setObjectNotExistsAsync(adapterChannels.DeviceRawData.path + '.' + DeviceParameter.id, Object(raw_objectdefinition));
+			// do we need a raw object for this state
+			if (DeviceParameter.saveRawData) {
+
+				// basic RAW object definition
+				const raw_objectdefinition = {
+					type: 'state',
+					common: {
+						name: DeviceParameter.objectdefinition.common.name,
+						type: 'string',
+						unit: null,
+						role: 'json',
+						read: true,
+						write: false
+					},
+					native: {}
+				};
+				await this.setObjectNotExistsAsync(adapterChannels.DeviceRawData.path + '.' + DeviceParameter.id, Object(raw_objectdefinition));
+			}
 		}
 		catch (err) {
 			this.log.error('ERROR at async createRawStateObject(DeviceParameter): Parameter ID = ' + String(DeviceParameter.id) + ' ERROR: ' + err);
+		}
+	}
+
+
+	/**
+	 * This methode creates state objects
+	 * accordung to persence of sensors
+	 */
+	async createSensorSpecificObjects()
+	{
+		for(let i = 0; i < sensorPresence.length; i++)
+		{
+			switch (sensorPresence[i].id)
+			{
+				case 'CSD':	// conductivity sensor
+					if(parseInt(String(await this.getStateAsync(sensorPresence[i].statePath +'.' + sensorPresence[i].id))) === 0){
+						// Sensor is present
+						sensor_conductivity_present = true;
+						try{
+							// create Object for conductivity value
+							await this.setObjectNotExistsAsync(DeviceParameters.WaterConductivity.statePath + '.' + DeviceParameters.WaterConductivity.id, Object(DeviceParameters.WaterConductivity.objectdefinition));
+							// create RAW data object if needed
+							if (DeviceParameters.WaterConductivity.saveRawData) {
+								// basic RAW object definition
+								const raw_objectdefinition = {
+									type: 'state',
+									common: {
+										name: DeviceParameters.WaterConductivity.objectdefinition.common.name,
+										type: 'string',
+										unit: null,
+										role: 'json',
+										read: true,
+										write: false
+									},
+									native: {}
+								};
+								await this.setObjectNotExistsAsync(adapterChannels.DeviceRawData.path + '.' + DeviceParameters.WaterConductivity.id, Object(raw_objectdefinition));
+							}
+						}
+						catch (err){}
+					}
+					else
+					{
+						// Sensor is not present
+						sensor_conductivity_present = false;
+					}
+					break;
+
+				case 'TSD':	// temperature sensor
+					if(parseInt(String(await this.getStateAsync(sensorPresence[i].statePath +'.' + sensorPresence[i].id))) === 0){
+						// Sensor is present
+						sensor_temperature_present = true;
+						try{
+							// create Object for temperature value
+							await this.setObjectNotExistsAsync(DeviceParameters.WaterTemperature.statePath + '.' + DeviceParameters.WaterTemperature.id, Object(DeviceParameters.WaterTemperature.objectdefinition));
+							// create RAW data object if needed
+							if (DeviceParameters.WaterTemperature.saveRawData) {
+								// basic RAW object definition
+								const raw_objectdefinition = {
+									type: 'state',
+									common: {
+										name: DeviceParameters.WaterTemperature.objectdefinition.common.name,
+										type: 'string',
+										unit: null,
+										role: 'json',
+										read: true,
+										write: false
+									},
+									native: {}
+								};
+								await this.setObjectNotExistsAsync(adapterChannels.DeviceRawData.path + '.' + DeviceParameters.WaterTemperature.id, Object(raw_objectdefinition));
+							}
+						}
+						catch (err){}
+					}
+					else
+					{
+						// Sensor is not present
+						sensor_temperature_present = false;
+					}
+					break;
+					
+				case 'PSD':	// pressure sensor
+					if(parseInt(String(await this.getStateAsync(sensorPresence[i].statePath +'.' + sensorPresence[i].id))) === 0){
+						// Sensor is present
+						sensor_pressure_present = true;
+						try{
+							// create Object for pressure value
+							await this.setObjectNotExistsAsync(DeviceParameters.WaterPressure.statePath + '.' + DeviceParameters.WaterPressure.id, Object(DeviceParameters.WaterPressure.objectdefinition));
+							// create RAW data object if needed
+							if (DeviceParameters.WaterPressure.saveRawData) {
+								// basic RAW object definition
+								const raw_objectdefinition = {
+									type: 'state',
+									common: {
+										name: DeviceParameters.WaterPressure.objectdefinition.common.name,
+										type: 'string',
+										unit: null,
+										role: 'json',
+										read: true,
+										write: false
+									},
+									native: {}
+								};
+								await this.setObjectNotExistsAsync(adapterChannels.DeviceRawData.path + '.' + DeviceParameters.WaterPressure.id, Object(raw_objectdefinition));
+							}
+						}
+						catch (err){}
+					}
+					else
+					{
+						// Sensor is not present
+						sensor_pressure_present = false;
+					}
+					break;
+				
+				default:
+					this.log.warn('[async createSensorSpecificObjects()] Sensor type "' + sensorPresence[i].id + '" not recognised')
+			}
+		}
+
+		// do we have conductivity AND temperature sensor present?
+		if(sensor_conductivity_present && sensor_temperature_present)
+		{
+			// then we nedd additional calculated objects
+			
+			// create object for "compensated conductivity" value
+			await this.setObjectNotExistsAsync(calculatedStates.conductivityEC25.statePath + '.' + calculatedStates.conductivityEC25.id, Object(calculatedStates.conductivityEC25.objectdefinition));
+			
+			// create object for "German water hardness" value
+			await this.setObjectNotExistsAsync(calculatedStates.germanWaterHardness.statePath + '.' + calculatedStates.germanWaterHardness.id, Object(calculatedStates.germanWaterHardness.objectdefinition));
 		}
 	}
 

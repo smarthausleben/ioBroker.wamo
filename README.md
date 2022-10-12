@@ -26,7 +26,10 @@ The POLYGONVATRO unit is, under the hood, a SYR SaveTech Connect 2422 unit but w
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+* (smarthausleben) add: new property "createoOnStartup" in DeviceParameter
+* (smarthausleben) add: new property "saveRawData" in DeviceParameter
 * (smarthausleben) change: creating all state objects during startup to avoid calling "setObjectNotExistsAsync" later on
+* (smarthausleben) add: Profile parameter raw states
 * (smarthausleben) change: default value for "factor_german_water_hardnes" changed to 0.0296041666666667
 * (smarthausleben) FIX update german water hardnes factor object (GHARDFACTOR) during startup 
 
