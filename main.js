@@ -190,8 +190,7 @@ class wamo extends utils.Adapter {
 				if (moreMessages) { this.log.info('reading device parameters defined in object [sensorPresence]'); }
 				await this.getData(sensorPresence);
 				gotSensorPreasence = true;
-				// we need to wait some seconds to make sure sensor objects are created
-				await sleep(3000);
+				await this.delay(3000); // we need to wait some seconds to make sure sensor objects are created
 				// now we can create the sensor specific objects
 				await this.createSensorSpecificObjects();
 			}
@@ -1194,7 +1193,7 @@ class wamo extends utils.Adapter {
 					try { this.clearTimeout(delay_Timer_ID); }
 					catch (err) { this.log.error('Error clear Timeout'); }
 				}
-				this.log.error('await sleep(3000) ERROR: ' + err);
+				this.log.error('await this.delay(3000)] ERROR: ' + err);
 			}
 			short_Intervall_ID = this.setInterval(short_poll, this.config.device_short_poll_interval * 1000);
 			if (moreMessages) { this.log.info('Short timer initialized'); }
@@ -1208,7 +1207,7 @@ class wamo extends utils.Adapter {
 					try { this.clearTimeout(delay_Timer_ID); }
 					catch (err) { this.log.error('Error clear Timeout'); }
 				}
-				this.log.error('await sleep(3000) ERROR: ' + err);
+				this.log.error('await this.delay(3000)] ERROR: ' + err);
 			}
 			long_Intervall_ID = this.setInterval(long_poll, this.config.device_long_poll_interval * 1000);
 			if (moreMessages) { this.log.info('Long timer initialized'); }
@@ -1222,7 +1221,7 @@ class wamo extends utils.Adapter {
 					try { this.clearTimeout(delay_Timer_ID); }
 					catch (err) { this.log.error('Error clear Timeout'); }
 				}
-				this.log.error('await sleep(2000) ERROR: ' + err);
+				this.log.error('await this.delay(3000)] ERROR: ' + err);
 			}
 			very_long_Intervall_ID = this.setInterval(very_long_poll, this.config.device_very_long_poll_interval * 1000);
 			if (moreMessages) { this.log.info('Very Long timer initialized'); }
@@ -3938,27 +3937,6 @@ class wamo extends utils.Adapter {
 			throw new Error(err);
 		}
 	}
-}
-
-/**
- * Async Delay Funktion (you can await for delay)
- * @param {number} ms - Milliseconds to sleep
- */
-function sleep(ms) {
-	return new Promise(resolve => {
-		delay_Timer_ID = setTimeout(resolve, ms);
-	});
-}
-
-
-/**
- * testing if val is an object
- * @param {any} val
- * @returns String 'object' or false
- */
-function isObject(val) {
-	if (val === null) { return false; }
-	return (typeof val === 'object');
 }
 
 /**
