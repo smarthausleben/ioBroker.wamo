@@ -248,7 +248,19 @@
             "type": "state",
             "common": {
                 "role": "indicator.connected",
-                "name": "If communication with circuit works",
+                "name": {
+                    "en": "If communication with circuit works",
+                    "de": "Wenn die Kommunikation mit dem Gerät funktioniert",
+                    "ru": "Если связь с схемой работает",
+                    "pt": "Se a comunicação com o circuito funciona",
+                    "nl": "Als communicatie met circuit werkt",
+                    "fr": "Si la communication avec les circuits fonctionne",
+                    "it": "Se la comunicazione con i circuiti funziona",
+                    "es": "Si la comunicación con los circuitos funciona",
+                    "pl": "Jeśli komunikacja się z obwodem",
+                    "uk": "Якщо комунікація з контурними роботами",
+                    "zh-cn": "如果与渠道的通信工程"
+                  },
                 "type": "boolean",
                 "read": true,
                 "write": false,
