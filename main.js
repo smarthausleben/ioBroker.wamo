@@ -68,6 +68,8 @@ let moreMessages = false;
 let apiResponseInfoMessages = false;
 
 let interfaceBussy;
+let interfaceBussyCounter = 0;
+let interfaceBussyMaxBeforeReaset = 10;
 let SystemLanguage;
 
 
@@ -1399,14 +1401,17 @@ class wamo extends utils.Adapter {
 			if (moreMessages) { this.log.info('Alarm Timer tick'); }
 			// get alarmPeriode data
 			if (!interfaceBussy) {
+				interfaceBussyCounter = 0;	// Counter of interfaceBussy Reqwuest reset
 				await this.getData(Object(alarmPeriod));
 				return true;
 			}
 			else {
 				this.log.warn('Interface bussy during ALARM TIMER data request');
+				await this.interfaceBussyWatchDog();	// check if bussy flag is still plausible
 				return false;
 			}
 		} catch (err) {
+			interfaceBussyCounter = 0;	// Counter of interfaceBussy Reqwuest reset
 			interfaceBussy = false;	// CLEAR flag that device interface is bussy
 			throw new Error(err);
 		}
@@ -1421,6 +1426,7 @@ class wamo extends utils.Adapter {
 			if (moreMessages) { this.log.info('Short Timer tick'); }
 			// get longPeriode data
 			if (!interfaceBussy) {
+				interfaceBussyCounter = 0;	// Counter of interfaceBussy Reqwuest reset
 				await this.getData(Object(shortPeriod));
 				try {
 					await this.updateStatistics();
@@ -1431,10 +1437,12 @@ class wamo extends utils.Adapter {
 			}
 			else {
 				this.log.warn('Interface bussy during SHORT TIMER data request');
+				await this.interfaceBussyWatchDog();	// check if bussy flag is still plausible
 				return false;
 			}
 		}
 		catch (err) {
+			interfaceBussyCounter = 0;	// Counter of interfaceBussy Reqwuest reset
 			interfaceBussy = false;	// CLEAR flag that device interface is bussy
 			throw new Error(err);
 		}
@@ -1449,14 +1457,17 @@ class wamo extends utils.Adapter {
 			if (moreMessages) { this.log.info('Long Timer tick'); }
 			// get longPeriode data
 			if (!interfaceBussy) {
+				interfaceBussyCounter = 0;	// Counter of interfaceBussy Reqwuest reset
 				await this.getData(Object(longPeriode));
 				return true;
 			}
 			else {
 				this.log.warn('Interface bussy during LONG TIMER data request');
+				await this.interfaceBussyWatchDog();	// check if bussy flag is still plausible
 				return false;
 			}
 		} catch (err) {
+			interfaceBussyCounter = 0;	// Counter of interfaceBussy Reqwuest reset
 			interfaceBussy = false;	// CLEAR flag that device interface is bussy
 			throw new Error(err);
 		}
@@ -1471,6 +1482,7 @@ class wamo extends utils.Adapter {
 			if (moreMessages) { this.log.info('Very Long Timer tick'); }
 			// get longPeriode data
 			if (!interfaceBussy) {
+				interfaceBussyCounter = 0;	// Counter of interfaceBussy Reqwuest reset
 				if (moreMessages) { this.log.info('Get initStates'); }
 				//=================================================================
 				// update state: German hardnes calculation factor from settings
@@ -1488,11 +1500,36 @@ class wamo extends utils.Adapter {
 			}
 			else {
 				this.log.warn('Interface bussy during VERY LONG TIMER data request');
+				await this.interfaceBussyWatchDog();	// check if bussy flag is still plausible
 				return false;
 			}
 		} catch (err) {
+			interfaceBussyCounter = 0;	// Counter of interfaceBussy Reqwuest reset
 			interfaceBussy = false;	// CLEAR flag that device interface is bussy
 			throw new Error(err);
+		}
+	}
+
+	/** checks plausibility of an set InterfaceBussy flag
+	 * and resets flag after defined attempts.
+	*/
+	async interfaceBussyWatchDog()
+	{
+		try{
+			if(interfaceBussyCounter >= interfaceBussyMaxBeforeReaset)
+			{
+				// we reste interfaceBussy Flag and Counter
+				interfaceBussy = false;
+				interfaceBussyCounter = 0;
+				this.log.warn('\'interfaceBussy\' flag reset by watch dog');
+			}
+			else{
+				// increase interfaceBussy counter
+				interfaceBussyCounter++;
+			}
+		}
+		catch(err){
+			this.log.error('[async checkInterfaceBussyPlausibility()] Error: ' + err);
 		}
 	}
 
@@ -1543,10 +1580,11 @@ class wamo extends utils.Adapter {
 						this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
 					}
 					interfaceBussy = false; // to informe other timer calls that they can perform request to the device.
+					interfaceBussyCounter = 0;	// Counter of interfaceBussy Reqwuest reset
 					return true;
 				} else {
 					this.log.error('Axios response.status: ' + String(deviceResponse.status) + ' ' + String(deviceResponse.statusText));
-					// we wail some time before we return the bad news
+					// we wait some time before we return the bad news
 					this.log.warn('device ping delay successfull response ...');
 					await this.delay(delay_reconnection * 1000);
 					return false;
@@ -3097,6 +3135,7 @@ class wamo extends utils.Adapter {
 					interfaceBussy = true;
 					const deviceResponse = await this.syrApiClient.get('get/' + String(Parameter.id));
 					interfaceBussy = false;
+					interfaceBussyCounter = 0;	// Counter of interfaceBussy Reqwuest reset
 					if (deviceResponse.status === 200) {
 						if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 						if (readModeChanged) {
@@ -3111,6 +3150,9 @@ class wamo extends utils.Adapter {
 					throw new Error('syrApiClient is not initialized!');
 				}
 			} catch (err) {
+				// Reste interfaceBussy flag
+				interfaceBussyCounter = 0;	// Counter of interfaceBussy Reqwuest reset
+				interfaceBussy = false;
 				if (err.response) {
 					// The request was made and the server responded with a status code
 					this.log.error('async get_DevieParameter(Parameter): Response Code: ' + String(err.message));
@@ -3182,6 +3224,7 @@ class wamo extends utils.Adapter {
 				interfaceBussy = true;
 				const deviceResponse = await this.syrApiClient.get('set/' + String(Parameter.id) + '/' + String(Value));
 				interfaceBussy = false;
+				interfaceBussyCounter = 0;	// Counter of interfaceBussy Reqwuest reset
 				if (deviceResponse.status === 200) {
 					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 
@@ -3224,6 +3267,9 @@ class wamo extends utils.Adapter {
 				throw new Error('syrApiClient is not initialized!');
 			}
 		} catch (err) {
+			// Reset interfaceBussy Flag
+			interfaceBussy = false;
+			interfaceBussyCounter = 0;	// Counter of interfaceBussy Reqwuest reset
 			if (err.response) {
 				// The request was made and the server responded with a status code
 				this.log.error('async set_DevieParameter(Parameter): Response Code: ' + String(err.message));
@@ -3255,6 +3301,7 @@ class wamo extends utils.Adapter {
 				interfaceBussy = true;
 				const deviceResponse = await this.syrApiClient.get('get/' + ParameterID + String(ProfileNumber));
 				interfaceBussy = false;
+				interfaceBussyCounter = 0;	// Counter of interfaceBussy Reqwuest reset
 				if (deviceResponse.status === 200) {
 					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 					return deviceResponse.data;
@@ -3265,6 +3312,9 @@ class wamo extends utils.Adapter {
 				throw new Error('syrApiClient is not initialized!');
 			}
 		} catch (err) {
+			// Reset interfaceBussy Flag
+			interfaceBussy = false;
+			interfaceBussyCounter = 0;	// Counter of interfaceBussy Reqwuest reset
 			if (err.response) {
 				// The request was made and the server responded with a status code
 				this.log.error('async get_DevieProfileParameter(ProfileNumber, ParameterID, IPadress, Port): Response Code: ' + String(err.message));
