@@ -1411,21 +1411,24 @@ class wamo extends utils.Adapter {
 	 */
 	async alarm_corn_jam_protection_Tick(){
 		try{
+			if(MainValveJammProtection_running == true){
+				this.log.warn('Valve JAM Protection is already running. We skip it this time.');
+				return;
+			}
 			MainValveJammProtection_running = true; // set flag that jam protection is running
 			this.log.info('[JAM PROTECTION] Starting');
 			this.log.info('[JAM PROTECTION] Valve operation delay to avoide disturbing running device requests');
 			await this.delay(10000); // Wait some time seconds to avoid desturbing already made Requests
 			this.log.info('[JAM PROTECTION] Closing main valve');
 			this.log.info('[JAM PROTECTION] Waiting for closed main valve ...');
-			await this.delay(15000);
+			await this.delay(15000); // simulation
 			this.log.info('[JAM PROTECTION] Main valve is closed');
+			this.log.info('[JAM PROTECTION] Waiting for opened main valve ...');
 			try{
 				await this.open_main_valve();
 			}catch (err){
 				this.log.warn('this.open_main_valve() ERROR: ' + err);
 			}
-			this.log.info('[JAM PROTECTION] Waiting for opened main valve ...');
-			await this.delay(15000);
 			this.log.info('[JAM PROTECTION] Main valve is open');
 
 			MainValveJammProtection_running = false; // clear flag that jam protection is running
@@ -1436,6 +1439,9 @@ class wamo extends utils.Adapter {
 		}
 	}
 
+	/**
+	 * This function Opens the main valve
+	 */
 	async open_main_valve() {
 		try {
 			this.log.info('[JAM PROTECTION] Opening valve');
@@ -1460,9 +1466,9 @@ class wamo extends utils.Adapter {
 				if (deviceResponse.status === 200) {
 					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 					valve_state = JSON.stringify(deviceResponse.data['getVLV']);
-					this.log.info('[JAM PROTECTION] Current valve Status = ' + String(valve_state));
+					this.log.debug('[JAM PROTECTION] Current valve Status = ' + String(valve_state));
 				}
-				// Procede according valfe status
+				// Procede according valve state
 				if (valve_state == '"20"') {
 					this.log.info('[JAM PROTECTION] Valve is already open');
 				} else {
@@ -1493,6 +1499,9 @@ class wamo extends utils.Adapter {
 									this.log.error('[JAM PROTECTION] Valve Status = Invalid return value: ' + String(valve_state));
 							}
 						}
+						else{this.log.error('Device Resopns Status not good. Status is: ' + String(deviceResponse.status));}
+
+						await this.delay(1000); // wait one cecond between requests
 					}
 					this.log.info('[JAM PROTECTION] Valve is now open');
 				}
