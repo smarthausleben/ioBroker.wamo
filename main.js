@@ -27,7 +27,8 @@ const {
 	alarmPeriod,
 	shortPeriod,
 	longPeriode,
-	sensorPresence
+	sensorPresence,
+	mainValveParameters
 } = require('./lib/device-parameters');
 
 /* cron definitions for the varius cron timers.
@@ -1414,6 +1415,7 @@ class wamo extends utils.Adapter {
 			this.log.info('[JAM PROTECTION] Starting');
 			this.log.info('[JAM PROTECTION] Valve operation delay to avoide disturbing running device requests');
 			await this.delay(10000); // Wait some time seconds to avoid desturbing already made Requests
+			await this.open_main_valve();
 			this.log.info('[JAM PROTECTION] Closing main valve');
 			this.log.info('[JAM PROTECTION] Waiting for closed main valve ...');
 			await this.delay(15000);
@@ -1430,6 +1432,46 @@ class wamo extends utils.Adapter {
 			throw new Error(err);
 		}
 	}
+
+	async open_main_valve() {
+		try {
+			this.log.info('[JAM PROTECTION] Opening valve');
+
+			// mainValveParameters[0] = VLV Valve State (SERVICE)
+			// 10 Closed
+			// 11 Closing
+			// 20 Open
+			// 21 Opening
+			// 30 Undefined
+
+			// enable service Mode
+			await this.set_SERVICE_Mode();
+
+			if (this.syrApiClient != null) {
+
+				const deviceResponse = await this.syrApiClient.get('get/' + String(mainValveParameters[0].id));
+				if (deviceResponse.status === 200) {
+					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
+					this.log.warn('Valve Status = ' + JSON.stringify(deviceResponse));
+
+				}
+			}
+			// clear special mode
+			await this.clear_SERVICE_FACTORY_Mode();
+
+		} catch (err) {
+			throw new Error(err);
+		}
+	}
+
+	async close_main_valve() {
+		try {
+			this.log.info('[JAM PROTECTION] Closing valve');
+		} catch (err) {
+			throw new Error(err);
+		}
+	}
+
 
 	/**
 	 * Timer action
