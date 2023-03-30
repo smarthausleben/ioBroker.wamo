@@ -1445,8 +1445,10 @@ class wamo extends utils.Adapter {
 			// 30 Undefined
 
 			// enable service Mode
+			this.log.info('[JAM PROTECTION] Set service Mode');
 			await this.set_SERVICE_Mode();
 
+			this.log.info('[JAM PROTECTION] Readin Valve State');
 			if (this.syrApiClient != null) {
 
 				const deviceResponse = await this.syrApiClient.get('get/' + String(mainValveParameters[0].id));
@@ -1456,6 +1458,7 @@ class wamo extends utils.Adapter {
 
 				}
 			}
+			this.log.info('[JAM PROTECTION] Clear service Mode');
 			// clear special mode
 			await this.clear_SERVICE_FACTORY_Mode();
 
