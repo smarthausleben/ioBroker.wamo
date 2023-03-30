@@ -1410,23 +1410,23 @@ class wamo extends utils.Adapter {
 	 */
 	async alarm_corn_jam_protection_Tick(){
 		try{
-			this.log.info('Jam protection trigger received');
+			this.log.info('[JAM PROTECTION] trigger received');
 
 			MainValveJammProtection_running = true; // set flag that jam protection is running
-			this.log.info('Start delay Jam protection');
-			await this.delay(5000); // Wait some time seconds to avoid desturbing already made Requests
-			this.log.info('Starting Jam protection');
-			this.log.info('Closing main valve');
-			this.log.info('Waiting for closed main valve ...');
-			await this.delay(5000);
-			this.log.info('Main valve is closed');
-			this.log.info('Opening main valve');
-			this.log.info('Waiting for opened main valve ...');
-			await this.delay(5000);
-			this.log.info('Main valve is open');
+			this.log.info('[JAM PROTECTION] Start delay');
+			await this.delay(10000); // Wait some time seconds to avoid desturbing already made Requests
+			this.log.info('[JAM PROTECTION] Starting');
+			this.log.info('[JAM PROTECTION] Closing main valve');
+			this.log.info('[JAM PROTECTION] Waiting for closed main valve ...');
+			await this.delay(15000);
+			this.log.info('[JAM PROTECTION] Main valve is closed');
+			this.log.info('[JAM PROTECTION] Opening main valve');
+			this.log.info('[JAM PROTECTION] Waiting for opened main valve ...');
+			await this.delay(15000);
+			this.log.info('[JAM PROTECTION] Main valve is open');
 
 			MainValveJammProtection_running = false; // clear flag that jam protection is running
-			this.log.info('Jam protection finished');
+			this.log.info('[JAM PROTECTION] Finished');
 		} catch (err) {
 			MainValveJammProtection_running = false; // clear flag that jam protection is running
 			throw new Error(err);
