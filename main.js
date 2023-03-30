@@ -1459,7 +1459,7 @@ class wamo extends utils.Adapter {
 				const deviceResponse = await this.syrApiClient.get('get/' + String(mainValveParameters[0].id));
 				if (deviceResponse.status === 200) {
 					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
-					this.log.warn('Valve Status = ' + JSON.stringify(deviceResponse));
+					this.log.warn('Valve Status = ' + JSON.stringify(deviceResponse.data));
 
 				}
 			}
