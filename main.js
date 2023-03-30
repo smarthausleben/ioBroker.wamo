@@ -1415,7 +1415,12 @@ class wamo extends utils.Adapter {
 			this.log.info('[JAM PROTECTION] Starting');
 			this.log.info('[JAM PROTECTION] Valve operation delay to avoide disturbing running device requests');
 			await this.delay(10000); // Wait some time seconds to avoid desturbing already made Requests
-			await this.open_main_valve();
+			try{
+				await this.open_main_valve();
+			}catch (err){
+				this.log.warn('this.open_main_valve() ERROR: ' + err);
+			}
+
 			this.log.info('[JAM PROTECTION] Closing main valve');
 			this.log.info('[JAM PROTECTION] Waiting for closed main valve ...');
 			await this.delay(15000);
