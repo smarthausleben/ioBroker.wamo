@@ -79,6 +79,29 @@
                 }
             }
         },
+        "_tasks": {
+            "type": "panel",
+            "label": "Tasks",
+            "items":{
+                "regularmainvalvemovement": {
+                    "newLine": true,
+                    "type": "checkbox",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "label": "regular main valve movement"
+                },
+                "regularemovementcron":{
+                    "newLine": true,
+                    "type": "cron",
+                    "complex": true,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "label": "timing of regular main valve movement"
+                }
+            }
+        },
         "_advanced": {
             "type": "panel",
             "label": "Advanced Options",
