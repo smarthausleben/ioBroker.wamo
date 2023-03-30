@@ -1474,7 +1474,7 @@ class wamo extends utils.Adapter {
 						deviceResponse = await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentValveStatus.id));
 						if (deviceResponse.status === 200) {
 							valve_state = JSON.stringify(deviceResponse.data['getVLV']);
-							switch(valve_state){
+							switch(String(valve_state)){
 								case '10':
 									this.log.info('Valve Status = Closed');
 									break;
