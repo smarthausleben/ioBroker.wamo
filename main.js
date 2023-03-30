@@ -1184,6 +1184,7 @@ class wamo extends utils.Adapter {
 			if(this.config.regularmainvalvemovement){
 				// Ok we schedule it
 				this.log.info('Jam protection cron job scheduled');
+				this.log.info('Jam protection cron ' + String(this.config.regularemovementcron));
 				schedule.scheduleJob(this.config.regularemovementcron, cron_poll_jam_protection);
 			}
 			if (moreMessages) { this.log.info('Cron timer started'); }
@@ -1952,7 +1953,7 @@ class wamo extends utils.Adapter {
 	 */
 	async getDeviceProfilesData() {
 		try {
-			this.log.info('reading profiles ...');
+			this.log.debug('reading profiles ...');
 
 			if (moreMessages) { this.log.info('reading device profiles'); }
 			// alle 8 möglichen Profile durchlaufen
@@ -1992,6 +1993,7 @@ class wamo extends utils.Adapter {
 					}
 				}
 			}
+			this.log.debug('reading profiles ... done');
 			return true;
 		} catch (err) {
 			this.log.error(err.message);
