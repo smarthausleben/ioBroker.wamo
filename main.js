@@ -1410,9 +1410,8 @@ class wamo extends utils.Adapter {
 	 */
 	async alarm_corn_jam_protection_Tick(){
 		try{
-			this.log.info('[JAM PROTECTION] trigger received');
-
 			MainValveJammProtection_running = true; // set flag that jam protection is running
+			this.log.info('[JAM PROTECTION] trigger received');
 			this.log.info('[JAM PROTECTION] Start delay');
 			await this.delay(10000); // Wait some time seconds to avoid desturbing already made Requests
 			this.log.info('[JAM PROTECTION] Starting');
@@ -1439,6 +1438,7 @@ class wamo extends utils.Adapter {
 	 */
 	async alarm_TimerTick() {
 		try {
+			this.log.info('Trigger: Alarm Timer');
 			// Check if main valve protection is not runneing
 			if (!MainValveJammProtection_running) {
 				if (moreMessages) { this.log.info('Alarm Timer tick'); }
@@ -1470,6 +1470,7 @@ class wamo extends utils.Adapter {
 	 */
 	async short_TimerTick() {
 		try {
+			this.log.info('Trigger: Short Timer');
 			// Check if main valve protection is not runneing
 			if (!MainValveJammProtection_running) {
 				if (moreMessages) { this.log.info('Short Timer tick'); }
@@ -1507,6 +1508,7 @@ class wamo extends utils.Adapter {
 	 */
 	async long_TimerTick() {
 		try {
+			this.log.info('Trigger: Long Timer');
 			// Check if main valve protection is not runneing
 			if (!MainValveJammProtection_running) {
 				if (moreMessages) { this.log.info('Long Timer tick'); }
@@ -1538,6 +1540,7 @@ class wamo extends utils.Adapter {
 	 */
 	async very_long_TimerTick() {
 		try {
+			this.log.info('Trigger: Very Alarm Timer');
 			// Check if main valve protection is not runneing
 			if (!MainValveJammProtection_running) {
 				if (moreMessages) { this.log.info('Very Long Timer tick'); }
