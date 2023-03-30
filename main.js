@@ -1469,25 +1469,28 @@ class wamo extends utils.Adapter {
 				} else {
 					this.log.info('[JAM PROTECTION] Opening Valve ...');
 					await this.syrApiClient.get('set/' + String(DeviceParameters.ShutOff.id + '/' + String('1')));
-					while (valve_state != '20') {
+					while (valve_state != '"20"') {
 						await this.set_SERVICE_Mode();
 						deviceResponse = await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentValveStatus.id));
 						if (deviceResponse.status === 200) {
 							valve_state = JSON.stringify(deviceResponse.data['getVLV']);
+							this.log.warn(String(valve_state));
+							this.log.warn('20');
+							this.log.warn('"20"');
 							switch(String(valve_state)){
-								case '10':
+								case '"10"':
 									this.log.info('Valve Status = Closed');
 									break;
-								case '11':
+								case '"11"':
 									this.log.info('Valve Status = Closing');
 									break;
-								case '20':
+								case '"20"':
 									this.log.info('Valve Status = Open');
 									break;
-								case '21':
+								case '"21"':
 									this.log.info('Valve Status = Opening');
 									break;
-								case '30':
+								case '"30"':
 									this.log.info('Valve Status = Undefined');
 									break;
 								default:
