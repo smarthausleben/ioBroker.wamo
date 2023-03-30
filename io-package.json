@@ -222,7 +222,7 @@
         "reconnectingdelaytime": 5,
         "requesttimeout": 5,
         "regularmainvalvemovement": false,
-        "regularemovementcron": 0
+        "regularemovementcron": "0 3 * * *"
     },
     "objects": [],
     "instanceObjects": [

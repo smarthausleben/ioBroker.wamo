@@ -115,8 +115,8 @@ class wamo extends utils.Adapter {
 		this.log.debug('show value messages from device: ' + String(this.config.valueinfomessages));
 		this.log.debug('Reconnection time after lost connection to the device is ' + String(this.config.reconnectingdelaytime) +' seconds');
 		this.log.debug('Timeout for axios requests is ' + String(this.config.requesttimeout) +' seconds');
-		this.log.info('Jam Protection:' + String(this.config.regularmainvalvemovement));
-		this.log.info('Cron settings main valve jam protection' + String(this.config.regularemovementcron));
+		this.log.debug('Main valve jam Protection: ' + String(this.config.regularmainvalvemovement));
+		this.log.debug('Cron settings main valve jam protection ' + String(this.config.regularemovementcron));
 
 		//=================================================================================================
 		// getting system language
@@ -1180,6 +1180,12 @@ class wamo extends utils.Adapter {
 			schedule.scheduleJob(cron_Week, cron_poll_week);
 			schedule.scheduleJob(cron_Month, cron_poll_month);
 			schedule.scheduleJob(cron_Year, cron_poll_year);
+			// Main valve jam protection active?
+			if(this.config.regularmainvalvemovement){
+				// Ok we schedule it
+				this.log.info('Jam protection cron job scheduled');
+				schedule.scheduleJob(this.config.regularemovementcron, cron_poll_jam_protection);
+			}
 			if (moreMessages) { this.log.info('Cron timer started'); }
 		} catch (err) {
 			this.log.error('Cron timer start error: ' + err);
@@ -1391,6 +1397,18 @@ class wamo extends utils.Adapter {
 				await this.setStateAsync(StatisticStates.TotalYear.statePath + '.' + StatisticStates.TotalYear.id, { val: 0, ack: true });
 			}
 			return true;
+		} catch (err) {
+			throw new Error(err);
+		}
+	}
+
+	/**
+	 * Cron action
+	 * [jam protection]
+	 */
+	async alarm_corn_jam_protection_Tick(){
+		try{
+			this.log.info('Jam protection cron job trigger received');
 		} catch (err) {
 			throw new Error(err);
 		}
@@ -4092,7 +4110,19 @@ async function cron_poll_year() {
 	}
 
 }
-//===================================================
+
+/**
+ * Cron event handler
+ * [jam protection]
+ */
+async function cron_poll_jam_protection() {
+	try {
+		await myAdapter.alarm_corn_jam_protection_Tick();
+	} catch (err) {
+		//throw new Error(err);
+	}
+
+}//===================================================
 
 if (require.main !== module) {
 	// Export the constructor in compact mode

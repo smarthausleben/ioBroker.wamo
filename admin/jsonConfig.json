@@ -96,8 +96,8 @@
                     "type": "cron",
                     "complex": true,
                     "sm": 12,
-                    "md": 6,
-                    "lg": 6,
+                    "md": 12,
+                    "lg": 12,
                     "label": "timing of regular main valve movement"
                 }
             }
