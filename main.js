@@ -1415,17 +1415,15 @@ class wamo extends utils.Adapter {
 			this.log.info('[JAM PROTECTION] Starting');
 			this.log.info('[JAM PROTECTION] Valve operation delay to avoide disturbing running device requests');
 			await this.delay(10000); // Wait some time seconds to avoid desturbing already made Requests
+			this.log.info('[JAM PROTECTION] Closing main valve');
+			this.log.info('[JAM PROTECTION] Waiting for closed main valve ...');
+			await this.delay(15000);
+			this.log.info('[JAM PROTECTION] Main valve is closed');
 			try{
 				await this.open_main_valve();
 			}catch (err){
 				this.log.warn('this.open_main_valve() ERROR: ' + err);
 			}
-
-			this.log.info('[JAM PROTECTION] Closing main valve');
-			this.log.info('[JAM PROTECTION] Waiting for closed main valve ...');
-			await this.delay(15000);
-			this.log.info('[JAM PROTECTION] Main valve is closed');
-			this.log.info('[JAM PROTECTION] Opening main valve');
 			this.log.info('[JAM PROTECTION] Waiting for opened main valve ...');
 			await this.delay(15000);
 			this.log.info('[JAM PROTECTION] Main valve is open');
@@ -1453,7 +1451,7 @@ class wamo extends utils.Adapter {
 			this.log.debug('[JAM PROTECTION] Set service Mode');
 			await this.set_SERVICE_Mode();
 
-			this.log.info('[JAM PROTECTION] Readin Valve State');
+			this.log.info('[JAM PROTECTION] Reading Valve State');
 			if (this.syrApiClient != null) {
 
 				let valve_state;
@@ -1464,7 +1462,7 @@ class wamo extends utils.Adapter {
 					valve_state = JSON.stringify(deviceResponse.data['getVLV']);
 					this.log.info('Valve Status = ' + String(valve_state));
 				}
-				if (valve_state == '20') {
+				if (valve_state == '"20"') {
 					this.log.info('[JAM PROTECTION] Valve is already open');
 				} else {
 					this.log.info('[JAM PROTECTION] Opening Valve ...');
@@ -1474,27 +1472,24 @@ class wamo extends utils.Adapter {
 						deviceResponse = await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentValveStatus.id));
 						if (deviceResponse.status === 200) {
 							valve_state = JSON.stringify(deviceResponse.data['getVLV']);
-							this.log.warn(String(valve_state));
-							this.log.warn('20');
-							this.log.warn('"20"');
-							switch(String(valve_state)){
+							switch(valve_state){
 								case '"10"':
-									this.log.info('Valve Status = Closed');
+									this.log.info('[JAM PROTECTION] Valve Status = Closed');
 									break;
 								case '"11"':
-									this.log.info('Valve Status = Closing');
+									this.log.info('[JAM PROTECTION] Valve Status = Closing');
 									break;
 								case '"20"':
-									this.log.info('Valve Status = Open');
+									this.log.info('[JAM PROTECTION] Valve Status = Open');
 									break;
 								case '"21"':
-									this.log.info('Valve Status = Opening');
+									this.log.info('[JAM PROTECTION] Valve Status = Opening');
 									break;
 								case '"30"':
-									this.log.info('Valve Status = Undefined');
+									this.log.info('[JAM PROTECTION] Valve Status = Undefined');
 									break;
 								default:
-									this.log.error('Valve Status = Invalid reurn value: ' + String(valve_state));
+									this.log.error('[JAM PROTECTION] Valve Status = Invalid return value: ' + String(valve_state));
 							}
 						}
 					}
