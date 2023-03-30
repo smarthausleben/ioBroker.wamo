@@ -71,7 +71,8 @@ let interfaceBusy;
 let interfaceBusyCounter = 0;
 let interfaceBusyMaxBeforeReaset = 10;
 let SystemLanguage;
-let MainValveJammProtection;
+let MainValveJammProtection_aktive;
+let MainValveJammProtection_running = false;
 
 
 class wamo extends utils.Adapter {
@@ -107,7 +108,7 @@ class wamo extends utils.Adapter {
 		valuesInfoMessages = this.config.valueinfomessages;
 		delay_reconnection = this.config.reconnectingdelaytime;
 		timeout_axios_request = this.config.requesttimeout;
-		MainValveJammProtection = this.config.regularmainvalvemovement;
+		MainValveJammProtection_aktive = this.config.regularmainvalvemovement;
 		this.log.debug('config Device IP: ' + String(this.config.device_ip));
 		this.log.debug('config Device Port: ' + String(this.config.device_port));
 		this.log.debug('More log messages: ' + String(this.config.moremessages));
@@ -1409,8 +1410,25 @@ class wamo extends utils.Adapter {
 	 */
 	async alarm_corn_jam_protection_Tick(){
 		try{
-			this.log.info('Jam protection cron job trigger received');
+			this.log.info('Jam protection trigger received');
+
+			MainValveJammProtection_running = true; // set flag that jam protection is running
+			this.log.info('Start delay Jam protection');
+			await this.delay(5000); // Wait some time seconds to avoid desturbing already made Requests
+			this.log.info('Starting Jam protection');
+			this.log.info('Closing main valve');
+			this.log.info('Waiting for closed main valve ...');
+			await this.delay(5000);
+			this.log.info('Main valve is closed');
+			this.log.info('Opening main valve');
+			this.log.info('Waiting for opened main valve ...');
+			await this.delay(5000);
+			this.log.info('Main valve is open');
+
+			MainValveJammProtection_running = false; // clear flag that jam protection is running
+			this.log.info('Jam protection finished');
 		} catch (err) {
+			MainValveJammProtection_running = false; // clear flag that jam protection is running
 			throw new Error(err);
 		}
 	}
@@ -1421,17 +1439,23 @@ class wamo extends utils.Adapter {
 	 */
 	async alarm_TimerTick() {
 		try {
-			if (moreMessages) { this.log.info('Alarm Timer tick'); }
-			// get alarmPeriode data
-			if (!interfaceBusy) {
-				interfaceBusyCounter = 0;	// Counter of interfaceBusy Reqwuest reset
-				await this.getData(Object(alarmPeriod));
-				return true;
+			// Check if main valve protection is not runneing
+			if (!MainValveJammProtection_running) {
+				if (moreMessages) { this.log.info('Alarm Timer tick'); }
+				// get alarmPeriode data
+				if (!interfaceBusy) {
+					interfaceBusyCounter = 0;	// Counter of interfaceBusy Reqwuest reset
+					await this.getData(Object(alarmPeriod));
+					return true;
+				}
+				else {
+					this.log.warn('Interface bussy during ALARM TIMER data request');
+					await this.interfaceBusyWatchDog();	// check if bussy flag is still plausible
+					return false;
+				}
 			}
-			else {
-				this.log.warn('Interface bussy during ALARM TIMER data request');
-				await this.interfaceBusyWatchDog();	// check if bussy flag is still plausible
-				return false;
+			else{
+				this.log.warn('Alarm Timer: Device request canceled becaus jam protection is running!');
 			}
 		} catch (err) {
 			interfaceBusyCounter = 0;	// Counter of interfaceBusy Reqwuest reset
@@ -1446,22 +1470,28 @@ class wamo extends utils.Adapter {
 	 */
 	async short_TimerTick() {
 		try {
-			if (moreMessages) { this.log.info('Short Timer tick'); }
-			// get longPeriode data
-			if (!interfaceBusy) {
-				interfaceBusyCounter = 0;	// Counter of interfaceBusy Reqwuest reset
-				await this.getData(Object(shortPeriod));
-				try {
-					await this.updateStatistics();
-				} catch (err) {
-					this.log.error('Statistics Error: ' + err);
+			// Check if main valve protection is not runneing
+			if (!MainValveJammProtection_running) {
+				if (moreMessages) { this.log.info('Short Timer tick'); }
+				// get longPeriode data
+				if (!interfaceBusy) {
+					interfaceBusyCounter = 0;	// Counter of interfaceBusy Reqwuest reset
+					await this.getData(Object(shortPeriod));
+					try {
+						await this.updateStatistics();
+					} catch (err) {
+						this.log.error('Statistics Error: ' + err);
+					}
+					return true;
 				}
-				return true;
+				else {
+					this.log.warn('Interface bussy during SHORT TIMER data request');
+					await this.interfaceBusyWatchDog();	// check if bussy flag is still plausible
+					return false;
+				}
 			}
-			else {
-				this.log.warn('Interface bussy during SHORT TIMER data request');
-				await this.interfaceBusyWatchDog();	// check if bussy flag is still plausible
-				return false;
+			else{
+				this.log.warn('Short Timer: Device request canceled becaus jam protection is running!');
 			}
 		}
 		catch (err) {
@@ -1477,17 +1507,23 @@ class wamo extends utils.Adapter {
 	 */
 	async long_TimerTick() {
 		try {
-			if (moreMessages) { this.log.info('Long Timer tick'); }
-			// get longPeriode data
-			if (!interfaceBusy) {
-				interfaceBusyCounter = 0;	// Counter of interfaceBusy Reqwuest reset
-				await this.getData(Object(longPeriode));
-				return true;
+			// Check if main valve protection is not runneing
+			if (!MainValveJammProtection_running) {
+				if (moreMessages) { this.log.info('Long Timer tick'); }
+				// get longPeriode data
+				if (!interfaceBusy) {
+					interfaceBusyCounter = 0;	// Counter of interfaceBusy Reqwuest reset
+					await this.getData(Object(longPeriode));
+					return true;
+				}
+				else {
+					this.log.warn('Interface bussy during LONG TIMER data request');
+					await this.interfaceBusyWatchDog();	// check if bussy flag is still plausible
+					return false;
+				}
 			}
-			else {
-				this.log.warn('Interface bussy during LONG TIMER data request');
-				await this.interfaceBusyWatchDog();	// check if bussy flag is still plausible
-				return false;
+			else{
+				this.log.warn('Long Timer: Device request canceled becaus jam protection is running!');
 			}
 		} catch (err) {
 			interfaceBusyCounter = 0;	// Counter of interfaceBusy Reqwuest reset
@@ -1502,29 +1538,36 @@ class wamo extends utils.Adapter {
 	 */
 	async very_long_TimerTick() {
 		try {
-			if (moreMessages) { this.log.info('Very Long Timer tick'); }
-			// get longPeriode data
-			if (!interfaceBusy) {
-				interfaceBusyCounter = 0;	// Counter of interfaceBusy Reqwuest reset
-				if (moreMessages) { this.log.info('Get initStates'); }
-				//=================================================================
-				// update state: German hardnes calculation factor from settings
-				//=================================================================
-				await this.updateHardnesFactorObject();
+			// Check if main valve protection is not runneing
+			if (!MainValveJammProtection_running) {
+				if (moreMessages) { this.log.info('Very Long Timer tick'); }
+				// get longPeriode data
+				if (!interfaceBusy) {
+					interfaceBusyCounter = 0;	// Counter of interfaceBusy Reqwuest reset
+					if (moreMessages) { this.log.info('Get initStates'); }
+					//=================================================================
+					// update state: German hardnes calculation factor from settings
+					//=================================================================
+					await this.updateHardnesFactorObject();
 
-				//=================================================================
-				// Read all values, defined in 'initStates' from device
-				//=================================================================
-				await this.getData(Object(initStates));
+					//=================================================================
+					// Read all values, defined in 'initStates' from device
+					//=================================================================
+					await this.getData(Object(initStates));
 
-				if (moreMessages) { this.log.info('Get Device Profiles'); }
-				await this.getDeviceProfilesData();
-				return true;
+					if (moreMessages) { this.log.info('Get Device Profiles'); }
+					await this.getDeviceProfilesData();
+					return true;
+
+				}
+				else {
+					this.log.warn('Interface bussy during VERY LONG TIMER data request');
+					await this.interfaceBusyWatchDog();	// check if bussy flag is still plausible
+					return false;
+				}
 			}
-			else {
-				this.log.warn('Interface bussy during VERY LONG TIMER data request');
-				await this.interfaceBusyWatchDog();	// check if bussy flag is still plausible
-				return false;
+			else{
+				this.log.warn('Very Long Timer: Device request canceled becaus jam protection is running!');
 			}
 		} catch (err) {
 			interfaceBusyCounter = 0;	// Counter of interfaceBusy Reqwuest reset
