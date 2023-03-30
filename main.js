@@ -1460,8 +1460,9 @@ class wamo extends utils.Adapter {
 				if (deviceResponse.status === 200) {
 					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 					valve_state = JSON.stringify(deviceResponse.data['getVLV']);
-					this.log.info('Valve Status = ' + String(valve_state));
+					this.log.info('[JAM PROTECTION] Current valve Status = ' + String(valve_state));
 				}
+				// Procede according valfe status
 				if (valve_state == '"20"') {
 					this.log.info('[JAM PROTECTION] Valve is already open');
 				} else {
