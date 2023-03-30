@@ -1450,20 +1450,56 @@ class wamo extends utils.Adapter {
 			// 30 Undefined
 
 			// enable service Mode
-			this.log.info('[JAM PROTECTION] Set service Mode');
+			this.log.debug('[JAM PROTECTION] Set service Mode');
 			await this.set_SERVICE_Mode();
 
 			this.log.info('[JAM PROTECTION] Readin Valve State');
 			if (this.syrApiClient != null) {
 
-				const deviceResponse = await this.syrApiClient.get('get/' + String(mainValveParameters[0].id));
+				let valve_state;
+				// Get current Valve Status
+				let deviceResponse = await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentValveStatus.id));
 				if (deviceResponse.status === 200) {
 					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
-					this.log.warn('Valve Status = ' + JSON.stringify(deviceResponse.data));
-
+					valve_state = JSON.stringify(deviceResponse.data['getVLV']);
+					this.log.info('Valve Status = ' + String(valve_state));
+				}
+				if (valve_state == '20') {
+					this.log.info('[JAM PROTECTION] Valve is already open');
+				} else {
+					this.log.info('[JAM PROTECTION] Opening Valve ...');
+					await this.syrApiClient.get('set/' + String(DeviceParameters.ShutOff.id + '/' + String('1')));
+					while (valve_state != '20') {
+						await this.set_SERVICE_Mode();
+						deviceResponse = await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentValveStatus.id));
+						if (deviceResponse.status === 200) {
+							valve_state = JSON.stringify(deviceResponse.data['getVLV']);
+							switch(valve_state){
+								case '10':
+									this.log.info('Valve Status = Closed');
+									break;
+								case '11':
+									this.log.info('Valve Status = Closing');
+									break;
+								case '20':
+									this.log.info('Valve Status = Open');
+									break;
+								case '21':
+									this.log.info('Valve Status = Opening');
+									break;
+								case '30':
+									this.log.info('Valve Status = Undefined');
+									break;
+								default:
+									this.log.error('Valve Status = Invalid reurn value: ' + String(valve_state));
+							}
+						}
+					}
+					this.log.info('[JAM PROTECTION] Valve is now open');
 				}
 			}
-			this.log.info('[JAM PROTECTION] Clear service Mode');
+
+			this.log.debug('[JAM PROTECTION] Clear service Mode');
 			// clear special mode
 			await this.clear_SERVICE_FACTORY_Mode();
 
