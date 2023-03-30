@@ -27,6 +27,7 @@ The POLYGONVATRO unit is, under the hood, a SYR SaveTech Connect 2422 unit but w
 -->
 
 **WORK IN PROGRESS**
+* (smarthausleben) ADD: Task settings for regular movement of main valve to prevent jammed valve
 * (smarthausleben) FIX: [interfaceBusy] flag was not reset after AXIOS interface handler error
 * (smarthausleben) ADD: 'WatchDog' function for interfaceBusy flag. Flag will be reset after defined amount of requests
 

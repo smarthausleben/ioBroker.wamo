@@ -71,6 +71,7 @@ let interfaceBusy;
 let interfaceBusyCounter = 0;
 let interfaceBusyMaxBeforeReaset = 10;
 let SystemLanguage;
+let MainValveJammProtection;
 
 
 class wamo extends utils.Adapter {
@@ -106,6 +107,7 @@ class wamo extends utils.Adapter {
 		valuesInfoMessages = this.config.valueinfomessages;
 		delay_reconnection = this.config.reconnectingdelaytime;
 		timeout_axios_request = this.config.requesttimeout;
+		MainValveJammProtection = this.config.regularmainvalvemovement;
 		this.log.debug('config Device IP: ' + String(this.config.device_ip));
 		this.log.debug('config Device Port: ' + String(this.config.device_port));
 		this.log.debug('More log messages: ' + String(this.config.moremessages));
@@ -113,6 +115,8 @@ class wamo extends utils.Adapter {
 		this.log.debug('show value messages from device: ' + String(this.config.valueinfomessages));
 		this.log.debug('Reconnection time after lost connection to the device is ' + String(this.config.reconnectingdelaytime) +' seconds');
 		this.log.debug('Timeout for axios requests is ' + String(this.config.requesttimeout) +' seconds');
+		this.log.info('Jam Protection:' + String(this.config.regularmainvalvemovement));
+		this.log.info('Cron settings main valve jam protection' + String(this.config.regularemovementcron));
 
 		//=================================================================================================
 		// getting system language
