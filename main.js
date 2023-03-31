@@ -1516,16 +1516,14 @@ class wamo extends utils.Adapter {
 
 				if (close) {
 					if (valve_state == closedPosition) {
-						this.log.info('[JAM PROTECTION] Main valve is already closed');
-						this.log.info('[JAM PROTECTION] Main valve is now closed');
+						this.log.info('[JAM PROTECTION] Main valve was already closed');
 						// clear special mode
 						await this.clear_SERVICE_FACTORY_Mode();
 						return;
 					}
 				} else {
 					if (valve_state == openedPosition) {
-						this.log.info('[JAM PROTECTION] Main valve is already open');
-						this.log.info('[JAM PROTECTION] Main valve is now open');
+						this.log.info('[JAM PROTECTION] Main valve was already open');
 						// clear special mode
 						await this.clear_SERVICE_FACTORY_Mode();
 						return;
@@ -1571,12 +1569,12 @@ class wamo extends utils.Adapter {
 								this.log.error('[JAM PROTECTION] Main valve Status = Invalid return value: ' + String(valve_state));
 						}
 					}
-					else { this.log.error('Device Resopns Status not good. Status is: ' + String(deviceResponse.status)); }
+					else { this.log.error('Device resopns status invalid! Status: ' + String(deviceResponse.status)); }
 				}
 
 				// await this.delay(1000); // wait one second between requests
-				if (close) { this.log.info('[JAM PROTECTION] Main valve is now closed');}
-				else { this.log.info('[JAM PROTECTION] Main valve is now open');}
+				if (close) { this.log.info('[JAM PROTECTION] Main valve is closed');}
+				else { this.log.info('[JAM PROTECTION] Main valve is open');}
 			}
 		} catch (err) {
 			throw new Error(err);
