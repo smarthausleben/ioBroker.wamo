@@ -1418,24 +1418,36 @@ class wamo extends utils.Adapter {
 				return;
 			}
 			MainValveJammProtection_running = true; // set flag that jam protection is running
+			// set state accordingly
+			this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: '1', ack: true });
+
 			this.log.info('[JAM PROTECTION] Starting');
 			this.log.info('[JAM PROTECTION] Valve operation delay to avoide disturbing running device requests');
 			await this.delay(10000); // Wait some time seconds to avoid desturbing already made Requests
 			this.log.info('[JAM PROTECTION] Closing main valve');
-			this.log.info('[JAM PROTECTION] Waiting for closed main valve ...');
-			await this.delay(15000); // simulation
+			try{
+				// await this.move_main_valve(closeValveCommand);
+			}catch (err){
+				this.log.warn('this.open_main_valve() ERROR: ' + err);
+			}
 			this.log.info('[JAM PROTECTION] Main valve is closed');
-			this.log.info('[JAM PROTECTION] Waiting for opened main valve ...');
+			this.log.info('[JAM PROTECTION] Opening main valve');
 			try{
 				await this.move_main_valve(openValveCommand);
 			}catch (err){
 				this.log.warn('this.open_main_valve() ERROR: ' + err);
 			}
 
+
 			MainValveJammProtection_running = false; // clear flag that jam protection is running
+			// set state accordingly
+			this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: '0', ack: true });
+
 			this.log.info('[JAM PROTECTION] Finished');
 		} catch (err) {
 			MainValveJammProtection_running = false; // clear flag that jam protection is running
+			// set state accordingly
+			this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: '0', ack: true });
 			throw new Error(err);
 		}
 	}
