@@ -162,7 +162,7 @@ class wamo extends utils.Adapter {
 		//=================================================================================================
 
 		// Jam protection running Flag
-		this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: '0', ack: true });
+		this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: false, ack: true });
 
 		//=================================================================================================
 		// Initialize Axios Client (this client will be used to communicate with the device)			===
@@ -1426,7 +1426,7 @@ class wamo extends utils.Adapter {
 			}
 			MainValveJammProtection_running = true; // set flag that jam protection is running
 			// set state accordingly
-			this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: '1', ack: true });
+			this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: true, ack: true });
 
 			this.log.info('[JAM PROTECTION] Starting');
 			this.log.info('[JAM PROTECTION] Valve operation delay to avoide disturbing running device requests');
@@ -1448,13 +1448,13 @@ class wamo extends utils.Adapter {
 
 			MainValveJammProtection_running = false; // clear flag that jam protection is running
 			// set state accordingly
-			this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: '0', ack: true });
+			this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: false, ack: true });
 
 			this.log.info('[JAM PROTECTION] Finished');
 		} catch (err) {
 			MainValveJammProtection_running = false; // clear flag that jam protection is running
 			// set state accordingly
-			this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: '0', ack: true });
+			this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: false, ack: true });
 			throw new Error(err);
 		}
 	}
