@@ -43,7 +43,7 @@ If during the **_Jam Protection_** activity communication to the device gets los
 -->
 
 **WORK IN PROGRESS** - ***Jam Protection*** release
-* (smarthausleben) ADD: New State JPR for Jam protection running  (Main valve jam protection) 
+* (smarthausleben) ADD: [Main valve jam protection] New State JPR for Jam protection running  (Main valve jam protection) 
 * (smarthausleben) ADD: New State JPA for Jam protection aktivated  (Main valve jam protection) 
 * (smarthausleben) ADD: New State JPT for Jam protection Timing/  (Main valve jam protection) 
 * (smarthausleben) ADD: Task Tab to adapter settings to manage regular movement of main valve (Main valve jam protection) 
