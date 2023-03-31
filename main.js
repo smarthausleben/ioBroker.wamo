@@ -158,6 +158,13 @@ class wamo extends utils.Adapter {
 		}
 
 		//=================================================================================================
+		//===  Initialise additional runtime states														===
+		//=================================================================================================
+
+		// Jam protection running Flag
+		this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: '0', ack: true });
+
+		//=================================================================================================
 		// Initialize Axios Client (this client will be used to communicate with the device)			===
 		//=================================================================================================
 		this.syrApiClient = axios.create({
