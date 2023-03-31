@@ -21,8 +21,10 @@ The adapter connects to your **SYR SafeTech Connect 2422** or **POLYGONVATRO** l
 
 The POLYGONVATRO unit is, under the hood, a SYR SaveTech Connect 2422 unit but without pressure-, temperature- and conductivity sensor. The POLYGONVATRO unit is currently not available. 
 
-## ATTENTION
-The Jam Protection can now be activated in teh adapter settings area (Tab: Tasks)
+## IMPOTEAND
+Since the Jam Protection Release a scheduled move of the main valve can be activated and scheduled in the adapter settings area (Tab: Tasks)
+Be verry carefull with this functionality because it will **close** and **open** the main valve in order to prevent the main valve to get stuck in open position and therefore will not close in case of an leackage.
+The **Jam Protection** can be planed using a CRON schedule which will also be configured in the adapter settings Tasks tab. Be carefull there as well, because if you schedule a jam protection for example every 1 Minute you are having big trouble because your main valve will close and open every minute! 
 
 ## Changelog
 <!--
@@ -30,7 +32,7 @@ The Jam Protection can now be activated in teh adapter settings area (Tab: Tasks
     ### **WORK IN PROGRESS**
 -->
 
-**WORK IN PROGRESS** - 2020 ***Jam Protection added*** release
+**WORK IN PROGRESS** - 2020 ***Jam Protection*** release
 * (smarthausleben) ADD: New State JPR for Jam protection running  (Main valve jam protection) 
 * (smarthausleben) ADD: New State JPA for Jam protection aktivated  (Main valve jam protection) 
 * (smarthausleben) ADD: New State JPT for Jam protection Timing/  (Main valve jam protection) 
