@@ -28,9 +28,7 @@ The POLYGONVATRO unit is, under the hood, a SYR SaveTech Connect 2422 unit but w
 -->
 
 **WORK IN PROGRESS**
-* ***extremely important***
-Das ist der Testtext
-* (smarthausleben) ADD: New State JPR for Jam protection running  (Main valve jam protection) 
+* (smarthausleben) ADD: `#0969DA` New State JPR for Jam protection running  (Main valve jam protection) 
 * (smarthausleben) ADD: New State JPA for Jam protection aktivated  (Main valve jam protection) 
 * (smarthausleben) ADD: New State JPT for Jam protection Timing/  (Main valve jam protection) 
 * (smarthausleben) ADD: Task Tab to adapter settings to manage regular movement of main valve (Main valve jam protection) 
