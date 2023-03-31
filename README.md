@@ -11,18 +11,18 @@
 
 **Tests:** ![Test and Release](https://github.com/smarthausleben/ioBroker.wamo/workflows/Test%20and%20Release/badge.svg)
 
-## wamo adapter for ioBroker
+# WAMO adapter for ioBroker
 
 This adapter adds "wamo" leakage protection monitoring to your ioBroker installation.
 
 The adapter connects to your **SYR SafeTech Connect 2422** or **POLYGONVATRO** leakage protection device in order to read data from the device and create some statistic data like water consumption history.
 
-[SYR SaveTech Connect 2422](https://www.syr.de/de/Produkte/CB9D9A72-BC51-40CE-840E-73401981A519/SafeTech-Connect)
+Details about the SYR SaveTech Connect 2422 can be found [here.](https://www.syr.de/de/Produkte/CB9D9A72-BC51-40CE-840E-73401981A519/SafeTech-Connect)
 
 The POLYGONVATRO unit is, under the hood, a SYR SaveTech Connect 2422 unit but without pressure-, temperature- and conductivity sensor. The POLYGONVATRO unit is currently not available. 
 
 # IMPOTEANT
-In the **_Jam Protection_** release a scheduled move of the main valve was added and can be activated and scheduled in the adapter settings area (Tab: Tasks)
+Since the **_Jam Protection_** release a scheduled move of the main valve was added and can be activated and scheduled in the adapter settings area (Tab: Tasks)
 
 Be verry careful with this functionality because it will **_close_** and **_open_** the main valve in order to prevent it to get stuck in open position and therefore will not close in case of an leakage.
 
@@ -35,6 +35,9 @@ If the main valve is already in **_closed_** position, the **_Jam Protection_** 
 
 ### Disclaimer / Warning
 If during the **_Jam Protection_** activity communication to the device gets lost or the WAMO adapter or ioBroker itself crashes or will be stopped, the main valve will stay in the last commanded position! This means if something gets wrong, the valve could be closed and needs to be opened by yourself using the related app or the button on the device itself.
+
+## Support this project
+If you find this adapter useful and you want to support this project, your kindness will be highly appreciated. You can easily support me [here.](https://www.paypal.com/paypalme/smarthausleben) Thanks 😊   
 
 ## Changelog
 <!--
