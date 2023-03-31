@@ -163,6 +163,10 @@ class wamo extends utils.Adapter {
 
 		// Jam protection running Flag
 		this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: false, ack: true });
+		// Jam protection activated
+		this.setStateAsync(DeviceParameters.JamProtectionEnabled.statePath + '.' + DeviceParameters.JamProtectionEnabled.id, { val: this.config.regularmainvalvemovement, ack: true });
+		// Jam protection Cron Timing
+		this.setStateAsync(DeviceParameters.JamProtectionTiming.statePath + '.' + DeviceParameters.JamProtectionTiming.id, { val: this.config.regularemovementcron, ack: true });
 
 		//=================================================================================================
 		// Initialize Axios Client (this client will be used to communicate with the device)			===
