@@ -1410,6 +1410,9 @@ class wamo extends utils.Adapter {
 	 */
 	async alarm_corn_jam_protection_Tick(){
 		try{
+			const openValveCommand = false;
+			const closeValveCommand = true;
+
 			if(MainValveJammProtection_running == true){
 				this.log.warn('Valve JAM Protection is already running. We skip it this time.');
 				return;
@@ -1424,11 +1427,10 @@ class wamo extends utils.Adapter {
 			this.log.info('[JAM PROTECTION] Main valve is closed');
 			this.log.info('[JAM PROTECTION] Waiting for opened main valve ...');
 			try{
-				await this.open_main_valve();
+				await this.move_main_valve(openValveCommand);
 			}catch (err){
 				this.log.warn('this.open_main_valve() ERROR: ' + err);
 			}
-			this.log.info('[JAM PROTECTION] Main valve is open');
 
 			MainValveJammProtection_running = false; // clear flag that jam protection is running
 			this.log.info('[JAM PROTECTION] Finished');
@@ -1440,89 +1442,123 @@ class wamo extends utils.Adapter {
 
 	/**
 	 * This function Opens the main valve
+	 *
+	 * mainValveParameters[0] = VLV Valve State (SERVICE)
+	 * 10 Closed
+	 * 11 Closing
+	 * 20 Open
+	 * 21 Opening
+	 * 30 Undefined
 	 */
-	async open_main_valve() {
+	async move_main_valve(close) {
 		try {
-			this.log.info('[JAM PROTECTION] Opening valve');
+			const closedPosition = '"10"';
+			const closingMove = '"11"';
+			const openedPosition = '"20"';
+			const openingMove = '"21"';
+			const undefinedPosition = '"30"';
 
-			// mainValveParameters[0] = VLV Valve State (SERVICE)
-			// 10 Closed
-			// 11 Closing
-			// 20 Open
-			// 21 Opening
-			// 30 Undefined
+			const closeCommand = '2';
+			const openCommand = '1';
 
-			// enable service Mode
-			this.log.debug('[JAM PROTECTION] Set service Mode');
-			await this.set_SERVICE_Mode();
+			let valveCommand;
+			let valve_state;
 
-			this.log.info('[JAM PROTECTION] Reading Valve State');
+
+			// set position we wont for the valve
+			let valve_state_target;
+			if (close) {
+				valve_state_target = closedPosition;
+				valveCommand = closeCommand;
+			} else {
+				valve_state_target = openedPosition;
+				valveCommand = openCommand;
+			}
+
+			// only procede if we have a initialised ApiClient
 			if (this.syrApiClient != null) {
 
-				let valve_state;
+				// enable service Mode
+				this.log.debug('[JAM PROTECTION] Set service Mode');
+				await this.set_SERVICE_Mode();
+				this.log.info('[JAM PROTECTION] Reading main valve State');
+
 				// Get current Valve Status
 				let deviceResponse = await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentValveStatus.id));
 				if (deviceResponse.status === 200) {
 					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 					valve_state = JSON.stringify(deviceResponse.data['getVLV']);
-					this.log.debug('[JAM PROTECTION] Current valve Status = ' + String(valve_state));
+					this.log.debug('[JAM PROTECTION] Current Main valve Status = ' + String(valve_state));
 				}
-				// Procede according valve state
-				if (valve_state == '"20"') {
-					this.log.info('[JAM PROTECTION] Valve is already open');
-				} else {
-					this.log.info('[JAM PROTECTION] Opening Valve ...');
-					await this.syrApiClient.get('set/' + String(DeviceParameters.ShutOff.id + '/' + String('1')));
-					while (valve_state != '"20"') {
-						await this.set_SERVICE_Mode();
-						deviceResponse = await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentValveStatus.id));
-						if (deviceResponse.status === 200) {
-							valve_state = JSON.stringify(deviceResponse.data['getVLV']);
-							switch(valve_state){
-								case '"10"':
-									this.log.info('[JAM PROTECTION] Valve Status = Closed');
-									break;
-								case '"11"':
-									this.log.info('[JAM PROTECTION] Valve Status = Closing');
-									break;
-								case '"20"':
-									this.log.info('[JAM PROTECTION] Valve Status = Open');
-									break;
-								case '"21"':
-									this.log.info('[JAM PROTECTION] Valve Status = Opening');
-									break;
-								case '"30"':
-									this.log.info('[JAM PROTECTION] Valve Status = Undefined');
-									break;
-								default:
-									this.log.error('[JAM PROTECTION] Valve Status = Invalid return value: ' + String(valve_state));
-							}
-						}
-						else{this.log.error('Device Resopns Status not good. Status is: ' + String(deviceResponse.status));}
 
-						await this.delay(1000); // wait one cecond between requests
+				if (close) {
+					if (valve_state == closedPosition) {
+						this.log.info('[JAM PROTECTION] Main valve is already closed');
+						this.log.info('[JAM PROTECTION] Main valve is now closed');
+						// clear special mode
+						await this.clear_SERVICE_FACTORY_Mode();
+						return;
 					}
-					this.log.info('[JAM PROTECTION] Valve is now open');
+				} else {
+					if (valve_state == openedPosition) {
+						this.log.info('[JAM PROTECTION] Main valve is already open');
+						this.log.info('[JAM PROTECTION] Main valve is now open');
+						// clear special mode
+						await this.clear_SERVICE_FACTORY_Mode();
+						return;
+					}
 				}
+
+				// we have to move the main valve
+				// Procede according valve state
+				this.log.info('[JAM PROTECTION] Moving main valve ...');
+				// Send moving command to Device
+				await this.syrApiClient.get('set/' + String(DeviceParameters.ShutOff.id + '/' + String(valveCommand)));
+
+				// reading position till valve reaches requested position
+				while (valve_state != valve_state_target) {
+					// set special mode
+					await this.set_SERVICE_Mode();
+					// read valve state from device
+					deviceResponse = await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentValveStatus.id));
+					// clear special mode
+					await this.clear_SERVICE_FACTORY_Mode();
+
+					// did we get a valid answer from device?
+					if (deviceResponse.status === 200) {
+						// extract valve position from JSON result
+						valve_state = JSON.stringify(deviceResponse.data['getVLV']);
+						switch (valve_state) {
+							case closedPosition:
+								this.log.info('[JAM PROTECTION] Main valve Status = Closed');
+								break;
+							case closingMove:
+								this.log.info('[JAM PROTECTION] Main valve Status = Closing');
+								break;
+							case openedPosition:
+								this.log.info('[JAM PROTECTION] Main valve Status = Open');
+								break;
+							case openingMove:
+								this.log.info('[JAM PROTECTION] Main valve Status = Opening');
+								break;
+							case undefinedPosition:
+								this.log.warn('[JAM PROTECTION] Main valve Status = Undefined');
+								break;
+							default:
+								this.log.error('[JAM PROTECTION] Main valve Status = Invalid return value: ' + String(valve_state));
+						}
+					}
+					else { this.log.error('Device Resopns Status not good. Status is: ' + String(deviceResponse.status)); }
+				}
+
+				// await this.delay(1000); // wait one second between requests
+				if (close) { this.log.info('[JAM PROTECTION] Main valve is now closed');}
+				else { this.log.info('[JAM PROTECTION] Main valve is now open');}
 			}
-
-			this.log.debug('[JAM PROTECTION] Clear service Mode');
-			// clear special mode
-			await this.clear_SERVICE_FACTORY_Mode();
-
 		} catch (err) {
 			throw new Error(err);
 		}
 	}
-
-	async close_main_valve() {
-		try {
-			this.log.info('[JAM PROTECTION] Closing valve');
-		} catch (err) {
-			throw new Error(err);
-		}
-	}
-
 
 	/**
 	 * Timer action
