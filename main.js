@@ -27,8 +27,7 @@ const {
 	alarmPeriod,
 	shortPeriod,
 	longPeriode,
-	sensorPresence,
-	mainValveParameters
+	sensorPresence
 } = require('./lib/device-parameters');
 
 /* cron definitions for the varius cron timers.
