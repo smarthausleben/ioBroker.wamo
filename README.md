@@ -21,7 +21,7 @@ The adapter connects to your **SYR SafeTech Connect 2422** or **POLYGONVATRO** l
 
 The POLYGONVATRO unit is, under the hood, a SYR SaveTech Connect 2422 unit but without pressure-, temperature- and conductivity sensor. The POLYGONVATRO unit is currently not available. 
 
-## IMPOTEAND
+# IMPOTEANT
 In the **_Jam Protection_** release a scheduled move of the main valve was added and can be activated and scheduled in the adapter settings area (Tab: Tasks)
 
 Be verry careful with this functionality because it will **_close_** and **_open_** the main valve in order to prevent it to get stuck in open position and therefore will not close in case of an leakage.
