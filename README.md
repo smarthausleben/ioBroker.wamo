@@ -17,7 +17,7 @@ This adapter adds "wamo" leakage protection monitoring to your ioBroker installa
 
 The adapter connects to your **SYR SafeTech Connect 2422** or **POLYGONVATRO** leakage protection device in order to read data from the device and create some statistic data like water consumption history.
 
-SYR SaveTech Connect 2422: https://www.syr.de/de/Produkte/CB9D9A72-BC51-40CE-840E-73401981A519/SafeTech-Connect
+[SYR SaveTech Connect 2422](https://www.syr.de/de/Produkte/CB9D9A72-BC51-40CE-840E-73401981A519/SafeTech-Connect)
 The POLYGONVATRO unit is, under the hood, a SYR SaveTech Connect 2422 unit but without pressure-, temperature- and conductivity sensor. The POLYGONVATRO unit is currently not available.  
 
 ## Changelog
@@ -27,7 +27,10 @@ The POLYGONVATRO unit is, under the hood, a SYR SaveTech Connect 2422 unit but w
 -->
 
 **WORK IN PROGRESS**
-* (smarthausleben) ADD: Task settings for regular movement of main valve to prevent jammed valve
+* (smarthausleben) ADD: New State JPR for Jam protection running  (Main valve jam protection) 
+* (smarthausleben) ADD: New State JPA for Jam protection aktivated  (Main valve jam protection) 
+* (smarthausleben) ADD: New State JPT for Jam protection Timing/  (Main valve jam protection) 
+* (smarthausleben) ADD: Task Tab to adapter settings to manage regular movement of main valve (Main valve jam protection) 
 * (smarthausleben) FIX: [interfaceBusy] flag was not reset after AXIOS interface handler error
 * (smarthausleben) ADD: 'WatchDog' function for interfaceBusy flag. Flag will be reset after defined amount of requests
 
