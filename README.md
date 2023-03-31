@@ -27,7 +27,14 @@ In the **_Jam Protection_** release a scheduled move of the main valve was added
 Be verry carefull with this functionality because it will **_close_** and **_open_** the main valve in order to prevent it to get stuck in open position and therefore will not close in case of an leackage.
 
 The **_Jam Protection_** can be planed using a CRON schedule which will also be configured in the adapter settings **_Tasks_** tab.
-Be carefull there as well, because if you schedule a jam protection for example every 1 Minute you are having big trouble because your main valve will close and open every minute! 
+Be verry carefull there as well, because if you schedule a jam protection for example every 1 Minute you are having big trouble because your main valve will close and open every minute!
+
+During the **_Jam Protection_** aktivity, no regular states (Valve, Alerms etc.) will be updated in order to prevent false trigger you may have set on of those states.
+
+If the main valve is already in **_closed_** position, the **_Jam Protection_** aktivity will not be performed in order to prevent opening the main valve.
+
+### Disclaimer / Warning
+If during the **_Jam Protection_** aktivity communication to the device gets lost or the WAMO adapter or ioBroker itselfe crashes or will be stoped, the main valve will in the last commanded position! This means if something gets wron, the valve could be closed and needs to be opend by yourselfe using the related app or the button on the device itself.
 
 ## Changelog
 <!--
