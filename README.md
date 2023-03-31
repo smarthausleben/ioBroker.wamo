@@ -43,10 +43,10 @@ If during the **_Jam Protection_** activity communication to the device gets los
 -->
 
 **WORK IN PROGRESS** - ***Jam Protection*** release
-* (smarthausleben) ADD: [Main valve jam protection] New State JPR for Jam protection running  (Main valve jam protection) 
-* (smarthausleben) ADD: New State JPA for Jam protection aktivated  (Main valve jam protection) 
-* (smarthausleben) ADD: New State JPT for Jam protection Timing/  (Main valve jam protection) 
-* (smarthausleben) ADD: Task Tab to adapter settings to manage regular movement of main valve (Main valve jam protection) 
+* (smarthausleben) ADD: [Main valve jam protection] New State JPR for Jam protection running 
+* (smarthausleben) ADD: [Main valve jam protection] New State JPA for Jam protection aktivated
+* (smarthausleben) ADD: [Main valve jam protection] New State JPT for Jam protection timing (CRON)
+* (smarthausleben) ADD: [Main valve jam protection] Task Tab to adapter settings to manage regular movement of main valve
 * (smarthausleben) FIX: [interfaceBusy] flag was not reset after AXIOS interface handler error
 * (smarthausleben) ADD: 'WatchDog' function for interfaceBusy flag. Flag will be reset after defined amount of requests
 
