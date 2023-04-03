@@ -45,7 +45,7 @@ If you find this adapter useful and you want to support this project, your kindn
     ### **WORK IN PROGRESS**
 -->
 
-**WORK IN PROGRESS** - ***Jam Protection*** release
+### **WORK IN PROGRESS** - ***Jam Protection*** release
 * (smarthausleben) ADD: [Main valve jam protection] New State JPR for Jam protection running 
 * (smarthausleben) ADD: [Main valve jam protection] New State JPA for Jam protection aktivated
 * (smarthausleben) ADD: [Main valve jam protection] New State JPT for Jam protection timing (CRON)
