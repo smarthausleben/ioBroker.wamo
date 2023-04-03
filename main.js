@@ -69,7 +69,7 @@ let apiResponseInfoMessages = false;
 
 let interfaceBusy;
 let interfaceBusyCounter = 0;
-let interfaceBusyMaxBeforeReaset = 10;
+const interfaceBusyMaxBeforeReaset = 10;
 let SystemLanguage;
 let MainValveJammProtection_aktive;
 let MainValveJammProtection_running = false;
@@ -411,7 +411,7 @@ class wamo extends utils.Adapter {
 			else if ((id == statePrefix + DeviceParameters.APTimeout.statePath + '.' + DeviceParameters.APTimeout.id) && (state.ack == false)) {
 				if (state.val != null) {
 					try {
-						if ((state.val >= DeviceParameters.APTimeout.objectdefinition.common.min) && state.val <= DeviceParameters.APTimeout.objectdefinition.common.max) {
+						if ((Number(state.val) >= Number(DeviceParameters.APTimeout.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.APTimeout.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.APTimeout, state.val);
 							if (moreMessages) {this.log.info(DeviceParameters.APTimeout.id + ' changed to ' + String(state.val)); }
 						}
@@ -428,7 +428,7 @@ class wamo extends utils.Adapter {
 				if(state.val != null)
 				{
 					try {
-						if ((state.val >= DeviceParameters.ButtonProfileChange.objectdefinition.common.min) && state.val <= DeviceParameters.ButtonProfileChange.objectdefinition.common.max) {
+						if ((Number(state.val) >= Number(DeviceParameters.ButtonProfileChange.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.ButtonProfileChange.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.ButtonProfileChange, state.val);
 							if (moreMessages) {this.log.info(DeviceParameters.ButtonProfileChange.id + ' changed to ' + String(state.val)); }
 						}
@@ -445,7 +445,7 @@ class wamo extends utils.Adapter {
 				if(state.val != null)
 				{
 					try {
-						if ((state.val >= DeviceParameters.FlorSensor.objectdefinition.common.min) && state.val <= DeviceParameters.FlorSensor.objectdefinition.common.max) {
+						if ((Number(state.val) >= Number(DeviceParameters.FlorSensor.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.FlorSensor.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.FlorSensor, state.val);
 							if (moreMessages) {this.log.info(DeviceParameters.FlorSensor.id + ' changed to ' + String(state.val)); }
 						}
@@ -462,7 +462,7 @@ class wamo extends utils.Adapter {
 				if(state.val != null)
 				{
 					try {
-						if ((state.val >= DeviceParameters.BuzzerOnAlarm.objectdefinition.common.min) && state.val <= DeviceParameters.BuzzerOnAlarm.objectdefinition.common.max) {
+						if ((Number(state.val) >= Number(DeviceParameters.BuzzerOnAlarm.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.BuzzerOnAlarm.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.BuzzerOnAlarm, state.val);
 							if (moreMessages) {this.log.info(DeviceParameters.BuzzerOnAlarm.id + ' changed to ' + String(state.val)); }
 						}
@@ -479,7 +479,7 @@ class wamo extends utils.Adapter {
 				if(state.val != null)
 				{
 					try {
-						if ((state.val >= DeviceParameters.MicroLeakageTest.objectdefinition.common.min) && state.val <= DeviceParameters.MicroLeakageTest.objectdefinition.common.max) {
+						if ((Number(state.val) >= Number(DeviceParameters.MicroLeakageTest.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.MicroLeakageTest.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.MicroLeakageTest, state.val);
 							if (moreMessages) {this.log.info(DeviceParameters.MicroLeakageTest.id + ' changed to ' + String(state.val)); }
 						}
@@ -496,7 +496,7 @@ class wamo extends utils.Adapter {
 				if(state.val != null)
 				{
 					try {
-						if ((state.val >= DeviceParameters.MicroLeakageTestPeriod.objectdefinition.common.min) && state.val <= DeviceParameters.MicroLeakageTestPeriod.objectdefinition.common.max) {
+						if ((Number(state.val) >= Number(DeviceParameters.MicroLeakageTestPeriod.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.MicroLeakageTestPeriod.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.MicroLeakageTestPeriod, state.val);
 							if (moreMessages) {this.log.info(DeviceParameters.MicroLeakageTestPeriod.id + ' changed to ' + String(state.val)); }
 						}
@@ -513,7 +513,7 @@ class wamo extends utils.Adapter {
 				if(state.val != null)
 				{
 					try {
-						if ((state.val >= DeviceParameters.DaylightSavingTime.objectdefinition.common.min) && state.val <= DeviceParameters.DaylightSavingTime.objectdefinition.common.max) {
+						if ((Number(state.val) >= Number(DeviceParameters.DaylightSavingTime.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DaylightSavingTime.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.DaylightSavingTime, state.val);
 							if (moreMessages) {this.log.info(DeviceParameters.DaylightSavingTime.id + ' changed to ' + String(state.val)); }
 						}
@@ -530,7 +530,7 @@ class wamo extends utils.Adapter {
 				if(state.val != null)
 				{
 					try {
-						if ((state.val >= DeviceParameters.Language.objectdefinition.common.min) && state.val <= DeviceParameters.Language.objectdefinition.common.max) {
+						if ((Number(state.val) >= Number(DeviceParameters.Language.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.Language.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.Language, state.val);
 							if (moreMessages) {this.log.info(DeviceParameters.Language.id + ' changed to ' + String(state.val)); }
 						}
@@ -547,7 +547,7 @@ class wamo extends utils.Adapter {
 				if(state.val != null)
 				{
 					try {
-						if ((state.val >= DeviceParameters.LeakageNotificationWarningThreshold.objectdefinition.common.min) && state.val <= DeviceParameters.LeakageNotificationWarningThreshold.objectdefinition.common.max) {
+						if ((Number(state.val) >= Number(DeviceParameters.LeakageNotificationWarningThreshold.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.LeakageNotificationWarningThreshold.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.LeakageNotificationWarningThreshold, state.val);
 							if (moreMessages) {this.log.info(DeviceParameters.LeakageNotificationWarningThreshold.id + ' changed to ' + String(state.val)); }
 						}
@@ -564,7 +564,7 @@ class wamo extends utils.Adapter {
 				if(state.val != null)
 				{
 					try {
-						if ((state.val >= DeviceParameters.Units.objectdefinition.common.min) && state.val <= DeviceParameters.Units.objectdefinition.common.max) {
+						if ((Number(state.val) >= Number(DeviceParameters.Units.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.Units.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.Units, state.val);
 							if (moreMessages) {this.log.info(DeviceParameters.Units.id + ' changed to ' + String(state.val)); }
 						}
@@ -581,7 +581,7 @@ class wamo extends utils.Adapter {
 				if(state.val != null)
 				{
 					try {
-						if ((state.val >= DeviceParameters.DeactivateConductivitySensor.objectdefinition.common.min) && state.val <= DeviceParameters.DeactivateConductivitySensor.objectdefinition.common.max) {
+						if ((Number(state.val) >= Number(DeviceParameters.DeactivateConductivitySensor.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DeactivateConductivitySensor.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.DeactivateConductivitySensor, state.val);
 							if (moreMessages) {this.log.info(DeviceParameters.DeactivateConductivitySensor.id + ' changed to ' + String(state.val)); }
 						}
@@ -598,7 +598,7 @@ class wamo extends utils.Adapter {
 				if(state.val != null)
 				{
 					try {
-						if ((state.val >= DeviceParameters.DeactivatePressureSensor.objectdefinition.common.min) && state.val <= DeviceParameters.DeactivatePressureSensor.objectdefinition.common.max) {
+						if ((Number(state.val) >= Number(DeviceParameters.DeactivatePressureSensor.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DeactivatePressureSensor.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.DeactivatePressureSensor, state.val);
 							if (moreMessages) {this.log.info(DeviceParameters.DeactivatePressureSensor.id + ' changed to ' + String(state.val)); }
 						}
@@ -615,7 +615,7 @@ class wamo extends utils.Adapter {
 				if(state.val != null)
 				{
 					try {
-						if ((state.val >= DeviceParameters.DeactivateTemperatureSensor.objectdefinition.common.min) && state.val <= DeviceParameters.DeactivateTemperatureSensor.objectdefinition.common.max) {
+						if ((Number(state.val) >= Number(DeviceParameters.DeactivateTemperatureSensor.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DeactivateTemperatureSensor.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.DeactivateTemperatureSensor, state.val);
 							if (moreMessages) {this.log.info(DeviceParameters.DeactivateTemperatureSensor.id + ' changed to ' + String(state.val)); }
 						}
@@ -632,7 +632,7 @@ class wamo extends utils.Adapter {
 				if(state.val != null)
 				{
 					try {
-						if ((state.val >= DeviceParameters.MaxFlowLeakageTime.objectdefinition.common.min) && state.val <= DeviceParameters.MaxFlowLeakageTime.objectdefinition.common.max) {
+						if ((Number(state.val) >= Number(DeviceParameters.MaxFlowLeakageTime.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.MaxFlowLeakageTime.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.MaxFlowLeakageTime, state.val);
 							if (moreMessages) {this.log.info(DeviceParameters.MaxFlowLeakageTime.id + ' changed to ' + String(state.val)); }
 						}
