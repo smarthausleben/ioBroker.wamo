@@ -54,7 +54,7 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) ADD: 'WatchDog' function for interfaceBusy flag. Flag will be reset after defined amount of requests
 
 ### 0.2.13 (2022-10-12)
-* (smarthausleben) add: new property "createoOnStartup" in DeviceParameter
+* (smarthausleben) add: new property "createOnStartup" in DeviceParameter
 * (smarthausleben) add: new property "saveRawData" in DeviceParameter
 * (smarthausleben) change: creating all state objects during startup to avoid calling "setObjectNotExistsAsync" later on
 * (smarthausleben) add: Profile parameter raw states
