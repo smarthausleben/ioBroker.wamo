@@ -381,7 +381,7 @@ class wamo extends utils.Adapter {
 				}
 			}
 			//============================================================================
-			// Shutoff valve
+			// Shutoff valve AB
 			//============================================================================
 			else if ((id == statePrefix + DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id) && state.ack == false) {
 				switch (state.val) {
@@ -1437,18 +1437,39 @@ class wamo extends utils.Adapter {
 			await this.delay(10000); // Wait some time seconds to avoid desturbing already made Requests
 			this.log.info('[JAM PROTECTION] Closing main valve');
 			try{
-				// await this.move_main_valve(closeValveCommand);
+				// Closing main valve
+				if(!await this.move_main_valve(closeValveCommand))
+				{
+					// Main valve was already closed! Maybe for a good reason So we cancel Jam Protection
+					this.log.error('Jam Protection canceld because main valve is already closed');
+					this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: false, ack: true }); // set state accordingly
+					MainValveJammProtection_running = false; // clear flag that jam protection is running
+					return;
+				}
 			}catch (err){
-				this.log.warn('this.open_main_valve() ERROR: ' + err);
+				this.log.warn('[JAM PROTECTION] closing main valve ERROR: ' + err);
+				this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: false, ack: true }); // set state accordingly
+				MainValveJammProtection_running = false; // clear flag that jam protection is running
+				return;
 			}
 			this.log.info('[JAM PROTECTION] Main valve is closed');
 			this.log.info('[JAM PROTECTION] Opening main valve');
 			try{
-				await this.move_main_valve(openValveCommand);
+				// opening main valve again
+				if(!await this.move_main_valve(openValveCommand))
+				{
+					// something went wron .. we cancel the wohle action.
+					this.log.error('Jam Protection canceld because main valve could not be opened again');
+					this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: false, ack: true }); // set state accordingly
+					MainValveJammProtection_running = false; // clear flag that jam protection is running
+					return;
+				}
 			}catch (err){
-				this.log.warn('this.open_main_valve() ERROR: ' + err);
+				this.log.warn('[JAM PROTECTION] opening main valve ERROR: ' + err);
+				this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: false, ack: true }); // set state accordingly
+				MainValveJammProtection_running = false; // clear flag that jam protection is running
+				return;
 			}
-
 
 			MainValveJammProtection_running = false; // clear flag that jam protection is running
 			// set state accordingly
@@ -1488,7 +1509,7 @@ class wamo extends utils.Adapter {
 			let valve_state;
 
 
-			// set position we wont for the valve
+			// set position we want for the valve
 			let valve_state_target;
 			if (close) {
 				valve_state_target = closedPosition;
@@ -1513,26 +1534,33 @@ class wamo extends utils.Adapter {
 					valve_state = JSON.stringify(deviceResponse.data['getVLV']);
 					this.log.debug('[JAM PROTECTION] Current Main valve Status = ' + String(valve_state));
 				}
+				else{
+					// no response from device
+					this.log.warn('Error reading main valve position! No valid response from device.');
+					return false;
+				}
 
 				if (close) {
 					if (valve_state == closedPosition) {
-						this.log.info('[JAM PROTECTION] Main valve was already closed');
+						// Main valve could be already closed for a good reason and therefore we cancel the Jam Protection
+						this.log.error('[JAM PROTECTION] Main valve is already closed! Maybe for a good reason. Jam Protection canceled!');
 						// clear special mode
 						await this.clear_SERVICE_FACTORY_Mode();
-						return;
+						return false;
 					}
 				} else {
 					if (valve_state == openedPosition) {
 						this.log.info('[JAM PROTECTION] Main valve was already open');
 						// clear special mode
 						await this.clear_SERVICE_FACTORY_Mode();
-						return;
+						return false;
 					}
 				}
 
 				// we have to move the main valve
 				// Procede according valve state
 				this.log.info('[JAM PROTECTION] Moving main valve ...');
+
 				// Send moving command to Device
 				await this.syrApiClient.get('set/' + String(DeviceParameters.ShutOff.id + '/' + String(valveCommand)));
 
@@ -1569,12 +1597,13 @@ class wamo extends utils.Adapter {
 								this.log.error('[JAM PROTECTION] Main valve Status = Invalid return value: ' + String(valve_state));
 						}
 					}
-					else { this.log.error('Device resopns status invalid! Status: ' + String(deviceResponse.status)); }
+					else { this.log.error('[JAM PROTECTION] Device resopns status invalid at position reading during valve movement! Response Status: ' + String(deviceResponse.status)); }
 				}
 
 				// await this.delay(1000); // wait one second between requests
 				if (close) { this.log.info('[JAM PROTECTION] Main valve is closed');}
 				else { this.log.info('[JAM PROTECTION] Main valve is open');}
+				return true;
 			}
 		} catch (err) {
 			throw new Error(err);
