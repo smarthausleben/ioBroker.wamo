@@ -70,7 +70,6 @@ let interfaceBusy;
 let interfaceBusyCounter = 0;
 const interfaceBusyMaxBeforeReaset = 10;
 let SystemLanguage;
-let MainValveJammProtection_aktive;
 let MainValveJammProtection_running = false;
 
 
@@ -107,7 +106,6 @@ class wamo extends utils.Adapter {
 		valuesInfoMessages = this.config.valueinfomessages;
 		delay_reconnection = this.config.reconnectingdelaytime;
 		timeout_axios_request = this.config.requesttimeout;
-		MainValveJammProtection_aktive = this.config.regularmainvalvemovement;
 		this.log.debug('config Device IP: ' + String(this.config.device_ip));
 		this.log.debug('config Device Port: ' + String(this.config.device_port));
 		this.log.debug('More log messages: ' + String(this.config.moremessages));
