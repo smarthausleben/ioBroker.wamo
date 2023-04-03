@@ -49,9 +49,9 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) ADD: [Main valve jam protection] New State JPR for Jam protection running 
 * (smarthausleben) ADD: [Main valve jam protection] New State JPA for Jam protection aktivated
 * (smarthausleben) ADD: [Main valve jam protection] New State JPT for Jam protection timing (CRON)
-* (smarthausleben) ADD: [Main valve jam protection] Task Tab to adapter settings to manage regular movement of main valve
-* (smarthausleben) FIX: [interfaceBusy] flag was not reset after AXIOS interface handler error
-* (smarthausleben) ADD: 'WatchDog' function for interfaceBusy flag. Flag will be reset after defined amount of requests
+* (smarthausleben) ADD: [Main valve jam protection] New **Task Tab** in adapter settings to manage regular movement of main valve
+* (smarthausleben) FIX: [interfaceBusy] flag was not reset after AXIOS interface handler error **_(Issue #21)_**
+* (smarthausleben) ADD: [WatchDog] function for interfaceBusy flag. Flag will be reset after defined amount of requests **_(Issue #21)_**
 
 ### 0.2.13 (2022-10-12)
 * (smarthausleben) add: new property "createOnStartup" in DeviceParameter
