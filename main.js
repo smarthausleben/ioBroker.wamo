@@ -18,7 +18,6 @@ const adapterName = require('./package.json').name.split('.').pop();
 
 // my own modules
 const {
-	deviceControlStates,
 	adapterChannels,
 	calculatedStates,
 	StatisticStates,
