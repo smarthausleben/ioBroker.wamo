@@ -16,5 +16,8 @@
     "more logging messages": "больше сообщений журнала",
     "Seconds to retry connection to device": "Секунд для повторной попытки подключения к устройству",
     "Timeout device data request in seconds": "Время ожидания запроса данных устройства в секундах",
-    "Advanced Options": "Расширенные опции"
+    "Advanced Options": "Расширенные опции",
+    "Tasks": "Задания",
+    "regular main valve movement": "регулярное движение главного клапана",
+    "timing of regular main valve movement": "время нормального движения главного клапана"
 }

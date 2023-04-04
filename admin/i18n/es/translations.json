@@ -16,5 +16,8 @@
     "more logging messages": "más mensajes de registro",
     "Seconds to retry connection to device": "Segundos para reintentar la conexión al dispositivo",
     "Timeout device data request in seconds": "Solicitud de datos del dispositivo de tiempo de espera en segundos",
-    "Advanced Options": "Opciones avanzadas"
+    "Advanced Options": "Opciones avanzadas",
+    "Tasks": "Tareas",
+    "regular main valve movement": "movimiento regular de la válvula principal",
+    "timing of regular main valve movement": "sincronización del movimiento regular de la válvula principal"
 }

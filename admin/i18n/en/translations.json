@@ -15,5 +15,8 @@
     "show API response as info logging messages": "show api response as info logging messages",
     "Seconds to retry connection to device": "Seconds to retry connection to device",
     "Timeout device data request in seconds": "Timeout device data request in seconds",
-    "Advanced Options": "Advanced Options"
+    "Advanced Options": "Advanced Options",
+    "Tasks": "Tasks",
+    "regular main valve movement": "regular main valve movement",
+    "timing of regular main valve movement": "timing of regular main valve movement"
 }

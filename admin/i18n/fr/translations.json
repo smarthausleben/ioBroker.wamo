@@ -16,5 +16,8 @@
     "more logging messages": "plus de messages de journalisation",
     "Seconds to retry connection to device": "Secondes pour réessayer la connexion à l'appareil",
     "Timeout device data request in seconds": "Expiration de la demande de données de l'appareil en secondes",
-    "Advanced Options": "Options avancées"
+    "Advanced Options": "Options avancées",
+    "Tasks": "Tâches",
+    "regular main valve movement": "mouvement régulier de la vanne principale",
+    "timing of regular main valve movement": "moment du mouvement régulier de la vanne principale"
 }

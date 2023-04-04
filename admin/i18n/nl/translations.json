@@ -16,5 +16,8 @@
     "more logging messages": "meer logberichten",
     "Seconds to retry connection to device": "Seconden om opnieuw verbinding te maken met het apparaat",
     "Timeout device data request in seconds": "Verzoek om time-out apparaatgegevens in seconden",
-    "Advanced Options": "Geavanceerde mogelijkheden"
+    "Advanced Options": "Geavanceerde mogelijkheden",
+    "Tasks": "Taken",
+    "regular main valve movement": "regelmatige beweging van de hoofdklep",
+    "timing of regular main valve movement": "timing van regelmatige beweging van de hoofdklep"
 }

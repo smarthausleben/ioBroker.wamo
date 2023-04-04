@@ -16,5 +16,8 @@
     "more logging messages": "更多日志信息",
     "Seconds to retry connection to device": "重试连接到设备的秒数",
     "Timeout device data request in seconds": "以秒为单位的超时设备数据请求",
-    "Advanced Options": "高级选项"
+    "Advanced Options": "高级选项",
+    "Tasks": "任务",
+    "regular main valve movement": "定期主阀运动",
+    "timing of regular main valve movement": "定期主阀运动的时间"
 }
