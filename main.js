@@ -36,7 +36,7 @@ const cron_Month = '0 0 1 * *';
 const cron_Week = '0 0 * * 1';
 const cron_Day = '0 0 * * *';
 const cron_TestinLoop = '* * * * *'; // Every minute
-const executeTestingLoop = true; // Flag to indicate if Testing Loop should be executed
+const executeTestingLoop = false; // Flag to indicate if Testing Loop should be executed
 
 const Parameter_FACTORY_Mode = 'ADM/(2)f';
 const Parameter_SERVICE_Mode = 'ADM/(1)';
@@ -1418,6 +1418,9 @@ class wamo extends utils.Adapter {
 	/**
 	 * Cron action
 	 * [Testing loop]
+	 *
+	 * This funktion is only for internal testing and will only
+	 * be executed if "executeTestingLoop" is set to true
 	 */
 	async alarm_corn_TestingLoop_Tick(){
 
@@ -1433,15 +1436,6 @@ class wamo extends utils.Adapter {
 					const myResult = await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentVolume.id));
 					interfaceBusy = false;
 					this.log.warn('[Testing Loop] Raw Data;' + JSON.stringify(myResult.data));
-					if(JSON.stringify(myResult.data['getAVO']) == '0mL'){
-						this.log.warn('[Testing Loop] single quote result works');
-					}
-					else if(JSON.stringify(myResult.data['getAVO']) == '"0mL"'){
-						this.log.warn('[Testing Loop] addition double quote result works');
-					}
-					else{
-						this.log.warn('[Testing Loop] nothing works :-(');
-					}
 				}
 			}
 			else{
@@ -1476,14 +1470,23 @@ class wamo extends utils.Adapter {
 				let trys = 0;
 				let consumption_is_zero = false;
 
+				// waiting for free interface to device
+				while(interfaceBusy)
+				{
+					this.log.warn('[JAM PROTECTION] Interface is bussy we wait one second ...');
+					await this.delay(10000); // Wait one second till next try
+				}
+
 				while(!consumption_is_zero)
 				{
+					interfaceBusy = true;
 					// get current water consumption from device
 					currentconsumption = (await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentVolume.id)));
+					interfaceBusy = false;
 					// increase request counter
 					trys++;
 					// is there no water consumption?
-					if(JSON.stringify(currentconsumption.data['getAVO']) == '0mL'){
+					if(JSON.stringify(currentconsumption.data['getAVO']) == '"0mL"'){
 						consumption_is_zero = true;
 						break;
 					}
@@ -1491,17 +1494,25 @@ class wamo extends utils.Adapter {
 					if(trys >= max_trys)
 					{
 						// we cancle jam protection because of ongoing water consumption
+						this.log.warn('[JAM PROTECTION] Jam protection valve move was canceled because of ongoing water flow during ' + String((wait_time_between_consumption_reading * max_trys)/1000) + ' seconds');
 						return;
 					}
-					// Wait defined time until for next requests
+					// Wait defined time until next device requests
 					await this.delay(wait_time_between_consumption_reading);
 				}
 			}else{
-				this.log.error('syrApiClient is not initialised. No device requests possible -> Jam Protection wil be canceled!');
+				this.log.error('[JAM PROTECTION] syrApiClient is not initialised. No device requests possible -> Jam Protection wil be canceled!');
 				return;
 			}
 
 			// Looks like everything is ok, we can start Jam Protection move
+
+			// waiting for free interface to device
+			while (interfaceBusy) {
+				this.log.warn('[JAM PROTECTION] Interface is bussy we wait one second ...');
+				await this.delay(10000); // Wait one second till next try
+			}
+
 			MainValveJammProtection_running = true; // set flag that jam protection is running
 			// set state accordingly
 			this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: true, ack: true });
