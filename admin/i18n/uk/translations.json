@@ -1,3 +1,25 @@
 {
-    
+    "Advanced Options": "Розширені опції",
+    "Device IP Address": "IP-адреса пристрою",
+    "Device Port": "Порт пристрою",
+    "Factor to calculate German water hardnes from conductivity.": "Коефіцієнт для розрахунку жорсткості німецької води на основі провідності.",
+    "IP or hostname of your SYR SaveTech Connect 2422 or your POLYGONVATRO leakage protection device.": "IP або ім’я хоста вашого SYR SaveTech Connect 2422 або вашого пристрою захисту від витоку POLYGONVATRO.",
+    "Options": "Опції",
+    "Port of your SYR SaveTech Connect 2422 or your POLYGONVATRO leakage protection device": "Порт вашого SYR SaveTech Connect 2422 або пристрою захисту від витоку POLYGONVATRO",
+    "Seconds to retry connection to device": "Секунди для повторної спроби підключення до пристрою",
+    "Tasks": "завдання",
+    "Timeout device data request in seconds": "Тайм-аут запиту даних пристрою в секундах",
+    "alarm polling time in seconds": "час опитування будильника в секундах",
+    "factor german water hardness": "коефіцієнт німецької жорсткості води",
+    "fast polling time in seconds": "швидкий час опитування в секундах",
+    "more logging messages": "більше повідомлень реєстрації",
+    "more loging messages": "більше повідомлень реєстрації",
+    "regular main valve movement": "регулярний рух головного клапана",
+    "show API response as info logging messages": "показати відповідь API як повідомлення журналу інформації",
+    "show api response as info logging messages": "показати відповідь API як повідомлення журналу інформації",
+    "show values as log info messages": "показувати значення як інформаційні повідомлення журналу",
+    "slow polling time in seconds": "повільний час опитування в секундах",
+    "timing of regular main valve movement": "час регулярного руху головного клапана",
+    "very slow polling time in seconds": "дуже повільний час опитування в секундах",
+    "wamo adapter settings": "Налаштування адаптера для wamo"
 }
