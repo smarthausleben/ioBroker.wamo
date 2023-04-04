@@ -46,7 +46,7 @@ If you find this adapter useful and you want to support this project, your kindn
     ### **WORK IN PROGRESS**
 -->
 
-### **WORK IN PROGRESS** - ***Jam Protection*** release
+### 0.3.0 (2023-04-04) - ***Jam Protection*** release
 * (smarthausleben) ADD: [Main valve jam protection] New State JPR for Jam protection running 
 * (smarthausleben) ADD: [Main valve jam protection] New State JPA for Jam protection aktivated
 * (smarthausleben) ADD: [Main valve jam protection] New State JPT for Jam protection timing (CRON)
@@ -75,16 +75,6 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) new channel DeviceControl
 * (smarthausleben) added unit for GHARDNESS (°dH)
 * (smarthausleben) new state GHARDFACTOR (calculation factor German water hardnes)
-
-### 0.2.9 (2022-08-12)
-* (smarthausleben) states changable ATP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT
-* (smarthausleben) state types changed ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT
-* (smarthausleben) added states TMZ, TN, 71, ALD, CLP, BPB
-* (smarthausleben) added channel and states for self learning: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF
-* (smarthausleben) change splitted options into two tabs 
-* (smarthausleben) added options to define timeout for axios request 
-* (smarthausleben) added options for delay time between reconection try to device if connection got lost
-* (smarthausleben) change - exported Parameter declarations and parameter collections for timer into a seperate file 'lib/device-parameters.js'
 
 ## License
 The MIT License (MIT)

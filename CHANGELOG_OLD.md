@@ -1,5 +1,15 @@
 # Older changes
 
+## 0.2.9 (2022-08-12)
+* (smarthausleben) states changable ATP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT
+* (smarthausleben) state types changed ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT
+* (smarthausleben) added states TMZ, TN, 71, ALD, CLP, BPB
+* (smarthausleben) added channel and states for self learning: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF
+* (smarthausleben) change splitted options into two tabs 
+* (smarthausleben) added options to define timeout for axios request 
+* (smarthausleben) added options for delay time between reconection try to device if connection got lost
+* (smarthausleben) change - exported Parameter declarations and parameter collections for timer into a seperate file 'lib/device-parameters.js'
+
 ## 0.2.8 (2022-08-08)
 * (smarthausleben) release cosmetics
 
