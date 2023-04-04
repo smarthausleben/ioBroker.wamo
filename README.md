@@ -46,6 +46,8 @@ If you find this adapter useful and you want to support this project, your kindn
     ### **WORK IN PROGRESS**
 -->
 
+### **WORK IN PROGRESS**
+
 ### 0.3.0 (2023-04-04) - ***Jam Protection*** release
 * (smarthausleben) ADD: [Main valve jam protection] New State JPR for Jam protection running 
 * (smarthausleben) ADD: [Main valve jam protection] New State JPA for Jam protection aktivated

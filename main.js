@@ -1195,8 +1195,7 @@ class wamo extends utils.Adapter {
 			// Main valve jam protection active?
 			if(this.config.regularmainvalvemovement){
 				// Ok we schedule it
-				this.log.info('Jam protection cron job scheduled');
-				this.log.info('Jam protection cron ' + String(this.config.regularemovementcron));
+				this.log.info('Jam protection cron job scheduled for: ' + String(this.config.regularemovementcron));
 				schedule.scheduleJob(this.config.regularemovementcron, cron_poll_jam_protection);
 			}
 			if (moreMessages) { this.log.info('Cron timer started'); }
