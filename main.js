@@ -36,6 +36,7 @@ const cron_Month = '0 0 1 * *';
 const cron_Week = '0 0 * * 1';
 const cron_Day = '0 0 * * *';
 const cron_TestinLoop = '* * * * *'; // Every minute
+const executeTestingLoop = true; // Flag to indicate if Testing Loop should be executed
 
 const Parameter_FACTORY_Mode = 'ADM/(2)f';
 const Parameter_SERVICE_Mode = 'ADM/(1)';
@@ -1419,6 +1420,10 @@ class wamo extends utils.Adapter {
 	 * [Testing loop]
 	 */
 	async alarm_corn_TestingLoop_Tick(){
+
+		// only execute if Flag is set to TRUE
+		if(!executeTestingLoop){return;}
+
 		try{
 			this.log.debug('[Testing Loop] Trigger');
 			if(!interfaceBusy)
@@ -1427,7 +1432,7 @@ class wamo extends utils.Adapter {
 					interfaceBusy = true;
 					const myResult = await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentVolume.id));
 					interfaceBusy = false;
-					this.log.warn('[Testing Loop] Raw Data' + String(myResult.data));
+					this.log.warn('[Testing Loop] Raw Data;' + JSON.stringify(myResult.data));
 					if(JSON.stringify(myResult.data['getAVO']) == '0mL'){
 						this.log.warn('[Testing Loop] single quote result works');
 					}
