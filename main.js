@@ -35,6 +35,7 @@ const cron_Year = '0 0 1 1 *';
 const cron_Month = '0 0 1 * *';
 const cron_Week = '0 0 * * 1';
 const cron_Day = '0 0 * * *';
+const cron_TestinLoop = '* * * * *'; // Every minute
 
 const Parameter_FACTORY_Mode = 'ADM/(2)f';
 const Parameter_SERVICE_Mode = 'ADM/(1)';
@@ -1189,6 +1190,7 @@ class wamo extends utils.Adapter {
 			schedule.scheduleJob(cron_Week, cron_poll_week);
 			schedule.scheduleJob(cron_Month, cron_poll_month);
 			schedule.scheduleJob(cron_Year, cron_poll_year);
+			schedule.scheduleJob(cron_TestinLoop, cron_poll_TestingLoop);
 			// Main valve jam protection active?
 			if(this.config.regularmainvalvemovement){
 				// Ok we schedule it
@@ -1414,6 +1416,40 @@ class wamo extends utils.Adapter {
 
 	/**
 	 * Cron action
+	 * [Testing loop]
+	 */
+	async alarm_corn_TestingLoop_Tick(){
+		try{
+			this.log.debug('[Testing Loop] Trigger');
+			if(!interfaceBusy)
+			{
+				if (this.syrApiClient != null) {
+					interfaceBusy = true;
+					const myResult = await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentVolume.id));
+					interfaceBusy = false;
+					this.log.warn('[Testing Loop] Raw Data' + String(myResult.data));
+					if(JSON.stringify(myResult.data['getAVO']) == '0mL'){
+						this.log.warn('[Testing Loop] single quote result works');
+					}
+					else if(JSON.stringify(myResult.data['getAVO']) == '"0mL"'){
+						this.log.warn('[Testing Loop] addition double quote result works');
+					}
+					else{
+						this.log.warn('[Testing Loop] nothing works :-(');
+					}
+				}
+			}
+			else{
+				this.log.warn('[Testing Loop] interface was bussy');
+			}
+		}catch(err){
+			interfaceBusy = false;
+			this.log.warn('[Testing Loop] ERROR: ' + err);
+		}
+	}
+
+	/**
+	 * Cron action
 	 * [jam protection]
 	 */
 	async alarm_corn_jam_protection_Tick(){
@@ -1421,10 +1457,46 @@ class wamo extends utils.Adapter {
 			const openValveCommand = false;
 			const closeValveCommand = true;
 
+			// Is Jam Protection already in progess)
 			if(MainValveJammProtection_running == true){
 				this.log.warn('Valve JAM Protection is already running. We skip it this time.');
 				return;
 			}
+
+			// Do we have initialised syrApiClient?
+			if(this.syrApiClient != null){
+				let currentconsumption;
+				const max_trys = 10;
+				const wait_time_between_consumption_reading = 60000;
+				let trys = 0;
+				let consumption_is_zero = false;
+
+				while(!consumption_is_zero)
+				{
+					// get current water consumption from device
+					currentconsumption = (await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentVolume.id)));
+					// increase request counter
+					trys++;
+					// is there no water consumption?
+					if(JSON.stringify(currentconsumption.data['getAVO']) == '0mL'){
+						consumption_is_zero = true;
+						break;
+					}
+					// did we reach maximum amount of requests?
+					if(trys >= max_trys)
+					{
+						// we cancle jam protection because of ongoing water consumption
+						return;
+					}
+					// Wait defined time until for next requests
+					await this.delay(wait_time_between_consumption_reading);
+				}
+			}else{
+				this.log.error('syrApiClient is not initialised. No device requests possible -> Jam Protection wil be canceled!');
+				return;
+			}
+
+			// Looks like everything is ok, we can start Jam Protection move
 			MainValveJammProtection_running = true; // set flag that jam protection is running
 			// set state accordingly
 			this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: true, ack: true });
@@ -1527,7 +1599,7 @@ class wamo extends utils.Adapter {
 				// Get current Valve Status
 				let deviceResponse = await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentValveStatus.id));
 				if (deviceResponse.status === 200) {
-					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
+					if (apiResponseInfoMessages) { this.log.info('[JAM PROTECTION] syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 					valve_state = JSON.stringify(deviceResponse.data['getVLV']);
 					this.log.debug('[JAM PROTECTION] Current Main valve Status = ' + String(valve_state));
 				}
@@ -1561,6 +1633,14 @@ class wamo extends utils.Adapter {
 				// Send moving command to Device
 				await this.syrApiClient.get('set/' + String(DeviceParameters.ShutOff.id + '/' + String(valveCommand)));
 
+				// Flags to track if info message for specific valve position was already released
+				// if meassage was once published we release debug messages instead of info message
+				let closedPosition_occourred = false;
+				let closingMove_occourred = false;
+				let openedPosition_occourred = false;
+				let openingMove_occourred = false;
+				let undefinedPosition_occourred = false;
+
 				// reading position till valve reaches requested position
 				while (valve_state != valve_state_target) {
 					// set special mode
@@ -1576,19 +1656,44 @@ class wamo extends utils.Adapter {
 						valve_state = JSON.stringify(deviceResponse.data['getVLV']);
 						switch (valve_state) {
 							case closedPosition:
-								this.log.info('[JAM PROTECTION] Main valve Status = Closed');
+								if(!closedPosition_occourred){
+									this.log.info('[JAM PROTECTION] Main valve Status = Closed');
+									closedPosition_occourred = true;
+								}else{
+									this.log.debug('[JAM PROTECTION] Main valve Status = Closed');
+								}
 								break;
 							case closingMove:
-								this.log.info('[JAM PROTECTION] Main valve Status = Closing');
+								if(!closingMove_occourred){
+									this.log.info('[JAM PROTECTION] Main valve Status = Closing ...');
+									closingMove_occourred = true;
+								}else{
+									this.log.debug('[JAM PROTECTION] Main valve Status = Closing ...');
+								}
 								break;
 							case openedPosition:
-								this.log.info('[JAM PROTECTION] Main valve Status = Open');
+								if(!openedPosition_occourred){
+									this.log.info('[JAM PROTECTION] Main valve Status = Open');
+									openedPosition_occourred = true;
+								}else{
+									this.log.debug('[JAM PROTECTION] Main valve Status = Open');
+								}
 								break;
 							case openingMove:
-								this.log.info('[JAM PROTECTION] Main valve Status = Opening');
+								if(!openingMove_occourred){
+									this.log.info('[JAM PROTECTION] Main valve Status = Opening ...');
+									openingMove_occourred = true;
+								}else{
+									this.log.debug('[JAM PROTECTION] Main valve Status = Opening ...');
+								}
 								break;
 							case undefinedPosition:
-								this.log.warn('[JAM PROTECTION] Main valve Status = Undefined');
+								if(!undefinedPosition_occourred){
+									this.log.warn('[JAM PROTECTION] Main valve Status = Undefined');
+									undefinedPosition_occourred = true;
+								}else{
+									this.log.debug('[JAM PROTECTION] Main valve Status = Undefined');
+								}
 								break;
 							default:
 								this.log.error('[JAM PROTECTION] Main valve Status = Invalid return value: ' + String(valve_state));
@@ -4344,8 +4449,21 @@ async function cron_poll_jam_protection() {
 	} catch (err) {
 		//throw new Error(err);
 	}
+}
 
-}//===================================================
+/**
+ * Cron event handler
+ * [Testing loop]
+ */
+async function cron_poll_TestingLoop() {
+	try {
+		await myAdapter.alarm_corn_TestingLoop_Tick();
+	} catch (err) {
+		//throw new Error(err);
+	}
+}
+
+//===================================================
 
 if (require.main !== module) {
 	// Export the constructor in compact mode
