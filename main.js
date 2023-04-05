@@ -36,7 +36,10 @@ const cron_Month = '0 0 1 * *';
 const cron_Week = '0 0 * * 1';
 const cron_Day = '0 0 * * *';
 const cron_TestinLoop = '* * * * *'; // Every minute
-const executeTestingLoop = false; // Flag to indicate if Testing Loop should be executed
+
+//=======================================================================================
+const executeTestingLoop = true; // Flag to indicate if Testing Loop should be executed
+//=======================================================================================
 
 const Parameter_FACTORY_Mode = 'ADM/(2)f';
 const Parameter_SERVICE_Mode = 'ADM/(1)';
@@ -87,6 +90,7 @@ class wamo extends utils.Adapter {
 		});
 
 		this.syrApiClient = null;
+		this.syrSaveFloor1APIClient = null;
 
 		// test
 		this.on('ready', this.onReady.bind(this));
@@ -180,6 +184,21 @@ class wamo extends utils.Adapter {
 			})
 		});
 
+		//=====================================================================================================================
+		// Initialize Axios Client for SafeFloor Units (this client will be used to communicate with the SafeFloor units)	===
+		//=====================================================================================================================
+		if (this.config.safefloor_1_ip != '0.0.0.0') {
+			this.log.warn('SafeFloor Connect Unit 1 IP-Address: ' + String(this.config.safefloor_1_ip));
+			this.syrSaveFloor1APIClient = axios.create({
+				baseURL: `http://${this.config.safefloor_1_ip}:${this.config.device_port}/floorsensor/`,
+				timeout: timeout_axios_request * 1000,
+				responseType: 'json',
+				responseEncoding: 'utf8',
+				httpAgent: new http.Agent({
+					keepAlive: true
+				})
+			});
+		}
 		//=================================================================================================
 		// Test if device is responding																	===
 		//=================================================================================================
@@ -1430,11 +1449,19 @@ class wamo extends utils.Adapter {
 			this.log.debug('[Testing Loop] Trigger');
 			if(!interfaceBusy)
 			{
-				if (this.syrApiClient != null) {
+				if (this.syrSaveFloor1APIClient != null) {
 					interfaceBusy = true;
-					const myResult = await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentVolume.id));
+					const myResult = await this.syrSaveFloor1APIClient.get('get/' + 'VER');
 					interfaceBusy = false;
-					this.log.warn('[Testing Loop] Raw Data;' + JSON.stringify(myResult.data));
+					if (myResult.status === 200) {
+						const myResultValue = JSON.stringify(myResult.data['getVER']);
+						this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' Serial is: ' + String(myResultValue));
+					}
+					else{
+						// no response from device
+						this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' not online');
+						return false;
+					}
 				}
 			}
 			else{
