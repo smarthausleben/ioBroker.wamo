@@ -47,6 +47,8 @@ If you find this adapter useful and you want to support this project, your kindn
 -->
 
 ### **WORK IN PROGRESS**
+* (smarthausleben) ADD: [SafeFloor Device] New **SafeFloor Units** Tab in adapter settings to manage up to 4 **_SafeFloor Connect_** devices
+
 
 ### 0.3.0 (2023-04-04) - ***Jam Protection*** release
 * (smarthausleben) ADD: [Main valve jam protection] New State JPR for Jam protection running 

@@ -79,6 +79,84 @@
                 }
             }
         },
+        "_savefloor": {
+            "type": "panel",
+            "label": "SafeFloor Units",
+            "items":{
+                "safefloor_1_ip": {
+                    "newLine": true,
+                    "type": "text",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "label": "SafeFloor Connect 1 - IP address",
+                    "help": "IP address of first SYR SaveFloor Connect device"
+                },
+                "safefloor_1_serial":{
+                    "newLine": false,
+                    "type": "text",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "label": "SafeFloor Connect 1 - Serial number",
+                    "help": "Serial number of first SYR SaveFloor Connect device"
+                },
+                "safefloor_2_ip": {
+                    "newLine": true,
+                    "type": "text",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "label": "SafeFloor Connect 2 - IP address",
+                    "help": "IP address of second SYR SaveFloor Connect device"
+                },
+                "safefloor_2_serial":{
+                    "newLine": false,
+                    "type": "text",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "label": "SafeFloor Connect 2 - Serial number",
+                    "help": "Serial number of second SYR SaveFloor Connect device"
+                },
+                "safefloor_3_ip": {
+                    "newLine": true,
+                    "type": "text",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "label": "SafeFloor Connect 3 - IP address",
+                    "help": "IP address of third SYR SaveFloor Connect device"
+                },
+                "safefloor_3_serial":{
+                    "newLine": false,
+                    "type": "text",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "label": "SafeFloor Connect 3 - Serial number",
+                    "help": "Serial number of third SYR SaveFloor Connect device"
+                },
+                "safefloor_4_ip": {
+                    "newLine": true,
+                    "type": "text",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "label": "SafeFloor Connect 4 - IP address",
+                    "help": "IP address of fourth SYR SaveFloor Connect device"
+                },
+                "safefloor_4_serial":{
+                    "newLine": false,
+                    "type": "text",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "label": "SafeFloor Connect 4 - Serial number",
+                    "help": "Serial number of fourth SYR SaveFloor Connect device"
+                }
+            }
+        },
         "_tasks": {
             "type": "panel",
             "label": "Tasks",
