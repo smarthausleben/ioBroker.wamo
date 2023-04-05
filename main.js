@@ -1451,15 +1451,15 @@ class wamo extends utils.Adapter {
 			{
 				if (this.syrSaveFloor1APIClient != null) {
 					interfaceBusy = true;
-					const myResult = await this.syrSaveFloor1APIClient.get('get/' + 'VER');
+					const myResult = await this.syrSaveFloor1APIClient.get('get/' + 'SRN');
 					interfaceBusy = false;
 					if (myResult.status === 200) {
-						const myResultValue = JSON.stringify(myResult.data['getVER']);
+						const myResultValue = JSON.stringify(myResult.data['getSRN']);
 						this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' Serial is: ' + String(myResultValue));
 					}
 					else{
 						// no response from device
-						this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' not online');
+						this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' bad Data');
 						return false;
 					}
 				}
@@ -1469,7 +1469,12 @@ class wamo extends utils.Adapter {
 			}
 		}catch(err){
 			interfaceBusy = false;
-			this.log.warn('[Testing Loop] ERROR: ' + err);
+			// Device not Reachable
+			if(String(err).includes('connect EHOSTUNREACH 192.168.70.241:5333')){
+				this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' not reachable');
+			}else{
+				this.log.warn('[Testing Loop] ERROR: ' + err);
+			}
 		}
 	}
 
