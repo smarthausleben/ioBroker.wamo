@@ -248,7 +248,15 @@
         "reconnectingdelaytime": 5,
         "requesttimeout": 5,
         "regularmainvalvemovement": false,
-        "regularemovementcron": "0 3 * * *"
+        "regularemovementcron": "0 3 * * *",
+        "safefloor_1_ip": "0.0.0.0",
+        "safefloor_1_serial": "",
+        "safefloor_2_ip": "0.0.0.0",
+        "safefloor_2_serial": "",
+        "safefloor_3_ip": "0.0.0.0",
+        "safefloor_3_serial": "",
+        "safefloor_4_ip": "0.0.0.0",
+        "safefloor_4_serial": ""
     },
     "objects": [],
     "instanceObjects": [
