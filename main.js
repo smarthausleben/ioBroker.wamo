@@ -1452,10 +1452,10 @@ class wamo extends utils.Adapter {
 				if (this.syrSaveFloor1APIClient != null) {
 					try {
 						interfaceBusy = true;
-						const myResult = await this.syrSaveFloor1APIClient.get('get/' + 'BAT');
+						const myResult = await this.syrSaveFloor1APIClient.get('get/' + 'ALL');
 						interfaceBusy = false;
 						if (myResult.status === 200) {
-							const myResultValue = JSON.stringify(myResult.data['getSRN']);
+							const myResultValue = JSON.stringify(myResult.data);
 							this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' Battery voltage: ' + String(myResultValue));
 						}
 						else {
