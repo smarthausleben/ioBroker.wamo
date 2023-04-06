@@ -1461,6 +1461,17 @@ class wamo extends utils.Adapter {
 						if (myResult.status === 200) {
 							this.log.warn('[Testing Loop]' + JSON.stringify(myResult.data));
 							this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' Battery voltage: ' + String(myResult.data['BAT']));
+
+							// We got Data ... sending device to sleep
+							while(interfaceBusy)
+							{
+								await this.delay(1000);
+							}
+							this.log.warn('[Testing Loop] send Floor Sensor to sleep');
+							interfaceBusy = true;
+							await this.syrSaveFloor1APIClient.get('set/' + 'SLP');
+							interfaceBusy = false;
+
 						}
 						else {
 							// no response from device
