@@ -1460,7 +1460,7 @@ class wamo extends utils.Adapter {
 						interfaceBusy = false;
 						if (myResult.status === 200) {
 							this.log.warn('[Testing Loop]' + JSON.stringify(myResult.data));
-							this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' Battery voltage: ' + String(myResult['BAT']));
+							this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' Battery voltage: ' + String(myResult.data['BAT']));
 						}
 						else {
 							// no response from device
