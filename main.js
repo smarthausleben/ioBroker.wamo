@@ -1448,25 +1448,29 @@ class wamo extends utils.Adapter {
 
 		try{
 			this.log.debug('[Testing Loop] Trigger');
-			if(!interfaceBusy)
-			{
+			if (!interfaceBusy) {
 				if (this.syrSaveFloor1APIClient != null) {
-					interfaceBusy = true;
-					const myResult = await this.syrSaveFloor1APIClient.get('get/' + 'BAT');
-					interfaceBusy = false;
-					if (myResult.status === 200) {
-						const myResultValue = JSON.stringify(myResult.data['getSRN']);
-						this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' Battery voltage: ' + String(myResultValue));
+					try {
+						interfaceBusy = true;
+						const myResult = await this.syrSaveFloor1APIClient.get('get/' + 'BAT');
+						interfaceBusy = false;
+						if (myResult.status === 200) {
+							const myResultValue = JSON.stringify(myResult.data['getSRN']);
+							this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' Battery voltage: ' + String(myResultValue));
+						}
+						else {
+							// no response from device
+							this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' bad Data');
+							this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' Status: ' + String(myResult.status));
+							this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' Headers: ' + String(myResult.headers));
+							this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' StatusText: ' + String(myResult.statusText));
+							this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' StatusText: ' + String(myResult.data));
+							return false;
+						}
+					} catch (err) {
+						this.log.error('[AXIOS] ' + JSON.stringify(err.toJSON()));
 					}
-					else{
-						// no response from device
-						this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' bad Data');
-						this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' Status: ' + String(myResult.status));
-						this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' Headers: ' + String(myResult.headers));
-						this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' StatusText: ' + String(myResult.statusText));
-						this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' StatusText: ' + String(myResult.data));
-						return false;
-					}
+
 				}
 			}
 			else{
