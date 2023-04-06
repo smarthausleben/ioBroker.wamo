@@ -193,7 +193,7 @@ class wamo extends utils.Adapter {
 			this.log.warn('SafeFloor Connect Unit 1 IP-Address: ' + String(this.config.safefloor_1_ip)+ ':' + String(this.config.device_port));
 			this.syrSaveFloor1APIClient = axios.create({
 				baseURL: `http://${this.config.safefloor_1_ip}:${this.config.device_port}/floorsensor/`,
-				timeout: timeout_axios_request * (1000 *2),
+				timeout: timeout_axios_request * 1000,
 				responseType: 'json',
 				responseEncoding: 'utf8',
 				httpAgent: new http.Agent({
@@ -1454,9 +1454,10 @@ class wamo extends utils.Adapter {
 				if (this.syrSaveFloor1APIClient != null) {
 					try {
 						interfaceBusy = true;
+						this.log.warn('[Testing Loop] Axios Request sendt');
 						const myResult = await this.syrSaveFloor1APIClient.get('get/' + 'ALL');
-						interfaceBusy = false;
 						this.log.warn('[Testing Loop] Axios Request came back');
+						interfaceBusy = false;
 						if (myResult.status === 200) {
 							const myResultValue = String(myResult.data);
 							this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' Battery voltage: ' + String(myResultValue));
@@ -1475,7 +1476,6 @@ class wamo extends utils.Adapter {
 						//this.log.error('[AXIOS] ' + JSON.stringify(err.toJSON()));
 						this.log.error('[Testing Loop]: ' + err);
 					}
-
 				}
 			}
 			else{
