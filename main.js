@@ -1468,7 +1468,8 @@ class wamo extends utils.Adapter {
 							return false;
 						}
 					} catch (err) {
-						this.log.error('[AXIOS] ' + JSON.stringify(err.toJSON()));
+						//this.log.error('[AXIOS] ' + JSON.stringify(err.toJSON()));
+						this.log.error('[AXIOS]: ' + err);
 					}
 
 				}
