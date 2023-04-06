@@ -36,8 +36,8 @@ const cron_Month = '0 0 1 * *';
 const cron_Week = '0 0 * * 1';
 const cron_Day = '0 0 * * *';
 
-const cron_TestinLoop = '*/2 * * * *'; // Every 2 minutes
-//const cron_TestinLoop = '* * * * *'; // Every minute
+//const cron_TestinLoop = '*/2 * * * *'; // Every 2 minutes
+const cron_TestinLoop = '* * * * *'; // Every minute
 
 //=======================================================================================
 const executeTestingLoop = true; // Flag to indicate if Testing Loop should be executed
@@ -1454,9 +1454,9 @@ class wamo extends utils.Adapter {
 				if (this.syrSaveFloor1APIClient != null) {
 					try {
 						interfaceBusy = true;
-						this.log.warn('[Testing Loop] Axios Request sendt');
+						this.log.error('[Testing Loop] Axios Request sendt');
 						const myResult = await this.syrSaveFloor1APIClient.get('get/' + 'ALL');
-						this.log.warn('[Testing Loop] Axios Request came back');
+						this.log.error('[Testing Loop] Axios Request came back');
 						interfaceBusy = false;
 						if (myResult.status === 200) {
 							const myResultValue = String(myResult.data);
@@ -1485,9 +1485,9 @@ class wamo extends utils.Adapter {
 			interfaceBusy = false;
 			// Device not Reachable
 			if(String(err).includes('connect EHOSTUNREACH 192.168.70.241:5333')){
-				this.log.warn('[Testing Loop][OUTER CATCH] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' not reachable');
+				this.log.error('[Testing Loop][OUTER CATCH] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' not reachable');
 			}else{
-				this.log.warn('[Testing Loop][OUTER CATCH] ERROR: ' + err);
+				this.log.error('[Testing Loop][OUTER CATCH] ERROR: ' + err);
 			}
 		}
 	}
