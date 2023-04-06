@@ -191,7 +191,7 @@ class wamo extends utils.Adapter {
 			this.log.warn('SafeFloor Connect Unit 1 IP-Address: ' + String(this.config.safefloor_1_ip)+ ':' + String(this.config.device_port));
 			this.syrSaveFloor1APIClient = axios.create({
 				baseURL: `http://${this.config.safefloor_1_ip}:${this.config.device_port}/floorsensor/`,
-				timeout: timeout_axios_request * 1000 * 5,
+				timeout: timeout_axios_request * (1000 *2),
 				responseType: 'json',
 				responseEncoding: 'utf8',
 				httpAgent: new http.Agent({
