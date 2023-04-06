@@ -188,7 +188,7 @@ class wamo extends utils.Adapter {
 		// Initialize Axios Client for SafeFloor Units (this client will be used to communicate with the SafeFloor units)	===
 		//=====================================================================================================================
 		if (this.config.safefloor_1_ip != '0.0.0.0') {
-			this.log.warn('SafeFloor Connect Unit 1 IP-Address: ' + String(this.config.safefloor_1_ip));
+			this.log.warn('SafeFloor Connect Unit 1 IP-Address: ' + String(this.config.safefloor_1_ip)+ ':' + String(this.config.device_port));
 			this.syrSaveFloor1APIClient = axios.create({
 				baseURL: `http://${this.config.safefloor_1_ip}:${this.config.device_port}/floorsensor/`,
 				timeout: timeout_axios_request * 1000 * 5,
@@ -198,6 +198,7 @@ class wamo extends utils.Adapter {
 					keepAlive: true
 				})
 			});
+			this.log.warn('SafeFloor Connect Unit 1 baseURL: ' + String(this.syrSaveFloor1APIClient.defaults.baseURL));
 		}
 		//=================================================================================================
 		// Test if device is responding																	===
