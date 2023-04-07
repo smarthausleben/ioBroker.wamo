@@ -38,5 +38,7 @@
     "slow polling time in seconds": "slow polling time in seconds",
     "timing of regular main valve movement": "timing of regular main valve movement",
     "very slow polling time in seconds": "very slow polling time in seconds",
-    "wamo adapter settings": "Adapter settings for wamo"
+    "wamo adapter settings": "Adapter settings for wamo",
+    "Enable executing test loop": "Enable executing test loop",
+    "For testing purpose only. If enabled, a cron based scheduled function [Test Loop] will be executeed.": "For testing purpose only. If enabled, a cron based scheduled function [Test Loop] will be executeed."
 }

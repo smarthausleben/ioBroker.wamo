@@ -256,7 +256,8 @@
         "safefloor_3_ip": "0.0.0.0",
         "safefloor_3_serial": "",
         "safefloor_4_ip": "0.0.0.0",
-        "safefloor_4_serial": ""
+        "safefloor_4_serial": "",
+        "executetestloop": false
     },
     "objects": [],
     "instanceObjects": [

@@ -40,7 +40,7 @@ const cron_Day = '0 0 * * *';
 const cron_TestinLoop = '* * * * *'; // Every minute
 
 //=======================================================================================
-const executeTestingLoop = true; // Flag to indicate if Testing Loop should be executed
+let executeTestingLoop; // Flag to indicate if Testing Loop should be executed
 //=======================================================================================
 
 const Parameter_FACTORY_Mode = 'ADM/(2)f';
@@ -114,6 +114,7 @@ class wamo extends utils.Adapter {
 		valuesInfoMessages = this.config.valueinfomessages;
 		delay_reconnection = this.config.reconnectingdelaytime;
 		timeout_axios_request = this.config.requesttimeout;
+		executeTestingLoop = this.config.executetestloop;
 		this.log.debug('config Device IP: ' + String(this.config.device_ip));
 		this.log.debug('config Device Port: ' + String(this.config.device_port));
 		this.log.debug('More log messages: ' + String(this.config.moremessages));
@@ -1469,7 +1470,7 @@ class wamo extends utils.Adapter {
 							}
 							this.log.warn('[Testing Loop] send Floor Sensor to sleep');
 							interfaceBusy = true;
-							await this.syrSaveFloor1APIClient.get('set/' + 'SLP');
+							// await this.syrSaveFloor1APIClient.get('set/' + 'SLP');
 							interfaceBusy = false;
 
 						}

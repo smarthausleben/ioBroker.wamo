@@ -224,6 +224,15 @@
                     "md": 6,
                     "lg": 6,
                     "label": "show API response as info logging messages"
+                },
+                "executetestloop": {
+                    "newLine": true,
+                    "type": "checkbox",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "label": "Enable executing test loop",
+                    "help": "For testing purpose only. If enabled, a cron based scheduled function [Test Loop] will be executeed."
                 }
             }
         }
