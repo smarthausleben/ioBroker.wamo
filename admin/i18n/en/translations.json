@@ -2,7 +2,9 @@
     "Advanced Options": "Advanced Options",
     "Device IP Address": "Device IP Address",
     "Device Port": "Device Port",
+    "Enable executing test loop": "Enable executing test loop",
     "Factor to calculate German water hardnes from conductivity.": "Factor to calculate German water hardnes from conductivity.",
+    "For testing purpose only. If enabled, a cron based scheduled function [Test Loop] will be executeed.": "For testing purpose only. If enabled, a cron based scheduled function [Test Loop] will be executeed.",
     "IP address of first SYR SaveFloor Connect device": "IP address of first SYR SaveFloor Connect device",
     "IP address of fourth SYR SaveFloor Connect device": "IP address of fourth SYR SaveFloor Connect device",
     "IP address of second SYR SaveFloor Connect device": "IP address of second SYR SaveFloor Connect device",
@@ -38,7 +40,5 @@
     "slow polling time in seconds": "slow polling time in seconds",
     "timing of regular main valve movement": "timing of regular main valve movement",
     "very slow polling time in seconds": "very slow polling time in seconds",
-    "wamo adapter settings": "Adapter settings for wamo",
-    "Enable executing test loop": "Enable executing test loop",
-    "For testing purpose only. If enabled, a cron based scheduled function [Test Loop] will be executeed.": "For testing purpose only. If enabled, a cron based scheduled function [Test Loop] will be executeed."
+    "wamo adapter settings": "Adapter settings for wamo"
 }
