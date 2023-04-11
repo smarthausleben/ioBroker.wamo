@@ -29,6 +29,11 @@ const {
 	sensorPresence
 } = require('./lib/device-parameters');
 
+const{
+	AdapterChannelsFS,
+	DeviceParametetsFS
+} = require('./lib/device-parametersFS');
+
 /* cron definitions for the varius cron timers.
 (cron timers are for statistik data collection) */
 const cron_Year = '0 0 1 1 *';
@@ -153,6 +158,24 @@ class wamo extends utils.Adapter {
 		} catch (err) {
 			this.log.error('Error initStatesAndChanels: ' + err);
 		}
+
+		//=================================================================================================
+		//===  Create the "Floorsensor.X" object and all channel objects										===
+		//=================================================================================================
+
+		if (this.config.safefloor_1_ip != '0.0.0.0') {
+			await this.initFloorsensorAndChanels(1);
+		}
+		if (this.config.safefloor_2_ip != '0.0.0.0') {
+			await this.initFloorsensorAndChanels(2);
+		}
+		if (this.config.safefloor_3_ip != '0.0.0.0') {
+			await this.initFloorsensorAndChanels(3);
+		}
+		if (this.config.safefloor_4_ip != '0.0.0.0') {
+			await this.initFloorsensorAndChanels(4);
+		}
+
 
 		//=================================================================================================
 		//===  Create All state Objects in order to avoid later use of "setObjectNotExistsAsync"		===
@@ -2104,6 +2127,41 @@ class wamo extends utils.Adapter {
 		}
 	}
 
+
+	/**
+	 * Creating FloorSensor object and all channel objects
+	 * @param number - number of Floor sensor
+	 * @returns true OR error
+	 */
+	async initFloorsensorAndChanels(numberFloorSensor) {
+		this.log.info('creating channel objects for Floo Sensor ' + String(numberFloorSensor) + ' ...');
+		try {
+			try {
+				await this.setObjectNotExistsAsync('FloreSensors.'  + String(numberFloorSensor), {
+					type: 'device',
+					common: {
+						name: '1'
+					},
+					native: {}
+				});
+				this.log.debug('[async initFloorsensorAndChanels(numberFloorSensor)] FloreSensors.'+ String(numberFloorSensor) + ' object created');
+			} catch (err) {
+				this.log.error('[async initFloorsensorAndChanels(numberFloorSensor)] ERRORFloreSensors.'+ String(numberFloorSensor) + ' ' + err);
+			}
+
+			for (const key in AdapterChannelsFS) {
+				try {
+					await this.setObjectNotExistsAsync(String(AdapterChannelsFS[key].path.replace('.X.', '.' + String(numberFloorSensor) + '.')), AdapterChannelsFS[key].channel);
+					this.log.debug('Channel ' + String(AdapterChannelsFS[key].path.replace('.X.', '.' + String(numberFloorSensor) + '.')) + ' created');
+				} catch (err) {
+					this.log.error('[async initFloorsensorAndChanels(numberFloorSensor)] ERROR Channel: ]' + err);
+				}
+			}
+			return true;
+		} catch (err) {
+			throw new Error(err);
+		}
+	}
 	/**
 	 * Creating all object in order to avoid the function createObjectifnot exists in later states
 	 * @returns true OR error
