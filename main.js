@@ -31,7 +31,8 @@ const {
 
 const{
 	AdapterChannelsFS,
-	DeviceParametetsFS
+	DeviceParametetsFS,
+	StatisticStatesFS
 } = require('./lib/device-parametersFS');
 
 /* cron definitions for the varius cron timers.
@@ -160,22 +161,25 @@ class wamo extends utils.Adapter {
 		}
 
 		//=================================================================================================
-		//===  Create the "Floorsensor.X" object and all channel objects										===
+		//===  Create the "Floorsensor.X" object and all channel objects								===
 		//=================================================================================================
 
-		if (this.config.safefloor_1_ip != '0.0.0.0') {
-			await this.initFloorsensorAndChanels(1);
+		try {
+			if (this.config.safefloor_1_ip != '0.0.0.0') {
+				await this.initFloorsensorAndChanels(1);
+			}
+			if (this.config.safefloor_2_ip != '0.0.0.0') {
+				await this.initFloorsensorAndChanels(2);
+			}
+			if (this.config.safefloor_3_ip != '0.0.0.0') {
+				await this.initFloorsensorAndChanels(3);
+			}
+			if (this.config.safefloor_4_ip != '0.0.0.0') {
+				await this.initFloorsensorAndChanels(4);
+			}
+		} catch (err) {
+			this.log.error('Error initFloorsensorAndChanels: ' + err);
 		}
-		if (this.config.safefloor_2_ip != '0.0.0.0') {
-			await this.initFloorsensorAndChanels(2);
-		}
-		if (this.config.safefloor_3_ip != '0.0.0.0') {
-			await this.initFloorsensorAndChanels(3);
-		}
-		if (this.config.safefloor_4_ip != '0.0.0.0') {
-			await this.initFloorsensorAndChanels(4);
-		}
-
 
 		//=================================================================================================
 		//===  Create All state Objects in order to avoid later use of "setObjectNotExistsAsync"		===
@@ -183,7 +187,27 @@ class wamo extends utils.Adapter {
 		try {
 			await this.createAlloObjects();
 		} catch (err) {
-			this.log.error('Error initStatesAndChanels: ' + err);
+			this.log.error('Error createAlloObjects: ' + err);
+		}
+
+		//=================================================================================================================
+		//===  Create All state Objects for Floor Sensors in order to avoid later use of "setObjectNotExistsAsync"		===
+		//=================================================================================================================
+		try {
+			if (this.config.safefloor_1_ip != '0.0.0.0') {
+				await this.createAlloFloorsensorObjects(1);
+			}
+			if (this.config.safefloor_2_ip != '0.0.0.0') {
+				await this.createAlloFloorsensorObjects(2);
+			}
+			if (this.config.safefloor_3_ip != '0.0.0.0') {
+				await this.createAlloFloorsensorObjects(3);
+			}
+			if (this.config.safefloor_4_ip != '0.0.0.0') {
+				await this.createAlloFloorsensorObjects(4);
+			}
+		} catch (err) {
+			this.log.error('Error createAlloFloorsensorObjects: ' + err);
 		}
 
 		//=================================================================================================
@@ -2162,6 +2186,7 @@ class wamo extends utils.Adapter {
 			throw new Error(err);
 		}
 	}
+
 	/**
 	 * Creating all object in order to avoid the function createObjectifnot exists in later states
 	 * @returns true OR error
@@ -2217,6 +2242,50 @@ class wamo extends utils.Adapter {
 			this.log.debug('creating state objects -> done');
 		}
 		catch (err) {this.log.error('ERROR at async createAlloObjects(): ' + err);}
+	}
+
+	/**
+	 * Creating all object in order to avoid the function createObjectifnot exists in later states
+	 * @param number - number of Floor sensor
+	 * @returns true OR error
+	 */
+	async createAlloFloorsensorObjects(numberFloorSensor) {
+		try {
+			this.log.info('creating flor sensor ' + String(numberFloorSensor) + ' state objects ...');
+			// Creating device parameter states
+			for (const key in DeviceParametetsFS) {
+				const stateID = String(DeviceParametetsFS[key].statePath.replace('.X.', '.' + String(numberFloorSensor) + '.')) + '.' + String(DeviceParametetsFS[key].id);
+				try {
+					// do we need to crate this object on startup?
+					if (DeviceParametetsFS[key].createOnStartup) {
+						await this.setObjectNotExistsAsync(stateID, DeviceParametetsFS[key].objectdefinition);
+						this.log.debug('State: "' + stateID + '" created');
+						// creating matching RAW State objects
+						await this.createRawStateObject(DeviceParametetsFS[key]);
+						this.log.debug('Raw State: "' + stateID + '" created');
+					}
+				} catch (err) {
+					this.log.error('[async createAlloFloorsensorObjects(numberFloorSensor)] STATE: ' + stateID + ' ERROR: ' + err);
+				}
+			}
+
+			// Creating statistic states
+			for (const key in StatisticStatesFS) {
+				const stateID = String(StatisticStatesFS[key].statePath.replace('.X.', '.' + String(numberFloorSensor) + '.')) + '.' + String(StatisticStatesFS[key].id);
+				try {
+					// do we need to crate this object on startup?
+					if (StatisticStatesFS[key].createOnStartup) {
+						await this.setObjectNotExistsAsync(stateID, StatisticStatesFS[key].objectdefinition);
+						this.log.debug('State: "' + stateID + '" created');
+					}
+				} catch (err) {
+					this.log.error('[async createAlloFloorsensorObjects(numberFloorSensor)] STATE: ' + stateID + ' ERROR: ' + err);
+				}
+			}
+
+			this.log.debug('creating state objects -> done');
+		}
+		catch (err) {this.log.error('ERROR at async createAlloFloorsensorObjects(numberFloorSensor): ' + err);}
 	}
 
 	/**
