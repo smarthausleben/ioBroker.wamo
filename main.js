@@ -31,8 +31,7 @@ const {
 
 const{
 	AdapterChannelsFS,
-	DeviceParametetsFS,
-	StatisticStatesFS
+	DeviceParametetsFS
 } = require('./lib/device-parametersFS');
 
 /* cron definitions for the varius cron timers.
@@ -2263,20 +2262,6 @@ class wamo extends utils.Adapter {
 						// creating matching RAW State objects
 						await this.createRawStateObject(DeviceParametetsFS[key]);
 						this.log.debug('Raw State: "' + stateID + '" created');
-					}
-				} catch (err) {
-					this.log.error('[async createAlloFloorsensorObjects(numberFloorSensor)] STATE: ' + stateID + ' ERROR: ' + err);
-				}
-			}
-
-			// Creating statistic states
-			for (const key in StatisticStatesFS) {
-				const stateID = String(StatisticStatesFS[key].statePath.replace('.X.', '.' + String(numberFloorSensor) + '.')) + '.' + String(StatisticStatesFS[key].id);
-				try {
-					// do we need to crate this object on startup?
-					if (StatisticStatesFS[key].createOnStartup) {
-						await this.setObjectNotExistsAsync(stateID, StatisticStatesFS[key].objectdefinition);
-						this.log.debug('State: "' + stateID + '" created');
 					}
 				} catch (err) {
 					this.log.error('[async createAlloFloorsensorObjects(numberFloorSensor)] STATE: ' + stateID + ' ERROR: ' + err);
