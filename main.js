@@ -44,7 +44,7 @@ const cron_Day = '0 0 * * *';
 const corn_FloorSensors = '* * * * *'; // Every minute
 
 //const cron_TestinLoop = '*/2 * * * *'; // Every 2 minutes
-const cron_TestinLoop = '* * * * *'; // Every minute
+const cron_TestinLoop = '10 * * * * *'; // Every 10 seconds
 
 //=======================================================================================
 let executeTestingLoop; // Flag to indicate if Testing Loop should be executed
@@ -1299,6 +1299,7 @@ class wamo extends utils.Adapter {
 	 */
 	async timerStarts() {
 		try {
+			schedule.scheduleJob(cron_TestinLoop, cron_poll_TestingLoop);
 			schedule.scheduleJob(cron_Day, cron_poll_day);
 			schedule.scheduleJob(cron_Week, cron_poll_week);
 			schedule.scheduleJob(cron_Month, cron_poll_month);
@@ -1309,7 +1310,6 @@ class wamo extends utils.Adapter {
 				// Floor Sensors present so initialize FloorSensors Schedule
 				schedule.scheduleJob(corn_FloorSensors, cron_poll_FloorSensors);
 			}
-			schedule.scheduleJob(cron_TestinLoop, cron_poll_TestingLoop);
 			// Main valve jam protection active?
 			if(this.config.regularmainvalvemovement){
 				// Ok we schedule it
@@ -1543,60 +1543,7 @@ class wamo extends utils.Adapter {
 
 		// only execute if Flag is set to TRUE
 		if(!executeTestingLoop){return;}
-
-		try{
-			this.log.warn('[Testing Loop] Trigger');
-			if (!interfaceBusy) {
-				if (this.syrSaveFloor1APIClient != null) {
-					try {
-						interfaceBusy = true;
-						this.log.error('[Testing Loop] Axios Request sendt');
-						const myResult = await this.syrSaveFloor1APIClient.get('get/' + 'ALL');
-						this.log.error('[Testing Loop] Axios Request came back');
-						interfaceBusy = false;
-						if (myResult.status === 200) {
-							this.log.warn('[Testing Loop]' + JSON.stringify(myResult.data));
-							this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' Battery voltage: ' + String(myResult.data['BAT']));
-
-							// We got Data ... sending device to sleep
-							while(interfaceBusy)
-							{
-								await this.delay(1000);
-							}
-							this.log.warn('[Testing Loop] send Floor Sensor to sleep');
-							interfaceBusy = true;
-							// await this.syrSaveFloor1APIClient.get('set/' + 'SLP');
-							interfaceBusy = false;
-
-						}
-						else {
-							// no response from device
-							this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' bad Data');
-							this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' Status: ' + String(myResult.status));
-							this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' Headers: ' + String(myResult.headers));
-							this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' StatusText: ' + String(myResult.statusText));
-							this.log.warn('[Testing Loop] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' StatusText: ' + String(myResult.data));
-							return false;
-						}
-					} catch (err) {
-						interfaceBusy = false;
-						//this.log.error('[AXIOS] ' + JSON.stringify(err.toJSON()));
-						this.log.error('[Testing Loop]: ' + err);
-					}
-				}
-			}
-			else{
-				this.log.warn('[Testing Loop] interface was bussy');
-			}
-		}catch(err){
-			interfaceBusy = false;
-			// Device not Reachable
-			if(String(err).includes('connect EHOSTUNREACH 192.168.70.241:5333')){
-				this.log.error('[Testing Loop][OUTER CATCH] SaveFlore Connect 1 at ' + String(this.config.safefloor_1_ip) + ' not reachable');
-			}else{
-				this.log.error('[Testing Loop][OUTER CATCH] ERROR: ' + err);
-			}
-		}
+		this.log.warn('[Testing Loop] Trigger');
 	}
 
 	/**
