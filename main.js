@@ -41,6 +41,7 @@ const cron_Year = '0 0 1 1 *';
 const cron_Month = '0 0 1 * *';
 const cron_Week = '0 0 * * 1';
 const cron_Day = '0 0 * * *';
+const corn_FloorSensors = '* * * * *'; // Every minute
 
 //const cron_TestinLoop = '*/2 * * * *'; // Every 2 minutes
 const cron_TestinLoop = '* * * * *'; // Every minute
@@ -85,7 +86,6 @@ const interfaceBusyMaxBeforeReaset = 10;
 let SystemLanguage;
 let MainValveJammProtection_running = false;
 
-
 class wamo extends utils.Adapter {
 
 	/**
@@ -99,6 +99,9 @@ class wamo extends utils.Adapter {
 
 		this.syrApiClient = null;
 		this.syrSaveFloor1APIClient = null;
+		this.syrSaveFloor2APIClient = null;
+		this.syrSaveFloor3APIClient = null;
+		this.syrSaveFloor4APIClient = null;
 
 		// test
 		this.on('ready', this.onReady.bind(this));
@@ -238,7 +241,7 @@ class wamo extends utils.Adapter {
 		// Initialize Axios Client for SafeFloor Units (this client will be used to communicate with the SafeFloor units)	===
 		//=====================================================================================================================
 		if (this.config.safefloor_1_ip != '0.0.0.0') {
-			this.log.warn('SafeFloor Connect Unit 1 IP-Address: ' + String(this.config.safefloor_1_ip)+ ':' + String(this.config.device_port));
+			this.log.info('SafeFloor Connect Unit 1 IP-Address: ' + String(this.config.safefloor_1_ip)+ ':' + String(this.config.device_port));
 			this.syrSaveFloor1APIClient = axios.create({
 				baseURL: `http://${this.config.safefloor_1_ip}:${this.config.device_port}/floorsensor/`,
 				timeout: timeout_axios_request * 1000,
@@ -248,7 +251,46 @@ class wamo extends utils.Adapter {
 					keepAlive: true
 				})
 			});
-			this.log.warn('SafeFloor Connect Unit 1 baseURL: ' + String(this.syrSaveFloor1APIClient.defaults.baseURL));
+			this.log.debug('SafeFloor Connect Unit 1 baseURL: ' + String(this.syrSaveFloor1APIClient.defaults.baseURL));
+		}
+		if (this.config.safefloor_2_ip != '0.0.0.0') {
+			this.log.info('SafeFloor Connect Unit 2 IP-Address: ' + String(this.config.safefloor_2_ip)+ ':' + String(this.config.device_port));
+			this.syrSaveFloor2APIClient = axios.create({
+				baseURL: `http://${this.config.safefloor_2_ip}:${this.config.device_port}/floorsensor/`,
+				timeout: timeout_axios_request * 1000,
+				responseType: 'json',
+				responseEncoding: 'utf8',
+				httpAgent: new http.Agent({
+					keepAlive: true
+				})
+			});
+			this.log.debug('SafeFloor Connect Unit 2 baseURL: ' + String(this.syrSaveFloor2APIClient.defaults.baseURL));
+		}
+		if (this.config.safefloor_3_ip != '0.0.0.0') {
+			this.log.info('SafeFloor Connect Unit 3 IP-Address: ' + String(this.config.safefloor_3_ip)+ ':' + String(this.config.device_port));
+			this.syrSaveFloor3APIClient = axios.create({
+				baseURL: `http://${this.config.safefloor_3_ip}:${this.config.device_port}/floorsensor/`,
+				timeout: timeout_axios_request * 1000,
+				responseType: 'json',
+				responseEncoding: 'utf8',
+				httpAgent: new http.Agent({
+					keepAlive: true
+				})
+			});
+			this.log.debug('SafeFloor Connect Unit 3 baseURL: ' + String(this.syrSaveFloor3APIClient.defaults.baseURL));
+		}
+		if (this.config.safefloor_4_ip != '0.0.0.0') {
+			this.log.info('SafeFloor Connect Unit 4 IP-Address: ' + String(this.config.safefloor_4_ip)+ ':' + String(this.config.device_port));
+			this.syrSaveFloor4APIClient = axios.create({
+				baseURL: `http://${this.config.safefloor_4_ip}:${this.config.device_port}/floorsensor/`,
+				timeout: timeout_axios_request * 1000,
+				responseType: 'json',
+				responseEncoding: 'utf8',
+				httpAgent: new http.Agent({
+					keepAlive: true
+				})
+			});
+			this.log.debug('SafeFloor Connect Unit 4 baseURL: ' + String(this.syrSaveFloor4APIClient.defaults.baseURL));
 		}
 		//=================================================================================================
 		// Test if device is responding																	===
@@ -1261,6 +1303,12 @@ class wamo extends utils.Adapter {
 			schedule.scheduleJob(cron_Week, cron_poll_week);
 			schedule.scheduleJob(cron_Month, cron_poll_month);
 			schedule.scheduleJob(cron_Year, cron_poll_year);
+			// do we have Floor Sensors?
+			if(this.syrSaveFloor1APIClient != null || this.syrSaveFloor2APIClient != null || this.syrSaveFloor3APIClient != null || this.syrSaveFloor4APIClient != null)
+			{
+				// Floor Sensors present so initialize FloorSensors Schedule
+				schedule.scheduleJob(corn_FloorSensors, cron_poll_FloorSensors);
+			}
 			schedule.scheduleJob(cron_TestinLoop, cron_poll_TestingLoop);
 			// Main valve jam protection active?
 			if(this.config.regularmainvalvemovement){
@@ -1488,7 +1536,7 @@ class wamo extends utils.Adapter {
 	 * Cron action
 	 * [Testing loop]
 	 *
-	 * This funktion is only for internal testing and will only
+	 * This function is only for internal testing and will only
 	 * be executed if "executeTestingLoop" is set to true
 	 */
 	async alarm_corn_TestingLoop_Tick(){
@@ -1548,6 +1596,24 @@ class wamo extends utils.Adapter {
 			}else{
 				this.log.error('[Testing Loop][OUTER CATCH] ERROR: ' + err);
 			}
+		}
+	}
+
+	/**
+	 * Cron action
+	 * [Floor Sensors loop]
+	 *
+	 * This function is for polling data from FloorSensors
+	 */
+	async alarm_corn_FloorSensors_Tick(){
+		try{
+			this.log.warn('[Floor Sensors Loop] Trigger');
+			if(this.syrSaveFloor1APIClient != null){this.log.warn('Florsensor 1 is present');}
+			if(this.syrSaveFloor2APIClient != null){this.log.warn('Florsensor 2 is present');}
+			if(this.syrSaveFloor3APIClient != null){this.log.warn('Florsensor 3 is present');}
+			if(this.syrSaveFloor4APIClient != null){this.log.warn('Florsensor 4 is present');}
+		} catch (err){
+			this.log.error('[async alarm_corn_FloorSensors_Tick()] ' + err);
 		}
 	}
 
@@ -4633,6 +4699,18 @@ async function cron_poll_year() {
 async function cron_poll_jam_protection() {
 	try {
 		await myAdapter.alarm_corn_jam_protection_Tick();
+	} catch (err) {
+		//throw new Error(err);
+	}
+}
+
+/**
+ * Cron event handler
+ * [Floor Sensors loop]
+ */
+async function cron_poll_FloorSensors() {
+	try {
+		await myAdapter.alarm_corn_FloorSensors_Tick();
 	} catch (err) {
 		//throw new Error(err);
 	}
