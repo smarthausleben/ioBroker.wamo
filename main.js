@@ -1605,35 +1605,20 @@ class wamo extends utils.Adapter {
 	 *
 	 * This function is for polling data from FloorSensors
 	 */
-	async alarm_corn_FloorSensors_Tick(){
+	async alarm_cron_FloorSensors_Tick(){
 		try{
-			this.log.info('[async alarm_corn_FloorSensors_Tick()] Trigger');
+			this.log.info('[async alarm_cron_FloorSensors_Tick()] Trigger');
 			if (this.syrSaveFloor1APIClient != null) {
 				this.log.debug('Florsensor 1 is present');
 				try {
 					// request data from Floor Sensor
 					const FS1_Data = await this.get_FloorSensor_Data(this.syrSaveFloor1APIClient);
 					if (FS1_Data != false) {
-						// We got Data ... sending device to sleep
-						this.log.warn('[async alarm_corn_FloorSensors_Tick()] Data: ' + JSON.stringify(FS1_Data));
-						// ' Battery voltage: ' + String(FS1Data['BAT'])
-						while(interfaceBusy)
-						{
-							await this.delay(1000);
-						}
-						this.log.warn('[async alarm_corn_FloorSensors_Tick()] sending Floor Sensor to sleep');
-						interfaceBusy = true;
-						try{
-							await this.syrSaveFloor1APIClient.get('set/' + 'SLP');
-							interfaceBusy = false;
-						} catch (err)
-						{
-							interfaceBusy = false;
-							this.log.error('[async alarm_corn_FloorSensors_Tick()] ERROR sending Floor Sensor to sleep: ' + err);
-						}
+						//  We got Data and handle them asyncron (so NO AWAIT the data handling process)
+						this.handle_FloorSensor_Data(FS1_Data, 1);
 					}
 				} catch (err) {
-					this.log.error('[async alarm_corn_FloorSensors_Tick()] ' + err);
+					this.log.error('[async alarm_cron_FloorSensors_Tick()] ' + err);
 				}
 			}
 			if(this.syrSaveFloor2APIClient != null){
@@ -1646,7 +1631,7 @@ class wamo extends utils.Adapter {
 				this.log.debug('Florsensor 1 is present');
 			}
 		} catch (err){
-			this.log.error('[async alarm_corn_FloorSensors_Tick()] ' + err);
+			this.log.error('[async alarm_cron_FloorSensors_Tick()] ' + err);
 		}
 	}
 
@@ -1664,6 +1649,17 @@ class wamo extends utils.Adapter {
 			interfaceBusy = false;
 			if (myResult.status === 200) {
 				// we got good data from Floor Sensor
+				while (interfaceBusy) { await this.delay(1000); }
+				this.log.warn('[async get_FloorSensor_Data(Syr_ApiClient)] sending Floor Sensor to sleep');
+				try {
+					interfaceBusy = true;
+					//... sending Floor Sensor to sleep
+					await Syr_ApiClient.get('set/' + 'SLP');
+					interfaceBusy = false;
+				} catch (err) {
+					interfaceBusy = false;
+					this.log.error('[async get_FloorSensor_Data(Syr_ApiClient)] ERROR sending Floor Sensor to sleep: ' + err);
+				}
 				return myResult.data;
 			}
 			else {
@@ -1675,9 +1671,18 @@ class wamo extends utils.Adapter {
 			interfaceBusy = false;
 			throw err;
 		}
-
 	}
 
+	async handle_FloorSensor_Data(FS_Data, num_FloorSensor)
+	{
+		try{
+			this.log.warn('[async handle_FloorSensor_Data(FS_Data, num_FloorSensor)] Data Sensor ' + String(num_FloorSensor) + ': ' + JSON.stringify(FS_Data));
+			this.log.warn('Floor Sensor ' + String(num_FloorSensor) + ' Battery state = ' + String(FS_Data['BAT']) + '%');
+		} catch (err)
+		{
+			this.log.error('[async handle_FloorSensor_Data(FS_Data, num_FloorSensor)] ');
+		}
+	}
 
 	/**
 	 * Cron action
@@ -4772,7 +4777,7 @@ async function cron_poll_jam_protection() {
  */
 async function cron_poll_FloorSensors() {
 	try {
-		await myAdapter.alarm_corn_FloorSensors_Tick();
+		await myAdapter.alarm_cron_FloorSensors_Tick();
 	} catch (err) {
 		//throw new Error(err);
 	}
