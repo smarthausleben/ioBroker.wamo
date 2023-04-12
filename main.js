@@ -30,6 +30,7 @@ const {
 } = require('./lib/device-parameters');
 
 const{
+	channelsRootNameFS,
 	AdapterChannelsFS,
 	DeviceParametetsFS
 } = require('./lib/device-parametersFS');
@@ -2157,19 +2158,19 @@ class wamo extends utils.Adapter {
 	 * @returns true OR error
 	 */
 	async initFloorsensorAndChanels(numberFloorSensor) {
-		this.log.info('creating channel objects for Floo Sensor ' + String(numberFloorSensor) + ' ...');
+		this.log.info('creating channel objects for FloorSensor ' + String(numberFloorSensor) + ' ...');
 		try {
 			try {
-				await this.setObjectNotExistsAsync('FloreSensors.'  + String(numberFloorSensor), {
+				await this.setObjectNotExistsAsync(channelsRootNameFS + '.'  + String(numberFloorSensor), {
 					type: 'device',
 					common: {
 						name: '1'
 					},
 					native: {}
 				});
-				this.log.debug('[async initFloorsensorAndChanels(numberFloorSensor)] FloreSensors.'+ String(numberFloorSensor) + ' object created');
+				this.log.debug('[async initFloorsensorAndChanels(numberFloorSensor)]' + channelsRootNameFS + '.'+ String(numberFloorSensor) + ' object created');
 			} catch (err) {
-				this.log.error('[async initFloorsensorAndChanels(numberFloorSensor)] ERRORFloreSensors.'+ String(numberFloorSensor) + ' ' + err);
+				this.log.error('[async initFloorsensorAndChanels(numberFloorSensor)] ERROR' + channelsRootNameFS + '.'+ String(numberFloorSensor) + ' ' + err);
 			}
 
 			for (const key in AdapterChannelsFS) {
