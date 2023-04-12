@@ -1652,6 +1652,11 @@ class wamo extends utils.Adapter {
 
 	async get_FloorSensor_Data(Syr_ApiClient){
 		try {
+			if(interfaceBusy)
+			{
+				this.log.warn('[async get_FloorSensor_Data(Syr_ApiClient)] Floor Sensor data request skipped becaus interface was bussy');
+				return false;
+			}
 			interfaceBusy = true;
 			this.log.warn('[async get_FloorSensor_Data(Syr_ApiClient)] Axios Request sendt');
 			const myResult = await Syr_ApiClient.get('get/' + 'ALL');
