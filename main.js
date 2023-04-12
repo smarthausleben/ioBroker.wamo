@@ -1607,15 +1607,64 @@ class wamo extends utils.Adapter {
 	 */
 	async alarm_corn_FloorSensors_Tick(){
 		try{
-			this.log.warn('[Floor Sensors Loop] Trigger');
-			if(this.syrSaveFloor1APIClient != null){this.log.warn('Florsensor 1 is present');}
-			if(this.syrSaveFloor2APIClient != null){this.log.warn('Florsensor 2 is present');}
-			if(this.syrSaveFloor3APIClient != null){this.log.warn('Florsensor 3 is present');}
-			if(this.syrSaveFloor4APIClient != null){this.log.warn('Florsensor 4 is present');}
+			this.log.info('[Floor Sensors Loop] Trigger');
+			if (this.syrSaveFloor1APIClient != null) {
+				this.log.debug('Florsensor 1 is present');
+				try {
+					const FS1_Data = await this.get_FloorSensor_Data(this.syrSaveFloor1APIClient);
+					if (FS1_Data != false) {
+						// We got Data ... sending device to sleep
+						this.log.warn('[Testing Loop]' + JSON.stringify(FS1_Data));
+						// ' Battery voltage: ' + String(FS1Data['BAT'])
+						while(interfaceBusy)
+						{
+							await this.delay(1000);
+						}
+						this.log.warn('[Testing Loop] send Floor Sensor to sleep');
+						interfaceBusy = true;
+						// await this.syrSaveFloor1APIClient.get('set/' + 'SLP');
+						interfaceBusy = false;
+					}
+				} catch (err) {
+					this.log.error('[async alarm_corn_FloorSensors_Tick()] ' + err);
+				}
+			}
+			if(this.syrSaveFloor2APIClient != null){
+				this.log.debug('Florsensor 1 is present');
+			}
+			if(this.syrSaveFloor3APIClient != null){
+				this.log.debug('Florsensor 1 is present');
+			}
+			if(this.syrSaveFloor4APIClient != null){
+				this.log.debug('Florsensor 1 is present');
+			}
 		} catch (err){
 			this.log.error('[async alarm_corn_FloorSensors_Tick()] ' + err);
 		}
 	}
+
+	async get_FloorSensor_Data(Syr_ApiClient){
+		try {
+			interfaceBusy = true;
+			this.log.error('[Testing Loop] Axios Request sendt');
+			const myResult = await Syr_ApiClient.get('get/' + 'ALL');
+			this.log.error('[Testing Loop] Axios Request came back');
+			interfaceBusy = false;
+			if (myResult.status === 200) {
+				return myResult.data;
+
+			}
+			else {
+				throw '[async get_FloorSensor_Data(Syr_ApiClient)] Bad Data: '  + ' Status: ' + String(myResult.status) + ' Headers: ' + String(myResult.headers) + ' Status Text: ' + String(myResult.statusText) + ' Status Data: ' + String(myResult.data);
+				// no response from device
+			}
+		} catch (err) {
+			interfaceBusy = false;
+			throw err;
+		}
+
+	}
+
 
 	/**
 	 * Cron action
