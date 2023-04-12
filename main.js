@@ -2202,7 +2202,7 @@ class wamo extends utils.Adapter {
 						await this.setObjectNotExistsAsync(stateID, DeviceParameters[key].objectdefinition);
 						this.log.debug('State: "' + stateID + '" created');
 						// creating matching RAW State objects
-						await this.createRawStateObject(DeviceParameters[key], adapterChannels);
+						await this.createRawStateObject(DeviceParameters[key], adapterChannels.DeviceRawData.path);
 						this.log.debug('Raw State: "' + stateID + '" created');
 					}
 				} catch (err) {
@@ -2260,7 +2260,7 @@ class wamo extends utils.Adapter {
 						await this.setObjectNotExistsAsync(stateID, DeviceParametetsFS[key].objectdefinition);
 						this.log.debug('State: "' + stateID + '" created');
 						// creating matching RAW State objects
-						await this.createRawStateObject(DeviceParametetsFS[key], AdapterChannelsFS);
+						await this.createRawStateObject(DeviceParametetsFS[key], AdapterChannelsFS.DeviceRawData.path.replace('.X.', '.' + String(numberFloorSensor) + '.'));
 						this.log.debug('Raw State: "' + stateID + '" created');
 					}
 				} catch (err) {
@@ -2277,8 +2277,9 @@ class wamo extends utils.Adapter {
 	 * this method creats the sate object for the RAW value
 	 * of the handed over device parameter
 	 * @param {*} DeviceParameter - DeviceParameter Object
+	 * @param string - path to raw data channel
 	 */
-	async createRawStateObject(DeviceParameter, DeviceCannels)
+	async createRawStateObject(DeviceParameter, RawDataChannelPath)
 	{
 		try {
 			// do we need a raw object for this state
@@ -2297,7 +2298,7 @@ class wamo extends utils.Adapter {
 					},
 					native: {}
 				};
-				await this.setObjectNotExistsAsync(DeviceCannels.DeviceRawData.path + '.' + DeviceParameter.id, Object(raw_objectdefinition));
+				await this.setObjectNotExistsAsync(RawDataChannelPath + '.' + DeviceParameter.id, Object(raw_objectdefinition));
 			}
 		}
 		catch (err) {
