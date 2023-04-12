@@ -44,7 +44,7 @@ const cron_Day = '0 0 * * *';
 const corn_FloorSensors = '* * * * *'; // Every minute
 
 //const cron_TestinLoop = '*/2 * * * *'; // Every 2 minutes
-const cron_TestinLoop = '10 * * * * *'; // Every 10 seconds
+const cron_TestinLoop = '*/13 * * * * *'; // Every 10 seconds
 
 //=======================================================================================
 let executeTestingLoop; // Flag to indicate if Testing Loop should be executed
