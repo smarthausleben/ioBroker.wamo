@@ -420,7 +420,7 @@ class wamo extends utils.Adapter {
 		this.subscribeStates(DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id); // [AB] Shutoff valve
 		this.subscribeStates(DeviceParameters.APTimeout.statePath + '.' + DeviceParameters.APTimeout.id); // [APT] WiFi AP timeout
 		this.subscribeStates(DeviceParameters.ButtonProfileChange.statePath + '.' + DeviceParameters.ButtonProfileChange.id); // [BPB] Enable profile changes by button (0 = blocked, 1 = possible)
-		this.subscribeStates(DeviceParameters.FlorSensor.statePath + '.' + DeviceParameters.FlorSensor.id); // [BSE] Floor sensor
+		this.subscribeStates(DeviceParameters.FloorSensor.statePath + '.' + DeviceParameters.FloorSensor.id); // [BSE] Floor sensor
 		this.subscribeStates(DeviceParameters.BuzzerOnAlarm.statePath + '.' + DeviceParameters.BuzzerOnAlarm.id); // [BUZ] Buzzer on alarm
 		this.subscribeStates(DeviceParameters.MicroLeakageTest.statePath + '.' + DeviceParameters.MicroLeakageTest.id); // [BUZ] Buzzer on alarm
 		this.subscribeStates(DeviceParameters.MicroLeakageTestPeriod.statePath + '.' + DeviceParameters.MicroLeakageTestPeriod.id); // [DRP] Micro-Leakage-Test period
@@ -557,14 +557,14 @@ class wamo extends utils.Adapter {
 			//============================================================================
 			// BSA Floor Sensor
 			//============================================================================
-			else if ((id == statePrefix + DeviceParameters.FlorSensor.statePath + '.' + DeviceParameters.FlorSensor.id) && (state.ack == false)) {
+			else if ((id == statePrefix + DeviceParameters.FloorSensor.statePath + '.' + DeviceParameters.FloorSensor.id) && (state.ack == false)) {
 				if (state.val != null) {
 					try {
-						if ((Number(state.val) >= Number(DeviceParameters.FlorSensor.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.FlorSensor.objectdefinition.common.max)) {
-							await this.set_DevieParameter(DeviceParameters.FlorSensor, state.val);
-							if (moreMessages) { this.log.info(DeviceParameters.FlorSensor.id + ' changed to ' + String(state.val)); }
+						if ((Number(state.val) >= Number(DeviceParameters.FloorSensor.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.FloorSensor.objectdefinition.common.max)) {
+							await this.set_DevieParameter(DeviceParameters.FloorSensor, state.val);
+							if (moreMessages) { this.log.info(DeviceParameters.FloorSensor.id + ' changed to ' + String(state.val)); }
 						}
-						else { this.log.error(DeviceParameters.FlorSensor.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						else { this.log.error(DeviceParameters.FloorSensor.id + ' new value [' + String(state.val) + '] is out of range!'); }
 					} catch (err) {
 						this.log.error('ERROR setting [BSA]: ' + err.message);
 					}
@@ -1565,7 +1565,7 @@ class wamo extends utils.Adapter {
 				}
 				// Do we have this one?
 				if (AxiosHandlerToUse != null) {
-					this.log.debug('Florsensor ' + FlooreSensNo + ' is configured');
+					this.log.debug('Floorsensor ' + FlooreSensNo + ' is configured');
 					try {
 						// request data from Floor Sensor
 						const FS_Data = await AxiosHandlerToUse.get('get/' + 'ALL');
@@ -2318,7 +2318,7 @@ class wamo extends utils.Adapter {
 	 */
 	async createAlloFloorsensorObjects(numberFloorSensor) {
 		try {
-			this.log.info('creating flor sensor ' + String(numberFloorSensor) + ' state objects ...');
+			this.log.info('creating Floor Sensor ' + String(numberFloorSensor) + ' state objects ...');
 			// Creating device parameter states
 			for (const key in DeviceParametetsFS) {
 				const stateID = String(DeviceParametetsFS[key].statePath.replace('.X.', '.' + String(numberFloorSensor) + '.')) + '.' + String(DeviceParametetsFS[key].id);
@@ -3069,12 +3069,12 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.NextMaintenance, finalValue); }
 					break;
-				case DeviceParameters.FlorSensor.id:				// BSA - Floor Sensor
-					finalValue = await this.getGlobalisedValue(DeviceParameters.FlorSensor, value);
+				case DeviceParameters.FloorSensor.id:				// BSA - Floor Sensor
+					finalValue = await this.getGlobalisedValue(DeviceParameters.FloorSensor, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.FlorSensor, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.FloorSensor, finalValue); }
 					break;
 				case DeviceParameters.ShutOff.id:					// AB - Shutoff state
 					finalValue = await this.getGlobalisedValue(DeviceParameters.ShutOff, value);
