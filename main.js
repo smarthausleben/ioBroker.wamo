@@ -41,10 +41,12 @@ const cron_Year = '0 0 1 1 *';
 const cron_Month = '0 0 1 * *';
 const cron_Week = '0 0 * * 1';
 const cron_Day = '0 0 * * *';
-const corn_FloorSensors = '* * * * *'; // Every minute
+const corn_FloorSensors = '*/15 * * * * *'; // Every 15 Seconds
 
 //const cron_TestinLoop = '*/2 * * * *'; // Every 2 minutes
-const cron_TestinLoop = '*/13 * * * * *'; // Every 10 seconds
+const cron_TestinLoop = '*/13 * * * * *'; // Every 13 seconds
+
+const FloorSensoLoopTimeout = 5;
 
 //=======================================================================================
 let executeTestingLoop; // Flag to indicate if Testing Loop should be executed
@@ -244,7 +246,7 @@ class wamo extends utils.Adapter {
 			this.log.info('SafeFloor Connect Unit 1 IP-Address: ' + String(this.config.safefloor_1_ip)+ ':' + String(this.config.device_port));
 			this.syrSaveFloor1APIClient = axios.create({
 				baseURL: `http://${this.config.safefloor_1_ip}:${this.config.device_port}/floorsensor/`,
-				timeout: timeout_axios_request * 1000,
+				timeout: FloorSensoLoopTimeout * 1000,
 				responseType: 'json',
 				responseEncoding: 'utf8',
 				httpAgent: new http.Agent({
@@ -257,7 +259,7 @@ class wamo extends utils.Adapter {
 			this.log.info('SafeFloor Connect Unit 2 IP-Address: ' + String(this.config.safefloor_2_ip)+ ':' + String(this.config.device_port));
 			this.syrSaveFloor2APIClient = axios.create({
 				baseURL: `http://${this.config.safefloor_2_ip}:${this.config.device_port}/floorsensor/`,
-				timeout: timeout_axios_request * 1000,
+				timeout: FloorSensoLoopTimeout * 1000,
 				responseType: 'json',
 				responseEncoding: 'utf8',
 				httpAgent: new http.Agent({
@@ -270,7 +272,7 @@ class wamo extends utils.Adapter {
 			this.log.info('SafeFloor Connect Unit 3 IP-Address: ' + String(this.config.safefloor_3_ip)+ ':' + String(this.config.device_port));
 			this.syrSaveFloor3APIClient = axios.create({
 				baseURL: `http://${this.config.safefloor_3_ip}:${this.config.device_port}/floorsensor/`,
-				timeout: timeout_axios_request * 1000,
+				timeout: FloorSensoLoopTimeout * 1000,
 				responseType: 'json',
 				responseEncoding: 'utf8',
 				httpAgent: new http.Agent({
@@ -283,7 +285,7 @@ class wamo extends utils.Adapter {
 			this.log.info('SafeFloor Connect Unit 4 IP-Address: ' + String(this.config.safefloor_4_ip)+ ':' + String(this.config.device_port));
 			this.syrSaveFloor4APIClient = axios.create({
 				baseURL: `http://${this.config.safefloor_4_ip}:${this.config.device_port}/floorsensor/`,
-				timeout: timeout_axios_request * 1000,
+				timeout: FloorSensoLoopTimeout * 1000,
 				responseType: 'json',
 				responseEncoding: 'utf8',
 				httpAgent: new http.Agent({
@@ -1563,6 +1565,15 @@ class wamo extends utils.Adapter {
 					if (FS1_Data != false) {
 						//  We got Data and handle them asyncron (so NO AWAIT the data handling process)
 						this.handle_FloorSensor_Data(FS1_Data, 1);
+
+						this.log.warn('[async get_FloorSensor_Data(Syr_ApiClient)] sending Floor Sensor to sleep');
+						try {
+							await this.delay(1000);
+							//... sending Floor Sensor to sleep
+							await this.syrSaveFloor1APIClient.get('set/' + 'SLP');
+						} catch (err) {
+							this.log.error('[async get_FloorSensor_Data(Syr_ApiClient)] ERROR sending Floor Sensor to sleep: ' + err);
+						}
 					}
 				} catch (err) {
 					this.log.error('[async alarm_cron_FloorSensors_Tick()] ' + err);
@@ -1582,31 +1593,13 @@ class wamo extends utils.Adapter {
 		}
 	}
 
-	async get_FloorSensor_Data(Syr_ApiClient){
+	async get_FloorSensor_Data(FlorSensor_ApiClient){
 		try {
-			if(interfaceBusy)
-			{
-				this.log.warn('[async get_FloorSensor_Data(Syr_ApiClient)] Floor Sensor data request skipped becaus interface was bussy');
-				return false;
-			}
-			interfaceBusy = true;
 			this.log.warn('[async get_FloorSensor_Data(Syr_ApiClient)] Axios Request sendt');
-			const myResult = await Syr_ApiClient.get('get/' + 'ALL');
+			const myResult = await FlorSensor_ApiClient.get('get/' + 'ALL');
 			this.log.warn('[[async get_FloorSensor_Data(Syr_ApiClient)] Axios Request came back');
-			interfaceBusy = false;
 			if (myResult.status === 200) {
 				// we got good data from Floor Sensor
-				while (interfaceBusy) { await this.delay(1000); }
-				this.log.warn('[async get_FloorSensor_Data(Syr_ApiClient)] sending Floor Sensor to sleep');
-				try {
-					interfaceBusy = true;
-					//... sending Floor Sensor to sleep
-					await Syr_ApiClient.get('set/' + 'SLP');
-					interfaceBusy = false;
-				} catch (err) {
-					interfaceBusy = false;
-					this.log.error('[async get_FloorSensor_Data(Syr_ApiClient)] ERROR sending Floor Sensor to sleep: ' + err);
-				}
 				return myResult.data;
 			}
 			else {
@@ -1615,7 +1608,7 @@ class wamo extends utils.Adapter {
 			}
 		} catch (err) {
 			// Error from Axios client
-			interfaceBusy = false;
+			this.log.debug('[async get_FloorSensor_Data(Syr_ApiClient)] '+ err);
 			throw err;
 		}
 	}
