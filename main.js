@@ -29,7 +29,7 @@ const {
 	sensorPresence
 } = require('./lib/device-parameters');
 
-const{
+const {
 	channelsRootNameFS,
 	AdapterChannelsFS,
 	DeviceParametetsFS
@@ -131,8 +131,8 @@ class wamo extends utils.Adapter {
 		this.log.debug('More log messages: ' + String(this.config.moremessages));
 		this.log.debug('show API response messages: ' + String(this.config.apiresponsemessages));
 		this.log.debug('show value messages from device: ' + String(this.config.valueinfomessages));
-		this.log.debug('Reconnection time after lost connection to the device is ' + String(this.config.reconnectingdelaytime) +' seconds');
-		this.log.debug('Timeout for axios requests is ' + String(this.config.requesttimeout) +' seconds');
+		this.log.debug('Reconnection time after lost connection to the device is ' + String(this.config.reconnectingdelaytime) + ' seconds');
+		this.log.debug('Timeout for axios requests is ' + String(this.config.requesttimeout) + ' seconds');
 		this.log.debug('Main valve jam Protection: ' + String(this.config.regularmainvalvemovement));
 		this.log.debug('Cron settings main valve jam protection ' + String(this.config.regularemovementcron));
 
@@ -243,7 +243,7 @@ class wamo extends utils.Adapter {
 		// Initialize Axios Client for SafeFloor Units (this client will be used to communicate with the SafeFloor units)	===
 		//=====================================================================================================================
 		if (this.config.safefloor_1_ip != '0.0.0.0') {
-			this.log.info('SafeFloor Connect Unit 1 IP-Address: ' + String(this.config.safefloor_1_ip)+ ':' + String(this.config.device_port));
+			this.log.info('SafeFloor Connect Unit 1 IP-Address: ' + String(this.config.safefloor_1_ip) + ':' + String(this.config.device_port));
 			this.syrSaveFloor1APIClient = axios.create({
 				baseURL: `http://${this.config.safefloor_1_ip}:${this.config.device_port}/floorsensor/`,
 				timeout: FloorSensoLoopTimeout * 1000,
@@ -256,7 +256,7 @@ class wamo extends utils.Adapter {
 			this.log.debug('SafeFloor Connect Unit 1 baseURL: ' + String(this.syrSaveFloor1APIClient.defaults.baseURL));
 		}
 		if (this.config.safefloor_2_ip != '0.0.0.0') {
-			this.log.info('SafeFloor Connect Unit 2 IP-Address: ' + String(this.config.safefloor_2_ip)+ ':' + String(this.config.device_port));
+			this.log.info('SafeFloor Connect Unit 2 IP-Address: ' + String(this.config.safefloor_2_ip) + ':' + String(this.config.device_port));
 			this.syrSaveFloor2APIClient = axios.create({
 				baseURL: `http://${this.config.safefloor_2_ip}:${this.config.device_port}/floorsensor/`,
 				timeout: FloorSensoLoopTimeout * 1000,
@@ -269,7 +269,7 @@ class wamo extends utils.Adapter {
 			this.log.debug('SafeFloor Connect Unit 2 baseURL: ' + String(this.syrSaveFloor2APIClient.defaults.baseURL));
 		}
 		if (this.config.safefloor_3_ip != '0.0.0.0') {
-			this.log.info('SafeFloor Connect Unit 3 IP-Address: ' + String(this.config.safefloor_3_ip)+ ':' + String(this.config.device_port));
+			this.log.info('SafeFloor Connect Unit 3 IP-Address: ' + String(this.config.safefloor_3_ip) + ':' + String(this.config.device_port));
 			this.syrSaveFloor3APIClient = axios.create({
 				baseURL: `http://${this.config.safefloor_3_ip}:${this.config.device_port}/floorsensor/`,
 				timeout: FloorSensoLoopTimeout * 1000,
@@ -282,7 +282,7 @@ class wamo extends utils.Adapter {
 			this.log.debug('SafeFloor Connect Unit 3 baseURL: ' + String(this.syrSaveFloor3APIClient.defaults.baseURL));
 		}
 		if (this.config.safefloor_4_ip != '0.0.0.0') {
-			this.log.info('SafeFloor Connect Unit 4 IP-Address: ' + String(this.config.safefloor_4_ip)+ ':' + String(this.config.device_port));
+			this.log.info('SafeFloor Connect Unit 4 IP-Address: ' + String(this.config.safefloor_4_ip) + ':' + String(this.config.device_port));
 			this.syrSaveFloor4APIClient = axios.create({
 				baseURL: `http://${this.config.safefloor_4_ip}:${this.config.device_port}/floorsensor/`,
 				timeout: FloorSensoLoopTimeout * 1000,
@@ -298,8 +298,9 @@ class wamo extends utils.Adapter {
 		// Test if device is responding																	===
 		//=================================================================================================
 		try {
-			while(!await this.devicePing()) {
-				this.log.warn('waiting till device becomes available again ...');}
+			while (!await this.devicePing()) {
+				this.log.warn('waiting till device becomes available again ...');
+			}
 			this.log.info('Leakage protection device is present at: ' + String(this.config.device_ip) + ':' + String(this.config.device_port));
 		}
 		catch (err) {
@@ -343,7 +344,8 @@ class wamo extends utils.Adapter {
 				//==================================================================
 				if (moreMessages) { this.log.info('reading device parameters defined in object [initStates]'); }
 				await this.getData(initStates);
-				gotDeviceData = true;}
+				gotDeviceData = true;
+			}
 			catch (err) {
 				this.log.error('this.getData(initStates) ERROR: ' + err);
 			}
@@ -368,7 +370,8 @@ class wamo extends utils.Adapter {
 				//===============================================
 				const responseInitProfiles = await this.getDeviceProfilesData();
 				this.log.debug(`[async onReady() - getDeviceProfilesData -> getDeviceProfilesData] Response:  ${responseInitProfiles}`);
-				gotDeviceProfileData = true;}
+				gotDeviceProfileData = true;
+			}
 			catch (err) {
 				this.log.error('getDeviceProfilesData() ERROR: ' + err);
 			}
@@ -430,7 +433,7 @@ class wamo extends utils.Adapter {
 		// reference to Adapter
 		myAdapter = this;
 
-		if(moreMessages){this.log.info('wamo adapter is running');}
+		if (moreMessages) { this.log.info('wamo adapter is running'); }
 	}
 
 	/**
@@ -526,9 +529,9 @@ class wamo extends utils.Adapter {
 					try {
 						if ((Number(state.val) >= Number(DeviceParameters.APTimeout.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.APTimeout.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.APTimeout, state.val);
-							if (moreMessages) {this.log.info(DeviceParameters.APTimeout.id + ' changed to ' + String(state.val)); }
+							if (moreMessages) { this.log.info(DeviceParameters.APTimeout.id + ' changed to ' + String(state.val)); }
 						}
-						else{this.log.error(DeviceParameters.ButtonProAPTimeoutfileChange.id + ' new value [' + String(state.val) + '] is out of range!');}
+						else { this.log.error(DeviceParameters.ButtonProAPTimeoutfileChange.id + ' new value [' + String(state.val) + '] is out of range!'); }
 					} catch (err) {
 						this.log.error('ERROR setting [APT]: ' + err.message);
 					}
@@ -537,15 +540,14 @@ class wamo extends utils.Adapter {
 			//============================================================================
 			// BPB ButtonProfileChange
 			//============================================================================
-			else if((id == statePrefix + DeviceParameters.ButtonProfileChange.statePath + '.' + DeviceParameters.ButtonProfileChange.id) && (state.ack == false)){
-				if(state.val != null)
-				{
+			else if ((id == statePrefix + DeviceParameters.ButtonProfileChange.statePath + '.' + DeviceParameters.ButtonProfileChange.id) && (state.ack == false)) {
+				if (state.val != null) {
 					try {
 						if ((Number(state.val) >= Number(DeviceParameters.ButtonProfileChange.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.ButtonProfileChange.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.ButtonProfileChange, state.val);
-							if (moreMessages) {this.log.info(DeviceParameters.ButtonProfileChange.id + ' changed to ' + String(state.val)); }
+							if (moreMessages) { this.log.info(DeviceParameters.ButtonProfileChange.id + ' changed to ' + String(state.val)); }
 						}
-						else{this.log.error(DeviceParameters.ButtonProfileChange.id + ' new value [' + String(state.val) + '] is out of range!');}
+						else { this.log.error(DeviceParameters.ButtonProfileChange.id + ' new value [' + String(state.val) + '] is out of range!'); }
 					} catch (err) {
 						this.log.error('ERROR setting [BPB]: ' + err.message);
 					}
@@ -554,15 +556,14 @@ class wamo extends utils.Adapter {
 			//============================================================================
 			// BSA Floor Sensor
 			//============================================================================
-			else if((id == statePrefix + DeviceParameters.FlorSensor.statePath + '.' + DeviceParameters.FlorSensor.id) && (state.ack == false)){
-				if(state.val != null)
-				{
+			else if ((id == statePrefix + DeviceParameters.FlorSensor.statePath + '.' + DeviceParameters.FlorSensor.id) && (state.ack == false)) {
+				if (state.val != null) {
 					try {
 						if ((Number(state.val) >= Number(DeviceParameters.FlorSensor.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.FlorSensor.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.FlorSensor, state.val);
-							if (moreMessages) {this.log.info(DeviceParameters.FlorSensor.id + ' changed to ' + String(state.val)); }
+							if (moreMessages) { this.log.info(DeviceParameters.FlorSensor.id + ' changed to ' + String(state.val)); }
 						}
-						else{this.log.error(DeviceParameters.FlorSensor.id + ' new value [' + String(state.val) + '] is out of range!');}
+						else { this.log.error(DeviceParameters.FlorSensor.id + ' new value [' + String(state.val) + '] is out of range!'); }
 					} catch (err) {
 						this.log.error('ERROR setting [BSA]: ' + err.message);
 					}
@@ -571,15 +572,14 @@ class wamo extends utils.Adapter {
 			//============================================================================
 			// BUZ Buzzer on alarm
 			//============================================================================
-			else if((id == statePrefix + DeviceParameters.BuzzerOnAlarm.statePath + '.' + DeviceParameters.BuzzerOnAlarm.id) && (state.ack == false)){
-				if(state.val != null)
-				{
+			else if ((id == statePrefix + DeviceParameters.BuzzerOnAlarm.statePath + '.' + DeviceParameters.BuzzerOnAlarm.id) && (state.ack == false)) {
+				if (state.val != null) {
 					try {
 						if ((Number(state.val) >= Number(DeviceParameters.BuzzerOnAlarm.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.BuzzerOnAlarm.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.BuzzerOnAlarm, state.val);
-							if (moreMessages) {this.log.info(DeviceParameters.BuzzerOnAlarm.id + ' changed to ' + String(state.val)); }
+							if (moreMessages) { this.log.info(DeviceParameters.BuzzerOnAlarm.id + ' changed to ' + String(state.val)); }
 						}
-						else{this.log.error(DeviceParameters.BuzzerOnAlarm.id + ' new value [' + String(state.val) + '] is out of range!');}
+						else { this.log.error(DeviceParameters.BuzzerOnAlarm.id + ' new value [' + String(state.val) + '] is out of range!'); }
 					} catch (err) {
 						this.log.error('ERROR setting [BUZ]: ' + err.message);
 					}
@@ -588,15 +588,14 @@ class wamo extends utils.Adapter {
 			//============================================================================
 			// DMA Micro-Leakage-Test
 			//============================================================================
-			else if((id == statePrefix + DeviceParameters.MicroLeakageTest.statePath + '.' + DeviceParameters.MicroLeakageTest.id) && (state.ack == false)){
-				if(state.val != null)
-				{
+			else if ((id == statePrefix + DeviceParameters.MicroLeakageTest.statePath + '.' + DeviceParameters.MicroLeakageTest.id) && (state.ack == false)) {
+				if (state.val != null) {
 					try {
 						if ((Number(state.val) >= Number(DeviceParameters.MicroLeakageTest.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.MicroLeakageTest.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.MicroLeakageTest, state.val);
-							if (moreMessages) {this.log.info(DeviceParameters.MicroLeakageTest.id + ' changed to ' + String(state.val)); }
+							if (moreMessages) { this.log.info(DeviceParameters.MicroLeakageTest.id + ' changed to ' + String(state.val)); }
 						}
-						else{this.log.error(DeviceParameters.MicroLeakageTest.id + ' new value [' + String(state.val) + '] is out of range!');}
+						else { this.log.error(DeviceParameters.MicroLeakageTest.id + ' new value [' + String(state.val) + '] is out of range!'); }
 					} catch (err) {
 						this.log.error('ERROR setting [DMA]: ' + err.message);
 					}
@@ -605,15 +604,14 @@ class wamo extends utils.Adapter {
 			//============================================================================
 			// DRP Micro-Leakage-Test period
 			//============================================================================
-			else if((id == statePrefix + DeviceParameters.MicroLeakageTestPeriod.statePath + '.' + DeviceParameters.MicroLeakageTestPeriod.id) && (state.ack == false)){
-				if(state.val != null)
-				{
+			else if ((id == statePrefix + DeviceParameters.MicroLeakageTestPeriod.statePath + '.' + DeviceParameters.MicroLeakageTestPeriod.id) && (state.ack == false)) {
+				if (state.val != null) {
 					try {
 						if ((Number(state.val) >= Number(DeviceParameters.MicroLeakageTestPeriod.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.MicroLeakageTestPeriod.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.MicroLeakageTestPeriod, state.val);
-							if (moreMessages) {this.log.info(DeviceParameters.MicroLeakageTestPeriod.id + ' changed to ' + String(state.val)); }
+							if (moreMessages) { this.log.info(DeviceParameters.MicroLeakageTestPeriod.id + ' changed to ' + String(state.val)); }
 						}
-						else{this.log.error(DeviceParameters.MicroLeakageTestPeriod.id + ' new value [' + String(state.val) + '] is out of range!');}
+						else { this.log.error(DeviceParameters.MicroLeakageTestPeriod.id + ' new value [' + String(state.val) + '] is out of range!'); }
 					} catch (err) {
 						this.log.error('ERROR setting [DRP]: ' + err.message);
 					}
@@ -622,15 +620,14 @@ class wamo extends utils.Adapter {
 			//============================================================================
 			// IDS Daylight saving time
 			//============================================================================
-			else if((id == statePrefix + DeviceParameters.DaylightSavingTime.statePath + '.' + DeviceParameters.DaylightSavingTime.id) && (state.ack == false)){
-				if(state.val != null)
-				{
+			else if ((id == statePrefix + DeviceParameters.DaylightSavingTime.statePath + '.' + DeviceParameters.DaylightSavingTime.id) && (state.ack == false)) {
+				if (state.val != null) {
 					try {
 						if ((Number(state.val) >= Number(DeviceParameters.DaylightSavingTime.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DaylightSavingTime.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.DaylightSavingTime, state.val);
-							if (moreMessages) {this.log.info(DeviceParameters.DaylightSavingTime.id + ' changed to ' + String(state.val)); }
+							if (moreMessages) { this.log.info(DeviceParameters.DaylightSavingTime.id + ' changed to ' + String(state.val)); }
 						}
-						else{this.log.error(DeviceParameters.DaylightSavingTime.id + ' new value [' + String(state.val) + '] is out of range!');}
+						else { this.log.error(DeviceParameters.DaylightSavingTime.id + ' new value [' + String(state.val) + '] is out of range!'); }
 					} catch (err) {
 						this.log.error('ERROR setting [IDS]: ' + err.message);
 					}
@@ -639,15 +636,14 @@ class wamo extends utils.Adapter {
 			//============================================================================
 			// LNG Language
 			//============================================================================
-			else if((id == statePrefix + DeviceParameters.Language.statePath + '.' + DeviceParameters.Language.id) && (state.ack == false)){
-				if(state.val != null)
-				{
+			else if ((id == statePrefix + DeviceParameters.Language.statePath + '.' + DeviceParameters.Language.id) && (state.ack == false)) {
+				if (state.val != null) {
 					try {
 						if ((Number(state.val) >= Number(DeviceParameters.Language.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.Language.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.Language, state.val);
-							if (moreMessages) {this.log.info(DeviceParameters.Language.id + ' changed to ' + String(state.val)); }
+							if (moreMessages) { this.log.info(DeviceParameters.Language.id + ' changed to ' + String(state.val)); }
 						}
-						else{this.log.error(DeviceParameters.Language.id + ' new value [' + String(state.val) + '] is out of range!');}
+						else { this.log.error(DeviceParameters.Language.id + ' new value [' + String(state.val) + '] is out of range!'); }
 					} catch (err) {
 						this.log.error('ERROR setting [LNG]: ' + err.message);
 					}
@@ -656,15 +652,14 @@ class wamo extends utils.Adapter {
 			//============================================================================
 			// LWT Leakage notification (warning) threshold
 			//============================================================================
-			else if((id == statePrefix + DeviceParameters.LeakageNotificationWarningThreshold.statePath + '.' + DeviceParameters.LeakageNotificationWarningThreshold.id) && (state.ack == false)){
-				if(state.val != null)
-				{
+			else if ((id == statePrefix + DeviceParameters.LeakageNotificationWarningThreshold.statePath + '.' + DeviceParameters.LeakageNotificationWarningThreshold.id) && (state.ack == false)) {
+				if (state.val != null) {
 					try {
 						if ((Number(state.val) >= Number(DeviceParameters.LeakageNotificationWarningThreshold.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.LeakageNotificationWarningThreshold.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.LeakageNotificationWarningThreshold, state.val);
-							if (moreMessages) {this.log.info(DeviceParameters.LeakageNotificationWarningThreshold.id + ' changed to ' + String(state.val)); }
+							if (moreMessages) { this.log.info(DeviceParameters.LeakageNotificationWarningThreshold.id + ' changed to ' + String(state.val)); }
 						}
-						else{this.log.error(DeviceParameters.LeakageNotificationWarningThreshold.id + ' new value [' + String(state.val) + '] is out of range!');}
+						else { this.log.error(DeviceParameters.LeakageNotificationWarningThreshold.id + ' new value [' + String(state.val) + '] is out of range!'); }
 					} catch (err) {
 						this.log.error('ERROR setting [LWT]: ' + err.message);
 					}
@@ -673,15 +668,14 @@ class wamo extends utils.Adapter {
 			//============================================================================
 			// UNI Units
 			//============================================================================
-			else if((id == statePrefix + DeviceParameters.Units.statePath + '.' + DeviceParameters.Units.id) && (state.ack == false)){
-				if(state.val != null)
-				{
+			else if ((id == statePrefix + DeviceParameters.Units.statePath + '.' + DeviceParameters.Units.id) && (state.ack == false)) {
+				if (state.val != null) {
 					try {
 						if ((Number(state.val) >= Number(DeviceParameters.Units.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.Units.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.Units, state.val);
-							if (moreMessages) {this.log.info(DeviceParameters.Units.id + ' changed to ' + String(state.val)); }
+							if (moreMessages) { this.log.info(DeviceParameters.Units.id + ' changed to ' + String(state.val)); }
 						}
-						else{this.log.error(DeviceParameters.Units.id + ' new value [' + String(state.val) + '] is out of range!');}
+						else { this.log.error(DeviceParameters.Units.id + ' new value [' + String(state.val) + '] is out of range!'); }
 					} catch (err) {
 						this.log.error('ERROR setting [UNI]: ' + err.message);
 					}
@@ -690,15 +684,14 @@ class wamo extends utils.Adapter {
 			//============================================================================
 			// CSD Deactivate conductivity sensor
 			//============================================================================
-			else if((id == statePrefix + DeviceParameters.DeactivateConductivitySensor.statePath + '.' + DeviceParameters.DeactivateConductivitySensor.id) && (state.ack == false)){
-				if(state.val != null)
-				{
+			else if ((id == statePrefix + DeviceParameters.DeactivateConductivitySensor.statePath + '.' + DeviceParameters.DeactivateConductivitySensor.id) && (state.ack == false)) {
+				if (state.val != null) {
 					try {
 						if ((Number(state.val) >= Number(DeviceParameters.DeactivateConductivitySensor.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DeactivateConductivitySensor.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.DeactivateConductivitySensor, state.val);
-							if (moreMessages) {this.log.info(DeviceParameters.DeactivateConductivitySensor.id + ' changed to ' + String(state.val)); }
+							if (moreMessages) { this.log.info(DeviceParameters.DeactivateConductivitySensor.id + ' changed to ' + String(state.val)); }
 						}
-						else{this.log.error(DeviceParameters.DeactivateConductivitySensor.id + ' new value [' + String(state.val) + '] is out of range!');}
+						else { this.log.error(DeviceParameters.DeactivateConductivitySensor.id + ' new value [' + String(state.val) + '] is out of range!'); }
 					} catch (err) {
 						this.log.error('ERROR setting [CSD]: ' + err.message);
 					}
@@ -707,15 +700,14 @@ class wamo extends utils.Adapter {
 			//============================================================================
 			// PSD Deactivate pressure sensor
 			//============================================================================
-			else if((id == statePrefix + DeviceParameters.DeactivatePressureSensor.statePath + '.' + DeviceParameters.DeactivatePressureSensor.id) && (state.ack == false)){
-				if(state.val != null)
-				{
+			else if ((id == statePrefix + DeviceParameters.DeactivatePressureSensor.statePath + '.' + DeviceParameters.DeactivatePressureSensor.id) && (state.ack == false)) {
+				if (state.val != null) {
 					try {
 						if ((Number(state.val) >= Number(DeviceParameters.DeactivatePressureSensor.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DeactivatePressureSensor.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.DeactivatePressureSensor, state.val);
-							if (moreMessages) {this.log.info(DeviceParameters.DeactivatePressureSensor.id + ' changed to ' + String(state.val)); }
+							if (moreMessages) { this.log.info(DeviceParameters.DeactivatePressureSensor.id + ' changed to ' + String(state.val)); }
 						}
-						else{this.log.error(DeviceParameters.DeactivatePressureSensor.id + ' new value [' + String(state.val) + '] is out of range!');}
+						else { this.log.error(DeviceParameters.DeactivatePressureSensor.id + ' new value [' + String(state.val) + '] is out of range!'); }
 					} catch (err) {
 						this.log.error('ERROR setting [PSD]: ' + err.message);
 					}
@@ -724,15 +716,14 @@ class wamo extends utils.Adapter {
 			//============================================================================
 			// TSD Deactivate temperature sensor
 			//============================================================================
-			else if((id == statePrefix + DeviceParameters.DeactivateTemperatureSensor.statePath + '.' + DeviceParameters.DeactivateTemperatureSensor.id) && (state.ack == false)){
-				if(state.val != null)
-				{
+			else if ((id == statePrefix + DeviceParameters.DeactivateTemperatureSensor.statePath + '.' + DeviceParameters.DeactivateTemperatureSensor.id) && (state.ack == false)) {
+				if (state.val != null) {
 					try {
 						if ((Number(state.val) >= Number(DeviceParameters.DeactivateTemperatureSensor.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DeactivateTemperatureSensor.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.DeactivateTemperatureSensor, state.val);
-							if (moreMessages) {this.log.info(DeviceParameters.DeactivateTemperatureSensor.id + ' changed to ' + String(state.val)); }
+							if (moreMessages) { this.log.info(DeviceParameters.DeactivateTemperatureSensor.id + ' changed to ' + String(state.val)); }
 						}
-						else{this.log.error(DeviceParameters.DeactivateTemperatureSensor.id + ' new value [' + String(state.val) + '] is out of range!');}
+						else { this.log.error(DeviceParameters.DeactivateTemperatureSensor.id + ' new value [' + String(state.val) + '] is out of range!'); }
 					} catch (err) {
 						this.log.error('ERROR setting [TSD]: ' + err.message);
 					}
@@ -741,15 +732,14 @@ class wamo extends utils.Adapter {
 			//============================================================================
 			// T2 Max flow leakage time
 			//============================================================================
-			else if((id == statePrefix + DeviceParameters.MaxFlowLeakageTime.statePath + '.' + DeviceParameters.MaxFlowLeakageTime.id) && (state.ack == false)){
-				if(state.val != null)
-				{
+			else if ((id == statePrefix + DeviceParameters.MaxFlowLeakageTime.statePath + '.' + DeviceParameters.MaxFlowLeakageTime.id) && (state.ack == false)) {
+				if (state.val != null) {
 					try {
 						if ((Number(state.val) >= Number(DeviceParameters.MaxFlowLeakageTime.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.MaxFlowLeakageTime.objectdefinition.common.max)) {
 							await this.set_DevieParameter(DeviceParameters.MaxFlowLeakageTime, state.val);
-							if (moreMessages) {this.log.info(DeviceParameters.MaxFlowLeakageTime.id + ' changed to ' + String(state.val)); }
+							if (moreMessages) { this.log.info(DeviceParameters.MaxFlowLeakageTime.id + ' changed to ' + String(state.val)); }
 						}
-						else{this.log.error(DeviceParameters.MaxFlowLeakageTime.id + ' new value [' + String(state.val) + '] is out of range!');}
+						else { this.log.error(DeviceParameters.MaxFlowLeakageTime.id + ' new value [' + String(state.val) + '] is out of range!'); }
 					} catch (err) {
 						this.log.error('ERROR setting [T2]: ' + err.message);
 					}
@@ -758,12 +748,10 @@ class wamo extends utils.Adapter {
 			//============================================================================
 			// RST System restart
 			//============================================================================
-			else if((id == statePrefix + DeviceParameters.systemRestart.statePath + '.' + DeviceParameters.systemRestart.id) && (state.ack == false)){
-				if(state.val != null)
-				{
+			else if ((id == statePrefix + DeviceParameters.systemRestart.statePath + '.' + DeviceParameters.systemRestart.id) && (state.ack == false)) {
+				if (state.val != null) {
 					try {
-						if(state.val == 1)
-						{
+						if (state.val == 1) {
 							this.log.warn('System restart initiated by user!');
 							// send restart command (1 as number) to device
 							await this.set_DevieParameter(DeviceParameters.systemRestart, state.val);
@@ -771,7 +759,7 @@ class wamo extends utils.Adapter {
 							// set state back to 0
 							await this.setStateAsync(DeviceParameters.systemRestart.statePath + '.' + DeviceParameters.systemRestart.id, { val: 0, ack: true });
 
-							if (moreMessages) {this.log.info(DeviceParameters.systemRestart.id + ' changed to ' + String(state.val)); }
+							if (moreMessages) { this.log.info(DeviceParameters.systemRestart.id + ' changed to ' + String(state.val)); }
 						}
 					} catch (err) {
 						this.log.error('ERROR setting [RST]: ' + err.message);
@@ -859,10 +847,10 @@ class wamo extends utils.Adapter {
 					// Rerstore old active Profile back to State
 					// Read selected Profile from Device
 					const currentAktiveProfile = await this.get_DevieParameter(DeviceParameters.SelectedProfile);
-					if(currentAktiveProfile != null){
+					if (currentAktiveProfile != null) {
 						// Save aktive profile from Device in state
 						await this.set_DevieParameter(DeviceParameters.SelectedProfile, String(currentAktiveProfile['getPRF']));
-					}else{
+					} else {
 						this.log.debug('couldn\'t read aktive Profile Parameter');
 					}
 				}
@@ -1307,13 +1295,12 @@ class wamo extends utils.Adapter {
 			schedule.scheduleJob(cron_Month, cron_poll_month);
 			schedule.scheduleJob(cron_Year, cron_poll_year);
 			// do we have Floor Sensors?
-			if(this.syrSaveFloor1APIClient != null || this.syrSaveFloor2APIClient != null || this.syrSaveFloor3APIClient != null || this.syrSaveFloor4APIClient != null)
-			{
+			if (this.syrSaveFloor1APIClient != null || this.syrSaveFloor2APIClient != null || this.syrSaveFloor3APIClient != null || this.syrSaveFloor4APIClient != null) {
 				// Floor Sensors present so initialize FloorSensors Schedule
 				schedule.scheduleJob(corn_FloorSensors, cron_poll_FloorSensors);
 			}
 			// Main valve jam protection active?
-			if(this.config.regularmainvalvemovement){
+			if (this.config.regularmainvalvemovement) {
 				// Ok we schedule it
 				this.log.info('Jam protection cron job scheduled for: ' + String(this.config.regularemovementcron));
 				schedule.scheduleJob(this.config.regularemovementcron, cron_poll_jam_protection);
@@ -1541,10 +1528,10 @@ class wamo extends utils.Adapter {
 	 * This function is only for internal testing and will only
 	 * be executed if "executeTestingLoop" is set to true
 	 */
-	async alarm_corn_TestingLoop_Tick(){
+	async alarm_corn_TestingLoop_Tick() {
 
 		// only execute if Flag is set to TRUE
-		if(!executeTestingLoop){return;}
+		if (!executeTestingLoop) { return; }
 		this.log.warn('[Testing Loop] Trigger');
 	}
 
@@ -1554,72 +1541,64 @@ class wamo extends utils.Adapter {
 	 *
 	 * This function is for polling data from FloorSensors
 	 */
-	async alarm_cron_FloorSensors_Tick(){
-		try{
-			this.log.info('[async alarm_cron_FloorSensors_Tick()] Trigger');
-			if (this.syrSaveFloor1APIClient != null) {
-				this.log.debug('Florsensor 1 is present');
-				try {
-					// request data from Floor Sensor
-					const FS1_Data = await this.get_FloorSensor_Data(this.syrSaveFloor1APIClient);
-					if (FS1_Data != false) {
-						//  We got Data and handle them asyncron (so NO AWAIT the data handling process)
-						this.handle_FloorSensor_Data(FS1_Data, 1);
+	async alarm_cron_FloorSensors_Tick() {
+		try {
+			this.log.info('Floor Sensors Trigger');
+			for (let FlooreSensNo = 1; FlooreSensNo <= 4; FlooreSensNo++) {
+				let AxiosHandler = null;
+				switch (FlooreSensNo) {
+					case 1:
+						if (this.syrSaveFloor1APIClient != null) {AxiosHandler = this.syrSaveFloor1APIClient;}else{AxiosHandler = null;}
+						break;
+					case 2:
+						if (this.syrSaveFloor2APIClient != null) {AxiosHandler = this.syrSaveFloor2APIClient;}else{AxiosHandler = null;}
+						break;
+					case 3:
+						if (this.syrSaveFloor3APIClient != null) {AxiosHandler = this.syrSaveFloor3APIClient;}else{AxiosHandler = null;}
+						break;
+					case 4:
+						if (this.syrSaveFloor4APIClient != null) {AxiosHandler = this.syrSaveFloor4APIClient;}else{AxiosHandler = null;}
+						break;
+					default:
+						this.log.warn('Floor Sensor number ' + FlooreSensNo + ' should never be reached');
+				}
+				if (AxiosHandler != null) {
+					this.log.debug('Florsensor ' + FlooreSensNo + ' is configured');
+					try {
+						// request data from Floor Sensor
+						const FS_Data = await AxiosHandler.get('get/' + 'ALL');
+						if (FS_Data.status === 200) {
 
-						this.log.warn('[async get_FloorSensor_Data(Syr_ApiClient)] sending Floor Sensor to sleep');
-						try {
-							await this.delay(1000);
-							//... sending Floor Sensor to sleep
-							await this.syrSaveFloor1APIClient.get('set/' + 'SLP');
-						} catch (err) {
-							this.log.error('[async get_FloorSensor_Data(Syr_ApiClient)] ERROR sending Floor Sensor to sleep: ' + err);
+							//  We got Data and handle them asyncron (so NO AWAIT the data handling process)
+							this.handle_FloorSensor_Data(FS_Data.data, FlooreSensNo);
+
+							this.log.warn('[async get_FloorSensor_Data(Syr_ApiClient)] sending Floor Sensor to sleep');
+							try {
+								await this.delay(1000);
+								//... sending Floor Sensor to sleep
+								await AxiosHandler.get('set/' + 'SLP');
+							} catch (err) {
+								this.log.error('Sending Floor Sensor ' + FlooreSensNo + ' to sleep ' + err);
+							}
+						}else{
+							this.log.warn('Floor Sensor ' + FlooreSensNo + ' API response Status: ' + String(FS_Data.status) + ' ' + String(FS_Data.statusText));
 						}
+
+					} catch (err) {
+						this.log.error('Floor Sensor ' + FlooreSensNo + ' API request ' + err);
 					}
-				} catch (err) {
-					this.log.error('[async alarm_cron_FloorSensors_Tick()] ' + err);
 				}
 			}
-			if(this.syrSaveFloor2APIClient != null){
-				this.log.debug('Florsensor 1 is present');
-			}
-			if(this.syrSaveFloor3APIClient != null){
-				this.log.debug('Florsensor 1 is present');
-			}
-			if(this.syrSaveFloor4APIClient != null){
-				this.log.debug('Florsensor 1 is present');
-			}
-		} catch (err){
+		} catch (err) {
 			this.log.error('[async alarm_cron_FloorSensors_Tick()] ' + err);
 		}
 	}
 
-	async get_FloorSensor_Data(FlorSensor_ApiClient){
+	async handle_FloorSensor_Data(FS_Data, num_FloorSensor) {
 		try {
-			this.log.warn('[async get_FloorSensor_Data(Syr_ApiClient)] Axios Request sendt');
-			const myResult = await FlorSensor_ApiClient.get('get/' + 'ALL');
-			this.log.warn('[[async get_FloorSensor_Data(Syr_ApiClient)] Axios Request came back');
-			if (myResult.status === 200) {
-				// we got good data from Floor Sensor
-				return myResult.data;
-			}
-			else {
-				// no valid from Floor Sensor
-				throw '[async get_FloorSensor_Data(Syr_ApiClient)] Bad Data: '  + ' Status: ' + String(myResult.status) + ' Headers: ' + String(myResult.headers) + ' Status Text: ' + String(myResult.statusText) + ' Status Data: ' + String(myResult.data);
-			}
-		} catch (err) {
-			// Error from Axios client
-			this.log.debug('[async get_FloorSensor_Data(Syr_ApiClient)] '+ err);
-			throw err;
-		}
-	}
-
-	async handle_FloorSensor_Data(FS_Data, num_FloorSensor)
-	{
-		try{
 			this.log.warn('[async handle_FloorSensor_Data(FS_Data, num_FloorSensor)] Data Sensor ' + String(num_FloorSensor) + ': ' + JSON.stringify(FS_Data));
 			this.log.warn('Floor Sensor ' + String(num_FloorSensor) + ' Battery state = ' + String(FS_Data['BAT']) + '%');
-		} catch (err)
-		{
+		} catch (err) {
 			this.log.error('[async handle_FloorSensor_Data(FS_Data, num_FloorSensor)] ');
 		}
 	}
@@ -1628,19 +1607,19 @@ class wamo extends utils.Adapter {
 	 * Cron action
 	 * [jam protection]
 	 */
-	async alarm_corn_jam_protection_Tick(){
-		try{
+	async alarm_corn_jam_protection_Tick() {
+		try {
 			const openValveCommand = false;
 			const closeValveCommand = true;
 
 			// Is Jam Protection already in progess)
-			if(MainValveJammProtection_running == true){
+			if (MainValveJammProtection_running == true) {
 				this.log.warn('Valve JAM Protection is already running. We skip it this time.');
 				return;
 			}
 
 			// Do we have initialised syrApiClient?
-			if(this.syrApiClient != null){
+			if (this.syrApiClient != null) {
 				let currentconsumption;
 				const max_trys = 10;
 				const wait_time_between_consumption_reading = 60000;
@@ -1648,14 +1627,12 @@ class wamo extends utils.Adapter {
 				let consumption_is_zero = false;
 
 				// waiting for free interface to device
-				while(interfaceBusy)
-				{
+				while (interfaceBusy) {
 					this.log.warn('[JAM PROTECTION] Interface is bussy we wait one second ...');
 					await this.delay(10000); // Wait one second till next try
 				}
 
-				while(!consumption_is_zero)
-				{
+				while (!consumption_is_zero) {
 					interfaceBusy = true;
 					// get current water consumption from device
 					currentconsumption = (await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentVolume.id)));
@@ -1663,21 +1640,20 @@ class wamo extends utils.Adapter {
 					// increase request counter
 					trys++;
 					// is there no water consumption?
-					if(JSON.stringify(currentconsumption.data['getAVO']) == '"0mL"'){
+					if (JSON.stringify(currentconsumption.data['getAVO']) == '"0mL"') {
 						consumption_is_zero = true;
 						break;
 					}
 					// did we reach maximum amount of requests?
-					if(trys >= max_trys)
-					{
+					if (trys >= max_trys) {
 						// we cancle jam protection because of ongoing water consumption
-						this.log.warn('[JAM PROTECTION] Jam protection valve move was canceled because of ongoing water flow during ' + String((wait_time_between_consumption_reading * max_trys)/1000) + ' seconds');
+						this.log.warn('[JAM PROTECTION] Jam protection valve move was canceled because of ongoing water flow during ' + String((wait_time_between_consumption_reading * max_trys) / 1000) + ' seconds');
 						return;
 					}
 					// Wait defined time until next device requests
 					await this.delay(wait_time_between_consumption_reading);
 				}
-			}else{
+			} else {
 				this.log.error('[JAM PROTECTION] syrApiClient is not initialised. No device requests possible -> Jam Protection wil be canceled!');
 				return;
 			}
@@ -1698,17 +1674,16 @@ class wamo extends utils.Adapter {
 			this.log.info('[JAM PROTECTION] Valve operation delay to avoide disturbing running device requests');
 			await this.delay(10000); // Wait some time seconds to avoid desturbing already made Requests
 			this.log.info('[JAM PROTECTION] Closing main valve');
-			try{
+			try {
 				// Closing main valve
-				if(!await this.move_main_valve(closeValveCommand))
-				{
+				if (!await this.move_main_valve(closeValveCommand)) {
 					// Main valve was already closed! Maybe for a good reason So we cancel Jam Protection
 					this.log.error('Jam Protection canceld because main valve is already closed');
 					this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: false, ack: true }); // set state accordingly
 					MainValveJammProtection_running = false; // clear flag that jam protection is running
 					return;
 				}
-			}catch (err){
+			} catch (err) {
 				this.log.warn('[JAM PROTECTION] closing main valve ERROR: ' + err);
 				this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: false, ack: true }); // set state accordingly
 				MainValveJammProtection_running = false; // clear flag that jam protection is running
@@ -1716,17 +1691,16 @@ class wamo extends utils.Adapter {
 			}
 			this.log.info('[JAM PROTECTION] Main valve is closed');
 			this.log.info('[JAM PROTECTION] Opening main valve');
-			try{
+			try {
 				// opening main valve again
-				if(!await this.move_main_valve(openValveCommand))
-				{
+				if (!await this.move_main_valve(openValveCommand)) {
 					// something went wron .. we cancel the wohle action.
 					this.log.error('Jam Protection canceld because main valve could not be opened again');
 					this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: false, ack: true }); // set state accordingly
 					MainValveJammProtection_running = false; // clear flag that jam protection is running
 					return;
 				}
-			}catch (err){
+			} catch (err) {
 				this.log.warn('[JAM PROTECTION] opening main valve ERROR: ' + err);
 				this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: false, ack: true }); // set state accordingly
 				MainValveJammProtection_running = false; // clear flag that jam protection is running
@@ -1796,7 +1770,7 @@ class wamo extends utils.Adapter {
 					valve_state = JSON.stringify(deviceResponse.data['getVLV']);
 					this.log.debug('[JAM PROTECTION] Current Main valve Status = ' + String(valve_state));
 				}
-				else{
+				else {
 					// no response from device
 					this.log.warn('Error reading main valve position! No valid response from device.');
 					return false;
@@ -1849,42 +1823,42 @@ class wamo extends utils.Adapter {
 						valve_state = JSON.stringify(deviceResponse.data['getVLV']);
 						switch (valve_state) {
 							case closedPosition:
-								if(!closedPosition_occourred){
+								if (!closedPosition_occourred) {
 									this.log.info('[JAM PROTECTION] Main valve Status = Closed');
 									closedPosition_occourred = true;
-								}else{
+								} else {
 									this.log.debug('[JAM PROTECTION] Main valve Status = Closed');
 								}
 								break;
 							case closingMove:
-								if(!closingMove_occourred){
+								if (!closingMove_occourred) {
 									this.log.info('[JAM PROTECTION] Main valve Status = Closing ...');
 									closingMove_occourred = true;
-								}else{
+								} else {
 									this.log.debug('[JAM PROTECTION] Main valve Status = Closing ...');
 								}
 								break;
 							case openedPosition:
-								if(!openedPosition_occourred){
+								if (!openedPosition_occourred) {
 									this.log.info('[JAM PROTECTION] Main valve Status = Open');
 									openedPosition_occourred = true;
-								}else{
+								} else {
 									this.log.debug('[JAM PROTECTION] Main valve Status = Open');
 								}
 								break;
 							case openingMove:
-								if(!openingMove_occourred){
+								if (!openingMove_occourred) {
 									this.log.info('[JAM PROTECTION] Main valve Status = Opening ...');
 									openingMove_occourred = true;
-								}else{
+								} else {
 									this.log.debug('[JAM PROTECTION] Main valve Status = Opening ...');
 								}
 								break;
 							case undefinedPosition:
-								if(!undefinedPosition_occourred){
+								if (!undefinedPosition_occourred) {
 									this.log.warn('[JAM PROTECTION] Main valve Status = Undefined');
 									undefinedPosition_occourred = true;
-								}else{
+								} else {
 									this.log.debug('[JAM PROTECTION] Main valve Status = Undefined');
 								}
 								break;
@@ -1896,8 +1870,8 @@ class wamo extends utils.Adapter {
 				}
 
 				// await this.delay(1000); // wait one second between requests
-				if (close) { this.log.info('[JAM PROTECTION] Main valve is closed');}
-				else { this.log.info('[JAM PROTECTION] Main valve is open');}
+				if (close) { this.log.info('[JAM PROTECTION] Main valve is closed'); }
+				else { this.log.info('[JAM PROTECTION] Main valve is open'); }
 				return true;
 			}
 		} catch (err) {
@@ -1927,7 +1901,7 @@ class wamo extends utils.Adapter {
 					return false;
 				}
 			}
-			else{
+			else {
 				this.log.warn('Alarm Timer: Device request canceled becaus jam protection is running!');
 			}
 		} catch (err) {
@@ -1964,7 +1938,7 @@ class wamo extends utils.Adapter {
 					return false;
 				}
 			}
-			else{
+			else {
 				this.log.warn('Short Timer: Device request canceled becaus jam protection is running!');
 			}
 		}
@@ -1997,7 +1971,7 @@ class wamo extends utils.Adapter {
 					return false;
 				}
 			}
-			else{
+			else {
 				this.log.warn('Long Timer: Device request canceled becaus jam protection is running!');
 			}
 		} catch (err) {
@@ -2042,7 +2016,7 @@ class wamo extends utils.Adapter {
 					return false;
 				}
 			}
-			else{
+			else {
 				this.log.warn('Very Long Timer: Device request canceled becaus jam protection is running!');
 			}
 		} catch (err) {
@@ -2055,22 +2029,20 @@ class wamo extends utils.Adapter {
 	/** checks plausibility of an set InterfaceBussy flag
 	 * and resets flag after defined attempts.
 	*/
-	async interfaceBusyWatchDog()
-	{
-		try{
-			if(interfaceBusyCounter >= interfaceBusyMaxBeforeReaset)
-			{
+	async interfaceBusyWatchDog() {
+		try {
+			if (interfaceBusyCounter >= interfaceBusyMaxBeforeReaset) {
 				// we reste interfaceBusy Flag and Counter
 				interfaceBusy = false;
 				interfaceBusyCounter = 0;
 				this.log.warn('\'interfaceBusy\' flag reset by watch dog');
 			}
-			else{
+			else {
 				// increase interfaceBusy counter
 				interfaceBusyCounter++;
 			}
 		}
-		catch(err){
+		catch (err) {
 			this.log.error('[async checkInterfaceBussyPlausibility()] Error: ' + err);
 		}
 	}
@@ -2101,7 +2073,7 @@ class wamo extends utils.Adapter {
 			this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
 		}
 
-		if(moreMessages){this.log.info('async devicePing() -> hit');}
+		if (moreMessages) { this.log.info('async devicePing() -> hit'); }
 		try {
 			if (this.syrApiClient != null) {
 				this.log.debug('this.syrApiClientbaseURL: ' + String(this.syrApiClient.defaults.baseURL));
@@ -2111,7 +2083,7 @@ class wamo extends utils.Adapter {
 				const deviceResponse = await this.syrApiClient.get('get/');
 
 				if (deviceResponse.status === 200) {
-					if(apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
+					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 					//=========================================================================================
 					//===  Connection LED to GREEN															===
 					//=========================================================================================
@@ -2164,16 +2136,16 @@ class wamo extends utils.Adapter {
 					catch (err) {
 						this.log.error('async getData(' + deviceParametersToGet[i].id + ', ' + this.config.device_ip + ':' + this.config.device_port + ' ERROR: ' + err);
 						// is device available?
-						while(!await this.devicePing()){
+						while (!await this.devicePing()) {
 							this.log.warn('waiting till device becomes available again ...');
 						}
 					}
 				}
 				// Update object states
 				try {
-					if(DeviceParameterReturn == null){
+					if (DeviceParameterReturn == null) {
 						this.log.debug('Device parameter returned NULL -> skipped');
-					}else{
+					} else {
 						await this.updateState(deviceParametersToGet[i], DeviceParameterReturn);
 					}
 				}
@@ -2234,16 +2206,16 @@ class wamo extends utils.Adapter {
 		this.log.info('creating channel objects for FloorSensor ' + String(numberFloorSensor) + ' ...');
 		try {
 			try {
-				await this.setObjectNotExistsAsync(channelsRootNameFS + '.'  + String(numberFloorSensor), {
+				await this.setObjectNotExistsAsync(channelsRootNameFS + '.' + String(numberFloorSensor), {
 					type: 'device',
 					common: {
 						name: '1'
 					},
 					native: {}
 				});
-				this.log.debug('[async initFloorsensorAndChanels(numberFloorSensor)]' + channelsRootNameFS + '.'+ String(numberFloorSensor) + ' object created');
+				this.log.debug('[async initFloorsensorAndChanels(numberFloorSensor)]' + channelsRootNameFS + '.' + String(numberFloorSensor) + ' object created');
 			} catch (err) {
-				this.log.error('[async initFloorsensorAndChanels(numberFloorSensor)] ERROR' + channelsRootNameFS + '.'+ String(numberFloorSensor) + ' ' + err);
+				this.log.error('[async initFloorsensorAndChanels(numberFloorSensor)] ERROR' + channelsRootNameFS + '.' + String(numberFloorSensor) + ' ' + err);
 			}
 
 			for (const key in AdapterChannelsFS) {
@@ -2314,7 +2286,7 @@ class wamo extends utils.Adapter {
 
 			this.log.debug('creating state objects -> done');
 		}
-		catch (err) {this.log.error('ERROR at async createAlloObjects(): ' + err);}
+		catch (err) { this.log.error('ERROR at async createAlloObjects(): ' + err); }
 	}
 
 	/**
@@ -2344,7 +2316,7 @@ class wamo extends utils.Adapter {
 
 			this.log.debug('creating state objects -> done');
 		}
-		catch (err) {this.log.error('ERROR at async createAlloFloorsensorObjects(numberFloorSensor): ' + err);}
+		catch (err) { this.log.error('ERROR at async createAlloFloorsensorObjects(numberFloorSensor): ' + err); }
 	}
 
 	/**
@@ -2353,8 +2325,7 @@ class wamo extends utils.Adapter {
 	 * @param {*} DeviceParameter - DeviceParameter Object
 	 * @param string - path to raw data channel
 	 */
-	async createRawStateObject(DeviceParameter, RawDataChannelPath)
-	{
+	async createRawStateObject(DeviceParameter, RawDataChannelPath) {
 		try {
 			// do we need a raw object for this state
 			if (DeviceParameter.saveRawData) {
@@ -2385,14 +2356,11 @@ class wamo extends utils.Adapter {
 	 * This methode creates state objects
 	 * accordung to persence of sensors
 	 */
-	async createSensorSpecificObjects()
-	{
+	async createSensorSpecificObjects() {
 		this.log.info('creating sensor related objects ...');
-		for(let i = 0; i < sensorPresence.length; i++)
-		{
+		for (let i = 0; i < sensorPresence.length; i++) {
 			let precence_return_value = null;
-			switch (sensorPresence[i].id)
-			{
+			switch (sensorPresence[i].id) {
 				case 'CSD':	// conductivity sensor
 					precence_return_value = await this.getStateAsync(sensorPresence[i].statePath + '.' + sensorPresence[i].id);
 					if (precence_return_value != null) {
@@ -2522,8 +2490,7 @@ class wamo extends utils.Adapter {
 		}
 
 		// do we have conductivity AND temperature sensor present?
-		if(sensor_conductivity_present && sensor_temperature_present)
-		{
+		if (sensor_conductivity_present && sensor_temperature_present) {
 			// then we nedd additional calculated objects
 
 			// create object for "compensated conductivity" value
@@ -2659,7 +2626,7 @@ class wamo extends utils.Adapter {
 			switch (deviceParameterToUpdate.objectdefinition.common.type) {
 				case 'number':	// handle as number
 					this.log.debug('[async updateState(deviceParameterToUpdate, deviceValue)] value is NUMBER');
-					try{
+					try {
 						// trying to write value into state object
 						this.log.debug('deviceParameterToUpdate.objectdefinition.common.type = ' + deviceParameterToUpdate.objectdefinition.common.type);
 						this.setStateAsync(state_ID, { val: parseFloat(String(finalValue)), ack: true });
@@ -2670,7 +2637,7 @@ class wamo extends utils.Adapter {
 					break;
 				default:	// handle as string
 					this.log.debug('[async updateState(deviceParameterToUpdate, deviceValue)] value is STRING');
-					try{
+					try {
 						this.log.debug('deviceParameterToUpdate.objectdefinition.common.type = ' + deviceParameterToUpdate.objectdefinition.common.type);
 						this.setStateAsync(state_ID, { val: String(finalValue), ack: true });
 					}
@@ -3300,14 +3267,13 @@ class wamo extends utils.Adapter {
 	 */
 	async set_FACTORY_Mode() {
 		try {
-			if (moreMessages) { this.log.info('Setting SERVICE mode');}
-			if(this.syrApiClient != null)
-			{
+			if (moreMessages) { this.log.info('Setting SERVICE mode'); }
+			if (this.syrApiClient != null) {
 				const deviceResponse = await this.syrApiClient.get('set/' + Parameter_FACTORY_Mode);
-				if(apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
+				if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 				return true;
 			}
-			else{
+			else {
 				throw new Error('syrApiClient is not initialized!');
 			}
 		} catch (err) {
@@ -3321,14 +3287,13 @@ class wamo extends utils.Adapter {
 	 */
 	async set_SERVICE_Mode() {
 		try {
-			if (moreMessages) { this.log.info('Setting FACTORY mode');}
-			if(this.syrApiClient != null)
-			{
+			if (moreMessages) { this.log.info('Setting FACTORY mode'); }
+			if (this.syrApiClient != null) {
 				const deviceResponse = await this.syrApiClient.get('set/' + Parameter_SERVICE_Mode);
-				if(apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
+				if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 				return true;
 			}
-			else{
+			else {
 				throw new Error('syrApiClient is not initialized!');
 			}
 		} catch (err) {
@@ -3342,14 +3307,13 @@ class wamo extends utils.Adapter {
 	 */
 	async clear_SERVICE_FACTORY_Mode() {
 		try {
-			if (moreMessages) { this.log.info('Clearing SERVICE or FACTORY mode');}
-			if(this.syrApiClient != null)
-			{
+			if (moreMessages) { this.log.info('Clearing SERVICE or FACTORY mode'); }
+			if (this.syrApiClient != null) {
 				const deviceResponse = await this.syrApiClient.get('clr/' + Parameter_Clear_SERVICE_FACTORY_Mode);
-				if(apiResponseInfoMessages){this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data));}
+				if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 				return true;
 			}
-			else{
+			else {
 				throw new Error('syrApiClient is not initialized!');
 			}
 		} catch (err) {
@@ -3382,7 +3346,7 @@ class wamo extends utils.Adapter {
 			}
 			return true;
 		} catch (err) {
-			this.log.error('ERROR at [async moremessages(ParameterStruct, value)]: ' + err );
+			this.log.error('ERROR at [async moremessages(ParameterStruct, value)]: ' + err);
 			return false;
 		}
 	}
@@ -3721,7 +3685,7 @@ class wamo extends utils.Adapter {
 			try {
 				await this.set_SERVICE_Mode();
 				readModeChanged = true;
-			}catch (err) {
+			} catch (err) {
 				this.log.error('get_DevieParameter -> set_SERVICE_Mode() ERROR: ' + err);
 			}
 		}
@@ -3729,14 +3693,14 @@ class wamo extends utils.Adapter {
 			try {
 				await this.set_FACTORY_Mode();
 				readModeChanged = true;
-			}catch (err) {
+			} catch (err) {
 				this.log.error('get_DevieParameter -> set_FACTORY_Mode() ERROR: ' + err);
 			}
 		}
 
-		if((String(Parameter.id) == 'CEL') && (sensor_temperature_present == false)){skipp = true;}
-		if((String(Parameter.id) == 'BAR') && (sensor_pressure_present == false)){skipp = true;}
-		if((String(Parameter.id) == 'CND') && (sensor_conductivity_present == false)){skipp = true;}
+		if ((String(Parameter.id) == 'CEL') && (sensor_temperature_present == false)) { skipp = true; }
+		if ((String(Parameter.id) == 'BAR') && (sensor_pressure_present == false)) { skipp = true; }
+		if ((String(Parameter.id) == 'CND') && (sensor_conductivity_present == false)) { skipp = true; }
 
 		if (!skipp) {
 			try {
@@ -3777,9 +3741,10 @@ class wamo extends utils.Adapter {
 				}			//throw new Error(err.message);
 				throw new Error(err.message);
 			}
-		}else{
+		} else {
 			this.log.debug('Sensor ' + String(Parameter.id) + ' not present -> readout skipped');
-			return null;}
+			return null;
+		}
 	}
 
 	/**
@@ -3792,8 +3757,7 @@ class wamo extends utils.Adapter {
 
 		let oldParameter = null;
 
-		if(Parameter.readCommand != null)
-		{
+		if (Parameter.readCommand != null) {
 			oldParameter = await this.get_DevieParameter(Parameter);
 		}
 		// Flag indicating if we had to modifiy Admin Mode
@@ -3828,7 +3792,7 @@ class wamo extends utils.Adapter {
 		}
 
 		try {
-			if (moreMessages) { this.log.info('Writing Parameter ' + String(Parameter.id) + ' value: ' + String(Value) +' to device'); }
+			if (moreMessages) { this.log.info('Writing Parameter ' + String(Parameter.id) + ' value: ' + String(Value) + ' to device'); }
 
 			if (this.syrApiClient != null) {
 				interfaceBusy = true;
@@ -3842,8 +3806,7 @@ class wamo extends utils.Adapter {
 					if ((JSON.stringify(deviceResponse.data)).includes('ERROR')) {
 						try {
 							// was there an old parameter we can restore?
-							if(oldParameter != null)
-							{
+							if (oldParameter != null) {
 								this.log.warn('Restoring old content: ' + String(oldParameter['get' + Parameter.id]));
 								await this.setStateAsync(Parameter.statePath + '.' + Parameter.id, { val: oldParameter, ack: true });
 							}
