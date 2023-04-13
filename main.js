@@ -171,16 +171,16 @@ class wamo extends utils.Adapter {
 		//=================================================================================================
 
 		try {
-			if (this.config.safefloor_1_ip != '0.0.0.0') {
+			if (this.config.safefloor_1_ip != '0.0.0.0' && this.config.safefloor_1_ip != '') {
 				await this.initFloorsensorAndChanels(1);
 			}
-			if (this.config.safefloor_2_ip != '0.0.0.0') {
+			if (this.config.safefloor_2_ip != '0.0.0.0' && this.config.safefloor_2_ip != '') {
 				await this.initFloorsensorAndChanels(2);
 			}
-			if (this.config.safefloor_3_ip != '0.0.0.0') {
+			if (this.config.safefloor_3_ip != '0.0.0.0' && this.config.safefloor_3_ip != '') {
 				await this.initFloorsensorAndChanels(3);
 			}
-			if (this.config.safefloor_4_ip != '0.0.0.0') {
+			if (this.config.safefloor_4_ip != '0.0.0.0' && this.config.safefloor_4_ip != '') {
 				await this.initFloorsensorAndChanels(4);
 			}
 		} catch (err) {
@@ -1534,10 +1534,10 @@ class wamo extends utils.Adapter {
 		// only execute if Flag is set to TRUE
 		if (!executeTestingLoop) { return; }
 		this.log.warn('[Testing Loop] Trigger');
+		this.log.warn('DeviceParametetsFS.length = ' + String(DeviceParametetsFS.length));
 		for (let i = 0; i < DeviceParametetsFS.length; i++) {
 			this.log.warn('DeviceParameterFS.id: ' + String(DeviceParametetsFS[i].id) + ' is defined');
 		}
-
 	}
 
 	/**
