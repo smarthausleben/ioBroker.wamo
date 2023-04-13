@@ -1634,7 +1634,7 @@ class wamo extends utils.Adapter {
 			let convertedValue = null;
 			switch (FS_Value_ID) {
 				case 'CEL': // ENV Temperature (/100)
-					convertedValue = parseInt(String(FS_Value)) / 100;
+					convertedValue = parseInt(String(FS_Value)) / 10;
 					break;
 				default:
 					switch (FS_Value_Type) {
