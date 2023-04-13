@@ -1601,27 +1601,28 @@ class wamo extends utils.Adapter {
 			// iterate through all requested Parameters
 			for (const key in DeviceParametetsFS) {
 				let ToStore;
-				this.log.warn('Value of ' + String(DeviceParametetsFS[key].id) + ' = ' + String(FS_Data[String(DeviceParametetsFS[key].id)]));
-				switch (DeviceParametetsFS[key].objectdefinition.comon.type){
-					case 'number': // State has number format
-						ToStore = parseInt(String(FS_Data[DeviceParametetsFS[key].id]));
-						break;
-					case 'string': // State has string format
-						ToStore = String(FS_Data[DeviceParametetsFS[key].id]);
-						break;
-					default:	// State format is not supported
-						this.log.warn('Parameter: "' + String(DeviceParametetsFS[key].id) + '" data type "' + String(DeviceParametetsFS[key].objectdefinition.comon.type) + '" handling not implemented.');
-						ToStore = null;
-				}
-				if(ToStore != null){
-					// save Values to State Object
-					this.setStateAsync(DeviceParametetsFS[key].statePath.replace('.X.', '.' + String(num_FloorSensor) + '.') + DeviceParametetsFS[key].id, { val: ToStore, ack: true });
-				}else{this.log.warn('Saving Floor Sensor value to state "' + String(DeviceParametetsFS[key].id) + '" was skipped because of NULL value.');}
-
+				this.log.warn('Value of "' + String(DeviceParametetsFS[key].id) + '" = ' + String(FS_Data[String(DeviceParametetsFS[key].id)]));
+				try{
+					switch (DeviceParametetsFS[key].objectdefinition.comon.type) {
+						case 'number': // State has number format
+							ToStore = parseInt(String(FS_Data[DeviceParametetsFS[key].id]));
+							break;
+						case 'string': // State has string format
+							ToStore = String(FS_Data[DeviceParametetsFS[key].id]);
+							break;
+						default:	// State format is not supported
+							this.log.warn('Parameter: "' + String(DeviceParametetsFS[key].id) + '" data type "' + String(DeviceParametetsFS[key].objectdefinition.comon.type) + '" handling not implemented.');
+							ToStore = null;
+					}
+					if (ToStore != null) {
+						try {
+							// save Values to State Object
+							this.setStateAsync(DeviceParametetsFS[key].statePath.replace('.X.', '.' + String(num_FloorSensor) + '.') + '.' + DeviceParametetsFS[key].id, { val: ToStore, ack: true });
+						} catch (err) { this.log.error('Saving Floor Sensor value to state "' + String(DeviceParametetsFS[key].id) + '" has failed. ' + err); }
+					} else { this.log.warn('Saving Floor Sensor value to state "' + String(DeviceParametetsFS[key].id) + '" was skipped because of NULL value.'); }
+				} catch (err) {this.log.error('Converting Floor Sensor value "' + String(DeviceParametetsFS[key].id) + '" has failed. ' + err);}
 			}
-		} catch (err) {
-			this.log.error('[async handle_FloorSensor_Data(FS_Data, num_FloorSensor)] Floore Sensor: ' + String(num_FloorSensor) + ' ' + err);
-		}
+		} catch (err) {this.log.error('[async handle_FloorSensor_Data(FS_Data, num_FloorSensor)] Floore Sensor: ' + String(num_FloorSensor) + ' ' + err);}
 	}
 
 	/**
