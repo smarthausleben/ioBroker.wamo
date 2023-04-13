@@ -1576,7 +1576,7 @@ class wamo extends utils.Adapter {
 							//  We got Data and handle them asyncron (so NO AWAIT the data handling process)
 							this.handle_FloorSensor_Data(FS_Data.data, FlooreSensNo);
 
-							this.log.warn('[async get_FloorSensor_Data(Syr_ApiClient)] sending Floor Sensor to sleep');
+							this.log.warn('Sending Floor Sensor ' + String(FlooreSensNo) + ' to sleep');
 							try {
 								await this.delay(1000);
 								//... sending Floor Sensor to sleep
@@ -1602,12 +1602,18 @@ class wamo extends utils.Adapter {
 		try {
 			this.log.warn('[async handle_FloorSensor_Data(FS_Data, num_FloorSensor)] Data Sensor ' + String(num_FloorSensor) + ': ' + JSON.stringify(FS_Data));
 			// iterate through all requested Parameters
-			for (let i = 0; i < DeviceParametetsFS.length; i++) {
-				this.log.warn('Value of ' + String(DeviceParametetsFS[i].id) + ' = ' + String(FS_Data[String(DeviceParametetsFS[i].id)]));
+			for (const key in DeviceParametetsFS) {
+				this.log.warn('Value of ' + String(DeviceParametetsFS[key].id) + ' = ' + String(FS_Data[String(DeviceParametetsFS[key].id)]));
+				switch (DeviceParametetsFS[key].id){
+					case 'BAT':
+						this.log.warn('Value of BAT = ' + String(FS_Data['BAT']) + '%');
+						break;
+					default:
+						this.log.warn('Parameter: "' + String(DeviceParametetsFS[key].id) + '" was not handled.');
+				}
 			}
-			// this.log.warn('Floor Sensor ' + String(num_FloorSensor) + ' Battery state = ' + String(FS_Data['BAT']) + '%');
 		} catch (err) {
-			this.log.error('[async handle_FloorSensor_Data(FS_Data, num_FloorSensor)] ');
+			this.log.error('[async handle_FloorSensor_Data(FS_Data, num_FloorSensor)] Floore Sensor: ' + String(num_FloorSensor) + ' ' + err);
 		}
 	}
 
