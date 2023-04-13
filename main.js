@@ -99,6 +99,7 @@ class wamo extends utils.Adapter {
 			name: String(adapterName),
 		});
 
+		// Axios Clients
 		this.syrApiClient = null;
 		this.syrSaveFloor1APIClient = null;
 		this.syrSaveFloor2APIClient = null;
@@ -199,16 +200,16 @@ class wamo extends utils.Adapter {
 		//===  Create All state Objects for Floor Sensors in order to avoid later use of "setObjectNotExistsAsync"		===
 		//=================================================================================================================
 		try {
-			if (this.config.safefloor_1_ip != '0.0.0.0') {
+			if (this.config.safefloor_1_ip != '0.0.0.0' && this.config.safefloor_1_ip != '') {
 				await this.createAlloFloorsensorObjects(1);
 			}
-			if (this.config.safefloor_2_ip != '0.0.0.0') {
+			if (this.config.safefloor_2_ip != '0.0.0.0' && this.config.safefloor_2_ip != '') {
 				await this.createAlloFloorsensorObjects(2);
 			}
-			if (this.config.safefloor_3_ip != '0.0.0.0') {
+			if (this.config.safefloor_3_ip != '0.0.0.0' && this.config.safefloor_3_ip != '') {
 				await this.createAlloFloorsensorObjects(3);
 			}
-			if (this.config.safefloor_4_ip != '0.0.0.0') {
+			if (this.config.safefloor_4_ip != '0.0.0.0' && this.config.safefloor_4_ip != '') {
 				await this.createAlloFloorsensorObjects(4);
 			}
 		} catch (err) {
@@ -1533,6 +1534,10 @@ class wamo extends utils.Adapter {
 		// only execute if Flag is set to TRUE
 		if (!executeTestingLoop) { return; }
 		this.log.warn('[Testing Loop] Trigger');
+		for (let i = 0; i < DeviceParametetsFS.length; i++) {
+			this.log.warn('DeviceParameterFS.id: ' + String(DeviceParametetsFS[i].id) + ' is defined');
+		}
+
 	}
 
 	/**
@@ -1597,7 +1602,11 @@ class wamo extends utils.Adapter {
 	async handle_FloorSensor_Data(FS_Data, num_FloorSensor) {
 		try {
 			this.log.warn('[async handle_FloorSensor_Data(FS_Data, num_FloorSensor)] Data Sensor ' + String(num_FloorSensor) + ': ' + JSON.stringify(FS_Data));
-			this.log.warn('Floor Sensor ' + String(num_FloorSensor) + ' Battery state = ' + String(FS_Data['BAT']) + '%');
+			// iterate through all requested Parameters
+			for (let i = 0; i < DeviceParametetsFS.length; i++) {
+				this.log.warn('Value of ' + String(DeviceParametetsFS[i].id) + ' = ' + String(FS_Data[String(DeviceParametetsFS[i].id)]));
+			}
+			// this.log.warn('Floor Sensor ' + String(num_FloorSensor) + ' Battery state = ' + String(FS_Data['BAT']) + '%');
 		} catch (err) {
 			this.log.error('[async handle_FloorSensor_Data(FS_Data, num_FloorSensor)] ');
 		}
