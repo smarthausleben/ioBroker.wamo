@@ -1608,8 +1608,11 @@ class wamo extends utils.Adapter {
 				let ToStore;
 				this.log.warn('Value of "' + String(DeviceParametetsFS[key].id) + '" = ' + String(FS_Data[String(DeviceParametetsFS[key].id)]));
 				try {
+					if(DeviceParametetsFS[key].saveRawData)
+					{
 					// save Raw Values to State Object
-					this.setStateAsync(AdapterChannelsFS.DeviceRawData.path.replace('.X.', '.' + String(num_FloorSensor) + '.') + '.' + DeviceParametetsFS[key].id, { val: '{get"' + DeviceParametetsFS[key].id + '":"' + String(FS_Data[String(DeviceParametetsFS[key].id)]) + '"}', ack: true });
+						this.setStateAsync(AdapterChannelsFS.DeviceRawData.path.replace('.X.', '.' + String(num_FloorSensor) + '.') + '.' + DeviceParametetsFS[key].id, { val: '{"' + DeviceParametetsFS[key].id + '":"' + String(FS_Data[String(DeviceParametetsFS[key].id)]) + '"}', ack: true });
+					}
 				} catch (err) { this.log.error('Saving Floor Sensor RAW value to state "' + String(DeviceParametetsFS[key].id) + '" has failed. ' + err); }
 				try {
 					switch (DeviceParametetsFS[key].objectdefinition.common.type) {
