@@ -1615,17 +1615,8 @@ class wamo extends utils.Adapter {
 					}
 				} catch (err) { this.log.error('Saving Floor Sensor RAW value to state "' + String(DeviceParametetsFS[key].id) + '" has failed. ' + err); }
 				try {
-					switch (DeviceParametetsFS[key].objectdefinition.common.type) {
-						case 'number': // State has number format
-							ToStore = parseInt(String(FS_Data[DeviceParametetsFS[key].id]));
-							break;
-						case 'string': // State has string format
-							ToStore = String(FS_Data[DeviceParametetsFS[key].id]);
-							break;
-						default:	// State format is not supported
-							this.log.warn('Parameter: "' + String(DeviceParametetsFS[key].id) + '" data type "' + String(DeviceParametetsFS[key].objectdefinition.common.type) + '" handling not implemented.');
-							ToStore = null;
-					}
+					// converte returned value into final value
+					ToStore = await this.handle_FloorSensor_Value(String(DeviceParametetsFS[key].id),String(DeviceParametetsFS[key].objectdefinition.common.type),String(FS_Data[DeviceParametetsFS[key].id]));
 					if (ToStore != null) {
 						try {
 							// save Values to State Object
@@ -1637,6 +1628,34 @@ class wamo extends utils.Adapter {
 		} catch (err) {this.log.error('[async handle_FloorSensor_Data(FS_Data, num_FloorSensor)] Floore Sensor: ' + String(num_FloorSensor) + ' ' + err);}
 	}
 
+
+	async handle_FloorSensor_Value(FS_Value_ID, FS_Value_Type, FS_Value){
+		try{
+			let convertedValue = null;
+			switch (FS_Value_ID) {
+				case 'CEL': // ENV Temperature (/100)
+					convertedValue = parseInt(String(FS_Value)) / 100;
+					break;
+				default:
+					switch (FS_Value_Type) {
+						case 'number': // State has number format
+							convertedValue = parseInt(String(FS_Value));
+							break;
+						case 'string': // State has string format
+							convertedValue = String(FS_Value);
+							break;
+						default:	// State format is not supported
+							this.log.warn('Parameter: "' + String(FS_Value_ID) + '" data type "' + String(FS_Value_Type) + '" handling not implemented.');
+							convertedValue = null;
+					}
+			}
+			return convertedValue;
+		}catch(err){
+			this.log.error('Converting Floor Sensor value "' + String(FS_Value_ID) + '" has failed. ' + err);
+			return null;
+		}
+
+	}
 	/**
 	 * Cron action
 	 * [jam protection]
