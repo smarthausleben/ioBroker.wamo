@@ -1547,30 +1547,28 @@ class wamo extends utils.Adapter {
 	 */
 	async alarm_cron_FloorSensors_Tick() {
 		try {
-			this.log.info('Floor Sensors Trigger');
+			this.log.info('Trigger: Floor Sensors');
 			for (let FlooreSensNo = 1; FlooreSensNo <= 4; FlooreSensNo++) {
-				let AxiosHandler = null;
+				let AxiosHandlerToUse = null;
+				// prepare for correct Floor Sensor
 				switch (FlooreSensNo) {
 					case 1:
-						if (this.syrSaveFloor1APIClient != null) {AxiosHandler = this.syrSaveFloor1APIClient;}else{AxiosHandler = null;}
-						break;
+						if (this.syrSaveFloor1APIClient != null) {AxiosHandlerToUse = this.syrSaveFloor1APIClient;}else{AxiosHandlerToUse = null;}break;
 					case 2:
-						if (this.syrSaveFloor2APIClient != null) {AxiosHandler = this.syrSaveFloor2APIClient;}else{AxiosHandler = null;}
-						break;
+						if (this.syrSaveFloor2APIClient != null) {AxiosHandlerToUse = this.syrSaveFloor2APIClient;}else{AxiosHandlerToUse = null;}break;
 					case 3:
-						if (this.syrSaveFloor3APIClient != null) {AxiosHandler = this.syrSaveFloor3APIClient;}else{AxiosHandler = null;}
-						break;
+						if (this.syrSaveFloor3APIClient != null) {AxiosHandlerToUse = this.syrSaveFloor3APIClient;}else{AxiosHandlerToUse = null;}break;
 					case 4:
-						if (this.syrSaveFloor4APIClient != null) {AxiosHandler = this.syrSaveFloor4APIClient;}else{AxiosHandler = null;}
-						break;
+						if (this.syrSaveFloor4APIClient != null) {AxiosHandlerToUse = this.syrSaveFloor4APIClient;}else{AxiosHandlerToUse = null;}break;
 					default:
 						this.log.warn('Floor Sensor number ' + FlooreSensNo + ' should never be reached');
 				}
-				if (AxiosHandler != null) {
+				// Do we have this one?
+				if (AxiosHandlerToUse != null) {
 					this.log.debug('Florsensor ' + FlooreSensNo + ' is configured');
 					try {
 						// request data from Floor Sensor
-						const FS_Data = await AxiosHandler.get('get/' + 'ALL');
+						const FS_Data = await AxiosHandlerToUse.get('get/' + 'ALL');
 						if (FS_Data.status === 200) {
 
 							//  We got Data and handle them asyncron (so NO AWAIT the data handling process)
@@ -1580,37 +1578,46 @@ class wamo extends utils.Adapter {
 							try {
 								await this.delay(1000);
 								//... sending Floor Sensor to sleep
-								await AxiosHandler.get('set/' + 'SLP');
+								await AxiosHandlerToUse.get('set/' + 'SLP');
 							} catch (err) {
 								this.log.error('Sending Floor Sensor ' + FlooreSensNo + ' to sleep ' + err);
 							}
-						}else{
-							this.log.warn('Floor Sensor ' + FlooreSensNo + ' API response Status: ' + String(FS_Data.status) + ' ' + String(FS_Data.statusText));
 						}
-
-					} catch (err) {
-						this.log.error('Floor Sensor ' + FlooreSensNo + ' API request ' + err);
-					}
+						else{this.log.warn('Floor Sensor ' + FlooreSensNo + ' API response Status: ' + String(FS_Data.status) + ' ' + String(FS_Data.statusText));}
+					} catch (err) {this.log.error('Floor Sensor ' + FlooreSensNo + ' API request ' + err);}
 				}
 			}
-		} catch (err) {
-			this.log.error('[async alarm_cron_FloorSensors_Tick()] ' + err);
-		}
+		} catch (err) {this.log.error('[async alarm_cron_FloorSensors_Tick()] ' + err);}
 	}
 
+	/**
+	 * This function precesses the date we got from a SafeTech Floor Sensor
+	 * @param {*} FS_Data - Json Data from the Floor Sensor
+	 * @param {*} num_FloorSensor - Number of the corresponding Floor Sensor
+	 */
 	async handle_FloorSensor_Data(FS_Data, num_FloorSensor) {
 		try {
-			this.log.warn('[async handle_FloorSensor_Data(FS_Data, num_FloorSensor)] Data Sensor ' + String(num_FloorSensor) + ': ' + JSON.stringify(FS_Data));
+			this.log.warn('JSON data of Floor Sensor No. ' + String(num_FloorSensor) + ': ' + JSON.stringify(FS_Data));
 			// iterate through all requested Parameters
 			for (const key in DeviceParametetsFS) {
+				let ToStore;
 				this.log.warn('Value of ' + String(DeviceParametetsFS[key].id) + ' = ' + String(FS_Data[String(DeviceParametetsFS[key].id)]));
-				switch (DeviceParametetsFS[key].id){
-					case 'BAT':
-						this.log.warn('Value of BAT = ' + String(FS_Data['BAT']) + '%');
+				switch (DeviceParametetsFS[key].objectdefinition.comon.type){
+					case 'number': // State has number format
+						ToStore = parseInt(String(FS_Data[DeviceParametetsFS[key].id]));
 						break;
-					default:
-						this.log.warn('Parameter: "' + String(DeviceParametetsFS[key].id) + '" was not handled.');
+					case 'string': // State has string format
+						ToStore = String(FS_Data[DeviceParametetsFS[key].id]);
+						break;
+					default:	// State format is not supported
+						this.log.warn('Parameter: "' + String(DeviceParametetsFS[key].id) + '" data type "' + String(DeviceParametetsFS[key].objectdefinition.comon.type) + '" handling not implemented.');
+						ToStore = null;
 				}
+				if(ToStore != null){
+					// save Values to State Object
+					this.setStateAsync(DeviceParametetsFS[key].statePath.replace('.X.', '.' + String(num_FloorSensor) + '.') + DeviceParametetsFS[key].id, { val: ToStore, ack: true });
+				}else{this.log.warn('Saving Floor Sensor value to state "' + String(DeviceParametetsFS[key].id) + '" was skipped because of NULL value.');}
+
 			}
 		} catch (err) {
 			this.log.error('[async handle_FloorSensor_Data(FS_Data, num_FloorSensor)] Floore Sensor: ' + String(num_FloorSensor) + ' ' + err);
