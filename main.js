@@ -1534,9 +1534,8 @@ class wamo extends utils.Adapter {
 		// only execute if Flag is set to TRUE
 		if (!executeTestingLoop) { return; }
 		this.log.warn('[Testing Loop] Trigger');
-		this.log.warn('DeviceParametetsFS.length = ' + String(DeviceParametetsFS.length));
-		for (let i = 0; i < DeviceParametetsFS.length; i++) {
-			this.log.warn('DeviceParameterFS.id: ' + String(DeviceParametetsFS[i].id) + ' is defined');
+		for (const key in DeviceParametetsFS) {
+			this.log.warn('DeviceParameterFS.id: ' + String(DeviceParametetsFS[key].id) + ' is defined');
 		}
 	}
 
