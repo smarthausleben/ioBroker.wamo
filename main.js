@@ -1567,6 +1567,8 @@ class wamo extends utils.Adapter {
 				if (AxiosHandlerToUse != null) {
 					this.log.debug('Floorsensor ' + FlooreSensNo + ' is configured');
 					try {
+						await AxiosHandlerToUse.get('set/' + Parameter_FACTORY_Mode);
+						await this.delay(300);
 						// request data from Floor Sensor
 						const FS_Data = await AxiosHandlerToUse.get('get/' + 'ALL');
 						if (FS_Data.status === 200) {
@@ -1610,7 +1612,7 @@ class wamo extends utils.Adapter {
 					this.setStateAsync(AdapterChannelsFS.DeviceRawData.path.replace('.X.', '.' + String(num_FloorSensor) + '.') + '.' + DeviceParametetsFS[key].id, { val: '{get"' + DeviceParametetsFS[key].id + '":"' + String(FS_Data[String(DeviceParametetsFS[key].id)]) + '"}', ack: true });
 				} catch (err) { this.log.error('Saving Floor Sensor RAW value to state "' + String(DeviceParametetsFS[key].id) + '" has failed. ' + err); }
 				try {
-					switch (DeviceParametetsFS[key].objectdefinition.comon.type) {
+					switch (DeviceParametetsFS[key].objectdefinition.common.type) {
 						case 'number': // State has number format
 							ToStore = parseInt(String(FS_Data[DeviceParametetsFS[key].id]));
 							break;
@@ -1618,7 +1620,7 @@ class wamo extends utils.Adapter {
 							ToStore = String(FS_Data[DeviceParametetsFS[key].id]);
 							break;
 						default:	// State format is not supported
-							this.log.warn('Parameter: "' + String(DeviceParametetsFS[key].id) + '" data type "' + String(DeviceParametetsFS[key].objectdefinition.comon.type) + '" handling not implemented.');
+							this.log.warn('Parameter: "' + String(DeviceParametetsFS[key].id) + '" data type "' + String(DeviceParametetsFS[key].objectdefinition.common.type) + '" handling not implemented.');
 							ToStore = null;
 					}
 					if (ToStore != null) {
