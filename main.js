@@ -1584,7 +1584,10 @@ class wamo extends utils.Adapter {
 							}
 						}
 						else{this.log.warn('Floor Sensor ' + FlooreSensNo + ' API response Status: ' + String(FS_Data.status) + ' ' + String(FS_Data.statusText));}
-					} catch (err) {this.log.error('Floor Sensor ' + FlooreSensNo + ' API request ' + err);}
+					} catch (err) {
+						// connect EHOSTUNREACH Fehler sollte nicht ausgegeben werden
+						this.log.error('Floor Sensor ' + FlooreSensNo + ' API request ' + err);
+					}
 				}
 			}
 		} catch (err) {this.log.error('[async alarm_cron_FloorSensors_Tick()] ' + err);}
@@ -1602,7 +1605,11 @@ class wamo extends utils.Adapter {
 			for (const key in DeviceParametetsFS) {
 				let ToStore;
 				this.log.warn('Value of "' + String(DeviceParametetsFS[key].id) + '" = ' + String(FS_Data[String(DeviceParametetsFS[key].id)]));
-				try{
+				try {
+					// save Raw Values to State Object
+					this.setStateAsync(AdapterChannelsFS.DeviceRawData.path.replace('.X.', '.' + String(num_FloorSensor) + '.') + '.' + DeviceParametetsFS[key].id, { val: '{get"' + DeviceParametetsFS[key].id + '":"' + String(FS_Data[String(DeviceParametetsFS[key].id)]) + '"}', ack: true });
+				} catch (err) { this.log.error('Saving Floor Sensor RAW value to state "' + String(DeviceParametetsFS[key].id) + '" has failed. ' + err); }
+				try {
 					switch (DeviceParametetsFS[key].objectdefinition.comon.type) {
 						case 'number': // State has number format
 							ToStore = parseInt(String(FS_Data[DeviceParametetsFS[key].id]));
