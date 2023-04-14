@@ -1574,7 +1574,14 @@ class wamo extends utils.Adapter {
 							if (AdminResult.status === 200) {
 								this.handle_FloorSensor_ADM_Result(AdminResult.data, FlooreSensNo);
 							}
-						} catch (err) { if(moreMessages){this.log.error('Set Admin command ' + err);}}
+						} catch (err) {
+							if (moreMessages) { this.log.error('Set Admin command ' + err); }
+							if(err.includes('connect EHOSTUNREACH')){
+								// device not reachable we skipp further requests against this sensor
+								this.log.warn('No response from Floor Sensor ' + String(FlooreSensNo) + ', we skipp data request this time');
+								continue;
+							}
+						}
 						// request data from Floor Sensor
 						const FS_Data = await AxiosHandlerToUse.get('get/' + 'ALL');
 						if (FS_Data.status === 200) {
