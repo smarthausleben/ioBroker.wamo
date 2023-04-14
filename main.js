@@ -1578,7 +1578,7 @@ class wamo extends utils.Adapter {
 							if (moreMessages) { this.log.error('Set Admin command ' + err); }
 							if(String(err).includes('connect EHOSTUNREACH')){
 								// device not reachable we skipp further requests against this sensor
-								this.log.warn('No response from Floor Sensor ' + String(FlooreSensNo) + ', we skipp data request this time');
+								this.log.warn('No response from Floor Sensor No. ' + String(FlooreSensNo) + ', we skipp data request this time');
 								continue;
 							}
 						}
