@@ -1572,9 +1572,9 @@ class wamo extends utils.Adapter {
 							const AdminResult = await AxiosHandlerToUse.get('set/' + Parameter_FACTORY_Mode);
 							await this.delay(300);
 							if (AdminResult.status === 200) {
-								this.log.warn('Set Admin result = ' + JSON.stringify(AdminResult.data));
+								this.handle_FloorSensor_ADM_Result(AdminResult.data, FlooreSensNo);
 							}
-						} catch (err) { this.log.error('Set Admin command ' + err); }
+						} catch (err) { if(moreMessages){this.log.error('Set Admin command ' + err);}}
 						// request data from Floor Sensor
 						const FS_Data = await AxiosHandlerToUse.get('get/' + 'ALL');
 						if (FS_Data.status === 200) {
@@ -1588,9 +1588,9 @@ class wamo extends utils.Adapter {
 								//... sending Floor Sensor to sleep
 								const SleepResult = await AxiosHandlerToUse.get('set/' + 'SLP');
 								if (SleepResult.status === 200) {
-									this.log.warn('Set Sleep result = ' + JSON.stringify(SleepResult.data));
+									this.handle_FloorSensor_Sleep_Result(SleepResult.data, FlooreSensNo);
 								}
-							} catch (err) {this.log.error('Sending Floor Sensor ' + FlooreSensNo + ' to sleep ' + err);}
+							} catch (err) {if(moreMessages){this.log.error('Sending Floor Sensor ' + FlooreSensNo + ' to sleep ' + err);}}
 						}
 						else{this.log.warn('Floor Sensor ' + FlooreSensNo + ' API response Status: ' + String(FS_Data.status) + ' ' + String(FS_Data.statusText));}
 					} catch (err) {
@@ -1661,8 +1661,36 @@ class wamo extends utils.Adapter {
 			this.log.error('Converting Floor Sensor value "' + String(FS_Value_ID) + '" has failed. ' + err);
 			return null;
 		}
-
 	}
+
+	/**
+	 * Function saves Set Admin Result to corresponding state object
+	 * @param {*} FS_Value - Arios request result data
+	 * @param {*} FS_Num - Number of Floor Sensor
+	 */
+	async handle_FloorSensor_ADM_Result(FS_Value, FS_Num)
+	{
+		this.log.warn('JSON Set Admin Result of Floor Sensor No. ' + String(FS_Num) + ': ' + JSON.stringify(FS_Value));
+		try {
+			// save Values to State Object
+			this.setStateAsync(DeviceParametetsFS.AdminMode.statePath.replace('.X.', '.' + String(FS_Num) + '.') + '.' + DeviceParametetsFS.AdminMode.id, { val: String(FS_Value['ADM(2)f']), ack: true });
+		} catch (err) { this.log.error('Saving Set Admin Result of Floor Sensor No. ' + String(FS_Num) + '" has failed. ' + err); }
+	}
+
+	/**
+	 * Function saves Set Admin Result to corresponding state object
+	 * @param {*} FS_Value - Arios request result data
+	 * @param {*} FS_Num - Number of Floor Sensor
+	 */
+	async handle_FloorSensor_Sleep_Result(FS_Value, FS_Num)
+	{
+		this.log.warn('[JSON] Set Sleep mode of Floor Sensor No. ' + String(FS_Num) + ': ' + JSON.stringify(FS_Value));
+		try {
+			// save Values to State Object
+			this.setStateAsync(DeviceParametetsFS.SleepMode.statePath.replace('.X.', '.' + String(FS_Num) + '.') + '.' + DeviceParametetsFS.SleepMode.id, { val: String(FS_Value['SLP']), ack: true });
+		} catch (err) { this.log.error('Set Sleep mode Result of Floor Sensor No. ' + String(FS_Num) + '" has failed. ' + err); }
+	}
+
 	/**
 	 * Cron action
 	 * [jam protection]
