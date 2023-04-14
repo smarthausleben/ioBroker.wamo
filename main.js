@@ -1570,7 +1570,6 @@ class wamo extends utils.Adapter {
 						// Set Admin Mode
 						try {
 							const AdminResult = await AxiosHandlerToUse.get('set/' + Parameter_FACTORY_Mode);
-							await this.delay(300);
 							if (AdminResult.status === 200) {
 								this.handle_FloorSensor_ADM_Result(AdminResult.data, FlooreSensNo);
 							}
@@ -1579,7 +1578,7 @@ class wamo extends utils.Adapter {
 							if(String(err).includes('connect EHOSTUNREACH')){
 								// device not reachable we skipp further requests against this sensor
 								this.log.warn('No response from Floor Sensor No. ' + String(FlooreSensNo) + ', we skipp data request this time');
-								continue;
+								// continue;
 							}
 						}
 						// request data from Floor Sensor
