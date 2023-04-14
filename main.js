@@ -1567,8 +1567,14 @@ class wamo extends utils.Adapter {
 				if (AxiosHandlerToUse != null) {
 					this.log.debug('Floorsensor ' + FlooreSensNo + ' is configured');
 					try {
-						await AxiosHandlerToUse.get('set/' + Parameter_FACTORY_Mode);
-						await this.delay(300);
+						// Set Admin Mode
+						try {
+							const AdminResult = await AxiosHandlerToUse.get('set/' + Parameter_FACTORY_Mode);
+							await this.delay(300);
+							if (AdminResult.status === 200) {
+								this.log.warn('Set Admin result = ' + JSON.stringify(AdminResult.data));
+							}
+						} catch (err) { this.log.error('Set Admin command ' + err); }
 						// request data from Floor Sensor
 						const FS_Data = await AxiosHandlerToUse.get('get/' + 'ALL');
 						if (FS_Data.status === 200) {
@@ -1580,10 +1586,11 @@ class wamo extends utils.Adapter {
 							try {
 								await this.delay(1000);
 								//... sending Floor Sensor to sleep
-								await AxiosHandlerToUse.get('set/' + 'SLP');
-							} catch (err) {
-								this.log.error('Sending Floor Sensor ' + FlooreSensNo + ' to sleep ' + err);
-							}
+								const SleepResult = await AxiosHandlerToUse.get('set/' + 'SLP');
+								if (SleepResult.status === 200) {
+									this.log.warn('Set Sleep result = ' + JSON.stringify(SleepResult.data));
+								}
+							} catch (err) {this.log.error('Sending Floor Sensor ' + FlooreSensNo + ' to sleep ' + err);}
 						}
 						else{this.log.warn('Floor Sensor ' + FlooreSensNo + ' API response Status: ' + String(FS_Data.status) + ' ' + String(FS_Data.statusText));}
 					} catch (err) {
