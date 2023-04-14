@@ -1647,7 +1647,9 @@ class wamo extends utils.Adapter {
 		try{
 			let convertedValue = null;
 			switch (FS_Value_ID) {
-				case 'CEL': // ENV Temperature (/100)
+				case 'MIT': // ENV Minimal temperature alarm (/10)
+				case 'MXT': // ENV Maximal temperature alarm (/10)
+				case 'CEL': // ENV Temperature (/10)
 					convertedValue = parseInt(String(FS_Value)) / 10;
 					break;
 				default:
