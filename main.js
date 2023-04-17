@@ -1578,7 +1578,7 @@ class wamo extends utils.Adapter {
 							if(String(err).includes('connect EHOSTUNREACH')){
 								// device not reachable we skipp further requests against this sensor
 								this.log.warn('No response from Floor Sensor No. ' + String(FlooreSensNo) + ', we skipp data request this time');
-								// continue;
+								continue;
 							}
 						}
 						// request data from Floor Sensor
@@ -1628,6 +1628,7 @@ class wamo extends utils.Adapter {
 					}
 				} catch (err) { this.log.error('Saving Floor Sensor RAW value to state "' + String(DeviceParametetsFS[key].id) + '" has failed. ' + err); }
 				try {
+					// is the current device parameter present in sensor return data?
 					if(FS_Data[String(DeviceParametetsFS[key].id)] !== undefined){
 						// converte returned value into final value
 						ToStore = await this.handle_FloorSensor_Value(String(DeviceParametetsFS[key].id), String(DeviceParametetsFS[key].objectdefinition.common.type), String(FS_Data[DeviceParametetsFS[key].id]));
@@ -1643,7 +1644,15 @@ class wamo extends utils.Adapter {
 		} catch (err) {this.log.error('[async handle_FloorSensor_Data(FS_Data, num_FloorSensor)] Floore Sensor: ' + String(num_FloorSensor) + ' ' + err);}
 	}
 
-
+	/**
+	 * this function procedes the returned data from Floor Sensor and converts it
+	 * into the correct format and modifies (Deviding; Multiplicating etc.) it in order
+	 * to be stored in state object
+	 * @param {*} FS_Value_ID - ID of device Parameter
+	 * @param {*} FS_Value_Type - Type of device parameter
+	 * @param {*} FS_Value - the string value extracted from Floor Sensor returned data
+	 * @returns - Final value to be stored into state object or null if something went wrong
+	 */
 	async handle_FloorSensor_Value(FS_Value_ID, FS_Value_Type, FS_Value){
 		try{
 			let convertedValue = null;
