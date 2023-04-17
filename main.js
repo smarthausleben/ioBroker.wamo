@@ -1662,6 +1662,10 @@ class wamo extends utils.Adapter {
 				case 'CEL': // ENV Temperature (/10)
 					convertedValue = parseInt(String(FS_Value)) / 10;
 					break;
+				case 'BMI': // Reference point battery 0%
+				case 'BMA': // Reference point battery 100%
+					convertedValue = parseInt(String(FS_Value)) / 100;
+					break;
 				default:
 					switch (FS_Value_Type) {
 						case 'number': // State has number format
