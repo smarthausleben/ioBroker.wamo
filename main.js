@@ -1619,7 +1619,6 @@ class wamo extends utils.Adapter {
 			// iterate through all requested Parameters
 			for (const key in DeviceParametetsFS) {
 				let ToStore;
-				this.log.warn('Value of "' + String(DeviceParametetsFS[key].id) + '" = ' + String(FS_Data[String(DeviceParametetsFS[key].id)]));
 				try {
 					if(DeviceParametetsFS[key].saveRawData && FS_Data[String(DeviceParametetsFS[key].id)] !== undefined)
 					{
@@ -1630,6 +1629,7 @@ class wamo extends utils.Adapter {
 				try {
 					// is the current device parameter present in sensor return data?
 					if(FS_Data[String(DeviceParametetsFS[key].id)] !== undefined){
+						this.log.warn('Value of "' + String(DeviceParametetsFS[key].id) + '" = ' + String(FS_Data[String(DeviceParametetsFS[key].id)]));
 						// converte returned value into final value
 						ToStore = await this.handle_FloorSensor_Value(String(DeviceParametetsFS[key].id), String(DeviceParametetsFS[key].objectdefinition.common.type), String(FS_Data[DeviceParametetsFS[key].id]));
 						if (ToStore != null) {
