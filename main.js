@@ -1566,10 +1566,10 @@ class wamo extends utils.Adapter {
 	 * This function is for polling data from FloorSensors
 	 *
 	 * @param {*} AxiosHandlerToUse - Axios handler we have to use for the API request
-	 * @param {*} SendFloorSensorToSleep - Flag if we have to send the Floor Sensor to sleep after API request
+	 * @param {*} KeepFloorSensorOnline - Flag if we have to send the Floor Sensor to sleep after API request
 	 * @param {*} FlooreSensNo - Number of Floor Sensor (1 ... 4)
 	 */
-	async alarm_cron_FloorSensors(AxiosHandlerToUse, SendFloorSensorToSleep, FlooreSensNo) {
+	async alarm_cron_FloorSensors(AxiosHandlerToUse, KeepFloorSensorOnline, FlooreSensNo) {
 		try {
 			this.log.info('Trigger: Floor Sensors');
 			// Do we have this one?
@@ -1596,7 +1596,7 @@ class wamo extends utils.Adapter {
 						//  We got Data and handle them asyncron (so NO AWAIT the data handling process)
 						this.handle_FloorSensor_Data(FS_Data.data, FlooreSensNo);
 
-						if (SendFloorSensorToSleep) {
+						if (!KeepFloorSensorOnline) {
 							this.log.warn('Sending Floor Sensor ' + String(FlooreSensNo) + ' to sleep');
 							try {
 								await this.delay(1000);
