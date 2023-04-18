@@ -481,9 +481,9 @@ class wamo extends utils.Adapter {
 	 * @param {ioBroker.State | null | undefined} state
 	 */
 	async onStateChange(id, state) {
-		this.log.warn('async onStateChange(id, state) hit -> id: ' + String(id) + ' state.val: ' + String(state.val) + ' state.ack: ' + String(state.ack));
+		this.log.debug('async onStateChange(id, state) hit -> id: ' + String(id));
 		if (state) {
-			this.log.warn('async onStateChange(id, state) -> if (state) hit -> id: ' + String(id) + ' state.val: ' + String(state.val) + ' state.ack: ' + String(state.ack));
+			this.log.debug('async onStateChange(id, state) -> if (state) hit -> id: ' + String(id) + ' state.val: ' + String(state.val) + ' state.ack: ' + String(state.ack));
 			const statePrefix = this.name + '.' + String(this.instance) + '.';
 			// The state was changed
 			//============================================================================
