@@ -436,6 +436,12 @@ class wamo extends utils.Adapter {
 		this.subscribeStates(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id); // [PRF] Selected profile
 		this.subscribeStates(adapterChannels.DevicePofiles.path + '.*'); // ALL profile states
 
+		if(this.syrSaveFloor1APIClient != null)
+		{
+			this.subscribeStates(DeviceParametetsFS.SleepMode.statePath.replace('.X.', '.1.')  + '.' + DeviceParametetsFS.SleepMode.id); // Floor Sensor 1 [SLP] Send device to sleep
+			this.subscribeStates(DeviceParametetsFS.AdminMode.statePath.replace('.X.', '.1.')  + '.' + DeviceParametetsFS.AdminMode.id); // Floor Sensor 1 [ADM(2)f] Set device ADMIN mode
+		}
+
 		// reference to Adapter
 		myAdapter = this;
 
@@ -1280,6 +1286,26 @@ class wamo extends utils.Adapter {
 					}
 				} catch (err) { this.log.warn('onStateChange(id, state) -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) ... ERROR: ' + err); }
 			}
+			//############################################################################
+			// Floore Sensor 1 State changes
+			//############################################################################
+
+			//============================================================================
+			// Floor Sensor 1: Sleep Mode
+			//============================================================================
+			else if((id == DeviceParametetsFS.SleepMode.statePath.replace('.X.', '.1.') + '.' + DeviceParametetsFS.SleepMode.id) && state.ack == false){
+				this.log.warn('Floor sensor 1 [SLEEP MODE] requested');
+			}
+			//============================================================================
+			// Floor Sensor 1: Admin Mode
+			//============================================================================
+			else if((id == DeviceParametetsFS.AdminMode.statePath.replace('.X.', '.1.') + '.' + DeviceParametetsFS.AdminMode.id) && state.ack == false){
+				this.log.warn('Floor sensor 1 [ADMIN MODE] requested');
+			}
+
+			//############################################################################
+			// Unsupported State change
+			//############################################################################
 			else {
 				this.log.debug('StateChange: ' + String(id) + ' Value: ' + String(state.val) + ' acknowledged: ' + String(state.ack));
 			}
