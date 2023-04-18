@@ -1294,13 +1294,13 @@ class wamo extends utils.Adapter {
 			// Floor Sensor 1: Sleep Mode
 			//============================================================================
 			else if((id == statePrefix + DeviceParametetsFS.SleepMode.statePath.replace('.X.', '.1.') + '.' + DeviceParametetsFS.SleepMode.id) && state.ack == false){
-				this.handle_FS_state_changes(1, DeviceParametetsFS.SleepMode.id);
+				this.handle_FS_state_changes(this.syrSaveFloor1APIClient, 1, DeviceParametetsFS.SleepMode.id);
 			}
 			//============================================================================
 			// Floor Sensor 1: Admin Mode
 			//============================================================================
 			else if((id == statePrefix + DeviceParametetsFS.AdminMode.statePath.replace('.X.', '.1.') + '.' + DeviceParametetsFS.AdminMode.id) && state.ack == false){
-				this.handle_FS_state_changes(1, DeviceParametetsFS.AdminMode.id);
+				this.handle_FS_state_changes(this.syrSaveFloor1APIClient, 1, DeviceParametetsFS.AdminMode.id);
 			}
 
 			//############################################################################
@@ -1317,9 +1317,24 @@ class wamo extends utils.Adapter {
 	}
 
 
-	async handle_FS_state_changes(FS_Number, FS_State_ID)
+	/**
+	 * Floor Sensor State Handler
+	 * @param {*} FS_Number - Floor Sensor Number
+	 * @param {*} FS_State_ID - State ID
+	 */
+	async handle_FS_state_changes(FS_Handler, FS_Number, FS_State_ID)
 	{
 		this.log.warn('Floor sensor state change: Floor Sensor No. ' + String(FS_Number) + ' State ID: ' + String(FS_State_ID));
+		switch (FS_State_ID) {
+			case DeviceParametetsFS.AdminMode.id:
+				this.FS_set_AMIN_Mode(FS_Handler, FS_Number);
+				break;
+			case DeviceParametetsFS.SleepMode.id:
+				this.FS_set_SLEEP_Mode(FS_Handler, FS_Number);
+				break;
+
+			default:
+		}
 	}
 
 	/**
@@ -1635,22 +1650,13 @@ class wamo extends utils.Adapter {
 			// Do we have this one?
 			if (AxiosHandlerToUse != null) {
 				try {
-					// Set Admin Mode
-					try {
-						const AdminResult = await AxiosHandlerToUse.get('set/' + Parameter_FACTORY_Mode);
-						if (AdminResult.status === 200) {
-							this.handle_FloorSensor_ADM_Result(AdminResult.data, FlooreSensNo);
-						}
-					} catch (err) {
-						if (moreMessages) { this.log.error('Set Admin command ' + err); }
-						if (String(err).includes('connect EHOSTUNREACH')) {
-							// device not reachable we skipp further requests against this sensor
-							this.log.warn('No response from Floor Sensor No. ' + String(FlooreSensNo) + ', we skipp data request this time');
-							return;
-						}
+					// set Floor Sensor into ADMIN mode
+					if(!await this.FS_set_AMIN_Mode(AxiosHandlerToUse, FlooreSensNo))
+					{
+						return;	// setting Admin mode failed
 					}
-					// waiting 500mS to avoid Axios "socket hang up"
-					await this.delay(500);
+
+					await this.delay(500);	// waiting 500mS to avoid Axios "socket hang up"
 					// request data from Floor Sensor
 					const FS_Data = await AxiosHandlerToUse.get('get/' + 'ALL');
 					if (FS_Data.status === 200) {
@@ -1659,15 +1665,9 @@ class wamo extends utils.Adapter {
 						this.handle_FloorSensor_Data(FS_Data.data, FlooreSensNo);
 
 						if (!KeepFloorSensorOnline) {
-							this.log.warn('Sending Floor Sensor ' + String(FlooreSensNo) + ' to sleep');
-							try {
-								await this.delay(1000);
-								//... sending Floor Sensor to sleep
-								const SleepResult = await AxiosHandlerToUse.get('set/' + 'SLP');
-								if (SleepResult.status === 200) {
-									this.handle_FloorSensor_Sleep_Result(SleepResult.data, FlooreSensNo);
-								}
-							} catch (err) { if (moreMessages) { this.log.error('Sending Floor Sensor ' + FlooreSensNo + ' to sleep ' + err); } }
+							await this.delay(500);	// waiting 500mS to avoid Axios "socket hang up"
+							//  We don't care if Sensor really gos to sleep and handle this asyncron (so NO AWAIT)
+							this.FS_set_AMIN_Mode(AxiosHandlerToUse, FlooreSensNo);
 						}
 					}
 					else { this.log.warn('Floor Sensor ' + FlooreSensNo + ' API response Status: ' + String(FS_Data.status) + ' ' + String(FS_Data.statusText)); }
@@ -1789,6 +1789,52 @@ class wamo extends utils.Adapter {
 			// save Values to State Object
 			this.setStateAsync(DeviceParametetsFS.SleepMode.statePath.replace('.X.', '.' + String(FS_Num) + '.') + '.' + DeviceParametetsFS.SleepMode.id, { val: stateValue, ack: true, expire: 30});
 		} catch (err) { this.log.error('Set Sleep mode Result of Floor Sensor No. ' + String(FS_Num) + '" has failed. ' + err); }
+	}
+
+	/**
+	 * Puts Floor Sensor into ADMIN Mode
+	 * @param {*} AxiosHandlerToUse - Axios API handler
+	 * @param {*} FlooreSensNo - Number of Floor Sensor
+	 * @returns TRUE if everithing went OK, or FALSE
+	 */
+	async FS_set_AMIN_Mode(AxiosHandlerToUse, FlooreSensNo) {
+		try {
+			// Set Admin Mode
+			const AdminResult = await AxiosHandlerToUse.get('set/' + Parameter_FACTORY_Mode);
+			if (AdminResult.status === 200) {
+				this.handle_FloorSensor_ADM_Result(AdminResult.data, FlooreSensNo);
+				return true;
+			}
+			return false;
+		} catch (err) {
+			if (moreMessages) { this.log.error('Set Admin command ' + err); }
+			if (String(err).includes('connect EHOSTUNREACH')) {
+				// device not reachable we skipp further requests against this sensor
+				this.log.warn('No response from Floor Sensor No. ' + String(FlooreSensNo) + ', we skipp data request this time');
+				return false;
+			}
+		}
+	}
+
+	/**
+	 * Puts Floor Sensor into SLEEP Mode
+	 * @param {*} AxiosHandlerToUse - Axios API handler
+	 * @param {*} FlooreSensNo - Number of Floor Sensor
+	 * @returns TRUE if everithing went OK, or FALSE
+	 */async FS_set_SLEEP_Mode(AxiosHandlerToUse, FlooreSensNo)
+	{
+		this.log.warn('Sending Floor Sensor ' + String(FlooreSensNo) + ' to sleep');
+		try {
+			//... sending Floor Sensor to sleep
+			const SleepResult = await AxiosHandlerToUse.get('set/' + 'SLP');
+			if (SleepResult.status === 200) {
+				this.handle_FloorSensor_Sleep_Result(SleepResult.data, FlooreSensNo);
+				return true;
+			}
+			return false;
+		} catch (err) { if (moreMessages) { this.log.error('Sending Floor Sensor ' + FlooreSensNo + ' to sleep ' + err); } }
+
+		return false;
 	}
 
 	/**
