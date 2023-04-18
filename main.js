@@ -1294,13 +1294,13 @@ class wamo extends utils.Adapter {
 			// Floor Sensor 1: Sleep Mode
 			//============================================================================
 			else if((id == statePrefix + DeviceParametetsFS.SleepMode.statePath.replace('.X.', '.1.') + '.' + DeviceParametetsFS.SleepMode.id) && state.ack == false){
-				this.log.warn('Floor sensor 1 [SLEEP MODE] requested');
+				this.handle_FS_state_changes(1, DeviceParametetsFS.SleepMode.id);
 			}
 			//============================================================================
 			// Floor Sensor 1: Admin Mode
 			//============================================================================
 			else if((id == statePrefix + DeviceParametetsFS.AdminMode.statePath.replace('.X.', '.1.') + '.' + DeviceParametetsFS.AdminMode.id) && state.ack == false){
-				this.log.warn('Floor sensor 1 [ADMIN MODE] requested');
+				this.handle_FS_state_changes(1, DeviceParametetsFS.AdminMode.id);
 			}
 
 			//############################################################################
@@ -1314,6 +1314,12 @@ class wamo extends utils.Adapter {
 			// The state was deleted
 			this.log.debug(`state ${id} deleted`);
 		}
+	}
+
+
+	async handle_FS_state_changes(FS_Number, FS_State_ID)
+	{
+		this.log.warn('Floor sensor state change: Floor Sensor No. ' + String(FS_Number) + ' State ID: ' + String(FS_State_ID));
 	}
 
 	/**
