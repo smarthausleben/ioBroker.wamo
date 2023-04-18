@@ -92,6 +92,14 @@
                     "label": "SafeFloor Connect 1 - IP address",
                     "help": "IP address of first SYR SaveFloor Connect device"
                 },
+                "safefloor_1_keep_online": {
+                    "newLine": false,
+                    "type": "checkbox",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "label": "Keep this floor sensor online (emptys battery very fast and therefore only makes sense if sensor uses a power supply)"
+                },
                 "safefloor_1_serial":{
                     "newLine": false,
                     "type": "text",
@@ -109,6 +117,14 @@
                     "lg": 6,
                     "label": "SafeFloor Connect 2 - IP address",
                     "help": "IP address of second SYR SaveFloor Connect device"
+                },
+                "safefloor_2_keep_online": {
+                    "newLine": false,
+                    "type": "checkbox",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "label": "Keep this floor sensor online (emptys battery very fast and therefore only makes sense if sensor uses a power supply)"
                 },
                 "safefloor_2_serial":{
                     "newLine": false,
@@ -128,6 +144,14 @@
                     "label": "SafeFloor Connect 3 - IP address",
                     "help": "IP address of third SYR SaveFloor Connect device"
                 },
+                "safefloor_3_keep_online": {
+                    "newLine": false,
+                    "type": "checkbox",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "label": "Keep this floor sensor online (emptys battery very fast and therefore only makes sense if sensor uses a power supply)"
+                },
                 "safefloor_3_serial":{
                     "newLine": false,
                     "type": "text",
@@ -145,6 +169,14 @@
                     "lg": 6,
                     "label": "SafeFloor Connect 4 - IP address",
                     "help": "IP address of fourth SYR SaveFloor Connect device"
+                },
+                "safefloor_4_keep_online": {
+                    "newLine": false,
+                    "type": "checkbox",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "label": "Keep this floor sensor online (emptys battery very fast and therefore only makes sense if sensor uses a power supply)"
                 },
                 "safefloor_4_serial":{
                     "newLine": false,

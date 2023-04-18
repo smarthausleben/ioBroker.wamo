@@ -10,6 +10,7 @@
     "IP address of second SYR SaveFloor Connect device": "IP-Adresse des zweiten SYR SaveFloor Connect-Geräts",
     "IP address of third SYR SaveFloor Connect device": "IP-Adresse des dritten SYR SaveFloor Connect-Geräts",
     "IP or hostname of your SYR SaveTech Connect 2422 or your POLYGONVATRO leakage protection device.": "IP oder Hostname Ihres SYR SaveTech Connect 2422 oder Ihres POLYGONVATRO Leckageschutz.",
+    "Keep this floor sensor online (emptys battery very fast and therefore only makes sense if sensor uses a power supply)": "Bodensensor online halten (Achtung: Batterie wird sehr schnell entleert und macht daher nur Sinn, wenn der Sensor eine Stromversorgung verwendet)",
     "Options": "Optionen",
     "Port of your SYR SaveTech Connect 2422 or your POLYGONVATRO leakage protection device": "Port Ihres SYR SaveTech Connect 2422 oder Ihres POLYGONVATRO Leckageschutz",
     "SafeFloor Connect 1 - IP address": "SafeFloor Connect 1 - IP-Adresse",

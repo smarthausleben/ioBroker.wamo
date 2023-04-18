@@ -257,7 +257,11 @@
         "safefloor_3_serial": "",
         "safefloor_4_ip": "0.0.0.0",
         "safefloor_4_serial": "",
-        "executetestloop": false
+        "executetestloop": false,
+        "safefloor_1_keep_online": false,
+        "safefloor_2_keep_online": false,
+        "safefloor_3_keep_online": false,
+        "safefloor_4_keep_online": false
     },
     "objects": [],
     "instanceObjects": [
