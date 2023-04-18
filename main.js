@@ -1667,7 +1667,7 @@ class wamo extends utils.Adapter {
 						if (!KeepFloorSensorOnline) {
 							await this.delay(500);	// waiting 500mS to avoid Axios "socket hang up"
 							//  We don't care if Sensor really gos to sleep and handle this asyncron (so NO AWAIT)
-							this.FS_set_AMIN_Mode(AxiosHandlerToUse, FlooreSensNo);
+							this.FS_set_SLEEP_Mode(AxiosHandlerToUse, FlooreSensNo);
 						}
 					}
 					else { this.log.warn('Floor Sensor ' + FlooreSensNo + ' API response Status: ' + String(FS_Data.status) + ' ' + String(FS_Data.statusText)); }
