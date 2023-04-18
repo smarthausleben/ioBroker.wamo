@@ -481,9 +481,9 @@ class wamo extends utils.Adapter {
 	 * @param {ioBroker.State | null | undefined} state
 	 */
 	async onStateChange(id, state) {
-		this.log.warn('async onStateChange(id, state) hit -> id: ' + String(id));
+		this.log.warn('async onStateChange(id, state) hit -> id: ' + String(id) + ' state.val: ' + String(state.val) + ' state.ack: ' + String(state.ack));
 		if (state) {
-			this.log.debug('async onStateChange(id, state) -> if (state) hit -> id: ' + String(id) + ' state.val: ' + state.val + ' state.ack: ' + state.ack);
+			this.log.warn('async onStateChange(id, state) -> if (state) hit -> id: ' + String(id) + ' state.val: ' + String(state.val) + ' state.ack: ' + String(state.ack));
 			const statePrefix = this.name + '.' + String(this.instance) + '.';
 			// The state was changed
 			//============================================================================
@@ -1293,13 +1293,13 @@ class wamo extends utils.Adapter {
 			//============================================================================
 			// Floor Sensor 1: Sleep Mode
 			//============================================================================
-			else if((id == DeviceParametetsFS.SleepMode.statePath.replace('.X.', '.1.') + '.' + DeviceParametetsFS.SleepMode.id) && state.ack == false){
+			else if((id == statePrefix + DeviceParametetsFS.SleepMode.statePath.replace('.X.', '.1.') + '.' + DeviceParametetsFS.SleepMode.id) && state.ack == false){
 				this.log.warn('Floor sensor 1 [SLEEP MODE] requested');
 			}
 			//============================================================================
 			// Floor Sensor 1: Admin Mode
 			//============================================================================
-			else if((id == DeviceParametetsFS.AdminMode.statePath.replace('.X.', '.1.') + '.' + DeviceParametetsFS.AdminMode.id) && state.ack == false){
+			else if((id == statePrefix + DeviceParametetsFS.AdminMode.statePath.replace('.X.', '.1.') + '.' + DeviceParametetsFS.AdminMode.id) && state.ack == false){
 				this.log.warn('Floor sensor 1 [ADMIN MODE] requested');
 			}
 
