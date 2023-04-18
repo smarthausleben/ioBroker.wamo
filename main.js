@@ -1550,16 +1550,26 @@ class wamo extends utils.Adapter {
 			this.log.info('Trigger: Floor Sensors');
 			for (let FlooreSensNo = 1; FlooreSensNo <= 4; FlooreSensNo++) {
 				let AxiosHandlerToUse = null;
+				let SendFloorSensorToSleep = null;
+
 				// prepare for correct Floor Sensor
 				switch (FlooreSensNo) {
 					case 1:
-						if (this.syrSaveFloor1APIClient != null) {AxiosHandlerToUse = this.syrSaveFloor1APIClient;}else{AxiosHandlerToUse = null;}break;
+						if (this.syrSaveFloor1APIClient != null) {AxiosHandlerToUse = this.syrSaveFloor1APIClient;}else{AxiosHandlerToUse = null;}
+						SendFloorSensorToSleep = !this.config.safefloor_1_keep_online;
+						break;
 					case 2:
-						if (this.syrSaveFloor2APIClient != null) {AxiosHandlerToUse = this.syrSaveFloor2APIClient;}else{AxiosHandlerToUse = null;}break;
+						if (this.syrSaveFloor2APIClient != null) {AxiosHandlerToUse = this.syrSaveFloor2APIClient;}else{AxiosHandlerToUse = null;}
+						SendFloorSensorToSleep = !this.config.safefloor_2_keep_online;
+						break;
 					case 3:
-						if (this.syrSaveFloor3APIClient != null) {AxiosHandlerToUse = this.syrSaveFloor3APIClient;}else{AxiosHandlerToUse = null;}break;
+						if (this.syrSaveFloor3APIClient != null) {AxiosHandlerToUse = this.syrSaveFloor3APIClient;}else{AxiosHandlerToUse = null;}
+						SendFloorSensorToSleep = !this.config.safefloor_3_keep_online;
+						break;
 					case 4:
-						if (this.syrSaveFloor4APIClient != null) {AxiosHandlerToUse = this.syrSaveFloor4APIClient;}else{AxiosHandlerToUse = null;}break;
+						if (this.syrSaveFloor4APIClient != null) {AxiosHandlerToUse = this.syrSaveFloor4APIClient;}else{AxiosHandlerToUse = null;}
+						SendFloorSensorToSleep = !this.config.safefloor_4_keep_online;
+						break;
 					default:
 						this.log.warn('Floor Sensor number ' + FlooreSensNo + ' should never be reached');
 				}
@@ -1588,15 +1598,17 @@ class wamo extends utils.Adapter {
 							//  We got Data and handle them asyncron (so NO AWAIT the data handling process)
 							this.handle_FloorSensor_Data(FS_Data.data, FlooreSensNo);
 
-							this.log.warn('Sending Floor Sensor ' + String(FlooreSensNo) + ' to sleep');
-							try {
-								await this.delay(1000);
-								//... sending Floor Sensor to sleep
-								const SleepResult = await AxiosHandlerToUse.get('set/' + 'SLP');
-								if (SleepResult.status === 200) {
-									this.handle_FloorSensor_Sleep_Result(SleepResult.data, FlooreSensNo);
-								}
-							} catch (err) {if(moreMessages){this.log.error('Sending Floor Sensor ' + FlooreSensNo + ' to sleep ' + err);}}
+							if (SendFloorSensorToSleep) {
+								this.log.warn('Sending Floor Sensor ' + String(FlooreSensNo) + ' to sleep');
+								try {
+									await this.delay(1000);
+									//... sending Floor Sensor to sleep
+									const SleepResult = await AxiosHandlerToUse.get('set/' + 'SLP');
+									if (SleepResult.status === 200) {
+										this.handle_FloorSensor_Sleep_Result(SleepResult.data, FlooreSensNo);
+									}
+								} catch (err) { if (moreMessages) { this.log.error('Sending Floor Sensor ' + FlooreSensNo + ' to sleep ' + err); } }
+							}
 						}
 						else{this.log.warn('Floor Sensor ' + FlooreSensNo + ' API response Status: ' + String(FS_Data.status) + ' ' + String(FS_Data.statusText));}
 					} catch (err) {
