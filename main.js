@@ -1575,7 +1575,6 @@ class wamo extends utils.Adapter {
 				}
 				// Do we have this one?
 				if (AxiosHandlerToUse != null) {
-					this.log.debug('Floorsensor ' + FlooreSensNo + ' is configured');
 					try {
 						// Set Admin Mode
 						try {
@@ -1641,7 +1640,7 @@ class wamo extends utils.Adapter {
 				try {
 					// is the current device parameter present in sensor return data?
 					if(FS_Data[String(DeviceParametetsFS[key].id)] !== undefined){
-						this.log.warn('Value of "' + String(DeviceParametetsFS[key].id) + '" = ' + String(FS_Data[String(DeviceParametetsFS[key].id)]));
+						if(moreMessages){this.log.info('Value of "' + String(DeviceParametetsFS[key].id) + '" = ' + String(FS_Data[String(DeviceParametetsFS[key].id)]));}
 						// converte returned value into final value
 						ToStore = await this.handle_FloorSensor_Value(String(DeviceParametetsFS[key].id), String(DeviceParametetsFS[key].objectdefinition.common.type), String(FS_Data[DeviceParametetsFS[key].id]));
 						if (ToStore != null) {
