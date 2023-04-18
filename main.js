@@ -1589,6 +1589,8 @@ class wamo extends utils.Adapter {
 							return;
 						}
 					}
+					// waiting 500mS to avoid Axios "socket hang up"
+					await this.delay(500);
 					// request data from Floor Sensor
 					const FS_Data = await AxiosHandlerToUse.get('get/' + 'ALL');
 					if (FS_Data.status === 200) {
