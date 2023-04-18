@@ -1805,6 +1805,7 @@ class wamo extends utils.Adapter {
 				this.handle_FloorSensor_ADM_Result(AdminResult.data, FlooreSensNo);
 				return true;
 			}
+			this.log.warn('Set ADMIN mode Floor Sensor No. ' + String(FlooreSensNo) + ' returned wrong status: ' + String(AdminResult.status) + ' ' + String(AdminResult.statusText));
 			return false;
 		} catch (err) {
 			if (moreMessages) { this.log.error('Set Admin command ' + err); }
