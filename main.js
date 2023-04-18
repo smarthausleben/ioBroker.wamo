@@ -41,12 +41,16 @@ const cron_Year = '0 0 1 1 *';
 const cron_Month = '0 0 1 * *';
 const cron_Week = '0 0 * * 1';
 const cron_Day = '0 0 * * *';
-const corn_FloorSensors = '*/15 * * * * *'; // Every 15 Seconds
+const corn_FloorSensor_short = '*/15 * * * * *'; // Every 15 Seconds
+const corn_FloorSensor_long = '*/2 * * * *'; // Every 2 minutes
 
 //const cron_TestinLoop = '*/2 * * * *'; // Every 2 minutes
 const cron_TestinLoop = '*/13 * * * * *'; // Every 13 seconds
 
-const FloorSensoLoopTimeout = 5;
+const FloorSenso1_LoopTimeout = 5;
+const FloorSenso2_LoopTimeout = 5;
+const FloorSenso3_LoopTimeout = 5;
+const FloorSenso4_LoopTimeout = 5;
 
 //=======================================================================================
 let executeTestingLoop; // Flag to indicate if Testing Loop should be executed
@@ -136,6 +140,7 @@ class wamo extends utils.Adapter {
 		this.log.debug('Timeout for axios requests is ' + String(this.config.requesttimeout) + ' seconds');
 		this.log.debug('Main valve jam Protection: ' + String(this.config.regularmainvalvemovement));
 		this.log.debug('Cron settings main valve jam protection ' + String(this.config.regularemovementcron));
+
 
 		//=================================================================================================
 		// getting system language
@@ -247,7 +252,7 @@ class wamo extends utils.Adapter {
 			this.log.info('SafeFloor Connect Unit 1 IP-Address: ' + String(this.config.safefloor_1_ip) + ':' + String(this.config.device_port));
 			this.syrSaveFloor1APIClient = axios.create({
 				baseURL: `http://${this.config.safefloor_1_ip}:${this.config.device_port}/floorsensor/`,
-				timeout: FloorSensoLoopTimeout * 1000,
+				timeout: FloorSenso1_LoopTimeout * 1000,
 				responseType: 'json',
 				responseEncoding: 'utf8',
 				httpAgent: new http.Agent({
@@ -260,7 +265,7 @@ class wamo extends utils.Adapter {
 			this.log.info('SafeFloor Connect Unit 2 IP-Address: ' + String(this.config.safefloor_2_ip) + ':' + String(this.config.device_port));
 			this.syrSaveFloor2APIClient = axios.create({
 				baseURL: `http://${this.config.safefloor_2_ip}:${this.config.device_port}/floorsensor/`,
-				timeout: FloorSensoLoopTimeout * 1000,
+				timeout: FloorSenso2_LoopTimeout * 1000,
 				responseType: 'json',
 				responseEncoding: 'utf8',
 				httpAgent: new http.Agent({
@@ -273,7 +278,7 @@ class wamo extends utils.Adapter {
 			this.log.info('SafeFloor Connect Unit 3 IP-Address: ' + String(this.config.safefloor_3_ip) + ':' + String(this.config.device_port));
 			this.syrSaveFloor3APIClient = axios.create({
 				baseURL: `http://${this.config.safefloor_3_ip}:${this.config.device_port}/floorsensor/`,
-				timeout: FloorSensoLoopTimeout * 1000,
+				timeout: FloorSenso3_LoopTimeout * 1000,
 				responseType: 'json',
 				responseEncoding: 'utf8',
 				httpAgent: new http.Agent({
@@ -286,7 +291,7 @@ class wamo extends utils.Adapter {
 			this.log.info('SafeFloor Connect Unit 4 IP-Address: ' + String(this.config.safefloor_4_ip) + ':' + String(this.config.device_port));
 			this.syrSaveFloor4APIClient = axios.create({
 				baseURL: `http://${this.config.safefloor_4_ip}:${this.config.device_port}/floorsensor/`,
-				timeout: FloorSensoLoopTimeout * 1000,
+				timeout: FloorSenso4_LoopTimeout * 1000,
 				responseType: 'json',
 				responseEncoding: 'utf8',
 				httpAgent: new http.Agent({
@@ -1295,11 +1300,29 @@ class wamo extends utils.Adapter {
 			schedule.scheduleJob(cron_Week, cron_poll_week);
 			schedule.scheduleJob(cron_Month, cron_poll_month);
 			schedule.scheduleJob(cron_Year, cron_poll_year);
+
 			// do we have Floor Sensors?
-			if (this.syrSaveFloor1APIClient != null || this.syrSaveFloor2APIClient != null || this.syrSaveFloor3APIClient != null || this.syrSaveFloor4APIClient != null) {
+			if (this.syrSaveFloor1APIClient != null) {
 				// Floor Sensors present so initialize FloorSensors Schedule
-				schedule.scheduleJob(corn_FloorSensors, cron_poll_FloorSensors);
+				if(this.config.safefloor_1_keep_online){schedule.scheduleJob(corn_FloorSensor_long, cron_poll_FloorSensor_1);}
+				else{schedule.scheduleJob(corn_FloorSensor_short, cron_poll_FloorSensor_1);}
 			}
+			if (this.syrSaveFloor2APIClient != null) {
+				// Floor Sensors present so initialize FloorSensors Schedule
+				if(this.config.safefloor_2_keep_online){schedule.scheduleJob(corn_FloorSensor_long, cron_poll_FloorSensor_2);}
+				else{schedule.scheduleJob(corn_FloorSensor_short, cron_poll_FloorSensor_2);}
+			}
+			if (this.syrSaveFloor3APIClient != null) {
+				// Floor Sensors present so initialize FloorSensors Schedule
+				if(this.config.safefloor_3_keep_online){schedule.scheduleJob(corn_FloorSensor_long, cron_poll_FloorSensor_3);}
+				else{schedule.scheduleJob(corn_FloorSensor_short, cron_poll_FloorSensor_3);}
+			}
+			if (this.syrSaveFloor4APIClient != null) {
+				// Floor Sensors present so initialize FloorSensors Schedule
+				if(this.config.safefloor_4_keep_online){schedule.scheduleJob(corn_FloorSensor_long, cron_poll_FloorSensor_4);}
+				else{schedule.scheduleJob(corn_FloorSensor_short, cron_poll_FloorSensor_4);}
+			}
+
 			// Main valve jam protection active?
 			if (this.config.regularmainvalvemovement) {
 				// Ok we schedule it
@@ -1540,83 +1563,90 @@ class wamo extends utils.Adapter {
 	}
 
 	/**
-	 * Cron action
-	 * [Floor Sensors loop]
-	 *
 	 * This function is for polling data from FloorSensors
+	 *
+	 * @param {*} AxiosHandlerToUse - Axios handler we have to use for the API request
+	 * @param {*} SendFloorSensorToSleep - Flag if we have to send the Floor Sensor to sleep after API request
+	 * @param {*} FlooreSensNo - Number of Floor Sensor (1 ... 4)
 	 */
-	async alarm_cron_FloorSensors_Tick() {
+	async alarm_cron_FloorSensors(AxiosHandlerToUse, SendFloorSensorToSleep, FlooreSensNo) {
 		try {
 			this.log.info('Trigger: Floor Sensors');
-			for (let FlooreSensNo = 1; FlooreSensNo <= 4; FlooreSensNo++) {
-				let AxiosHandlerToUse = null;
-				let SendFloorSensorToSleep = null;
-
-				// prepare for correct Floor Sensor
-				switch (FlooreSensNo) {
-					case 1:
-						if (this.syrSaveFloor1APIClient != null) {AxiosHandlerToUse = this.syrSaveFloor1APIClient;}else{AxiosHandlerToUse = null;}
-						SendFloorSensorToSleep = !this.config.safefloor_1_keep_online;
-						break;
-					case 2:
-						if (this.syrSaveFloor2APIClient != null) {AxiosHandlerToUse = this.syrSaveFloor2APIClient;}else{AxiosHandlerToUse = null;}
-						SendFloorSensorToSleep = !this.config.safefloor_2_keep_online;
-						break;
-					case 3:
-						if (this.syrSaveFloor3APIClient != null) {AxiosHandlerToUse = this.syrSaveFloor3APIClient;}else{AxiosHandlerToUse = null;}
-						SendFloorSensorToSleep = !this.config.safefloor_3_keep_online;
-						break;
-					case 4:
-						if (this.syrSaveFloor4APIClient != null) {AxiosHandlerToUse = this.syrSaveFloor4APIClient;}else{AxiosHandlerToUse = null;}
-						SendFloorSensorToSleep = !this.config.safefloor_4_keep_online;
-						break;
-					default:
-						this.log.warn('Floor Sensor number ' + FlooreSensNo + ' should never be reached');
-				}
-				// Do we have this one?
-				if (AxiosHandlerToUse != null) {
+			// Do we have this one?
+			if (AxiosHandlerToUse != null) {
+				try {
+					// Set Admin Mode
 					try {
-						// Set Admin Mode
-						try {
-							const AdminResult = await AxiosHandlerToUse.get('set/' + Parameter_FACTORY_Mode);
-							if (AdminResult.status === 200) {
-								this.handle_FloorSensor_ADM_Result(AdminResult.data, FlooreSensNo);
-							}
-						} catch (err) {
-							if (moreMessages) { this.log.error('Set Admin command ' + err); }
-							if(String(err).includes('connect EHOSTUNREACH')){
-								// device not reachable we skipp further requests against this sensor
-								this.log.warn('No response from Floor Sensor No. ' + String(FlooreSensNo) + ', we skipp data request this time');
-								continue;
-							}
+						const AdminResult = await AxiosHandlerToUse.get('set/' + Parameter_FACTORY_Mode);
+						if (AdminResult.status === 200) {
+							this.handle_FloorSensor_ADM_Result(AdminResult.data, FlooreSensNo);
 						}
-						// request data from Floor Sensor
-						const FS_Data = await AxiosHandlerToUse.get('get/' + 'ALL');
-						if (FS_Data.status === 200) {
-
-							//  We got Data and handle them asyncron (so NO AWAIT the data handling process)
-							this.handle_FloorSensor_Data(FS_Data.data, FlooreSensNo);
-
-							if (SendFloorSensorToSleep) {
-								this.log.warn('Sending Floor Sensor ' + String(FlooreSensNo) + ' to sleep');
-								try {
-									await this.delay(1000);
-									//... sending Floor Sensor to sleep
-									const SleepResult = await AxiosHandlerToUse.get('set/' + 'SLP');
-									if (SleepResult.status === 200) {
-										this.handle_FloorSensor_Sleep_Result(SleepResult.data, FlooreSensNo);
-									}
-								} catch (err) { if (moreMessages) { this.log.error('Sending Floor Sensor ' + FlooreSensNo + ' to sleep ' + err); } }
-							}
-						}
-						else{this.log.warn('Floor Sensor ' + FlooreSensNo + ' API response Status: ' + String(FS_Data.status) + ' ' + String(FS_Data.statusText));}
 					} catch (err) {
-						// connect EHOSTUNREACH Fehler sollte nicht ausgegeben werden
-						this.log.error('Floor Sensor ' + FlooreSensNo + ' API request ' + err);
+						if (moreMessages) { this.log.error('Set Admin command ' + err); }
+						if (String(err).includes('connect EHOSTUNREACH')) {
+							// device not reachable we skipp further requests against this sensor
+							this.log.warn('No response from Floor Sensor No. ' + String(FlooreSensNo) + ', we skipp data request this time');
+							return;
+						}
 					}
+					// request data from Floor Sensor
+					const FS_Data = await AxiosHandlerToUse.get('get/' + 'ALL');
+					if (FS_Data.status === 200) {
+
+						//  We got Data and handle them asyncron (so NO AWAIT the data handling process)
+						this.handle_FloorSensor_Data(FS_Data.data, FlooreSensNo);
+
+						if (SendFloorSensorToSleep) {
+							this.log.warn('Sending Floor Sensor ' + String(FlooreSensNo) + ' to sleep');
+							try {
+								await this.delay(1000);
+								//... sending Floor Sensor to sleep
+								const SleepResult = await AxiosHandlerToUse.get('set/' + 'SLP');
+								if (SleepResult.status === 200) {
+									this.handle_FloorSensor_Sleep_Result(SleepResult.data, FlooreSensNo);
+								}
+							} catch (err) { if (moreMessages) { this.log.error('Sending Floor Sensor ' + FlooreSensNo + ' to sleep ' + err); } }
+						}
+					}
+					else { this.log.warn('Floor Sensor ' + FlooreSensNo + ' API response Status: ' + String(FS_Data.status) + ' ' + String(FS_Data.statusText)); }
+				} catch (err) {
+					// connect EHOSTUNREACH Fehler sollte nicht ausgegeben werden
+					this.log.error('Floor Sensor ' + FlooreSensNo + ' API request ' + err);
 				}
 			}
-		} catch (err) {this.log.error('[async alarm_cron_FloorSensors_Tick()] ' + err);}
+		} catch (err) { this.log.error('[async alarm_cron_FloorSensors_Tick()] ' + err); }
+	}
+
+	/**
+	 * Cron action
+	 * [Floor Sensor 1]
+	 */
+	async alarm_cron_FloorSensor_Tick_1(){
+		if (this.syrSaveFloor1APIClient != null){this.alarm_cron_FloorSensors(this.syrSaveFloor1APIClient, this.config.safefloor_1_keep_online, 1);}
+	}
+
+	/**
+	 * Cron action
+	 * [Floor Sensor 2]
+	 */
+	async alarm_cron_FloorSensor_Tick_2(){
+		if (this.syrSaveFloor2APIClient != null){this.alarm_cron_FloorSensors(this.syrSaveFloor2APIClient, this.config.safefloor_2_keep_online, 2);}
+	}
+
+	/**
+	 * Cron action
+	 * [Floor Sensor 3]
+	 */
+	async alarm_cron_FloorSensor_Tick_3(){
+		if (this.syrSaveFloor3APIClient != null){this.alarm_cron_FloorSensors(this.syrSaveFloor3APIClient, this.config.safefloor_3_keep_online, 3);}
+	}
+
+	/**
+	 * Cron action
+	 * [Floor Sensor 4]
+	 */
+	async alarm_cron_FloorSensor_Tick_4(){
+		if (this.syrSaveFloor4APIClient != null){this.alarm_cron_FloorSensors(this.syrSaveFloor4APIClient, this.config.safefloor_4_keep_online, 4);}
 	}
 
 	/**
@@ -1704,7 +1734,7 @@ class wamo extends utils.Adapter {
 	 */
 	async handle_FloorSensor_ADM_Result(FS_Value, FS_Num)
 	{
-		this.log.warn('JSON Set Admin Result of Floor Sensor No. ' + String(FS_Num) + ': ' + JSON.stringify(FS_Value));
+		if(moreMessages){this.log.info('JSON Set Admin Result of Floor Sensor No. ' + String(FS_Num) + ': ' + JSON.stringify(FS_Value));}
 		try {
 			// save Values to State Object
 			this.setStateAsync(DeviceParametetsFS.AdminMode.statePath.replace('.X.', '.' + String(FS_Num) + '.') + '.' + DeviceParametetsFS.AdminMode.id, { val: String(FS_Value['ADM(2)f']), ack: true });
@@ -1718,7 +1748,7 @@ class wamo extends utils.Adapter {
 	 */
 	async handle_FloorSensor_Sleep_Result(FS_Value, FS_Num)
 	{
-		this.log.warn('[JSON] Set Sleep mode of Floor Sensor No. ' + String(FS_Num) + ': ' + JSON.stringify(FS_Value));
+		if(moreMessages){this.log.info('[JSON] Set Sleep mode of Floor Sensor No. ' + String(FS_Num) + ': ' + JSON.stringify(FS_Value));}
 		try {
 			// save Values to State Object
 			this.setStateAsync(DeviceParametetsFS.SleepMode.statePath.replace('.X.', '.' + String(FS_Num) + '.') + '.' + DeviceParametetsFS.SleepMode.id, { val: String(FS_Value['SLP']), ack: true });
@@ -4798,11 +4828,47 @@ async function cron_poll_jam_protection() {
 
 /**
  * Cron event handler
- * [Floor Sensors loop]
+ * [Floor Sensors 1 loop]
  */
-async function cron_poll_FloorSensors() {
+async function cron_poll_FloorSensor_1() {
 	try {
-		await myAdapter.alarm_cron_FloorSensors_Tick();
+		await myAdapter.alarm_cron_FloorSensor_Tick_1();
+	} catch (err) {
+		//throw new Error(err);
+	}
+}
+
+/**
+ * Cron event handler
+ * [Floor Sensors 2 loop]
+ */
+async function cron_poll_FloorSensor_2() {
+	try {
+		await myAdapter.alarm_cron_FloorSensor_Tick_2();
+	} catch (err) {
+		//throw new Error(err);
+	}
+}
+
+/**
+ * Cron event handler
+ * [Floor Sensors 3 loop]
+ */
+async function cron_poll_FloorSensor_3() {
+	try {
+		await myAdapter.alarm_cron_FloorSensor_Tick_3();
+	} catch (err) {
+		//throw new Error(err);
+	}
+}
+
+/**
+ * Cron event handler
+ * [Floor Sensors 4 loop]
+ */
+async function cron_poll_FloorSensor_4() {
+	try {
+		await myAdapter.alarm_cron_FloorSensor_Tick_4();
 	} catch (err) {
 		//throw new Error(err);
 	}
