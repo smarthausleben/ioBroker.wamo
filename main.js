@@ -1563,6 +1563,34 @@ class wamo extends utils.Adapter {
 	}
 
 	/**
+	 * Cron action
+	 * [Floor Sensor 1]
+	 */
+	async alarm_cron_FloorSensor_Tick_1(){
+		if (this.syrSaveFloor1APIClient != null){this.alarm_cron_FloorSensors(this.syrSaveFloor1APIClient, this.config.safefloor_1_keep_online, 1);}}
+
+	/**
+	 * Cron action
+	 * [Floor Sensor 2]
+	 */
+	async alarm_cron_FloorSensor_Tick_2(){
+		if (this.syrSaveFloor2APIClient != null){this.alarm_cron_FloorSensors(this.syrSaveFloor2APIClient, this.config.safefloor_2_keep_online, 2);}}
+
+	/**
+	 * Cron action
+	 * [Floor Sensor 3]
+	 */
+	async alarm_cron_FloorSensor_Tick_3(){
+		if (this.syrSaveFloor3APIClient != null){this.alarm_cron_FloorSensors(this.syrSaveFloor3APIClient, this.config.safefloor_3_keep_online, 3);}}
+
+	/**
+	 * Cron action
+	 * [Floor Sensor 4]
+	 */
+	async alarm_cron_FloorSensor_Tick_4(){
+		if (this.syrSaveFloor4APIClient != null){this.alarm_cron_FloorSensors(this.syrSaveFloor4APIClient, this.config.safefloor_4_keep_online, 4);}}
+
+	/**
 	 * This function is for polling data from FloorSensors
 	 *
 	 * @param {*} AxiosHandlerToUse - Axios handler we have to use for the API request
@@ -1620,42 +1648,15 @@ class wamo extends utils.Adapter {
 	}
 
 	/**
-	 * Cron action
-	 * [Floor Sensor 1]
-	 */
-	async alarm_cron_FloorSensor_Tick_1(){
-		if (this.syrSaveFloor1APIClient != null){this.alarm_cron_FloorSensors(this.syrSaveFloor1APIClient, this.config.safefloor_1_keep_online, 1);}}
-
-	/**
-	 * Cron action
-	 * [Floor Sensor 2]
-	 */
-	async alarm_cron_FloorSensor_Tick_2(){
-		if (this.syrSaveFloor2APIClient != null){this.alarm_cron_FloorSensors(this.syrSaveFloor2APIClient, this.config.safefloor_2_keep_online, 2);}}
-
-	/**
-	 * Cron action
-	 * [Floor Sensor 3]
-	 */
-	async alarm_cron_FloorSensor_Tick_3(){
-		if (this.syrSaveFloor3APIClient != null){this.alarm_cron_FloorSensors(this.syrSaveFloor3APIClient, this.config.safefloor_3_keep_online, 3);}}
-
-	/**
-	 * Cron action
-	 * [Floor Sensor 4]
-	 */
-	async alarm_cron_FloorSensor_Tick_4(){
-		if (this.syrSaveFloor4APIClient != null){this.alarm_cron_FloorSensors(this.syrSaveFloor4APIClient, this.config.safefloor_4_keep_online, 4);}}
-
-	/**
 	 * This function precesses the date we got from a SafeTech Floor Sensor
 	 * @param {*} FS_Data - Json Data from the Floor Sensor
 	 * @param {*} num_FloorSensor - Number of the corresponding Floor Sensor
 	 */
 	async handle_FloorSensor_Data(FS_Data, num_FloorSensor) {
 		try {
-			this.log.info('Data received from Floor Sensor No. ' + String(num_FloorSensor));
+			this.log.info('Floor Sensor No. ' + String(num_FloorSensor) + ' Data received');
 			if(moreMessages){this.log.info('JSON data of Floor Sensor No. ' + String(num_FloorSensor) + ': ' + JSON.stringify(FS_Data));}
+
 			// iterate through all requested Parameters
 			for (const key in DeviceParametetsFS) {
 				let ToStore;
@@ -1735,8 +1736,10 @@ class wamo extends utils.Adapter {
 	{
 		if(moreMessages){this.log.info('JSON Set Admin Result of Floor Sensor No. ' + String(FS_Num) + ': ' + JSON.stringify(FS_Value));}
 		try {
+			let stateValue = null;
+			if(String(FS_Value['ADM(2)f']) == 'FACTORY'){stateValue = true;}else{stateValue = false;}
 			// save Values to State Object
-			this.setStateAsync(DeviceParametetsFS.AdminMode.statePath.replace('.X.', '.' + String(FS_Num) + '.') + '.' + DeviceParametetsFS.AdminMode.id, { val: String(FS_Value['ADM(2)f']), ack: true });
+			this.setStateAsync(DeviceParametetsFS.AdminMode.statePath.replace('.X.', '.' + String(FS_Num) + '.') + '.' + DeviceParametetsFS.AdminMode.id, { val: stateValue, ack: true, expire: 30});
 		} catch (err) { this.log.error('Saving Set Admin Result of Floor Sensor No. ' + String(FS_Num) + '" has failed. ' + err); }
 	}
 
@@ -1749,8 +1752,10 @@ class wamo extends utils.Adapter {
 	{
 		if(moreMessages){this.log.info('[JSON] Set Sleep mode of Floor Sensor No. ' + String(FS_Num) + ': ' + JSON.stringify(FS_Value));}
 		try {
+			let stateValue = null;
+			if(String(FS_Value['SLP']) == 'OK'){stateValue = true;}else{stateValue = false;}
 			// save Values to State Object
-			this.setStateAsync(DeviceParametetsFS.SleepMode.statePath.replace('.X.', '.' + String(FS_Num) + '.') + '.' + DeviceParametetsFS.SleepMode.id, { val: String(FS_Value['SLP']), ack: true });
+			this.setStateAsync(DeviceParametetsFS.SleepMode.statePath.replace('.X.', '.' + String(FS_Num) + '.') + '.' + DeviceParametetsFS.SleepMode.id, { val: stateValue, ack: true, expire: 30});
 		} catch (err) { this.log.error('Set Sleep mode Result of Floor Sensor No. ' + String(FS_Num) + '" has failed. ' + err); }
 	}
 
