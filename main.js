@@ -1422,7 +1422,7 @@ class wamo extends utils.Adapter {
 					if (DeviceParameters[key].saveRawData && LP_Data['get' + String(DeviceParameters[key].id)] !== undefined) {
 						this.log.warn('Raw Data storage needs integration!!!');
 					}
-					this.log.warn('this.convertDeviceReturnValue() return: ' + String(this.convertDeviceReturnValue(String(DeviceParameters[key].id), LP_Data['get' + DeviceParameters[key].id])));
+					this.log.warn('this.convertDeviceReturnValue() return: ' + String(await this.convertDeviceReturnValue(String(DeviceParameters[key].id), LP_Data['get' + DeviceParameters[key].id])));
 				}
 				else {
 					this.log.warn('Parameter ' + String(key) + ' is not implemented yet.');
