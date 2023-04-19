@@ -261,6 +261,10 @@ class wamo extends utils.Adapter {
 					keepAlive: true
 				})
 			});
+
+			//######################### TESTING ###############################################
+			await this.LeakageDevice_GetAll();
+			//####################### END TESTING #############################################
 		}
 
 		//=====================================================================================================================
@@ -1374,6 +1378,35 @@ class wamo extends utils.Adapter {
 				break;
 
 			default:
+		}
+	}
+
+	async LeakageDevice_GetAll() {
+		if (this.syrApiClient != null) {
+			try {
+				await this.set_SERVICE_Mode();
+
+				await this.delay(500);	// waiting 500mS to avoid Axios "socket hang up"
+				// request data from Floor Sensor
+				try {
+					const LeakageProtectioData = await this.syrApiClient.get('get/' + 'ALL');
+					NetworkDevices.LeakageDevice_responding = true;
+					this.setInstanceLED();
+					if (LeakageProtectioData.status == 200) {
+						this.log.warn(JSON.stringify(LeakageProtectioData.data));
+					}
+					else{
+						this.log.warn('Leakage Devise response: ' + String(LeakageProtectioData.status + ' ' + String(LeakageProtectioData.statusText)));
+					}
+				} catch (err) {
+					NetworkDevices.LeakageDevice_responding = false;
+					this.setInstanceLED();
+					this.log.error('Leakage Protection getAll: ' + String(err));
+				}
+			}
+			catch (err) {
+				this.log.error('[async LeakageDevice_GetAll()] ' + String(err));
+			}
 		}
 	}
 
