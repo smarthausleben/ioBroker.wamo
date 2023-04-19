@@ -34,6 +34,7 @@ const {
 	AdapterChannelsFS,
 	DeviceParametetsFS
 } = require('./lib/device-parametersFS');
+const { networkInterfaces } = require('os');
 
 /* cron definitions for the varius cron timers.
 (cron timers are for statistik data collection) */
@@ -91,6 +92,14 @@ let interfaceBusyCounter = 0;
 const interfaceBusyMaxBeforeReaset = 10;
 let SystemLanguage;
 let MainValveJammProtection_running = false;
+
+let NetworkDevices = {
+	LeakageDevice_responding: false,
+	FS_1_responding: false,
+	FS_2_responding: false,
+	FS_3_responding: false,
+	FS_4_responding: false
+};
 
 class wamo extends utils.Adapter {
 
@@ -1651,9 +1660,8 @@ class wamo extends utils.Adapter {
 			// we delay the the function call randomly between 0 and 5 (4.95) seconds
 			// in order to avoide collition with other maybe running instances
 			const delayTime = Math.round(((Math.random() * 10000) / 2));
-			this.log.warn('we delay Flor Sensor request for ' + String(delayTime) + ' ms');
+			this.log.debug('we delay Floor Sensor request for ' + String(delayTime) + ' ms');
 			await this.delay(delayTime);
-			this.log.warn('now we trigger ..');
 			this.alarm_cron_FloorSensors(this.syrSaveFloor1APIClient, this.config.safefloor_1_keep_online, 1);
 		}
 	}
@@ -1705,7 +1713,7 @@ class wamo extends utils.Adapter {
 					// request data from Floor Sensor
 					const FS_Data = await AxiosHandlerToUse.get('get/' + 'ALL');
 					if (FS_Data.status === 200) {
-
+						this.set_FloorSensorConnectionStatus(FlooreSensNo, true); // no await on purpose
 						//  We got Data and handle them asyncron (so NO AWAIT the data handling process)
 						this.handle_FloorSensor_Data(FS_Data.data, FlooreSensNo);
 
@@ -1715,13 +1723,47 @@ class wamo extends utils.Adapter {
 							this.FS_set_SLEEP_Mode(AxiosHandlerToUse, FlooreSensNo);
 						}
 					}
-					else { this.log.warn('Floor Sensor ' + FlooreSensNo + ' API response Status: ' + String(FS_Data.status) + ' ' + String(FS_Data.statusText)); }
+					else {
+						this.set_FloorSensorConnectionStatus(FlooreSensNo, true); // no await on purpose 
+						this.log.warn('Floor Sensor ' + FlooreSensNo + ' API response Status: ' + String(FS_Data.status) + ' ' + String(FS_Data.statusText)); 
+					}
 				} catch (err) {
+					this.set_FloorSensorConnectionStatus(FlooreSensNo, false); // no await on purpose
 					// connect EHOSTUNREACH Fehler sollte nicht ausgegeben werden
 					this.log.error('Floor Sensor ' + FlooreSensNo + ' API request ' + err);
 				}
 			}
 		} catch (err) { this.log.error('[async alarm_cron_FloorSensors_Tick()] ' + err); }
+	}
+
+
+	async set_FloorSensorConnectionStatus(FS_Number, IsOnline){
+		switch(FS_Number){
+			case 1:
+				NetworkDevices.FS_1_responding = IsOnline;
+				break;
+			case 2:
+				NetworkDevices.FS_2_responding = IsOnline;
+				break;
+			case 3:
+				NetworkDevices.FS_3_responding = IsOnline;
+				break;
+			case 4:
+				NetworkDevices.FS_4_responding = IsOnline;
+				break;
+		}
+		this.setInstanceLED(); // no await on purpose
+	}
+
+	async setInstanceLED()
+	{
+		let ConnLED_ON = false;
+		for (const key in NetworkDevices) {
+			if(key){ConnLED_ON = true; break;}
+		}
+		try{this.setStateAsync('info.connection', { val: ConnLED_ON, ack: true }); // no await on purpose
+		}
+		catch (err){this.log.warn('[async set_Info_LED()] Setting instance connection indicator ' + err);}
 	}
 
 	/**
@@ -1847,12 +1889,15 @@ class wamo extends utils.Adapter {
 			// Set Admin Mode
 			const AdminResult = await AxiosHandlerToUse.get('set/' + Parameter_FACTORY_Mode);
 			if (AdminResult.status === 200) {
+				this.set_FloorSensorConnectionStatus(FlooreSensNo, true); // no await on purpose
 				this.handle_FloorSensor_ADM_Result(AdminResult.data, FlooreSensNo);
 				return true;
 			}
+			this.set_FloorSensorConnectionStatus(FlooreSensNo, true); // no await on purpose
 			this.log.warn('Set ADMIN mode Floor Sensor No. ' + String(FlooreSensNo) + ' returned wrong status: ' + String(AdminResult.status) + ' ' + String(AdminResult.statusText));
 			return false;
 		} catch (err) {
+			this.set_FloorSensorConnectionStatus(FlooreSensNo, false); // no await on purpose
 			if (moreMessages) { this.log.error('Set Admin command ' + err); }
 			if (String(err).includes('connect EHOSTUNREACH')) {
 				// device not reachable we skipp further requests against this sensor
@@ -1871,18 +1916,25 @@ class wamo extends utils.Adapter {
 	 * @param {*} AxiosHandlerToUse - Axios API handler
 	 * @param {*} FlooreSensNo - Number of Floor Sensor
 	 * @returns TRUE if everithing went OK, or FALSE
-	 */async FS_set_SLEEP_Mode(AxiosHandlerToUse, FlooreSensNo)
+	 */
+	async FS_set_SLEEP_Mode(AxiosHandlerToUse, FlooreSensNo)
 	{
 		this.log.warn('Sending Floor Sensor ' + String(FlooreSensNo) + ' to sleep');
 		try {
 			//... sending Floor Sensor to sleep
 			const SleepResult = await AxiosHandlerToUse.get('set/' + 'SLP');
 			if (SleepResult.status === 200) {
+				this.set_FloorSensorConnectionStatus(FlooreSensNo, true); // no await on purpose
 				this.handle_FloorSensor_Sleep_Result(SleepResult.data, FlooreSensNo);
 				return true;
 			}
+			this.set_FloorSensorConnectionStatus(FlooreSensNo, true); // no await on purpose
+			this.log.warn('Set SLEEP mode Floor Sensor No. ' + String(FlooreSensNo) + ' returned wrong status: ' + String(SleepResult.status) + ' ' + String(SleepResult.statusText));
 			return false;
-		} catch (err) { this.log.error('Sending Floor Sensor ' + FlooreSensNo + ' to sleep ' + err);}
+		} catch (err) {
+			this.set_FloorSensorConnectionStatus(FlooreSensNo, false); // no await on purpose
+			this.log.error('Sending Floor Sensor ' + FlooreSensNo + ' to sleep ' + err);
+		}
 
 		return false;
 	}
@@ -1904,7 +1956,7 @@ class wamo extends utils.Adapter {
 
 			// Do we have initialised syrApiClient?
 			if (this.syrApiClient != null) {
-				let currentconsumption;
+				let currentconsumption = null;
 				const max_trys = 10;
 				const wait_time_between_consumption_reading = 60000;
 				let trys = 0;
@@ -1919,15 +1971,24 @@ class wamo extends utils.Adapter {
 				while (!consumption_is_zero) {
 					interfaceBusy = true;
 					// get current water consumption from device
-					currentconsumption = (await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentVolume.id)));
-					interfaceBusy = false;
+					try{
+						currentconsumption = await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentVolume.id));
+						NetworkDevices.LeakageDevice_responding = true;
+						this.setInstanceLED();
+						interfaceBusy = false;
+						// is there no water consumption?
+						if (JSON.stringify(currentconsumption.data['getAVO']) == '"0mL"') {
+							consumption_is_zero = true;
+							break;
+						}
+					}
+					catch (err) {
+						NetworkDevices.LeakageDevice_responding = false;
+						this.setInstanceLED();
+						this.log.error(err);
+					}
 					// increase request counter
 					trys++;
-					// is there no water consumption?
-					if (JSON.stringify(currentconsumption.data['getAVO']) == '"0mL"') {
-						consumption_is_zero = true;
-						break;
-					}
 					// did we reach maximum amount of requests?
 					if (trys >= max_trys) {
 						// we cancle jam protection because of ongoing water consumption
@@ -2046,20 +2107,29 @@ class wamo extends utils.Adapter {
 				this.log.debug('[JAM PROTECTION] Set service Mode');
 				await this.set_SERVICE_Mode();
 				this.log.info('[JAM PROTECTION] Reading main valve State');
-
-				// Get current Valve Status
-				let deviceResponse = await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentValveStatus.id));
-				if (deviceResponse.status === 200) {
-					if (apiResponseInfoMessages) { this.log.info('[JAM PROTECTION] syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
-					valve_state = JSON.stringify(deviceResponse.data['getVLV']);
-					this.log.debug('[JAM PROTECTION] Current Main valve Status = ' + String(valve_state));
+				let deviceResponse = null;
+				try{
+					// Get current Valve Status
+					deviceResponse = await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentValveStatus.id));
+					if (deviceResponse.status === 200) {
+						NetworkDevices.LeakageDevice_responding = true;
+						this.setInstanceLED();
+						if (apiResponseInfoMessages) { this.log.info('[JAM PROTECTION] syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
+						valve_state = JSON.stringify(deviceResponse.data['getVLV']);
+						this.log.debug('[JAM PROTECTION] Current Main valve Status = ' + String(valve_state));
+					}
+					else {
+						NetworkDevices.LeakageDevice_responding = true;
+						this.setInstanceLED();
+						// no response from device
+						this.log.warn('Error reading main valve position! No valid response from device. Response: ' + String(deviceResponse.status)) + ' ' + String(deviceResponse.statusText);
+						return false;
+					}
+				} catch (err) {
+					NetworkDevices.LeakageDevice_responding = false;
+					this.setInstanceLED();
+					this.log.error('Response: ' + err);
 				}
-				else {
-					// no response from device
-					this.log.warn('Error reading main valve position! No valid response from device.');
-					return false;
-				}
-
 				if (close) {
 					if (valve_state == closedPosition) {
 						// Main valve could be already closed for a good reason and therefore we cancel the Jam Protection
@@ -2081,9 +2151,16 @@ class wamo extends utils.Adapter {
 				// Procede according valve state
 				this.log.info('[JAM PROTECTION] Moving main valve ...');
 
-				// Send moving command to Device
-				await this.syrApiClient.get('set/' + String(DeviceParameters.ShutOff.id + '/' + String(valveCommand)));
-
+				try {
+					// Send moving command to Device
+					await this.syrApiClient.get('set/' + String(DeviceParameters.ShutOff.id + '/' + String(valveCommand)));
+					NetworkDevices.LeakageDevice_responding = true;
+					this.setInstanceLED();
+				} catch (err) {
+					NetworkDevices.LeakageDevice_responding = false;
+					this.setInstanceLED();
+					this.log.error('Closing valve: ' + err);
+				}
 				// Flags to track if info message for specific valve position was already released
 				// if meassage was once published we release debug messages instead of info message
 				let closedPosition_occourred = false;
@@ -2096,61 +2173,69 @@ class wamo extends utils.Adapter {
 				while (valve_state != valve_state_target) {
 					// set special mode
 					await this.set_SERVICE_Mode();
+					try{
 					// read valve state from device
-					deviceResponse = await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentValveStatus.id));
-					// clear special mode
-					await this.clear_SERVICE_FACTORY_Mode();
+						deviceResponse = await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentValveStatus.id));
+						NetworkDevices.LeakageDevice_responding = true;
+						this.setInstanceLED();
+						// clear special mode
+						await this.clear_SERVICE_FACTORY_Mode();
 
-					// did we get a valid answer from device?
-					if (deviceResponse.status === 200) {
-						// extract valve position from JSON result
-						valve_state = JSON.stringify(deviceResponse.data['getVLV']);
-						switch (valve_state) {
-							case closedPosition:
-								if (!closedPosition_occourred) {
-									this.log.info('[JAM PROTECTION] Main valve Status = Closed');
-									closedPosition_occourred = true;
-								} else {
-									this.log.debug('[JAM PROTECTION] Main valve Status = Closed');
-								}
-								break;
-							case closingMove:
-								if (!closingMove_occourred) {
-									this.log.info('[JAM PROTECTION] Main valve Status = Closing ...');
-									closingMove_occourred = true;
-								} else {
-									this.log.debug('[JAM PROTECTION] Main valve Status = Closing ...');
-								}
-								break;
-							case openedPosition:
-								if (!openedPosition_occourred) {
-									this.log.info('[JAM PROTECTION] Main valve Status = Open');
-									openedPosition_occourred = true;
-								} else {
-									this.log.debug('[JAM PROTECTION] Main valve Status = Open');
-								}
-								break;
-							case openingMove:
-								if (!openingMove_occourred) {
-									this.log.info('[JAM PROTECTION] Main valve Status = Opening ...');
-									openingMove_occourred = true;
-								} else {
-									this.log.debug('[JAM PROTECTION] Main valve Status = Opening ...');
-								}
-								break;
-							case undefinedPosition:
-								if (!undefinedPosition_occourred) {
-									this.log.warn('[JAM PROTECTION] Main valve Status = Undefined');
-									undefinedPosition_occourred = true;
-								} else {
-									this.log.debug('[JAM PROTECTION] Main valve Status = Undefined');
-								}
-								break;
-							default:
-								this.log.error('[JAM PROTECTION] Main valve Status = Invalid return value: ' + String(valve_state));
+						// did we get a valid answer from device?
+						if (deviceResponse.status === 200) {
+							// extract valve position from JSON result
+							valve_state = JSON.stringify(deviceResponse.data['getVLV']);
+							switch (valve_state) {
+								case closedPosition:
+									if (!closedPosition_occourred) {
+										this.log.info('[JAM PROTECTION] Main valve Status = Closed');
+										closedPosition_occourred = true;
+									} else {
+										this.log.debug('[JAM PROTECTION] Main valve Status = Closed');
+									}
+									break;
+								case closingMove:
+									if (!closingMove_occourred) {
+										this.log.info('[JAM PROTECTION] Main valve Status = Closing ...');
+										closingMove_occourred = true;
+									} else {
+										this.log.debug('[JAM PROTECTION] Main valve Status = Closing ...');
+									}
+									break;
+								case openedPosition:
+									if (!openedPosition_occourred) {
+										this.log.info('[JAM PROTECTION] Main valve Status = Open');
+										openedPosition_occourred = true;
+									} else {
+										this.log.debug('[JAM PROTECTION] Main valve Status = Open');
+									}
+									break;
+								case openingMove:
+									if (!openingMove_occourred) {
+										this.log.info('[JAM PROTECTION] Main valve Status = Opening ...');
+										openingMove_occourred = true;
+									} else {
+										this.log.debug('[JAM PROTECTION] Main valve Status = Opening ...');
+									}
+									break;
+								case undefinedPosition:
+									if (!undefinedPosition_occourred) {
+										this.log.warn('[JAM PROTECTION] Main valve Status = Undefined');
+										undefinedPosition_occourred = true;
+									} else {
+										this.log.debug('[JAM PROTECTION] Main valve Status = Undefined');
+									}
+									break;
+								default:
+									this.log.error('[JAM PROTECTION] Main valve Status = Invalid return value: ' + String(valve_state));
+							}
 						}
+						else { this.log.error('[JAM PROTECTION] Device resopns status invalid at position reading during valve movement! Response Status: ' + String(deviceResponse.status)); }
+					} catch (err) {
+						NetworkDevices.LeakageDevice_responding = false;
+						this.setInstanceLED();
+						this.log.error('Reading valve status: ' + err);
 					}
-					else { this.log.error('[JAM PROTECTION] Device resopns status invalid at position reading during valve movement! Response Status: ' + String(deviceResponse.status)); }
 				}
 
 				// await this.delay(1000); // wait one second between requests
@@ -2347,16 +2432,6 @@ class wamo extends utils.Adapter {
 	async devicePing() {
 		interfaceBusy = true; // to informe other timer calls that the can't perfromn request and therefore have to skipp.
 
-		//=========================================================================================
-		//===  Connection LED to RED															===
-		//=========================================================================================
-		try {
-			await this.setStateAsync('info.connection', { val: false, ack: true });
-		}
-		catch (err) {
-			this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
-		}
-
 		if (moreMessages) { this.log.info('async devicePing() -> hit'); }
 		try {
 			if (this.syrApiClient != null) {
@@ -2367,20 +2442,15 @@ class wamo extends utils.Adapter {
 				const deviceResponse = await this.syrApiClient.get('get/');
 
 				if (deviceResponse.status === 200) {
+					NetworkDevices.LeakageDevice_responding = true;
+					this.setInstanceLED();
 					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
-					//=========================================================================================
-					//===  Connection LED to GREEN															===
-					//=========================================================================================
-					try {
-						await this.setStateAsync('info.connection', { val: true, ack: true });
-					}
-					catch (err) {
-						this.log.warn('Error at: await this.setStateAsync(\'info.connection\', { val: true, ack: true }) Error Message: ' + err);
-					}
 					interfaceBusy = false; // to informe other timer calls that they can perform request to the device.
 					interfaceBusyCounter = 0;	// Counter of interfaceBusy Reqwuest reset
 					return true;
 				} else {
+					NetworkDevices.LeakageDevice_responding = true;
+					this.setInstanceLED();
 					this.log.error('Axios response.status: ' + String(deviceResponse.status) + ' ' + String(deviceResponse.statusText));
 					// we wait some time before we return the bad news
 					this.log.warn('device ping delay successfull response ...');
@@ -2388,6 +2458,8 @@ class wamo extends utils.Adapter {
 					return false;
 				}
 			} else {
+				NetworkDevices.LeakageDevice_responding = false;
+				this.setInstanceLED();
 				throw new Error('syrApiClient is not initialized!');
 			}
 		} catch (err) {
@@ -3554,6 +3626,8 @@ class wamo extends utils.Adapter {
 			if (moreMessages) { this.log.info('Setting SERVICE mode'); }
 			if (this.syrApiClient != null) {
 				const deviceResponse = await this.syrApiClient.get('set/' + Parameter_FACTORY_Mode);
+				NetworkDevices.LeakageDevice_responding = true;
+				this.setInstanceLED();
 				if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 				return true;
 			}
@@ -3561,6 +3635,8 @@ class wamo extends utils.Adapter {
 				throw new Error('syrApiClient is not initialized!');
 			}
 		} catch (err) {
+			NetworkDevices.LeakageDevice_responding = false;
+			this.setInstanceLED();
 			throw new Error(err.message);
 		}
 	}
@@ -3574,6 +3650,8 @@ class wamo extends utils.Adapter {
 			if (moreMessages) { this.log.info('Setting FACTORY mode'); }
 			if (this.syrApiClient != null) {
 				const deviceResponse = await this.syrApiClient.get('set/' + Parameter_SERVICE_Mode);
+				NetworkDevices.LeakageDevice_responding = true;
+				this.setInstanceLED();
 				if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 				return true;
 			}
@@ -3581,6 +3659,8 @@ class wamo extends utils.Adapter {
 				throw new Error('syrApiClient is not initialized!');
 			}
 		} catch (err) {
+			NetworkDevices.LeakageDevice_responding = false;
+			this.setInstanceLED();
 			throw new Error(err.message);
 		}
 	}
@@ -3594,6 +3674,8 @@ class wamo extends utils.Adapter {
 			if (moreMessages) { this.log.info('Clearing SERVICE or FACTORY mode'); }
 			if (this.syrApiClient != null) {
 				const deviceResponse = await this.syrApiClient.get('clr/' + Parameter_Clear_SERVICE_FACTORY_Mode);
+				NetworkDevices.LeakageDevice_responding = true;
+				this.setInstanceLED();
 				if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 				return true;
 			}
@@ -3601,6 +3683,8 @@ class wamo extends utils.Adapter {
 				throw new Error('syrApiClient is not initialized!');
 			}
 		} catch (err) {
+			NetworkDevices.LeakageDevice_responding = false;
+			this.setInstanceLED();
 			throw new Error(err.message);
 		}
 	}
@@ -3995,6 +4079,8 @@ class wamo extends utils.Adapter {
 					interfaceBusy = false;
 					interfaceBusyCounter = 0;	// Counter of interfaceBusy Reqwuest reset
 					if (deviceResponse.status === 200) {
+						NetworkDevices.LeakageDevice_responding = true;
+						this.setInstanceLED();
 						if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 						if (readModeChanged) {
 							try { await this.clear_SERVICE_FACTORY_Mode(); }
@@ -4002,15 +4088,19 @@ class wamo extends utils.Adapter {
 						}
 						return deviceResponse.data;
 					}
-					throw new Error('Error reading device parameter ' + String(Parameter.id) + ': response status: ' + String(deviceResponse.status) + ' ' + String(deviceResponse.statusText));
+					NetworkDevices.LeakageDevice_responding = true;
+					this.setInstanceLED();
+					this.log.error('Error reading device parameter ' + String(Parameter.id) + ': response status: ' + String(deviceResponse.status) + ' ' + String(deviceResponse.statusText));
 				}
 				else {
-					throw new Error('syrApiClient is not initialized!');
+					this.log.error('syrApiClient is not initialized!');
 				}
 			} catch (err) {
 				// Reste interfaceBusy flag
 				interfaceBusyCounter = 0;	// Counter of interfaceBusy Reqwuest reset
 				interfaceBusy = false;
+				NetworkDevices.LeakageDevice_responding = false;
+				this.setInstanceLED();
 				if (err.response) {
 					// The request was made and the server responded with a status code
 					this.log.error('async get_DevieParameter(Parameter): Response Code: ' + String(err.message));
@@ -4084,6 +4174,8 @@ class wamo extends utils.Adapter {
 				interfaceBusy = false;
 				interfaceBusyCounter = 0;	// Counter of interfaceBusy Reqwuest reset
 				if (deviceResponse.status === 200) {
+					NetworkDevices.LeakageDevice_responding = true;
+					this.setInstanceLED();
 					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 
 					// did we have a problem?
@@ -4113,20 +4205,25 @@ class wamo extends utils.Adapter {
 					}
 					return deviceResponse.data;
 				}
+				NetworkDevices.LeakageDevice_responding = true;
+				this.setInstanceLED();
+
 				if (writeModeChanged) {
 					try { await this.clear_SERVICE_FACTORY_Mode(); }
 					catch (err) { this.log.error('async set_DevieParameter(Parameter) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err); }
 				}
 
-				throw new Error('Error reading device parameter ' + String(Parameter.id) + ': response status: ' + String(deviceResponse.status) + ' ' + String(deviceResponse.statusText));
+				this.log.error('Error reading device parameter ' + String(Parameter.id) + ': response status: ' + String(deviceResponse.status) + ' ' + String(deviceResponse.statusText));
 			}
 			else {
-				throw new Error('syrApiClient is not initialized!');
+				this.log.error('syrApiClient is not initialized!');
 			}
 		} catch (err) {
 			// Reset interfaceBusy Flag
 			interfaceBusy = false;
 			interfaceBusyCounter = 0;	// Counter of interfaceBusy Reqwuest reset
+			NetworkDevices.LeakageDevice_responding = false;
+			this.setInstanceLED();
 			if (err.response) {
 				// The request was made and the server responded with a status code
 				this.log.error('async set_DevieParameter(Parameter): Response Code: ' + String(err.message));
@@ -4160,18 +4257,24 @@ class wamo extends utils.Adapter {
 				interfaceBusy = false;
 				interfaceBusyCounter = 0;	// Counter of interfaceBusy Reqwuest reset
 				if (deviceResponse.status === 200) {
+					NetworkDevices.LeakageDevice_responding = true;
+					this.setInstanceLED();
 					if (apiResponseInfoMessages) { this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 					return deviceResponse.data;
 				}
-				throw new Error('Error reading device parameter ' + ParameterID + String(ProfileNumber) + ': response status: ' + String(deviceResponse.status) + ' ' + String(deviceResponse.statusText));
+				NetworkDevices.LeakageDevice_responding = true;
+				this.setInstanceLED();
+				this.log.error('Error reading device parameter ' + ParameterID + String(ProfileNumber) + ': response status: ' + String(deviceResponse.status) + ' ' + String(deviceResponse.statusText));
 			}
 			else {
-				throw new Error('syrApiClient is not initialized!');
+				this.log.error('syrApiClient is not initialized!');
 			}
 		} catch (err) {
 			// Reset interfaceBusy Flag
 			interfaceBusy = false;
 			interfaceBusyCounter = 0;	// Counter of interfaceBusy Reqwuest reset
+			NetworkDevices.LeakageDevice_responding = false;
+			this.setInstanceLED();
 			if (err.response) {
 				// The request was made and the server responded with a status code
 				this.log.error('async get_DevieProfileParameter(ProfileNumber, ParameterID, IPadress, Port): Response Code: ' + String(err.message));
