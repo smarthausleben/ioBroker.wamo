@@ -1856,6 +1856,10 @@ class wamo extends utils.Adapter {
 				this.log.warn('No response from Floor Sensor No. ' + String(FlooreSensNo) + ', we skipp data request this time');
 				return false;
 			}
+			else {
+				this.log.warn('Floor Sensor ' + FlooreSensNo + ' API response Status: ' + err);
+				return false;
+			}
 		}
 	}
 
@@ -1875,7 +1879,7 @@ class wamo extends utils.Adapter {
 				return true;
 			}
 			return false;
-		} catch (err) { if (moreMessages) { this.log.error('Sending Floor Sensor ' + FlooreSensNo + ' to sleep ' + err); } }
+		} catch (err) { this.log.error('Sending Floor Sensor ' + FlooreSensNo + ' to sleep ' + err);}
 
 		return false;
 	}
