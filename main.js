@@ -32,7 +32,7 @@ const {
 const {
 	channelsRootNameFS,
 	AdapterChannelsFS,
-	DeviceParametetsFS
+	DeviceParametersFS
 } = require('./lib/device-parametersFS');
 const { networkInterfaces } = require('os');
 
@@ -93,7 +93,7 @@ const interfaceBusyMaxBeforeReaset = 10;
 let SystemLanguage;
 let MainValveJammProtection_running = false;
 
-let NetworkDevices = {
+const NetworkDevices = {
 	LeakageDevice_responding: false,
 	FS_1_responding: false,
 	FS_2_responding: false,
@@ -465,23 +465,23 @@ class wamo extends utils.Adapter {
 		}
 		if(this.syrSaveFloor1APIClient != null)
 		{
-			this.subscribeStates(DeviceParametetsFS.SleepMode.statePath.replace('.X.', '.1.')  + '.' + DeviceParametetsFS.SleepMode.id); // Floor Sensor 1 [SLP] Send device to sleep
-			this.subscribeStates(DeviceParametetsFS.AdminMode.statePath.replace('.X.', '.1.')  + '.' + DeviceParametetsFS.AdminMode.id); // Floor Sensor 1 [ADM(2)f] Set device ADMIN mode
+			this.subscribeStates(DeviceParametersFS.SleepMode.statePath.replace('.X.', '.1.')  + '.' + DeviceParametersFS.SleepMode.id); // Floor Sensor 1 [SLP] Send device to sleep
+			this.subscribeStates(DeviceParametersFS.AdminMode.statePath.replace('.X.', '.1.')  + '.' + DeviceParametersFS.AdminMode.id); // Floor Sensor 1 [ADM(2)f] Set device ADMIN mode
 		}
 		if(this.syrSaveFloor2APIClient != null)
 		{
-			this.subscribeStates(DeviceParametetsFS.SleepMode.statePath.replace('.X.', '.2.')  + '.' + DeviceParametetsFS.SleepMode.id); // Floor Sensor 2 [SLP] Send device to sleep
-			this.subscribeStates(DeviceParametetsFS.AdminMode.statePath.replace('.X.', '.2.')  + '.' + DeviceParametetsFS.AdminMode.id); // Floor Sensor 2 [ADM(2)f] Set device ADMIN mode
+			this.subscribeStates(DeviceParametersFS.SleepMode.statePath.replace('.X.', '.2.')  + '.' + DeviceParametersFS.SleepMode.id); // Floor Sensor 2 [SLP] Send device to sleep
+			this.subscribeStates(DeviceParametersFS.AdminMode.statePath.replace('.X.', '.2.')  + '.' + DeviceParametersFS.AdminMode.id); // Floor Sensor 2 [ADM(2)f] Set device ADMIN mode
 		}
 		if(this.syrSaveFloor3APIClient != null)
 		{
-			this.subscribeStates(DeviceParametetsFS.SleepMode.statePath.replace('.X.', '.3.')  + '.' + DeviceParametetsFS.SleepMode.id); // Floor Sensor 3 [SLP] Send device to sleep
-			this.subscribeStates(DeviceParametetsFS.AdminMode.statePath.replace('.X.', '.3.')  + '.' + DeviceParametetsFS.AdminMode.id); // Floor Sensor 3 [ADM(2)f] Set device ADMIN mode
+			this.subscribeStates(DeviceParametersFS.SleepMode.statePath.replace('.X.', '.3.')  + '.' + DeviceParametersFS.SleepMode.id); // Floor Sensor 3 [SLP] Send device to sleep
+			this.subscribeStates(DeviceParametersFS.AdminMode.statePath.replace('.X.', '.3.')  + '.' + DeviceParametersFS.AdminMode.id); // Floor Sensor 3 [ADM(2)f] Set device ADMIN mode
 		}
 		if(this.syrSaveFloor4APIClient != null)
 		{
-			this.subscribeStates(DeviceParametetsFS.SleepMode.statePath.replace('.X.', '.4.')  + '.' + DeviceParametetsFS.SleepMode.id); // Floor Sensor 4 [SLP] Send device to sleep
-			this.subscribeStates(DeviceParametetsFS.AdminMode.statePath.replace('.X.', '.4.')  + '.' + DeviceParametetsFS.AdminMode.id); // Floor Sensor 4 [ADM(2)f] Set device ADMIN mode
+			this.subscribeStates(DeviceParametersFS.SleepMode.statePath.replace('.X.', '.4.')  + '.' + DeviceParametersFS.SleepMode.id); // Floor Sensor 4 [SLP] Send device to sleep
+			this.subscribeStates(DeviceParametersFS.AdminMode.statePath.replace('.X.', '.4.')  + '.' + DeviceParametersFS.AdminMode.id); // Floor Sensor 4 [ADM(2)f] Set device ADMIN mode
 		}
 
 		// reference to Adapter
@@ -1336,14 +1336,14 @@ class wamo extends utils.Adapter {
 				//============================================================================
 				// Floor Sensor 1: Sleep Mode
 				//============================================================================
-				else if ((id == statePrefix + DeviceParametetsFS.SleepMode.statePath.replace('.X.', '.1.') + '.' + DeviceParametetsFS.SleepMode.id) && state.ack == false) {
-					this.handle_FS_state_changes(this.syrSaveFloor1APIClient, 1, DeviceParametetsFS.SleepMode.id);
+				else if ((id == statePrefix + DeviceParametersFS.SleepMode.statePath.replace('.X.', '.1.') + '.' + DeviceParametersFS.SleepMode.id) && state.ack == false) {
+					this.handle_FS_state_changes(this.syrSaveFloor1APIClient, 1, DeviceParametersFS.SleepMode.id);
 				}
 				//============================================================================
 				// Floor Sensor 1: Admin Mode
 				//============================================================================
-				else if ((id == statePrefix + DeviceParametetsFS.AdminMode.statePath.replace('.X.', '.1.') + '.' + DeviceParametetsFS.AdminMode.id) && state.ack == false) {
-					this.handle_FS_state_changes(this.syrSaveFloor1APIClient, 1, DeviceParametetsFS.AdminMode.id);
+				else if ((id == statePrefix + DeviceParametersFS.AdminMode.statePath.replace('.X.', '.1.') + '.' + DeviceParametersFS.AdminMode.id) && state.ack == false) {
+					this.handle_FS_state_changes(this.syrSaveFloor1APIClient, 1, DeviceParametersFS.AdminMode.id);
 				}
 
 				//############################################################################
@@ -1370,10 +1370,10 @@ class wamo extends utils.Adapter {
 	{
 		this.log.warn('Floor sensor state change: Floor Sensor No. ' + String(FS_Number) + ' State ID: ' + String(FS_State_ID));
 		switch (FS_State_ID) {
-			case DeviceParametetsFS.AdminMode.id:
+			case DeviceParametersFS.AdminMode.id:
 				this.FS_set_AMIN_Mode(FS_Handler, FS_Number);
 				break;
-			case DeviceParametetsFS.SleepMode.id:
+			case DeviceParametersFS.SleepMode.id:
 				this.FS_set_SLEEP_Mode(FS_Handler, FS_Number);
 				break;
 
@@ -1381,18 +1381,22 @@ class wamo extends utils.Adapter {
 		}
 	}
 
+	/**
+	 * this function gets all parameters from the device
+	 */
 	async LeakageDevice_GetAll() {
 		if (this.syrApiClient != null) {
 			try {
 				await this.set_SERVICE_Mode();
 
 				await this.delay(500);	// waiting 500mS to avoid Axios "socket hang up"
-				// request data from Floor Sensor
+				// request data from Leakage Device
 				try {
 					const LeakageProtectioData = await this.syrApiClient.get('get/' + 'ALL');
 					NetworkDevices.LeakageDevice_responding = true;
 					this.setInstanceLED();
 					if (LeakageProtectioData.status == 200) {
+						this.LeakageDevice_HandleAll(LeakageProtectioData.data);
 						this.log.warn(JSON.stringify(LeakageProtectioData.data));
 					}
 					else{
@@ -1408,6 +1412,28 @@ class wamo extends utils.Adapter {
 				this.log.error('[async LeakageDevice_GetAll()] ' + String(err));
 			}
 		}
+	}
+
+	async LeakageDevice_HandleAll(LP_Data) {
+		try {
+			// iterate through all requested Parameters
+			for (const key in DeviceParameters) {
+				if (LP_Data[key] != undefined) {
+					if (DeviceParameters[key].saveRawData && LP_Data[String(DeviceParameters[key].id)] !== undefined) {
+						this.log.warn('Raw data integration');
+					}
+
+					this.log.warn('this.convertDeviceReturnValue() return: ' + String(this.convertDeviceReturnValue(key, LP_Data[key])));
+				}
+				else {
+					this.log.warn('Parameter ' + String(key) + ' is not implemented yet.');
+				}
+			}
+
+		} catch (err) {
+			this.log.error('[async LeakageDevice_HandleAll(Data)] ' + String(err));
+		}
+
 	}
 
 	/**
@@ -1679,8 +1705,8 @@ class wamo extends utils.Adapter {
 		// only execute if Flag is set to TRUE
 		if (!executeTestingLoop) { return; }
 		this.log.warn('[Testing Loop] Trigger');
-		for (const key in DeviceParametetsFS) {
-			this.log.warn('DeviceParameterFS.id: ' + String(DeviceParametetsFS[key].id) + ' is defined');
+		for (const key in DeviceParametersFS) {
+			this.log.warn('DeviceParameterFS.id: ' + String(DeviceParametersFS[key].id) + ' is defined');
 		}
 	}
 
@@ -1810,29 +1836,29 @@ class wamo extends utils.Adapter {
 			if(moreMessages){this.log.info('JSON data of Floor Sensor No. ' + String(num_FloorSensor) + ': ' + JSON.stringify(FS_Data));}
 
 			// iterate through all requested Parameters
-			for (const key in DeviceParametetsFS) {
+			for (const key in DeviceParametersFS) {
 				let ToStore;
 				try {
-					if(DeviceParametetsFS[key].saveRawData && FS_Data[String(DeviceParametetsFS[key].id)] !== undefined)
+					if(DeviceParametersFS[key].saveRawData && FS_Data[String(DeviceParametersFS[key].id)] !== undefined)
 					{
 						// save Raw Values to State Object
-						this.setStateAsync(AdapterChannelsFS.DeviceRawData.path.replace('.X.', '.' + String(num_FloorSensor) + '.') + '.' + DeviceParametetsFS[key].id, { val: '{"' + DeviceParametetsFS[key].id + '":"' + String(FS_Data[String(DeviceParametetsFS[key].id)]) + '"}', ack: true });
+						this.setStateAsync(AdapterChannelsFS.DeviceRawData.path.replace('.X.', '.' + String(num_FloorSensor) + '.') + '.' + DeviceParametersFS[key].id, { val: '{"' + DeviceParametersFS[key].id + '":"' + String(FS_Data[String(DeviceParametersFS[key].id)]) + '"}', ack: true });
 					}
-				} catch (err) { this.log.error('Saving Floor Sensor RAW value to state "' + String(DeviceParametetsFS[key].id) + '" has failed. ' + err); }
+				} catch (err) { this.log.error('Saving Floor Sensor RAW value to state "' + String(DeviceParametersFS[key].id) + '" has failed. ' + err); }
 				try {
 					// is the current device parameter present in sensor return data?
-					if(FS_Data[String(DeviceParametetsFS[key].id)] !== undefined){
-						if(moreMessages){this.log.info('Value of "' + String(DeviceParametetsFS[key].id) + '" = ' + String(FS_Data[String(DeviceParametetsFS[key].id)]));}
+					if(FS_Data[String(DeviceParametersFS[key].id)] !== undefined){
+						if(moreMessages){this.log.info('Value of "' + String(DeviceParametersFS[key].id) + '" = ' + String(FS_Data[String(DeviceParametersFS[key].id)]));}
 						// converte returned value into final value
-						ToStore = await this.handle_FloorSensor_Value(String(DeviceParametetsFS[key].id), String(DeviceParametetsFS[key].objectdefinition.common.type), String(FS_Data[DeviceParametetsFS[key].id]));
+						ToStore = await this.handle_FloorSensor_Value(String(DeviceParametersFS[key].id), String(DeviceParametersFS[key].objectdefinition.common.type), String(FS_Data[DeviceParametersFS[key].id]));
 						if (ToStore != null) {
 							try {
 								// save Values to State Object
-								this.setStateAsync(DeviceParametetsFS[key].statePath.replace('.X.', '.' + String(num_FloorSensor) + '.') + '.' + DeviceParametetsFS[key].id, { val: ToStore, ack: true });
-							} catch (err) { this.log.error('Saving Floor Sensor value to state "' + String(DeviceParametetsFS[key].id) + '" has failed. ' + err); }
-						} else { this.log.warn('Saving Floor Sensor value to state "' + String(DeviceParametetsFS[key].id) + '" was skipped because of NULL value.'); }
+								this.setStateAsync(DeviceParametersFS[key].statePath.replace('.X.', '.' + String(num_FloorSensor) + '.') + '.' + DeviceParametersFS[key].id, { val: ToStore, ack: true });
+							} catch (err) { this.log.error('Saving Floor Sensor value to state "' + String(DeviceParametersFS[key].id) + '" has failed. ' + err); }
+						} else { this.log.warn('Saving Floor Sensor value to state "' + String(DeviceParametersFS[key].id) + '" was skipped because of NULL value.'); }
 					}
-				} catch (err) {this.log.error('Converting Floor Sensor value "' + String(DeviceParametetsFS[key].id) + '" has failed. ' + err);}
+				} catch (err) {this.log.error('Converting Floor Sensor value "' + String(DeviceParametersFS[key].id) + '" has failed. ' + err);}
 			}
 		} catch (err) {this.log.error('[async handle_FloorSensor_Data(FS_Data, num_FloorSensor)] Floore Sensor: ' + String(num_FloorSensor) + ' ' + err);}
 	}
@@ -1891,7 +1917,7 @@ class wamo extends utils.Adapter {
 			let stateValue = null;
 			if(String(FS_Value['ADM(2)f']) == 'FACTORY'){stateValue = true;}else{stateValue = false;}
 			// save Values to State Object
-			this.setStateAsync(DeviceParametetsFS.AdminMode.statePath.replace('.X.', '.' + String(FS_Num) + '.') + '.' + DeviceParametetsFS.AdminMode.id, { val: stateValue, ack: true, expire: 30});
+			this.setStateAsync(DeviceParametersFS.AdminMode.statePath.replace('.X.', '.' + String(FS_Num) + '.') + '.' + DeviceParametersFS.AdminMode.id, { val: stateValue, ack: true, expire: 30});
 		} catch (err) { this.log.error('Saving Set Admin Result of Floor Sensor No. ' + String(FS_Num) + '" has failed. ' + err); }
 	}
 
@@ -1907,7 +1933,7 @@ class wamo extends utils.Adapter {
 			let stateValue = null;
 			if(String(FS_Value['SLP']) == 'OK'){stateValue = true;}else{stateValue = false;}
 			// save Values to State Object
-			this.setStateAsync(DeviceParametetsFS.SleepMode.statePath.replace('.X.', '.' + String(FS_Num) + '.') + '.' + DeviceParametetsFS.SleepMode.id, { val: stateValue, ack: true, expire: 30});
+			this.setStateAsync(DeviceParametersFS.SleepMode.statePath.replace('.X.', '.' + String(FS_Num) + '.') + '.' + DeviceParametersFS.SleepMode.id, { val: stateValue, ack: true, expire: 30});
 		} catch (err) { this.log.error('Set Sleep mode Result of Floor Sensor No. ' + String(FS_Num) + '" has failed. ' + err); }
 	}
 
@@ -2687,15 +2713,15 @@ class wamo extends utils.Adapter {
 		try {
 			this.log.info('creating Floor Sensor ' + String(numberFloorSensor) + ' state objects ...');
 			// Creating device parameter states
-			for (const key in DeviceParametetsFS) {
-				const stateID = String(DeviceParametetsFS[key].statePath.replace('.X.', '.' + String(numberFloorSensor) + '.')) + '.' + String(DeviceParametetsFS[key].id);
+			for (const key in DeviceParametersFS) {
+				const stateID = String(DeviceParametersFS[key].statePath.replace('.X.', '.' + String(numberFloorSensor) + '.')) + '.' + String(DeviceParametersFS[key].id);
 				try {
 					// do we need to crate this object on startup?
-					if (DeviceParametetsFS[key].createOnStartup) {
-						await this.setObjectNotExistsAsync(stateID, DeviceParametetsFS[key].objectdefinition);
+					if (DeviceParametersFS[key].createOnStartup) {
+						await this.setObjectNotExistsAsync(stateID, DeviceParametersFS[key].objectdefinition);
 						this.log.debug('State: "' + stateID + '" created');
 						// creating matching RAW State objects
-						await this.createRawStateObject(DeviceParametetsFS[key], AdapterChannelsFS.DeviceRawData.path.replace('.X.', '.' + String(numberFloorSensor) + '.'));
+						await this.createRawStateObject(DeviceParametersFS[key], AdapterChannelsFS.DeviceRawData.path.replace('.X.', '.' + String(numberFloorSensor) + '.'));
 						this.log.debug('Raw State: "' + stateID + '" created');
 					}
 				} catch (err) {
