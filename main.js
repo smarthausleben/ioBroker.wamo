@@ -1647,7 +1647,16 @@ class wamo extends utils.Adapter {
 	 * [Floor Sensor 1]
 	 */
 	async alarm_cron_FloorSensor_Tick_1(){
-		if (this.syrSaveFloor1APIClient != null){this.alarm_cron_FloorSensors(this.syrSaveFloor1APIClient, this.config.safefloor_1_keep_online, 1);}}
+		if (this.syrSaveFloor1APIClient != null){
+			const rnd = Math.random();
+			this.log.warn('Zufallszahl' + String(rnd));
+			this.log.warn('* 10 = ' + String(rnd * 10));
+			this.log.warn('* 100 = ' + String(rnd * 100));
+			this.log.warn('* 1000 = ' + String(rnd * 1000));
+			this.log.warn('* 10000 = ' + String(rnd * 10000));
+			this.alarm_cron_FloorSensors(this.syrSaveFloor1APIClient, this.config.safefloor_1_keep_online, 1);
+		}
+	}
 
 	/**
 	 * Cron action
