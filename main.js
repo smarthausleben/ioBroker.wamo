@@ -170,7 +170,7 @@ class wamo extends utils.Adapter {
 				await this.initDevicesAndChanels();
 			}
 			else{
-				this.log.warn('No "Water Protection Device" configured!');
+				this.log.warn('No "Leakage Protection Device" configured!');
 			}
 		} catch (err) {
 			this.log.error('Error initStatesAndChanels: ' + err);
@@ -1650,7 +1650,10 @@ class wamo extends utils.Adapter {
 		if (this.syrSaveFloor1APIClient != null){
 			// we delay the the function call randomly between 0 and 5 (4.95) seconds
 			// in order to avoide collition with other maybe running instances
-			await this.delay(Math.random() * 1000 / 2);
+			const delayTime = Math.random() * 1000 / 2;
+			this.log.warn('we delay Flor Sensor request for ' + String(delayTime) + ' ms');
+			await this.delay(delayTime);
+			this.log.warn('now we trigger ..');
 			this.alarm_cron_FloorSensors(this.syrSaveFloor1APIClient, this.config.safefloor_1_keep_online, 1);
 		}
 	}
