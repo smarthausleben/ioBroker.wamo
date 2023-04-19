@@ -1650,7 +1650,7 @@ class wamo extends utils.Adapter {
 		if (this.syrSaveFloor1APIClient != null){
 			// we delay the the function call randomly between 0 and 5 (4.95) seconds
 			// in order to avoide collition with other maybe running instances
-			const delayTime = Math.random() * 1000 / 2;
+			const delayTime = Math.round(((Math.random() * 10000) / 2));
 			this.log.warn('we delay Flor Sensor request for ' + String(delayTime) + ' ms');
 			await this.delay(delayTime);
 			this.log.warn('now we trigger ..');
