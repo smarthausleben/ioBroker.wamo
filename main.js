@@ -166,7 +166,12 @@ class wamo extends utils.Adapter {
 		//===  Create the "Device" object and all channel objects										===
 		//=================================================================================================
 		try {
-			await this.initDevicesAndChanels();
+			if (this.config.device_ip != '0.0.0.0' && this.config.device_ip != ''){
+				await this.initDevicesAndChanels();
+			}
+			else{
+				this.log.warn('No "Water Protection Device" configured!');
+			}
 		} catch (err) {
 			this.log.error('Error initStatesAndChanels: ' + err);
 		}
@@ -196,7 +201,9 @@ class wamo extends utils.Adapter {
 		//===  Create All state Objects in order to avoid later use of "setObjectNotExistsAsync"		===
 		//=================================================================================================
 		try {
-			await this.createAlloObjects();
+			if (this.config.device_ip != '0.0.0.0' && this.config.device_ip != ''){
+				await this.createAlloObjects();
+			}
 		} catch (err) {
 			this.log.error('Error createAlloObjects: ' + err);
 		}
@@ -224,26 +231,28 @@ class wamo extends utils.Adapter {
 		//=================================================================================================
 		//===  Initialise additional runtime states														===
 		//=================================================================================================
-
-		// Jam protection running Flag
-		this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: false, ack: true });
-		// Jam protection activated
-		this.setStateAsync(DeviceParameters.JamProtectionEnabled.statePath + '.' + DeviceParameters.JamProtectionEnabled.id, { val: this.config.regularmainvalvemovement, ack: true });
-		// Jam protection Cron Timing
-		this.setStateAsync(DeviceParameters.JamProtectionTiming.statePath + '.' + DeviceParameters.JamProtectionTiming.id, { val: this.config.regularemovementcron, ack: true });
-
+		if (this.config.device_ip != '0.0.0.0' && this.config.device_ip != '') {
+			// Jam protection running Flag
+			this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: false, ack: true });
+			// Jam protection activated
+			this.setStateAsync(DeviceParameters.JamProtectionEnabled.statePath + '.' + DeviceParameters.JamProtectionEnabled.id, { val: this.config.regularmainvalvemovement, ack: true });
+			// Jam protection Cron Timing
+			this.setStateAsync(DeviceParameters.JamProtectionTiming.statePath + '.' + DeviceParameters.JamProtectionTiming.id, { val: this.config.regularemovementcron, ack: true });
+		}
 		//=================================================================================================
 		// Initialize Axios Client (this client will be used to communicate with the device)			===
 		//=================================================================================================
-		this.syrApiClient = axios.create({
-			baseURL: `http://${this.config.device_ip}:${this.config.device_port}/safe-tec/`,
-			timeout: timeout_axios_request * 1000,
-			responseType: 'json',
-			responseEncoding: 'utf8',
-			httpAgent: new http.Agent({
-				keepAlive: true
-			})
-		});
+		if (this.config.device_ip != '0.0.0.0' && this.config.device_ip != '') {
+			this.syrApiClient = axios.create({
+				baseURL: `http://${this.config.device_ip}:${this.config.device_port}/safe-tec/`,
+				timeout: timeout_axios_request * 1000,
+				responseType: 'json',
+				responseEncoding: 'utf8',
+				httpAgent: new http.Agent({
+					keepAlive: true
+				})
+			});
+		}
 
 		//=====================================================================================================================
 		// Initialize Axios Client for SafeFloor Units (this client will be used to communicate with the SafeFloor units)	===
@@ -303,37 +312,40 @@ class wamo extends utils.Adapter {
 		//=================================================================================================
 		// Test if device is responding																	===
 		//=================================================================================================
-		try {
-			while (!await this.devicePing()) {
-				this.log.warn('waiting till device becomes available again ...');
+		if (this.syrApiClient != null) {
+			try {
+				while (!await this.devicePing()) {
+					this.log.warn('waiting till device becomes available again ...');
+				}
+				this.log.info('Leakage protection device is present at: ' + String(this.config.device_ip) + ':' + String(this.config.device_port));
 			}
-			this.log.info('Leakage protection device is present at: ' + String(this.config.device_ip) + ':' + String(this.config.device_port));
+			catch (err) {
+				this.log.error(err);
+				return;
+			}
 		}
-		catch (err) {
-			this.log.error(err);
-			return;
-		}
-
 		//=================================================================================================
 		//===  Getting sensor presence																	===
 		//=================================================================================================
 		let gotSensorPreasence = false;
-		while (!gotSensorPreasence) {
-			try {
-				this.log.info('checking sensor presence ...');
-				this.log.debug('async onReady() at "while (!gotSensorPreasence)" -> Getting sensor presence');
-				//==================================================================
-				//= Getting data for 'DeviceParameters' in [const sensorPresence]  =
-				//==================================================================
-				if (moreMessages) { this.log.info('reading device parameters defined in object [sensorPresence]'); }
-				await this.getData(sensorPresence);
-				gotSensorPreasence = true;
-				await this.delay(3000); // we need to wait some seconds to make sure sensor objects are created
-				// now we can create the sensor specific objects
-				await this.createSensorSpecificObjects();
-			}
-			catch (err) {
-				this.log.error('this.getData(sensorPresence) ERROR: ' + err);
+		if (this.syrApiClient != null) {
+			while (!gotSensorPreasence) {
+				try {
+					this.log.info('checking sensor presence ...');
+					this.log.debug('async onReady() at "while (!gotSensorPreasence)" -> Getting sensor presence');
+					//==================================================================
+					//= Getting data for 'DeviceParameters' in [const sensorPresence]  =
+					//==================================================================
+					if (moreMessages) { this.log.info('reading device parameters defined in object [sensorPresence]'); }
+					await this.getData(sensorPresence);
+					gotSensorPreasence = true;
+					await this.delay(3000); // we need to wait some seconds to make sure sensor objects are created
+					// now we can create the sensor specific objects
+					await this.createSensorSpecificObjects();
+				}
+				catch (err) {
+					this.log.error('this.getData(sensorPresence) ERROR: ' + err);
+				}
 			}
 		}
 
@@ -341,54 +353,56 @@ class wamo extends utils.Adapter {
 		//===  Getting device data																		===
 		//=================================================================================================
 		let gotDeviceData = false;
-		while (!gotDeviceData) {
-			try {
-				this.log.info('initial reading device data ...');
-				this.log.debug('async onReady() at "while (!gotDeviceData)" -> Getting initial data');
-				//==================================================================
-				//= Getting all datas for 'DeviceParameters' in [const initStates] =
-				//==================================================================
-				if (moreMessages) { this.log.info('reading device parameters defined in object [initStates]'); }
-				await this.getData(initStates);
-				gotDeviceData = true;
-			}
-			catch (err) {
-				this.log.error('this.getData(initStates) ERROR: ' + err);
+		if (this.syrApiClient != null) {
+			while (!gotDeviceData) {
+				try {
+					this.log.info('initial reading device data ...');
+					this.log.debug('async onReady() at "while (!gotDeviceData)" -> Getting initial data');
+					//==================================================================
+					//= Getting all datas for 'DeviceParameters' in [const initStates] =
+					//==================================================================
+					if (moreMessages) { this.log.info('reading device parameters defined in object [initStates]'); }
+					await this.getData(initStates);
+					gotDeviceData = true;
+				}
+				catch (err) {
+					this.log.error('this.getData(initStates) ERROR: ' + err);
+				}
 			}
 		}
-
 		//=================================================================
 		// update state: German hardnes calculation factor from settings
 		//=================================================================
-		await this.updateHardnesFactorObject();
-
+		if (this.syrApiClient != null) {
+			await this.updateHardnesFactorObject();
+		}
 		//=================================================================================================
 		//===  Getting device Profiles data																===
 		//=================================================================================================
 		let gotDeviceProfileData = false;
-		while (!gotDeviceProfileData) {
-			try {
-				this.log.info('initial reading profile data ...');
-				// Device Profiles Initialisation
-				this.log.debug('async onReady() - getDeviceProfilesData -> Getting Profiles data from device at ' + this.config.device_ip + ':' + this.config.device_port);
-				//===============================================
-				//= Getting all Profile 'DeviceParameters' data =
-				//===============================================
-				const responseInitProfiles = await this.getDeviceProfilesData();
-				this.log.debug(`[async onReady() - getDeviceProfilesData -> getDeviceProfilesData] Response:  ${responseInitProfiles}`);
-				gotDeviceProfileData = true;
-			}
-			catch (err) {
-				this.log.error('getDeviceProfilesData() ERROR: ' + err);
+		if (this.syrApiClient != null) {
+			while (!gotDeviceProfileData) {
+				try {
+					this.log.info('initial reading profile data ...');
+					// Device Profiles Initialisation
+					this.log.debug('async onReady() - getDeviceProfilesData -> Getting Profiles data from device at ' + this.config.device_ip + ':' + this.config.device_port);
+					//===============================================
+					//= Getting all Profile 'DeviceParameters' data =
+					//===============================================
+					const responseInitProfiles = await this.getDeviceProfilesData();
+					this.log.debug(`[async onReady() - getDeviceProfilesData -> getDeviceProfilesData] Response:  ${responseInitProfiles}`);
+					gotDeviceProfileData = true;
+				}
+				catch (err) {
+					this.log.error('getDeviceProfilesData() ERROR: ' + err);
+				}
 			}
 		}
-
 		//=========================
 		//===  Timer starten	===
 		//=========================
 		try {
-			const tmstarted = await this.timerStarts();
-			this.log.debug('Timers started - result: ' + String(tmstarted));
+			await this.timerStarts();
 		} catch (err) {
 			this.log.error('Timer start error ... exit');
 			return;
@@ -414,32 +428,47 @@ class wamo extends utils.Adapter {
 		//==========================================
 		//=== Subscribe to user changable states ===
 		//==========================================
-
-		this.subscribeStates(DeviceParameters.systemRestart.statePath + '.' + DeviceParameters.systemRestart.id); // [RST] System Restart
-		this.subscribeStates(DeviceParameters.DeactivateConductivitySensor.statePath + '.' + DeviceParameters.DeactivateConductivitySensor.id); // [CSD] Deactivate conductivity sensor
-		this.subscribeStates(DeviceParameters.DeactivatePressureSensor.statePath + '.' + DeviceParameters.DeactivatePressureSensor.id); // [PSD] Deactivate pressure sensor
-		this.subscribeStates(DeviceParameters.DeactivateTemperatureSensor.statePath + '.' + DeviceParameters.DeactivateTemperatureSensor.id); // [TSD] Deactivate temperature sensor
-		this.subscribeStates(DeviceParameters.MaxFlowLeakageTime.statePath + '.' + DeviceParameters.MaxFlowLeakageTime.id); // [T2] Max flow leakage time
-		this.subscribeStates(DeviceParameters.Units.statePath + '.' + DeviceParameters.Units.id); // [UNI] units
-		this.subscribeStates(DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id); // [SRO] Screen Rotation
-		this.subscribeStates(DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id); // [AB] Shutoff valve
-		this.subscribeStates(DeviceParameters.APTimeout.statePath + '.' + DeviceParameters.APTimeout.id); // [APT] WiFi AP timeout
-		this.subscribeStates(DeviceParameters.ButtonProfileChange.statePath + '.' + DeviceParameters.ButtonProfileChange.id); // [BPB] Enable profile changes by button (0 = blocked, 1 = possible)
-		this.subscribeStates(DeviceParameters.FloorSensor.statePath + '.' + DeviceParameters.FloorSensor.id); // [BSE] Floor sensor
-		this.subscribeStates(DeviceParameters.BuzzerOnAlarm.statePath + '.' + DeviceParameters.BuzzerOnAlarm.id); // [BUZ] Buzzer on alarm
-		this.subscribeStates(DeviceParameters.MicroLeakageTest.statePath + '.' + DeviceParameters.MicroLeakageTest.id); // [BUZ] Buzzer on alarm
-		this.subscribeStates(DeviceParameters.MicroLeakageTestPeriod.statePath + '.' + DeviceParameters.MicroLeakageTestPeriod.id); // [DRP] Micro-Leakage-Test period
-		this.subscribeStates(DeviceParameters.DaylightSavingTime.statePath + '.' + DeviceParameters.DaylightSavingTime.id); // [IDS] Daylight saving time
-		this.subscribeStates(DeviceParameters.Language.statePath + '.' + DeviceParameters.Language.id); // [LNG] Language
-		this.subscribeStates(DeviceParameters.LeakProtectionTemporaryDeactivation.statePath + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id);// [TMP] temporary protection deactivation
-		this.subscribeStates(DeviceParameters.LeakageNotificationWarningThreshold.statePath + '.' + DeviceParameters.LeakageNotificationWarningThreshold.id); // [LWT] Leakage notification (warning) threshold
-		this.subscribeStates(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id); // [PRF] Selected profile
-		this.subscribeStates(adapterChannels.DevicePofiles.path + '.*'); // ALL profile states
-
+		if (this.syrApiClient != null) {
+			this.subscribeStates(DeviceParameters.systemRestart.statePath + '.' + DeviceParameters.systemRestart.id); // [RST] System Restart
+			this.subscribeStates(DeviceParameters.DeactivateConductivitySensor.statePath + '.' + DeviceParameters.DeactivateConductivitySensor.id); // [CSD] Deactivate conductivity sensor
+			this.subscribeStates(DeviceParameters.DeactivatePressureSensor.statePath + '.' + DeviceParameters.DeactivatePressureSensor.id); // [PSD] Deactivate pressure sensor
+			this.subscribeStates(DeviceParameters.DeactivateTemperatureSensor.statePath + '.' + DeviceParameters.DeactivateTemperatureSensor.id); // [TSD] Deactivate temperature sensor
+			this.subscribeStates(DeviceParameters.MaxFlowLeakageTime.statePath + '.' + DeviceParameters.MaxFlowLeakageTime.id); // [T2] Max flow leakage time
+			this.subscribeStates(DeviceParameters.Units.statePath + '.' + DeviceParameters.Units.id); // [UNI] units
+			this.subscribeStates(DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id); // [SRO] Screen Rotation
+			this.subscribeStates(DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id); // [AB] Shutoff valve
+			this.subscribeStates(DeviceParameters.APTimeout.statePath + '.' + DeviceParameters.APTimeout.id); // [APT] WiFi AP timeout
+			this.subscribeStates(DeviceParameters.ButtonProfileChange.statePath + '.' + DeviceParameters.ButtonProfileChange.id); // [BPB] Enable profile changes by button (0 = blocked, 1 = possible)
+			this.subscribeStates(DeviceParameters.FloorSensor.statePath + '.' + DeviceParameters.FloorSensor.id); // [BSE] Floor sensor
+			this.subscribeStates(DeviceParameters.BuzzerOnAlarm.statePath + '.' + DeviceParameters.BuzzerOnAlarm.id); // [BUZ] Buzzer on alarm
+			this.subscribeStates(DeviceParameters.MicroLeakageTest.statePath + '.' + DeviceParameters.MicroLeakageTest.id); // [BUZ] Buzzer on alarm
+			this.subscribeStates(DeviceParameters.MicroLeakageTestPeriod.statePath + '.' + DeviceParameters.MicroLeakageTestPeriod.id); // [DRP] Micro-Leakage-Test period
+			this.subscribeStates(DeviceParameters.DaylightSavingTime.statePath + '.' + DeviceParameters.DaylightSavingTime.id); // [IDS] Daylight saving time
+			this.subscribeStates(DeviceParameters.Language.statePath + '.' + DeviceParameters.Language.id); // [LNG] Language
+			this.subscribeStates(DeviceParameters.LeakProtectionTemporaryDeactivation.statePath + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id);// [TMP] temporary protection deactivation
+			this.subscribeStates(DeviceParameters.LeakageNotificationWarningThreshold.statePath + '.' + DeviceParameters.LeakageNotificationWarningThreshold.id); // [LWT] Leakage notification (warning) threshold
+			this.subscribeStates(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id); // [PRF] Selected profile
+			this.subscribeStates(adapterChannels.DevicePofiles.path + '.*'); // ALL profile states
+		}
 		if(this.syrSaveFloor1APIClient != null)
 		{
 			this.subscribeStates(DeviceParametetsFS.SleepMode.statePath.replace('.X.', '.1.')  + '.' + DeviceParametetsFS.SleepMode.id); // Floor Sensor 1 [SLP] Send device to sleep
 			this.subscribeStates(DeviceParametetsFS.AdminMode.statePath.replace('.X.', '.1.')  + '.' + DeviceParametetsFS.AdminMode.id); // Floor Sensor 1 [ADM(2)f] Set device ADMIN mode
+		}
+		if(this.syrSaveFloor2APIClient != null)
+		{
+			this.subscribeStates(DeviceParametetsFS.SleepMode.statePath.replace('.X.', '.2.')  + '.' + DeviceParametetsFS.SleepMode.id); // Floor Sensor 2 [SLP] Send device to sleep
+			this.subscribeStates(DeviceParametetsFS.AdminMode.statePath.replace('.X.', '.2.')  + '.' + DeviceParametetsFS.AdminMode.id); // Floor Sensor 2 [ADM(2)f] Set device ADMIN mode
+		}
+		if(this.syrSaveFloor3APIClient != null)
+		{
+			this.subscribeStates(DeviceParametetsFS.SleepMode.statePath.replace('.X.', '.3.')  + '.' + DeviceParametetsFS.SleepMode.id); // Floor Sensor 3 [SLP] Send device to sleep
+			this.subscribeStates(DeviceParametetsFS.AdminMode.statePath.replace('.X.', '.3.')  + '.' + DeviceParametetsFS.AdminMode.id); // Floor Sensor 3 [ADM(2)f] Set device ADMIN mode
+		}
+		if(this.syrSaveFloor4APIClient != null)
+		{
+			this.subscribeStates(DeviceParametetsFS.SleepMode.statePath.replace('.X.', '.4.')  + '.' + DeviceParametetsFS.SleepMode.id); // Floor Sensor 4 [SLP] Send device to sleep
+			this.subscribeStates(DeviceParametetsFS.AdminMode.statePath.replace('.X.', '.4.')  + '.' + DeviceParametetsFS.AdminMode.id); // Floor Sensor 4 [ADM(2)f] Set device ADMIN mode
 		}
 
 		// reference to Adapter
@@ -462,12 +491,12 @@ class wamo extends utils.Adapter {
 
 		try {
 			// clear all intervals
-			try { clearInterval(alarm_Intervall_ID); } catch (err) { this.log.error('ERRRO clerring [Alarm Timer] interval'); }
-			try { clearInterval(short_Intervall_ID); } catch (err) { this.log.error('ERRRO clerring [Short Timer] interval'); }
-			try { clearInterval(long_Intervall_ID); } catch (err) { this.log.error('ERRRO clerring [Long Timer] interval'); }
-			try { clearInterval(very_long_Intervall_ID); } catch (err) { this.log.error('ERRRO clerring [Very Long Timer] interval'); }
+			if(alarm_Intervall_ID != null){try { clearInterval(alarm_Intervall_ID); } catch (err) { this.log.error('ERRRO clerring [Alarm Timer] interval');}}
+			if(short_Intervall_ID != null){try { clearInterval(short_Intervall_ID); } catch (err) { this.log.error('ERRRO clerring [Short Timer] interval');}}
+			if(long_Intervall_ID != null){try { clearInterval(long_Intervall_ID); } catch (err) { this.log.error('ERRRO clerring [Long Timer] interval');}}
+			if(very_long_Intervall_ID != null){try { clearInterval(very_long_Intervall_ID); } catch (err) { this.log.error('ERRRO clerring [Very Long Timer] interval');}}
 
-			try { clearTimeout(delay_Timer_ID); } catch (err) { this.log.error('ERRRO clerring [Delay Timeout] interval'); }
+			if(delay_Timer_ID != null){try { clearTimeout(delay_Timer_ID); } catch (err) { this.log.error('ERRRO clerring [Delay Timeout] interval');}}
 
 			callback();
 		} catch (e) {
@@ -481,839 +510,841 @@ class wamo extends utils.Adapter {
 	 * @param {ioBroker.State | null | undefined} state
 	 */
 	async onStateChange(id, state) {
-		this.log.debug('async onStateChange(id, state) hit -> id: ' + String(id));
-		if (state) {
-			this.log.debug('async onStateChange(id, state) -> if (state) hit -> id: ' + String(id) + ' state.val: ' + String(state.val) + ' state.ack: ' + String(state.ack));
-			const statePrefix = this.name + '.' + String(this.instance) + '.';
-			// The state was changed
-			//============================================================================
-			// Screen Rotation
-			//============================================================================
-			if ((id == statePrefix + DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id) && state.ack == false) {
-				switch (state.val) {
-					case 0:
-					case 90:
-					case 180:
-					case 270:
-						try {
-							await this.set_DevieParameter(DeviceParameters.ScreenRotation, String(state.val));
-							this.log.info('[SRO] Screen rotation changed to ' + String(state.val) + '°');
-						}
-						catch (err) {
-							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.ScreenRotation ... ERROR: ' + err);
-						}
-						break;
-					default:
-						this.log.error('Screen rotation value of ' + String(state.val) + '° is not a valid angle!');
-						break;
-				}
-			}
-			//============================================================================
-			// Shutoff valve AB
-			//============================================================================
-			else if ((id == statePrefix + DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id) && state.ack == false) {
-				switch (state.val) {
-					case 1:
-					case 2:
-						try {
-							await this.set_DevieParameter(DeviceParameters.ShutOff, String(state.val));
-							if (state.val == 1) {
-								this.log.info('Command: [AB] Shutoff valve OPENED');
+		try {
+			this.log.debug('async onStateChange(id, state) hit -> id: ' + String(id));
+			if (state) {
+				this.log.debug('async onStateChange(id, state) -> if (state) hit -> id: ' + String(id) + ' state.val: ' + String(state.val) + ' state.ack: ' + String(state.ack));
+				const statePrefix = this.name + '.' + String(this.instance) + '.';
+				// The state was changed
+				//============================================================================
+				// Screen Rotation
+				//============================================================================
+				if ((id == statePrefix + DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id) && state.ack == false) {
+					switch (state.val) {
+						case 0:
+						case 90:
+						case 180:
+						case 270:
+							try {
+								await this.set_DevieParameter(DeviceParameters.ScreenRotation, String(state.val));
+								this.log.info('[SRO] Screen rotation changed to ' + String(state.val) + '°');
 							}
-							else {
-								this.log.warn('Command: [AB] Shutoff valve CLOSED');
+							catch (err) {
+								this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.ScreenRotation ... ERROR: ' + err);
 							}
-						}
-						catch (err) {
-							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.ShutOff ... ERROR: ' + err);
-						}
-						break;
-					default:
-						this.log.error(String(state.val) + ' is not valid for ' + String(DeviceParameters.ScreenRotation.id + ' Valid values: 1=open 2=closed'));
-						break;
-				}
-			}
-			//============================================================================
-			// APT WiFi AP timeout changed
-			//============================================================================
-			else if ((id == statePrefix + DeviceParameters.APTimeout.statePath + '.' + DeviceParameters.APTimeout.id) && (state.ack == false)) {
-				if (state.val != null) {
-					try {
-						if ((Number(state.val) >= Number(DeviceParameters.APTimeout.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.APTimeout.objectdefinition.common.max)) {
-							await this.set_DevieParameter(DeviceParameters.APTimeout, state.val);
-							if (moreMessages) { this.log.info(DeviceParameters.APTimeout.id + ' changed to ' + String(state.val)); }
-						}
-						else { this.log.error(DeviceParameters.ButtonProAPTimeoutfileChange.id + ' new value [' + String(state.val) + '] is out of range!'); }
-					} catch (err) {
-						this.log.error('ERROR setting [APT]: ' + err.message);
-					}
-				}
-			}
-			//============================================================================
-			// BPB ButtonProfileChange
-			//============================================================================
-			else if ((id == statePrefix + DeviceParameters.ButtonProfileChange.statePath + '.' + DeviceParameters.ButtonProfileChange.id) && (state.ack == false)) {
-				if (state.val != null) {
-					try {
-						if ((Number(state.val) >= Number(DeviceParameters.ButtonProfileChange.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.ButtonProfileChange.objectdefinition.common.max)) {
-							await this.set_DevieParameter(DeviceParameters.ButtonProfileChange, state.val);
-							if (moreMessages) { this.log.info(DeviceParameters.ButtonProfileChange.id + ' changed to ' + String(state.val)); }
-						}
-						else { this.log.error(DeviceParameters.ButtonProfileChange.id + ' new value [' + String(state.val) + '] is out of range!'); }
-					} catch (err) {
-						this.log.error('ERROR setting [BPB]: ' + err.message);
-					}
-				}
-			}
-			//============================================================================
-			// BSA Floor Sensor
-			//============================================================================
-			else if ((id == statePrefix + DeviceParameters.FloorSensor.statePath + '.' + DeviceParameters.FloorSensor.id) && (state.ack == false)) {
-				if (state.val != null) {
-					try {
-						if ((Number(state.val) >= Number(DeviceParameters.FloorSensor.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.FloorSensor.objectdefinition.common.max)) {
-							await this.set_DevieParameter(DeviceParameters.FloorSensor, state.val);
-							if (moreMessages) { this.log.info(DeviceParameters.FloorSensor.id + ' changed to ' + String(state.val)); }
-						}
-						else { this.log.error(DeviceParameters.FloorSensor.id + ' new value [' + String(state.val) + '] is out of range!'); }
-					} catch (err) {
-						this.log.error('ERROR setting [BSA]: ' + err.message);
-					}
-				}
-			}
-			//============================================================================
-			// BUZ Buzzer on alarm
-			//============================================================================
-			else if ((id == statePrefix + DeviceParameters.BuzzerOnAlarm.statePath + '.' + DeviceParameters.BuzzerOnAlarm.id) && (state.ack == false)) {
-				if (state.val != null) {
-					try {
-						if ((Number(state.val) >= Number(DeviceParameters.BuzzerOnAlarm.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.BuzzerOnAlarm.objectdefinition.common.max)) {
-							await this.set_DevieParameter(DeviceParameters.BuzzerOnAlarm, state.val);
-							if (moreMessages) { this.log.info(DeviceParameters.BuzzerOnAlarm.id + ' changed to ' + String(state.val)); }
-						}
-						else { this.log.error(DeviceParameters.BuzzerOnAlarm.id + ' new value [' + String(state.val) + '] is out of range!'); }
-					} catch (err) {
-						this.log.error('ERROR setting [BUZ]: ' + err.message);
-					}
-				}
-			}
-			//============================================================================
-			// DMA Micro-Leakage-Test
-			//============================================================================
-			else if ((id == statePrefix + DeviceParameters.MicroLeakageTest.statePath + '.' + DeviceParameters.MicroLeakageTest.id) && (state.ack == false)) {
-				if (state.val != null) {
-					try {
-						if ((Number(state.val) >= Number(DeviceParameters.MicroLeakageTest.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.MicroLeakageTest.objectdefinition.common.max)) {
-							await this.set_DevieParameter(DeviceParameters.MicroLeakageTest, state.val);
-							if (moreMessages) { this.log.info(DeviceParameters.MicroLeakageTest.id + ' changed to ' + String(state.val)); }
-						}
-						else { this.log.error(DeviceParameters.MicroLeakageTest.id + ' new value [' + String(state.val) + '] is out of range!'); }
-					} catch (err) {
-						this.log.error('ERROR setting [DMA]: ' + err.message);
-					}
-				}
-			}
-			//============================================================================
-			// DRP Micro-Leakage-Test period
-			//============================================================================
-			else if ((id == statePrefix + DeviceParameters.MicroLeakageTestPeriod.statePath + '.' + DeviceParameters.MicroLeakageTestPeriod.id) && (state.ack == false)) {
-				if (state.val != null) {
-					try {
-						if ((Number(state.val) >= Number(DeviceParameters.MicroLeakageTestPeriod.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.MicroLeakageTestPeriod.objectdefinition.common.max)) {
-							await this.set_DevieParameter(DeviceParameters.MicroLeakageTestPeriod, state.val);
-							if (moreMessages) { this.log.info(DeviceParameters.MicroLeakageTestPeriod.id + ' changed to ' + String(state.val)); }
-						}
-						else { this.log.error(DeviceParameters.MicroLeakageTestPeriod.id + ' new value [' + String(state.val) + '] is out of range!'); }
-					} catch (err) {
-						this.log.error('ERROR setting [DRP]: ' + err.message);
-					}
-				}
-			}
-			//============================================================================
-			// IDS Daylight saving time
-			//============================================================================
-			else if ((id == statePrefix + DeviceParameters.DaylightSavingTime.statePath + '.' + DeviceParameters.DaylightSavingTime.id) && (state.ack == false)) {
-				if (state.val != null) {
-					try {
-						if ((Number(state.val) >= Number(DeviceParameters.DaylightSavingTime.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DaylightSavingTime.objectdefinition.common.max)) {
-							await this.set_DevieParameter(DeviceParameters.DaylightSavingTime, state.val);
-							if (moreMessages) { this.log.info(DeviceParameters.DaylightSavingTime.id + ' changed to ' + String(state.val)); }
-						}
-						else { this.log.error(DeviceParameters.DaylightSavingTime.id + ' new value [' + String(state.val) + '] is out of range!'); }
-					} catch (err) {
-						this.log.error('ERROR setting [IDS]: ' + err.message);
-					}
-				}
-			}
-			//============================================================================
-			// LNG Language
-			//============================================================================
-			else if ((id == statePrefix + DeviceParameters.Language.statePath + '.' + DeviceParameters.Language.id) && (state.ack == false)) {
-				if (state.val != null) {
-					try {
-						if ((Number(state.val) >= Number(DeviceParameters.Language.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.Language.objectdefinition.common.max)) {
-							await this.set_DevieParameter(DeviceParameters.Language, state.val);
-							if (moreMessages) { this.log.info(DeviceParameters.Language.id + ' changed to ' + String(state.val)); }
-						}
-						else { this.log.error(DeviceParameters.Language.id + ' new value [' + String(state.val) + '] is out of range!'); }
-					} catch (err) {
-						this.log.error('ERROR setting [LNG]: ' + err.message);
-					}
-				}
-			}
-			//============================================================================
-			// LWT Leakage notification (warning) threshold
-			//============================================================================
-			else if ((id == statePrefix + DeviceParameters.LeakageNotificationWarningThreshold.statePath + '.' + DeviceParameters.LeakageNotificationWarningThreshold.id) && (state.ack == false)) {
-				if (state.val != null) {
-					try {
-						if ((Number(state.val) >= Number(DeviceParameters.LeakageNotificationWarningThreshold.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.LeakageNotificationWarningThreshold.objectdefinition.common.max)) {
-							await this.set_DevieParameter(DeviceParameters.LeakageNotificationWarningThreshold, state.val);
-							if (moreMessages) { this.log.info(DeviceParameters.LeakageNotificationWarningThreshold.id + ' changed to ' + String(state.val)); }
-						}
-						else { this.log.error(DeviceParameters.LeakageNotificationWarningThreshold.id + ' new value [' + String(state.val) + '] is out of range!'); }
-					} catch (err) {
-						this.log.error('ERROR setting [LWT]: ' + err.message);
-					}
-				}
-			}
-			//============================================================================
-			// UNI Units
-			//============================================================================
-			else if ((id == statePrefix + DeviceParameters.Units.statePath + '.' + DeviceParameters.Units.id) && (state.ack == false)) {
-				if (state.val != null) {
-					try {
-						if ((Number(state.val) >= Number(DeviceParameters.Units.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.Units.objectdefinition.common.max)) {
-							await this.set_DevieParameter(DeviceParameters.Units, state.val);
-							if (moreMessages) { this.log.info(DeviceParameters.Units.id + ' changed to ' + String(state.val)); }
-						}
-						else { this.log.error(DeviceParameters.Units.id + ' new value [' + String(state.val) + '] is out of range!'); }
-					} catch (err) {
-						this.log.error('ERROR setting [UNI]: ' + err.message);
-					}
-				}
-			}
-			//============================================================================
-			// CSD Deactivate conductivity sensor
-			//============================================================================
-			else if ((id == statePrefix + DeviceParameters.DeactivateConductivitySensor.statePath + '.' + DeviceParameters.DeactivateConductivitySensor.id) && (state.ack == false)) {
-				if (state.val != null) {
-					try {
-						if ((Number(state.val) >= Number(DeviceParameters.DeactivateConductivitySensor.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DeactivateConductivitySensor.objectdefinition.common.max)) {
-							await this.set_DevieParameter(DeviceParameters.DeactivateConductivitySensor, state.val);
-							if (moreMessages) { this.log.info(DeviceParameters.DeactivateConductivitySensor.id + ' changed to ' + String(state.val)); }
-						}
-						else { this.log.error(DeviceParameters.DeactivateConductivitySensor.id + ' new value [' + String(state.val) + '] is out of range!'); }
-					} catch (err) {
-						this.log.error('ERROR setting [CSD]: ' + err.message);
-					}
-				}
-			}
-			//============================================================================
-			// PSD Deactivate pressure sensor
-			//============================================================================
-			else if ((id == statePrefix + DeviceParameters.DeactivatePressureSensor.statePath + '.' + DeviceParameters.DeactivatePressureSensor.id) && (state.ack == false)) {
-				if (state.val != null) {
-					try {
-						if ((Number(state.val) >= Number(DeviceParameters.DeactivatePressureSensor.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DeactivatePressureSensor.objectdefinition.common.max)) {
-							await this.set_DevieParameter(DeviceParameters.DeactivatePressureSensor, state.val);
-							if (moreMessages) { this.log.info(DeviceParameters.DeactivatePressureSensor.id + ' changed to ' + String(state.val)); }
-						}
-						else { this.log.error(DeviceParameters.DeactivatePressureSensor.id + ' new value [' + String(state.val) + '] is out of range!'); }
-					} catch (err) {
-						this.log.error('ERROR setting [PSD]: ' + err.message);
-					}
-				}
-			}
-			//============================================================================
-			// TSD Deactivate temperature sensor
-			//============================================================================
-			else if ((id == statePrefix + DeviceParameters.DeactivateTemperatureSensor.statePath + '.' + DeviceParameters.DeactivateTemperatureSensor.id) && (state.ack == false)) {
-				if (state.val != null) {
-					try {
-						if ((Number(state.val) >= Number(DeviceParameters.DeactivateTemperatureSensor.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DeactivateTemperatureSensor.objectdefinition.common.max)) {
-							await this.set_DevieParameter(DeviceParameters.DeactivateTemperatureSensor, state.val);
-							if (moreMessages) { this.log.info(DeviceParameters.DeactivateTemperatureSensor.id + ' changed to ' + String(state.val)); }
-						}
-						else { this.log.error(DeviceParameters.DeactivateTemperatureSensor.id + ' new value [' + String(state.val) + '] is out of range!'); }
-					} catch (err) {
-						this.log.error('ERROR setting [TSD]: ' + err.message);
-					}
-				}
-			}
-			//============================================================================
-			// T2 Max flow leakage time
-			//============================================================================
-			else if ((id == statePrefix + DeviceParameters.MaxFlowLeakageTime.statePath + '.' + DeviceParameters.MaxFlowLeakageTime.id) && (state.ack == false)) {
-				if (state.val != null) {
-					try {
-						if ((Number(state.val) >= Number(DeviceParameters.MaxFlowLeakageTime.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.MaxFlowLeakageTime.objectdefinition.common.max)) {
-							await this.set_DevieParameter(DeviceParameters.MaxFlowLeakageTime, state.val);
-							if (moreMessages) { this.log.info(DeviceParameters.MaxFlowLeakageTime.id + ' changed to ' + String(state.val)); }
-						}
-						else { this.log.error(DeviceParameters.MaxFlowLeakageTime.id + ' new value [' + String(state.val) + '] is out of range!'); }
-					} catch (err) {
-						this.log.error('ERROR setting [T2]: ' + err.message);
-					}
-				}
-			}
-			//============================================================================
-			// RST System restart
-			//============================================================================
-			else if ((id == statePrefix + DeviceParameters.systemRestart.statePath + '.' + DeviceParameters.systemRestart.id) && (state.ack == false)) {
-				if (state.val != null) {
-					try {
-						if (state.val == 1) {
-							this.log.warn('System restart initiated by user!');
-							// send restart command (1 as number) to device
-							await this.set_DevieParameter(DeviceParameters.systemRestart, state.val);
-							this.log.debug('Setting state RST (sytem restart) back to 0!');
-							// set state back to 0
-							await this.setStateAsync(DeviceParameters.systemRestart.statePath + '.' + DeviceParameters.systemRestart.id, { val: 0, ack: true });
-
-							if (moreMessages) { this.log.info(DeviceParameters.systemRestart.id + ' changed to ' + String(state.val)); }
-						}
-					} catch (err) {
-						this.log.error('ERROR setting [RST]: ' + err.message);
-					}
-				}
-			}
-			//============================================================================
-			// Leakage protection deactivation time
-			//============================================================================
-			else if ((id == statePrefix + DeviceParameters.LeakProtectionTemporaryDeactivation.statePath + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id) && state.ack == false) {
-				try {
-					await this.set_DevieParameter(DeviceParameters.LeakProtectionTemporaryDeactivation, String(state.val));
-				}
-				catch (err) {
-					this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.LeakProtectionTemporaryDeactivation ... ERROR: ' + err);
-				}
-				const tempDisabledSeconds = parseFloat(String(state.val));
-				const offTime = new Date(tempDisabledSeconds * 1000).toISOString().substring(11, 19);
-
-				if (tempDisabledSeconds == 0) { this.log.info('Command: [TMP] Leakage protection is aktive'); }
-				else { this.log.warn('Command: [TMP] Leakage protection temporary disabled for ' + offTime + ' (hh:mm:ss)'); }
-			}
-			//============================================================================
-			// Selected Profile
-			//============================================================================
-			else if ((id == statePrefix + DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id) && state.ack == false) {
-				let profileEnabled = Object();
-				let changeOK = false;
-				switch (state.val) {
-					case 1:
-						// Profile available?
-						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA1.statePath + '.' + DeviceParameters.Profile_PA1.id);
-						if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
-						break;
-					case 2:
-						// Profile available?
-						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA2.statePath + '.' + DeviceParameters.Profile_PA2.id);
-						if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
-						break;
-					case 3:
-						// Profile available?
-						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA3.statePath + '.' + DeviceParameters.Profile_PA3.id);
-						if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
-						break;
-					case 4:
-						// Profile available?
-						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA4.statePath + '.' + DeviceParameters.Profile_PA4.id);
-						if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
-						break;
-					case 5:
-						// Profile available?
-						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA5.statePath + '.' + DeviceParameters.Profile_PA5.id);
-						if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
-						break;
-					case 6:
-						// Profile available?
-						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA6.statePath + '.' + DeviceParameters.Profile_PA6.id);
-						if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
-						break;
-					case 7:
-						// Profile available?
-						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA7.statePath + '.' + DeviceParameters.Profile_PA7.id);
-						if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
-						break;
-					case 8:
-						// Profile available?
-						profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA8.statePath + '.' + DeviceParameters.Profile_PA8.id);
-						if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
-						break;
-					default:
-						this.log.error(String(state.val) + ' is not valid for ' + String(DeviceParameters.SelectedProfile.id + ' Valid values: 1...8'));
-						break;
-				}
-				if (changeOK) {
-					try {
-						await this.set_DevieParameter(DeviceParameters.SelectedProfile, String(state.val));
-						this.log.info('Selected profile changed to number ' + String(state.val));
-					}
-					catch (err) {
-						this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.SelectedProfile ... ERROR: ' + err);
-					}
-				}
-				else {
-					this.log.error('You cant change to an unavailable profile! Please make profil ' + String(state.val) + ' available first.');
-					// Rerstore old active Profile back to State
-					// Read selected Profile from Device
-					const currentAktiveProfile = await this.get_DevieParameter(DeviceParameters.SelectedProfile);
-					if (currentAktiveProfile != null) {
-						// Save aktive profile from Device in state
-						await this.set_DevieParameter(DeviceParameters.SelectedProfile, String(currentAktiveProfile['getPRF']));
-					} else {
-						this.log.debug('couldn\'t read aktive Profile Parameter');
-					}
-				}
-			}
-			//============================================================================
-			// Profile(s) Parameter
-			//============================================================================
-			else if ((id.includes('Device.Profiles.')) && (state.ack == false)) {
-				try {
-					// identify Profile parameter
-					const currentProfileState = id.substring(id.lastIndexOf('.') + 1, id.length - 1);
-					this.log.debug('onStateChange Profile Parameter is: ' + String(currentProfileState));
-					// identify profile number
-					const stateChangeProfileNo = parseInt(id.substring(id.length - 1));
-					this.log.debug('onStateChange Profile Number is: ' + String(stateChangeProfileNo));
-
-					// identify currentAktiveProfile
-					const AktiveProfileNumber = await this.getStateAsync(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id);
-
-					switch (currentProfileState) {
-						case 'PA':	// Available
-							// Trying to disable the ACTIVE profile?
-							if ((AktiveProfileNumber != null) && (parseInt(String(AktiveProfileNumber.val)) == stateChangeProfileNo) && (parseInt(String(state.val)) == 0)) {
-								this.log.error('You can\'t disable the aktive profile! You need to select an other aktiv profile first!');
-
-								// Restore availability parameter to 1 (on)
-								switch (stateChangeProfileNo) {
-									case 1:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA1, '1');
-										break;
-									case 2:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA2, '1');
-										break;
-									case 3:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA3, '1');
-										break;
-									case 4:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA4, '1');
-										break;
-									case 5:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA5, '1');
-										break;
-									case 6:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA6, '1');
-										break;
-									case 7:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA7, '1');
-										break;
-									case 8:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA8, '1');
-										break;
-								}
-								this.log.warn('Restored profile ' + String(stateChangeProfileNo) + 'availability to 1 (on)');
-							}
-							else {
-								let profAvailableState = parseInt(String(state.val));
-								// do we have a legal value like 0 or 1
-								if (profAvailableState > 1) {
-									profAvailableState = 1;
-									this.log.warn('Profile ' + stateChangeProfileNo + ' available value \'' + String(state.val) + '\' is not valid! Profile will be set to \'available\'! (1)');
-								}
-								switch (stateChangeProfileNo) {
-									case 1:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA1, String(profAvailableState));
-										break;
-									case 2:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA2, String(profAvailableState));
-										break;
-									case 3:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA3, String(profAvailableState));
-										break;
-									case 4:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA4, String(profAvailableState));
-										break;
-									case 5:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA5, String(profAvailableState));
-										break;
-									case 6:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA6, String(profAvailableState));
-										break;
-									case 7:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA7, String(profAvailableState));
-										break;
-									case 8:
-										await this.set_DevieParameter(DeviceParameters.Profile_PA8, String(profAvailableState));
-										break;
-									default:
-										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PA');
-								}
-
-								if (profAvailableState == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' availability changed to \'not available\'.'); }
-								else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' availability changed to \'available\'.'); }
-							}
-							break;
-						case 'PN':	// Name
-							try {
-								let newProfileName = String(state.val);
-								if (String(state.val).length > 31) {
-									newProfileName = newProfileName.substring(0, 30);
-									this.log.warn('Profile name \'' + String(state.val) + '\' is to long and will be cut to \'' + String(newProfileName) + '\' Mmax. 31 characters allowed!');
-								}
-								switch (stateChangeProfileNo) {
-									case 1:
-										await this.set_DevieParameter(DeviceParameters.Profile_PN1, newProfileName);
-										break;
-									case 2:
-										await this.set_DevieParameter(DeviceParameters.Profile_PN2, newProfileName);
-										break;
-									case 3:
-										await this.set_DevieParameter(DeviceParameters.Profile_PN3, newProfileName);
-										break;
-									case 4:
-										await this.set_DevieParameter(DeviceParameters.Profile_PN4, newProfileName);
-										break;
-									case 5:
-										await this.set_DevieParameter(DeviceParameters.Profile_PN5, newProfileName);
-										break;
-									case 6:
-										await this.set_DevieParameter(DeviceParameters.Profile_PN6, newProfileName);
-										break;
-									case 7:
-										await this.set_DevieParameter(DeviceParameters.Profile_PN7, newProfileName);
-										break;
-									case 8:
-										await this.set_DevieParameter(DeviceParameters.Profile_PN8, newProfileName);
-										break;
-									default:
-										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PN');
-								}
-								this.log.info('Profile ' + String(stateChangeProfileNo) + ' name changed to \'' + String(newProfileName) + '\'');
-							} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile Name change ERROR: ' + err); }
-							break;
-						case 'PB':	// Buzzer
-							try {
-								let profileBuzzer = parseFloat(String(state.val));
-								if (profileBuzzer > 1) {
-									profileBuzzer = 1;
-									this.log.warn('Profile ' + String(stateChangeProfileNo) + ' buzzer value \'' + String(state.val) + '\' is not valid! Buzzer will be set to \'ON\'! (1)');
-								}
-								switch (stateChangeProfileNo) {
-									case 1:
-										await this.set_DevieParameter(DeviceParameters.Profile_PB1, String(profileBuzzer));
-										break;
-									case 2:
-										await this.set_DevieParameter(DeviceParameters.Profile_PB2, String(profileBuzzer));
-										break;
-									case 3:
-										await this.set_DevieParameter(DeviceParameters.Profile_PB3, String(profileBuzzer));
-										break;
-									case 4:
-										await this.set_DevieParameter(DeviceParameters.Profile_PB4, String(profileBuzzer));
-										break;
-									case 5:
-										await this.set_DevieParameter(DeviceParameters.Profile_PB5, String(profileBuzzer));
-										break;
-									case 6:
-										await this.set_DevieParameter(DeviceParameters.Profile_PB6, String(profileBuzzer));
-										break;
-									case 7:
-										await this.set_DevieParameter(DeviceParameters.Profile_PB7, String(profileBuzzer));
-										break;
-									case 8:
-										await this.set_DevieParameter(DeviceParameters.Profile_PB8, String(profileBuzzer));
-										break;
-									default:
-										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PB');
-								}
-
-								if (profileBuzzer == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' buzzer is disabled'); }
-								else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' buzzer is enabled'); }
-
-							} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile buzzer change ERROR: ' + err); }
-							break;
-						case 'PF':	// Max flow
-							try {
-								let profileMaxFlow = parseInt(String(state.val));
-								if (profileMaxFlow > 5000) {
-									profileMaxFlow = 5000;
-									this.log.warn('Profile ' + String(stateChangeProfileNo) + ' Maximal flow per hour of \'' + String(state.val) + '/h\' is is to high! Max flow will be set to maximum \'5000l/h\'!');
-								}
-								switch (stateChangeProfileNo) {
-									case 1:
-										await this.set_DevieParameter(DeviceParameters.Profile_PF1, String(profileMaxFlow));
-										break;
-									case 2:
-										await this.set_DevieParameter(DeviceParameters.Profile_PF2, String(profileMaxFlow));
-										break;
-									case 3:
-										await this.set_DevieParameter(DeviceParameters.Profile_PF3, String(profileMaxFlow));
-										break;
-									case 4:
-										await this.set_DevieParameter(DeviceParameters.Profile_PF4, String(profileMaxFlow));
-										break;
-									case 5:
-										await this.set_DevieParameter(DeviceParameters.Profile_PF5, String(profileMaxFlow));
-										break;
-									case 6:
-										await this.set_DevieParameter(DeviceParameters.Profile_PF6, String(profileMaxFlow));
-										break;
-									case 7:
-										await this.set_DevieParameter(DeviceParameters.Profile_PF7, String(profileMaxFlow));
-										break;
-									case 8:
-										await this.set_DevieParameter(DeviceParameters.Profile_PF8, String(profileMaxFlow));
-										break;
-									default:
-										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PF');
-								}
-
-								if (profileMaxFlow == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' max Flow per hour is disabled'); }
-								else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' max Flow per hour changed to \'' + String(profileMaxFlow) + 'l/h\''); }
-
-							} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile max flow change ERROR: ' + err); }
-							break;
-						case 'PM':	// Micro leak detection
-							try {
-								let profileMicroLeak = parseInt(String(state.val));
-								if (profileMicroLeak > 1) {
-									profileMicroLeak = 1;
-									this.log.warn('Profile ' + String(stateChangeProfileNo) + ' micro leak detection \'' + String(state.val) + '\' is not valid! Micro leak detection will be set to \'ON\'! (1)');
-								}
-								switch (stateChangeProfileNo) {
-									case 1:
-										await this.set_DevieParameter(DeviceParameters.Profile_PM1, String(profileMicroLeak));
-										break;
-									case 2:
-										await this.set_DevieParameter(DeviceParameters.Profile_PM2, String(profileMicroLeak));
-										break;
-									case 3:
-										await this.set_DevieParameter(DeviceParameters.Profile_PM3, String(profileMicroLeak));
-										break;
-									case 4:
-										await this.set_DevieParameter(DeviceParameters.Profile_PM4, String(profileMicroLeak));
-										break;
-									case 5:
-										await this.set_DevieParameter(DeviceParameters.Profile_PM5, String(profileMicroLeak));
-										break;
-									case 6:
-										await this.set_DevieParameter(DeviceParameters.Profile_PM6, String(profileMicroLeak));
-										break;
-									case 7:
-										await this.set_DevieParameter(DeviceParameters.Profile_PM7, String(profileMicroLeak));
-										break;
-									case 8:
-										await this.set_DevieParameter(DeviceParameters.Profile_PM8, String(profileMicroLeak));
-										break;
-									default:
-										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PM');
-								}
-
-								if (profileMicroLeak == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' micro leak detection is disabled'); }
-								else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' micro leak detection is enabled'); }
-
-							} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile micro leak detection change ERROR: ' + err); }
-							break;
-						case 'PR':	// Time back to default profile
-							try {
-								let profileTimeBackStandardProfile = parseInt(String(state.val));
-								if (profileTimeBackStandardProfile > 720) {
-									profileTimeBackStandardProfile = 720;
-									this.log.warn('Profile ' + String(stateChangeProfileNo) + ' time back to default profile of \'' + String(state.val) + ' h\' is is to high! It will be set to the maximum of \'720h\' (30 days)!');
-								}
-								switch (stateChangeProfileNo) {
-									case 1:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR1, String(profileTimeBackStandardProfile));
-										break;
-									case 2:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR2, String(profileTimeBackStandardProfile));
-										break;
-									case 3:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR3, String(profileTimeBackStandardProfile));
-										break;
-									case 4:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR4, String(profileTimeBackStandardProfile));
-										break;
-									case 5:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR5, String(profileTimeBackStandardProfile));
-										break;
-									case 6:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR6, String(profileTimeBackStandardProfile));
-										break;
-									case 7:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR7, String(profileTimeBackStandardProfile));
-										break;
-									case 8:
-										await this.set_DevieParameter(DeviceParameters.Profile_PR8, String(profileTimeBackStandardProfile));
-										break;
-									default:
-										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PR');
-								}
-
-								if (profileTimeBackStandardProfile == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' time back to default profile is disabled'); }
-								else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' time back to default profile is \'' + String(profileTimeBackStandardProfile) + ' h\''); }
-
-							} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile back to default profile change ERROR: ' + err); }
-							break;
-						case 'PT':	// Time limit
-							try {
-								let profileLeakageTimeLimit = parseInt(String(state.val));
-								if (profileLeakageTimeLimit > 1500) {
-									profileLeakageTimeLimit = 1500;
-									this.log.warn('Profile ' + String(stateChangeProfileNo) + ' leakage time limit of \'' + String(state.val) + ' min\' is is to high! It will be set to the maximum of \'1500 min\' (25 h)!');
-								}
-								switch (stateChangeProfileNo) {
-									case 1:
-										await this.set_DevieParameter(DeviceParameters.Profile_PT1, String(profileLeakageTimeLimit));
-										break;
-									case 2:
-										await this.set_DevieParameter(DeviceParameters.Profile_PT2, String(profileLeakageTimeLimit));
-										break;
-									case 3:
-										await this.set_DevieParameter(DeviceParameters.Profile_PT3, String(profileLeakageTimeLimit));
-										break;
-									case 4:
-										await this.set_DevieParameter(DeviceParameters.Profile_PT4, String(profileLeakageTimeLimit));
-										break;
-									case 5:
-										await this.set_DevieParameter(DeviceParameters.Profile_PT5, String(profileLeakageTimeLimit));
-										break;
-									case 6:
-										await this.set_DevieParameter(DeviceParameters.Profile_PT6, String(profileLeakageTimeLimit));
-										break;
-									case 7:
-										await this.set_DevieParameter(DeviceParameters.Profile_PT7, String(profileLeakageTimeLimit));
-										break;
-									case 8:
-										await this.set_DevieParameter(DeviceParameters.Profile_PT8, String(profileLeakageTimeLimit));
-										break;
-									default:
-										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PT');
-								}
-
-								if (profileLeakageTimeLimit == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' leakage time limit is disabled'); }
-								else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' leakage time limit is \'' + String(profileLeakageTimeLimit) + ' min\''); }
-
-							} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile time limit change ERROR: ' + err); }
-							break;
-						case 'PV':	// Volume limit
-							try {
-								let profileLeakageVolumeLimit = parseInt(String(state.val));
-								if (profileLeakageVolumeLimit > 1900) {
-									profileLeakageVolumeLimit = 1900;
-									this.log.warn('Profile ' + String(stateChangeProfileNo) + ' leakage volume limit of \'' + String(state.val) + ' l\' is is to high! It will be set to the maximum of \'1900 l\'!');
-								}
-								switch (stateChangeProfileNo) {
-									case 1:
-										await this.set_DevieParameter(DeviceParameters.Profile_PV1, String(profileLeakageVolumeLimit));
-										break;
-									case 2:
-										await this.set_DevieParameter(DeviceParameters.Profile_PV2, String(profileLeakageVolumeLimit));
-										break;
-									case 3:
-										await this.set_DevieParameter(DeviceParameters.Profile_PV3, String(profileLeakageVolumeLimit));
-										break;
-									case 4:
-										await this.set_DevieParameter(DeviceParameters.Profile_PV4, String(profileLeakageVolumeLimit));
-										break;
-									case 5:
-										await this.set_DevieParameter(DeviceParameters.Profile_PV5, String(profileLeakageVolumeLimit));
-										break;
-									case 6:
-										await this.set_DevieParameter(DeviceParameters.Profile_PV6, String(profileLeakageVolumeLimit));
-										break;
-									case 7:
-										await this.set_DevieParameter(DeviceParameters.Profile_PV7, String(profileLeakageVolumeLimit));
-										break;
-									case 8:
-										await this.set_DevieParameter(DeviceParameters.Profile_PV8, String(profileLeakageVolumeLimit));
-										break;
-									default:
-										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PV');
-								}
-
-								if (profileLeakageVolumeLimit == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' leakage volume limit is disabled'); }
-								else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' leakage volume limit is \'' + String(profileLeakageVolumeLimit) + ' l\''); }
-
-							} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile volume limit change ERROR: ' + err); }
-							break;
-						case 'PW':	// Leakage warning
-							try {
-								let profileLeakageWarning = parseInt(String(state.val));
-								if (profileLeakageWarning > 1) {
-									profileLeakageWarning = 1;
-									this.log.warn('Profile ' + String(stateChangeProfileNo) + ' leackage warning value \'' + String(state.val) + '\' is not valid! Leackage warning will be set to \'ON\'! (1)');
-								}
-								switch (stateChangeProfileNo) {
-									case 1:
-										await this.set_DevieParameter(DeviceParameters.Profile_PW1, String(profileLeakageWarning));
-										break;
-									case 2:
-										await this.set_DevieParameter(DeviceParameters.Profile_PW2, String(profileLeakageWarning));
-										break;
-									case 3:
-										await this.set_DevieParameter(DeviceParameters.Profile_PW3, String(profileLeakageWarning));
-										break;
-									case 4:
-										await this.set_DevieParameter(DeviceParameters.Profile_PW4, String(profileLeakageWarning));
-										break;
-									case 5:
-										await this.set_DevieParameter(DeviceParameters.Profile_PW5, String(profileLeakageWarning));
-										break;
-									case 6:
-										await this.set_DevieParameter(DeviceParameters.Profile_PW6, String(profileLeakageWarning));
-										break;
-									case 7:
-										await this.set_DevieParameter(DeviceParameters.Profile_PW7, String(profileLeakageWarning));
-										break;
-									case 8:
-										await this.set_DevieParameter(DeviceParameters.Profile_PW8, String(profileLeakageWarning));
-										break;
-									default:
-										this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PW');
-								}
-
-								if (profileLeakageWarning == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' leackage warning is disabled'); }
-								else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' leackage warning is enabled'); }
-
-							} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile leackage warning ERROR: ' + err); }
 							break;
 						default:
+							this.log.error('Screen rotation value of ' + String(state.val) + '° is not a valid angle!');
+							break;
 					}
-				} catch (err) { this.log.warn('onStateChange(id, state) -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) ... ERROR: ' + err); }
-			}
-			//############################################################################
-			// Floore Sensor 1 State changes
-			//############################################################################
+				}
+				//============================================================================
+				// Shutoff valve AB
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id) && state.ack == false) {
+					switch (state.val) {
+						case 1:
+						case 2:
+							try {
+								await this.set_DevieParameter(DeviceParameters.ShutOff, String(state.val));
+								if (state.val == 1) {
+									this.log.info('Command: [AB] Shutoff valve OPENED');
+								}
+								else {
+									this.log.warn('Command: [AB] Shutoff valve CLOSED');
+								}
+							}
+							catch (err) {
+								this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.ShutOff ... ERROR: ' + err);
+							}
+							break;
+						default:
+							this.log.error(String(state.val) + ' is not valid for ' + String(DeviceParameters.ScreenRotation.id + ' Valid values: 1=open 2=closed'));
+							break;
+					}
+				}
+				//============================================================================
+				// APT WiFi AP timeout changed
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.APTimeout.statePath + '.' + DeviceParameters.APTimeout.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.APTimeout.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.APTimeout.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.APTimeout, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.APTimeout.id + ' changed to ' + String(state.val)); }
+							}
+							else { this.log.error(DeviceParameters.ButtonProAPTimeoutfileChange.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [APT]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// BPB ButtonProfileChange
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.ButtonProfileChange.statePath + '.' + DeviceParameters.ButtonProfileChange.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.ButtonProfileChange.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.ButtonProfileChange.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.ButtonProfileChange, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.ButtonProfileChange.id + ' changed to ' + String(state.val)); }
+							}
+							else { this.log.error(DeviceParameters.ButtonProfileChange.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [BPB]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// BSA Floor Sensor
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.FloorSensor.statePath + '.' + DeviceParameters.FloorSensor.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.FloorSensor.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.FloorSensor.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.FloorSensor, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.FloorSensor.id + ' changed to ' + String(state.val)); }
+							}
+							else { this.log.error(DeviceParameters.FloorSensor.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [BSA]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// BUZ Buzzer on alarm
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.BuzzerOnAlarm.statePath + '.' + DeviceParameters.BuzzerOnAlarm.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.BuzzerOnAlarm.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.BuzzerOnAlarm.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.BuzzerOnAlarm, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.BuzzerOnAlarm.id + ' changed to ' + String(state.val)); }
+							}
+							else { this.log.error(DeviceParameters.BuzzerOnAlarm.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [BUZ]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// DMA Micro-Leakage-Test
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.MicroLeakageTest.statePath + '.' + DeviceParameters.MicroLeakageTest.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.MicroLeakageTest.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.MicroLeakageTest.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.MicroLeakageTest, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.MicroLeakageTest.id + ' changed to ' + String(state.val)); }
+							}
+							else { this.log.error(DeviceParameters.MicroLeakageTest.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [DMA]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// DRP Micro-Leakage-Test period
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.MicroLeakageTestPeriod.statePath + '.' + DeviceParameters.MicroLeakageTestPeriod.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.MicroLeakageTestPeriod.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.MicroLeakageTestPeriod.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.MicroLeakageTestPeriod, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.MicroLeakageTestPeriod.id + ' changed to ' + String(state.val)); }
+							}
+							else { this.log.error(DeviceParameters.MicroLeakageTestPeriod.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [DRP]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// IDS Daylight saving time
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.DaylightSavingTime.statePath + '.' + DeviceParameters.DaylightSavingTime.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.DaylightSavingTime.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DaylightSavingTime.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.DaylightSavingTime, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.DaylightSavingTime.id + ' changed to ' + String(state.val)); }
+							}
+							else { this.log.error(DeviceParameters.DaylightSavingTime.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [IDS]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// LNG Language
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.Language.statePath + '.' + DeviceParameters.Language.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.Language.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.Language.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.Language, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.Language.id + ' changed to ' + String(state.val)); }
+							}
+							else { this.log.error(DeviceParameters.Language.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [LNG]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// LWT Leakage notification (warning) threshold
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.LeakageNotificationWarningThreshold.statePath + '.' + DeviceParameters.LeakageNotificationWarningThreshold.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.LeakageNotificationWarningThreshold.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.LeakageNotificationWarningThreshold.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.LeakageNotificationWarningThreshold, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.LeakageNotificationWarningThreshold.id + ' changed to ' + String(state.val)); }
+							}
+							else { this.log.error(DeviceParameters.LeakageNotificationWarningThreshold.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [LWT]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// UNI Units
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.Units.statePath + '.' + DeviceParameters.Units.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.Units.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.Units.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.Units, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.Units.id + ' changed to ' + String(state.val)); }
+							}
+							else { this.log.error(DeviceParameters.Units.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [UNI]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// CSD Deactivate conductivity sensor
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.DeactivateConductivitySensor.statePath + '.' + DeviceParameters.DeactivateConductivitySensor.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.DeactivateConductivitySensor.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DeactivateConductivitySensor.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.DeactivateConductivitySensor, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.DeactivateConductivitySensor.id + ' changed to ' + String(state.val)); }
+							}
+							else { this.log.error(DeviceParameters.DeactivateConductivitySensor.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [CSD]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// PSD Deactivate pressure sensor
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.DeactivatePressureSensor.statePath + '.' + DeviceParameters.DeactivatePressureSensor.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.DeactivatePressureSensor.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DeactivatePressureSensor.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.DeactivatePressureSensor, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.DeactivatePressureSensor.id + ' changed to ' + String(state.val)); }
+							}
+							else { this.log.error(DeviceParameters.DeactivatePressureSensor.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [PSD]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// TSD Deactivate temperature sensor
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.DeactivateTemperatureSensor.statePath + '.' + DeviceParameters.DeactivateTemperatureSensor.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.DeactivateTemperatureSensor.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DeactivateTemperatureSensor.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.DeactivateTemperatureSensor, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.DeactivateTemperatureSensor.id + ' changed to ' + String(state.val)); }
+							}
+							else { this.log.error(DeviceParameters.DeactivateTemperatureSensor.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [TSD]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// T2 Max flow leakage time
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.MaxFlowLeakageTime.statePath + '.' + DeviceParameters.MaxFlowLeakageTime.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.MaxFlowLeakageTime.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.MaxFlowLeakageTime.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.MaxFlowLeakageTime, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.MaxFlowLeakageTime.id + ' changed to ' + String(state.val)); }
+							}
+							else { this.log.error(DeviceParameters.MaxFlowLeakageTime.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [T2]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// RST System restart
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.systemRestart.statePath + '.' + DeviceParameters.systemRestart.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if (state.val == 1) {
+								this.log.warn('System restart initiated by user!');
+								// send restart command (1 as number) to device
+								await this.set_DevieParameter(DeviceParameters.systemRestart, state.val);
+								this.log.debug('Setting state RST (sytem restart) back to 0!');
+								// set state back to 0
+								await this.setStateAsync(DeviceParameters.systemRestart.statePath + '.' + DeviceParameters.systemRestart.id, { val: 0, ack: true });
 
-			//============================================================================
-			// Floor Sensor 1: Sleep Mode
-			//============================================================================
-			else if((id == statePrefix + DeviceParametetsFS.SleepMode.statePath.replace('.X.', '.1.') + '.' + DeviceParametetsFS.SleepMode.id) && state.ack == false){
-				this.handle_FS_state_changes(this.syrSaveFloor1APIClient, 1, DeviceParametetsFS.SleepMode.id);
-			}
-			//============================================================================
-			// Floor Sensor 1: Admin Mode
-			//============================================================================
-			else if((id == statePrefix + DeviceParametetsFS.AdminMode.statePath.replace('.X.', '.1.') + '.' + DeviceParametetsFS.AdminMode.id) && state.ack == false){
-				this.handle_FS_state_changes(this.syrSaveFloor1APIClient, 1, DeviceParametetsFS.AdminMode.id);
-			}
+								if (moreMessages) { this.log.info(DeviceParameters.systemRestart.id + ' changed to ' + String(state.val)); }
+							}
+						} catch (err) {
+							this.log.error('ERROR setting [RST]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// Leakage protection deactivation time
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.LeakProtectionTemporaryDeactivation.statePath + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id) && state.ack == false) {
+					try {
+						await this.set_DevieParameter(DeviceParameters.LeakProtectionTemporaryDeactivation, String(state.val));
+					}
+					catch (err) {
+						this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.LeakProtectionTemporaryDeactivation ... ERROR: ' + err);
+					}
+					const tempDisabledSeconds = parseFloat(String(state.val));
+					const offTime = new Date(tempDisabledSeconds * 1000).toISOString().substring(11, 19);
 
-			//############################################################################
-			// Unsupported State change
-			//############################################################################
-			else {
-				this.log.debug('StateChange: ' + String(id) + ' Value: ' + String(state.val) + ' acknowledged: ' + String(state.ack));
-			}
+					if (tempDisabledSeconds == 0) { this.log.info('Command: [TMP] Leakage protection is aktive'); }
+					else { this.log.warn('Command: [TMP] Leakage protection temporary disabled for ' + offTime + ' (hh:mm:ss)'); }
+				}
+				//============================================================================
+				// Selected Profile
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id) && state.ack == false) {
+					let profileEnabled = Object();
+					let changeOK = false;
+					switch (state.val) {
+						case 1:
+							// Profile available?
+							profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA1.statePath + '.' + DeviceParameters.Profile_PA1.id);
+							if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
+							break;
+						case 2:
+							// Profile available?
+							profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA2.statePath + '.' + DeviceParameters.Profile_PA2.id);
+							if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
+							break;
+						case 3:
+							// Profile available?
+							profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA3.statePath + '.' + DeviceParameters.Profile_PA3.id);
+							if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
+							break;
+						case 4:
+							// Profile available?
+							profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA4.statePath + '.' + DeviceParameters.Profile_PA4.id);
+							if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
+							break;
+						case 5:
+							// Profile available?
+							profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA5.statePath + '.' + DeviceParameters.Profile_PA5.id);
+							if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
+							break;
+						case 6:
+							// Profile available?
+							profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA6.statePath + '.' + DeviceParameters.Profile_PA6.id);
+							if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
+							break;
+						case 7:
+							// Profile available?
+							profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA7.statePath + '.' + DeviceParameters.Profile_PA7.id);
+							if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
+							break;
+						case 8:
+							// Profile available?
+							profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA8.statePath + '.' + DeviceParameters.Profile_PA8.id);
+							if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
+							break;
+						default:
+							this.log.error(String(state.val) + ' is not valid for ' + String(DeviceParameters.SelectedProfile.id + ' Valid values: 1...8'));
+							break;
+					}
+					if (changeOK) {
+						try {
+							await this.set_DevieParameter(DeviceParameters.SelectedProfile, String(state.val));
+							this.log.info('Selected profile changed to number ' + String(state.val));
+						}
+						catch (err) {
+							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.SelectedProfile ... ERROR: ' + err);
+						}
+					}
+					else {
+						this.log.error('You cant change to an unavailable profile! Please make profil ' + String(state.val) + ' available first.');
+						// Rerstore old active Profile back to State
+						// Read selected Profile from Device
+						const currentAktiveProfile = await this.get_DevieParameter(DeviceParameters.SelectedProfile);
+						if (currentAktiveProfile != null) {
+							// Save aktive profile from Device in state
+							await this.set_DevieParameter(DeviceParameters.SelectedProfile, String(currentAktiveProfile['getPRF']));
+						} else {
+							this.log.debug('couldn\'t read aktive Profile Parameter');
+						}
+					}
+				}
+				//============================================================================
+				// Profile(s) Parameter
+				//============================================================================
+				else if ((id.includes('Device.Profiles.')) && (state.ack == false)) {
+					try {
+						// identify Profile parameter
+						const currentProfileState = id.substring(id.lastIndexOf('.') + 1, id.length - 1);
+						this.log.debug('onStateChange Profile Parameter is: ' + String(currentProfileState));
+						// identify profile number
+						const stateChangeProfileNo = parseInt(id.substring(id.length - 1));
+						this.log.debug('onStateChange Profile Number is: ' + String(stateChangeProfileNo));
 
-		} else {
-			// The state was deleted
-			this.log.debug(`state ${id} deleted`);
-		}
+						// identify currentAktiveProfile
+						const AktiveProfileNumber = await this.getStateAsync(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id);
+
+						switch (currentProfileState) {
+							case 'PA':	// Available
+								// Trying to disable the ACTIVE profile?
+								if ((AktiveProfileNumber != null) && (parseInt(String(AktiveProfileNumber.val)) == stateChangeProfileNo) && (parseInt(String(state.val)) == 0)) {
+									this.log.error('You can\'t disable the aktive profile! You need to select an other aktiv profile first!');
+
+									// Restore availability parameter to 1 (on)
+									switch (stateChangeProfileNo) {
+										case 1:
+											await this.set_DevieParameter(DeviceParameters.Profile_PA1, '1');
+											break;
+										case 2:
+											await this.set_DevieParameter(DeviceParameters.Profile_PA2, '1');
+											break;
+										case 3:
+											await this.set_DevieParameter(DeviceParameters.Profile_PA3, '1');
+											break;
+										case 4:
+											await this.set_DevieParameter(DeviceParameters.Profile_PA4, '1');
+											break;
+										case 5:
+											await this.set_DevieParameter(DeviceParameters.Profile_PA5, '1');
+											break;
+										case 6:
+											await this.set_DevieParameter(DeviceParameters.Profile_PA6, '1');
+											break;
+										case 7:
+											await this.set_DevieParameter(DeviceParameters.Profile_PA7, '1');
+											break;
+										case 8:
+											await this.set_DevieParameter(DeviceParameters.Profile_PA8, '1');
+											break;
+									}
+									this.log.warn('Restored profile ' + String(stateChangeProfileNo) + 'availability to 1 (on)');
+								}
+								else {
+									let profAvailableState = parseInt(String(state.val));
+									// do we have a legal value like 0 or 1
+									if (profAvailableState > 1) {
+										profAvailableState = 1;
+										this.log.warn('Profile ' + stateChangeProfileNo + ' available value \'' + String(state.val) + '\' is not valid! Profile will be set to \'available\'! (1)');
+									}
+									switch (stateChangeProfileNo) {
+										case 1:
+											await this.set_DevieParameter(DeviceParameters.Profile_PA1, String(profAvailableState));
+											break;
+										case 2:
+											await this.set_DevieParameter(DeviceParameters.Profile_PA2, String(profAvailableState));
+											break;
+										case 3:
+											await this.set_DevieParameter(DeviceParameters.Profile_PA3, String(profAvailableState));
+											break;
+										case 4:
+											await this.set_DevieParameter(DeviceParameters.Profile_PA4, String(profAvailableState));
+											break;
+										case 5:
+											await this.set_DevieParameter(DeviceParameters.Profile_PA5, String(profAvailableState));
+											break;
+										case 6:
+											await this.set_DevieParameter(DeviceParameters.Profile_PA6, String(profAvailableState));
+											break;
+										case 7:
+											await this.set_DevieParameter(DeviceParameters.Profile_PA7, String(profAvailableState));
+											break;
+										case 8:
+											await this.set_DevieParameter(DeviceParameters.Profile_PA8, String(profAvailableState));
+											break;
+										default:
+											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PA');
+									}
+
+									if (profAvailableState == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' availability changed to \'not available\'.'); }
+									else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' availability changed to \'available\'.'); }
+								}
+								break;
+							case 'PN':	// Name
+								try {
+									let newProfileName = String(state.val);
+									if (String(state.val).length > 31) {
+										newProfileName = newProfileName.substring(0, 30);
+										this.log.warn('Profile name \'' + String(state.val) + '\' is to long and will be cut to \'' + String(newProfileName) + '\' Mmax. 31 characters allowed!');
+									}
+									switch (stateChangeProfileNo) {
+										case 1:
+											await this.set_DevieParameter(DeviceParameters.Profile_PN1, newProfileName);
+											break;
+										case 2:
+											await this.set_DevieParameter(DeviceParameters.Profile_PN2, newProfileName);
+											break;
+										case 3:
+											await this.set_DevieParameter(DeviceParameters.Profile_PN3, newProfileName);
+											break;
+										case 4:
+											await this.set_DevieParameter(DeviceParameters.Profile_PN4, newProfileName);
+											break;
+										case 5:
+											await this.set_DevieParameter(DeviceParameters.Profile_PN5, newProfileName);
+											break;
+										case 6:
+											await this.set_DevieParameter(DeviceParameters.Profile_PN6, newProfileName);
+											break;
+										case 7:
+											await this.set_DevieParameter(DeviceParameters.Profile_PN7, newProfileName);
+											break;
+										case 8:
+											await this.set_DevieParameter(DeviceParameters.Profile_PN8, newProfileName);
+											break;
+										default:
+											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PN');
+									}
+									this.log.info('Profile ' + String(stateChangeProfileNo) + ' name changed to \'' + String(newProfileName) + '\'');
+								} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile Name change ERROR: ' + err); }
+								break;
+							case 'PB':	// Buzzer
+								try {
+									let profileBuzzer = parseFloat(String(state.val));
+									if (profileBuzzer > 1) {
+										profileBuzzer = 1;
+										this.log.warn('Profile ' + String(stateChangeProfileNo) + ' buzzer value \'' + String(state.val) + '\' is not valid! Buzzer will be set to \'ON\'! (1)');
+									}
+									switch (stateChangeProfileNo) {
+										case 1:
+											await this.set_DevieParameter(DeviceParameters.Profile_PB1, String(profileBuzzer));
+											break;
+										case 2:
+											await this.set_DevieParameter(DeviceParameters.Profile_PB2, String(profileBuzzer));
+											break;
+										case 3:
+											await this.set_DevieParameter(DeviceParameters.Profile_PB3, String(profileBuzzer));
+											break;
+										case 4:
+											await this.set_DevieParameter(DeviceParameters.Profile_PB4, String(profileBuzzer));
+											break;
+										case 5:
+											await this.set_DevieParameter(DeviceParameters.Profile_PB5, String(profileBuzzer));
+											break;
+										case 6:
+											await this.set_DevieParameter(DeviceParameters.Profile_PB6, String(profileBuzzer));
+											break;
+										case 7:
+											await this.set_DevieParameter(DeviceParameters.Profile_PB7, String(profileBuzzer));
+											break;
+										case 8:
+											await this.set_DevieParameter(DeviceParameters.Profile_PB8, String(profileBuzzer));
+											break;
+										default:
+											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PB');
+									}
+
+									if (profileBuzzer == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' buzzer is disabled'); }
+									else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' buzzer is enabled'); }
+
+								} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile buzzer change ERROR: ' + err); }
+								break;
+							case 'PF':	// Max flow
+								try {
+									let profileMaxFlow = parseInt(String(state.val));
+									if (profileMaxFlow > 5000) {
+										profileMaxFlow = 5000;
+										this.log.warn('Profile ' + String(stateChangeProfileNo) + ' Maximal flow per hour of \'' + String(state.val) + '/h\' is is to high! Max flow will be set to maximum \'5000l/h\'!');
+									}
+									switch (stateChangeProfileNo) {
+										case 1:
+											await this.set_DevieParameter(DeviceParameters.Profile_PF1, String(profileMaxFlow));
+											break;
+										case 2:
+											await this.set_DevieParameter(DeviceParameters.Profile_PF2, String(profileMaxFlow));
+											break;
+										case 3:
+											await this.set_DevieParameter(DeviceParameters.Profile_PF3, String(profileMaxFlow));
+											break;
+										case 4:
+											await this.set_DevieParameter(DeviceParameters.Profile_PF4, String(profileMaxFlow));
+											break;
+										case 5:
+											await this.set_DevieParameter(DeviceParameters.Profile_PF5, String(profileMaxFlow));
+											break;
+										case 6:
+											await this.set_DevieParameter(DeviceParameters.Profile_PF6, String(profileMaxFlow));
+											break;
+										case 7:
+											await this.set_DevieParameter(DeviceParameters.Profile_PF7, String(profileMaxFlow));
+											break;
+										case 8:
+											await this.set_DevieParameter(DeviceParameters.Profile_PF8, String(profileMaxFlow));
+											break;
+										default:
+											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PF');
+									}
+
+									if (profileMaxFlow == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' max Flow per hour is disabled'); }
+									else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' max Flow per hour changed to \'' + String(profileMaxFlow) + 'l/h\''); }
+
+								} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile max flow change ERROR: ' + err); }
+								break;
+							case 'PM':	// Micro leak detection
+								try {
+									let profileMicroLeak = parseInt(String(state.val));
+									if (profileMicroLeak > 1) {
+										profileMicroLeak = 1;
+										this.log.warn('Profile ' + String(stateChangeProfileNo) + ' micro leak detection \'' + String(state.val) + '\' is not valid! Micro leak detection will be set to \'ON\'! (1)');
+									}
+									switch (stateChangeProfileNo) {
+										case 1:
+											await this.set_DevieParameter(DeviceParameters.Profile_PM1, String(profileMicroLeak));
+											break;
+										case 2:
+											await this.set_DevieParameter(DeviceParameters.Profile_PM2, String(profileMicroLeak));
+											break;
+										case 3:
+											await this.set_DevieParameter(DeviceParameters.Profile_PM3, String(profileMicroLeak));
+											break;
+										case 4:
+											await this.set_DevieParameter(DeviceParameters.Profile_PM4, String(profileMicroLeak));
+											break;
+										case 5:
+											await this.set_DevieParameter(DeviceParameters.Profile_PM5, String(profileMicroLeak));
+											break;
+										case 6:
+											await this.set_DevieParameter(DeviceParameters.Profile_PM6, String(profileMicroLeak));
+											break;
+										case 7:
+											await this.set_DevieParameter(DeviceParameters.Profile_PM7, String(profileMicroLeak));
+											break;
+										case 8:
+											await this.set_DevieParameter(DeviceParameters.Profile_PM8, String(profileMicroLeak));
+											break;
+										default:
+											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PM');
+									}
+
+									if (profileMicroLeak == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' micro leak detection is disabled'); }
+									else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' micro leak detection is enabled'); }
+
+								} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile micro leak detection change ERROR: ' + err); }
+								break;
+							case 'PR':	// Time back to default profile
+								try {
+									let profileTimeBackStandardProfile = parseInt(String(state.val));
+									if (profileTimeBackStandardProfile > 720) {
+										profileTimeBackStandardProfile = 720;
+										this.log.warn('Profile ' + String(stateChangeProfileNo) + ' time back to default profile of \'' + String(state.val) + ' h\' is is to high! It will be set to the maximum of \'720h\' (30 days)!');
+									}
+									switch (stateChangeProfileNo) {
+										case 1:
+											await this.set_DevieParameter(DeviceParameters.Profile_PR1, String(profileTimeBackStandardProfile));
+											break;
+										case 2:
+											await this.set_DevieParameter(DeviceParameters.Profile_PR2, String(profileTimeBackStandardProfile));
+											break;
+										case 3:
+											await this.set_DevieParameter(DeviceParameters.Profile_PR3, String(profileTimeBackStandardProfile));
+											break;
+										case 4:
+											await this.set_DevieParameter(DeviceParameters.Profile_PR4, String(profileTimeBackStandardProfile));
+											break;
+										case 5:
+											await this.set_DevieParameter(DeviceParameters.Profile_PR5, String(profileTimeBackStandardProfile));
+											break;
+										case 6:
+											await this.set_DevieParameter(DeviceParameters.Profile_PR6, String(profileTimeBackStandardProfile));
+											break;
+										case 7:
+											await this.set_DevieParameter(DeviceParameters.Profile_PR7, String(profileTimeBackStandardProfile));
+											break;
+										case 8:
+											await this.set_DevieParameter(DeviceParameters.Profile_PR8, String(profileTimeBackStandardProfile));
+											break;
+										default:
+											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PR');
+									}
+
+									if (profileTimeBackStandardProfile == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' time back to default profile is disabled'); }
+									else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' time back to default profile is \'' + String(profileTimeBackStandardProfile) + ' h\''); }
+
+								} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile back to default profile change ERROR: ' + err); }
+								break;
+							case 'PT':	// Time limit
+								try {
+									let profileLeakageTimeLimit = parseInt(String(state.val));
+									if (profileLeakageTimeLimit > 1500) {
+										profileLeakageTimeLimit = 1500;
+										this.log.warn('Profile ' + String(stateChangeProfileNo) + ' leakage time limit of \'' + String(state.val) + ' min\' is is to high! It will be set to the maximum of \'1500 min\' (25 h)!');
+									}
+									switch (stateChangeProfileNo) {
+										case 1:
+											await this.set_DevieParameter(DeviceParameters.Profile_PT1, String(profileLeakageTimeLimit));
+											break;
+										case 2:
+											await this.set_DevieParameter(DeviceParameters.Profile_PT2, String(profileLeakageTimeLimit));
+											break;
+										case 3:
+											await this.set_DevieParameter(DeviceParameters.Profile_PT3, String(profileLeakageTimeLimit));
+											break;
+										case 4:
+											await this.set_DevieParameter(DeviceParameters.Profile_PT4, String(profileLeakageTimeLimit));
+											break;
+										case 5:
+											await this.set_DevieParameter(DeviceParameters.Profile_PT5, String(profileLeakageTimeLimit));
+											break;
+										case 6:
+											await this.set_DevieParameter(DeviceParameters.Profile_PT6, String(profileLeakageTimeLimit));
+											break;
+										case 7:
+											await this.set_DevieParameter(DeviceParameters.Profile_PT7, String(profileLeakageTimeLimit));
+											break;
+										case 8:
+											await this.set_DevieParameter(DeviceParameters.Profile_PT8, String(profileLeakageTimeLimit));
+											break;
+										default:
+											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PT');
+									}
+
+									if (profileLeakageTimeLimit == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' leakage time limit is disabled'); }
+									else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' leakage time limit is \'' + String(profileLeakageTimeLimit) + ' min\''); }
+
+								} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile time limit change ERROR: ' + err); }
+								break;
+							case 'PV':	// Volume limit
+								try {
+									let profileLeakageVolumeLimit = parseInt(String(state.val));
+									if (profileLeakageVolumeLimit > 1900) {
+										profileLeakageVolumeLimit = 1900;
+										this.log.warn('Profile ' + String(stateChangeProfileNo) + ' leakage volume limit of \'' + String(state.val) + ' l\' is is to high! It will be set to the maximum of \'1900 l\'!');
+									}
+									switch (stateChangeProfileNo) {
+										case 1:
+											await this.set_DevieParameter(DeviceParameters.Profile_PV1, String(profileLeakageVolumeLimit));
+											break;
+										case 2:
+											await this.set_DevieParameter(DeviceParameters.Profile_PV2, String(profileLeakageVolumeLimit));
+											break;
+										case 3:
+											await this.set_DevieParameter(DeviceParameters.Profile_PV3, String(profileLeakageVolumeLimit));
+											break;
+										case 4:
+											await this.set_DevieParameter(DeviceParameters.Profile_PV4, String(profileLeakageVolumeLimit));
+											break;
+										case 5:
+											await this.set_DevieParameter(DeviceParameters.Profile_PV5, String(profileLeakageVolumeLimit));
+											break;
+										case 6:
+											await this.set_DevieParameter(DeviceParameters.Profile_PV6, String(profileLeakageVolumeLimit));
+											break;
+										case 7:
+											await this.set_DevieParameter(DeviceParameters.Profile_PV7, String(profileLeakageVolumeLimit));
+											break;
+										case 8:
+											await this.set_DevieParameter(DeviceParameters.Profile_PV8, String(profileLeakageVolumeLimit));
+											break;
+										default:
+											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PV');
+									}
+
+									if (profileLeakageVolumeLimit == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' leakage volume limit is disabled'); }
+									else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' leakage volume limit is \'' + String(profileLeakageVolumeLimit) + ' l\''); }
+
+								} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile volume limit change ERROR: ' + err); }
+								break;
+							case 'PW':	// Leakage warning
+								try {
+									let profileLeakageWarning = parseInt(String(state.val));
+									if (profileLeakageWarning > 1) {
+										profileLeakageWarning = 1;
+										this.log.warn('Profile ' + String(stateChangeProfileNo) + ' leackage warning value \'' + String(state.val) + '\' is not valid! Leackage warning will be set to \'ON\'! (1)');
+									}
+									switch (stateChangeProfileNo) {
+										case 1:
+											await this.set_DevieParameter(DeviceParameters.Profile_PW1, String(profileLeakageWarning));
+											break;
+										case 2:
+											await this.set_DevieParameter(DeviceParameters.Profile_PW2, String(profileLeakageWarning));
+											break;
+										case 3:
+											await this.set_DevieParameter(DeviceParameters.Profile_PW3, String(profileLeakageWarning));
+											break;
+										case 4:
+											await this.set_DevieParameter(DeviceParameters.Profile_PW4, String(profileLeakageWarning));
+											break;
+										case 5:
+											await this.set_DevieParameter(DeviceParameters.Profile_PW5, String(profileLeakageWarning));
+											break;
+										case 6:
+											await this.set_DevieParameter(DeviceParameters.Profile_PW6, String(profileLeakageWarning));
+											break;
+										case 7:
+											await this.set_DevieParameter(DeviceParameters.Profile_PW7, String(profileLeakageWarning));
+											break;
+										case 8:
+											await this.set_DevieParameter(DeviceParameters.Profile_PW8, String(profileLeakageWarning));
+											break;
+										default:
+											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PW');
+									}
+
+									if (profileLeakageWarning == 0) { this.log.info('Profile ' + String(stateChangeProfileNo) + ' leackage warning is disabled'); }
+									else { this.log.info('Profile ' + String(stateChangeProfileNo) + ' leackage warning is enabled'); }
+
+								} catch (err) { this.log.error('at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) Profile leackage warning ERROR: ' + err); }
+								break;
+							default:
+						}
+					} catch (err) { this.log.warn('onStateChange(id, state) -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) ... ERROR: ' + err); }
+				}
+				//############################################################################
+				// Floore Sensor 1 State changes
+				//############################################################################
+
+				//============================================================================
+				// Floor Sensor 1: Sleep Mode
+				//============================================================================
+				else if ((id == statePrefix + DeviceParametetsFS.SleepMode.statePath.replace('.X.', '.1.') + '.' + DeviceParametetsFS.SleepMode.id) && state.ack == false) {
+					this.handle_FS_state_changes(this.syrSaveFloor1APIClient, 1, DeviceParametetsFS.SleepMode.id);
+				}
+				//============================================================================
+				// Floor Sensor 1: Admin Mode
+				//============================================================================
+				else if ((id == statePrefix + DeviceParametetsFS.AdminMode.statePath.replace('.X.', '.1.') + '.' + DeviceParametetsFS.AdminMode.id) && state.ack == false) {
+					this.handle_FS_state_changes(this.syrSaveFloor1APIClient, 1, DeviceParametetsFS.AdminMode.id);
+				}
+
+				//############################################################################
+				// Unsupported State change
+				//############################################################################
+				else {
+					this.log.debug('StateChange: ' + String(id) + ' Value: ' + String(state.val) + ' acknowledged: ' + String(state.ack));
+				}
+
+			} else {
+				// The state was deleted
+				this.log.debug(`state ${id} deleted`);
+			}
+		} catch (err) {this.log.error('Handling state chane event ' + err);}
 	}
 
 
@@ -1342,12 +1373,16 @@ class wamo extends utils.Adapter {
 	 */
 	async timerStarts() {
 		try {
-			schedule.scheduleJob(cron_TestinLoop, cron_poll_TestingLoop);
-			schedule.scheduleJob(cron_Day, cron_poll_day);
-			schedule.scheduleJob(cron_Week, cron_poll_week);
-			schedule.scheduleJob(cron_Month, cron_poll_month);
-			schedule.scheduleJob(cron_Year, cron_poll_year);
-
+			if(this.config.executetestloop)
+			{
+				schedule.scheduleJob(cron_TestinLoop, cron_poll_TestingLoop);
+			}
+			if(this.syrApiClient != null){
+				schedule.scheduleJob(cron_Day, cron_poll_day);
+				schedule.scheduleJob(cron_Week, cron_poll_week);
+				schedule.scheduleJob(cron_Month, cron_poll_month);
+				schedule.scheduleJob(cron_Year, cron_poll_year);
+			}
 			// do we have Floor Sensors?
 			if (this.syrSaveFloor1APIClient != null) {
 				// Floor Sensors present so initialize FloorSensors Schedule
@@ -1377,57 +1412,55 @@ class wamo extends utils.Adapter {
 				schedule.scheduleJob(this.config.regularemovementcron, cron_poll_jam_protection);
 			}
 			if (moreMessages) { this.log.info('Cron timer started'); }
-		} catch (err) {
-			this.log.error('Cron timer start error: ' + err);
-		}
-		try {
 
-			// Die Timer für das Polling starten
-			alarm_Intervall_ID = this.setInterval(alarm_poll, this.config.device_alarm_poll_interval * 1000);
-			if (moreMessages) { this.log.info('Alarm timer initialized'); }
+			if (this.syrApiClient != null) {
 
-			try {
-				await this.delay(3000); // Warten um einen Versatz zu erzeugen
-			}
-			catch (err) {
-				// Tieout to clear?
-				if (delay_Timer_ID != null) {
-					try { this.clearTimeout(delay_Timer_ID); }
-					catch (err) { this.log.error('Error clear Timeout'); }
+				// Die Timer für das Polling starten
+				alarm_Intervall_ID = this.setInterval(alarm_poll, this.config.device_alarm_poll_interval * 1000);
+				if (moreMessages) { this.log.info('Alarm timer initialized'); }
+
+				try {
+					await this.delay(3000); // Warten um einen Versatz zu erzeugen
 				}
-				this.log.error('await this.delay(3000)] ERROR: ' + err);
-			}
-			short_Intervall_ID = this.setInterval(short_poll, this.config.device_short_poll_interval * 1000);
-			if (moreMessages) { this.log.info('Short timer initialized'); }
-
-			try {
-				await this.delay(3000); // Warten um einen Versatz zu erzeugen
-			}
-			catch (err) {
-				// Tieout to clear?
-				if (delay_Timer_ID != null) {
-					try { this.clearTimeout(delay_Timer_ID); }
-					catch (err) { this.log.error('Error clear Timeout'); }
+				catch (err) {
+					// Tieout to clear?
+					if (delay_Timer_ID != null) {
+						try { this.clearTimeout(delay_Timer_ID); }
+						catch (err) { this.log.error('Error clear Timeout'); }
+					}
+					this.log.error('await this.delay(3000)] ERROR: ' + err);
 				}
-				this.log.error('await this.delay(3000)] ERROR: ' + err);
-			}
-			long_Intervall_ID = this.setInterval(long_poll, this.config.device_long_poll_interval * 1000);
-			if (moreMessages) { this.log.info('Long timer initialized'); }
+				short_Intervall_ID = this.setInterval(short_poll, this.config.device_short_poll_interval * 1000);
+				if (moreMessages) { this.log.info('Short timer initialized'); }
 
-			try {
-				await this.delay(3000); // Warten um einen Versatz zu erzeugen
-			}
-			catch (err) {
-				// Tieout to clear?
-				if (delay_Timer_ID != null) {
-					try { this.clearTimeout(delay_Timer_ID); }
-					catch (err) { this.log.error('Error clear Timeout'); }
+				try {
+					await this.delay(3000); // Warten um einen Versatz zu erzeugen
 				}
-				this.log.error('await this.delay(3000)] ERROR: ' + err);
+				catch (err) {
+					// Tieout to clear?
+					if (delay_Timer_ID != null) {
+						try { this.clearTimeout(delay_Timer_ID); }
+						catch (err) { this.log.error('Error clear Timeout'); }
+					}
+					this.log.error('await this.delay(3000)] ERROR: ' + err);
+				}
+				long_Intervall_ID = this.setInterval(long_poll, this.config.device_long_poll_interval * 1000);
+				if (moreMessages) { this.log.info('Long timer initialized'); }
+
+				try {
+					await this.delay(3000); // Warten um einen Versatz zu erzeugen
+				}
+				catch (err) {
+					// Tieout to clear?
+					if (delay_Timer_ID != null) {
+						try { this.clearTimeout(delay_Timer_ID); }
+						catch (err) { this.log.error('Error clear Timeout'); }
+					}
+					this.log.error('await this.delay(3000)] ERROR: ' + err);
+				}
+				very_long_Intervall_ID = this.setInterval(very_long_poll, this.config.device_very_long_poll_interval * 1000);
+				if (moreMessages) { this.log.info('Very Long timer initialized'); }
 			}
-			very_long_Intervall_ID = this.setInterval(very_long_poll, this.config.device_very_long_poll_interval * 1000);
-			if (moreMessages) { this.log.info('Very Long timer initialized'); }
-			return 'Alarm timer ID = ' + alarm_Intervall_ID + ' / Short timer ID = ' + short_Intervall_ID + ' / Long timer ID = ' + long_Intervall_ID + ' / Very long timer ID = ' + very_long_Intervall_ID;
 		} catch (err) {
 			throw new Error(err);
 		}
