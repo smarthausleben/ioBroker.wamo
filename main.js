@@ -1648,12 +1648,9 @@ class wamo extends utils.Adapter {
 	 */
 	async alarm_cron_FloorSensor_Tick_1(){
 		if (this.syrSaveFloor1APIClient != null){
-			const rnd = Math.random().toFixed(2);
-			this.log.warn('Zufallszahl' + String(rnd));
-			this.log.warn('* 10 = ' + String(rnd * 10));
-			this.log.warn('* 100 = ' + String(rnd * 100));
-			this.log.warn('* 1000 = ' + String(rnd * 1000));
-			this.log.warn('* 10000 = ' + String(rnd * 10000));
+			// we delay the the function call randomly between 0 and 5 (4.95) seconds
+			// in order to avoide collition with other maybe running instances
+			this.delay(Math.random() * 1000 / 2);
 			this.alarm_cron_FloorSensors(this.syrSaveFloor1APIClient, this.config.safefloor_1_keep_online, 1);
 		}
 	}
