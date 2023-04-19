@@ -1648,7 +1648,7 @@ class wamo extends utils.Adapter {
 	 */
 	async alarm_cron_FloorSensor_Tick_1(){
 		if (this.syrSaveFloor1APIClient != null){
-			const rnd = Math.random();
+			const rnd = Math.random().toFixed(2);
 			this.log.warn('Zufallszahl' + String(rnd));
 			this.log.warn('* 10 = ' + String(rnd * 10));
 			this.log.warn('* 100 = ' + String(rnd * 100));
