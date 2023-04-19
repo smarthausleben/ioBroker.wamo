@@ -1650,7 +1650,7 @@ class wamo extends utils.Adapter {
 		if (this.syrSaveFloor1APIClient != null){
 			// we delay the the function call randomly between 0 and 5 (4.95) seconds
 			// in order to avoide collition with other maybe running instances
-			this.delay(Math.random() * 1000 / 2);
+			await this.delay(Math.random() * 1000 / 2);
 			this.alarm_cron_FloorSensors(this.syrSaveFloor1APIClient, this.config.safefloor_1_keep_online, 1);
 		}
 	}
@@ -1660,6 +1660,7 @@ class wamo extends utils.Adapter {
 	 * [Floor Sensor 2]
 	 */
 	async alarm_cron_FloorSensor_Tick_2(){
+		await this.delay(Math.random() * 1000 / 2);
 		if (this.syrSaveFloor2APIClient != null){this.alarm_cron_FloorSensors(this.syrSaveFloor2APIClient, this.config.safefloor_2_keep_online, 2);}}
 
 	/**
@@ -1667,6 +1668,7 @@ class wamo extends utils.Adapter {
 	 * [Floor Sensor 3]
 	 */
 	async alarm_cron_FloorSensor_Tick_3(){
+		await this.delay(Math.random() * 1000 / 2);
 		if (this.syrSaveFloor3APIClient != null){this.alarm_cron_FloorSensors(this.syrSaveFloor3APIClient, this.config.safefloor_3_keep_online, 3);}}
 
 	/**
@@ -1674,6 +1676,7 @@ class wamo extends utils.Adapter {
 	 * [Floor Sensor 4]
 	 */
 	async alarm_cron_FloorSensor_Tick_4(){
+		await this.delay(Math.random() * 1000 / 2);
 		if (this.syrSaveFloor4APIClient != null){this.alarm_cron_FloorSensors(this.syrSaveFloor4APIClient, this.config.safefloor_4_keep_online, 4);}}
 
 	/**
