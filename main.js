@@ -1415,6 +1415,9 @@ class wamo extends utils.Adapter {
 	}
 
 	async LeakageDevice_HandleAll(LP_Data) {
+		for(const attributename in LP_Data){
+			this.log.warn(attributename + ': ' + LP_Data[attributename]);
+		}
 		try {
 			// iterate through all requested Parameters
 			for (const key in DeviceParameters) {
