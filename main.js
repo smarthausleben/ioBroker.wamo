@@ -1387,11 +1387,11 @@ class wamo extends utils.Adapter {
 	async LeakageDevice_GetAll() {
 		if (this.syrApiClient != null) {
 			try {
-				await this.set_SERVICE_Mode();
 
-				await this.delay(500);	// waiting 500mS to avoid Axios "socket hang up"
 				// request data from Leakage Device
 				try {
+					await this.set_SERVICE_Mode();
+					await this.delay(300);	// waiting 300mS to avoid Axios "socket hang up"
 					const LeakageProtectioData = await this.syrApiClient.get('get/' + 'ALL');
 					NetworkDevices.LeakageDevice_responding = true;
 					this.setInstanceLED();
@@ -3666,6 +3666,108 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ButtonProfileChange, finalValue); }
 					break;
+				//#############################################################################################
+				//### 								PROFILES												###
+				//#############################################################################################
+				case DeviceParameters.Profile_PA1.id:				// PA1
+				case DeviceParameters.Profile_PA2.id:				// PA2
+				case DeviceParameters.Profile_PA3.id:				// PA3
+				case DeviceParameters.Profile_PA4.id:				// PA4
+				case DeviceParameters.Profile_PA5.id:				// PA5
+				case DeviceParameters.Profile_PA6.id:				// PA6
+				case DeviceParameters.Profile_PA7.id:				// PA7
+				case DeviceParameters.Profile_PA8.id:				// PA8
+					finalValue = value;
+					break;
+				//========================================================
+				case DeviceParameters.Profile_PB1.id:				// PB1
+				case DeviceParameters.Profile_PB2.id:				// PB2
+				case DeviceParameters.Profile_PB3.id:				// PB3
+				case DeviceParameters.Profile_PB4.id:				// PB4
+				case DeviceParameters.Profile_PB5.id:				// PB5
+				case DeviceParameters.Profile_PB6.id:				// PB6
+				case DeviceParameters.Profile_PB7.id:				// PB7
+				case DeviceParameters.Profile_PB8.id:				// PB8
+					finalValue = value;
+					break;
+				//========================================================
+				case DeviceParameters.Profile_PF1.id:				// PF1
+				case DeviceParameters.Profile_PF2.id:				// PF2
+				case DeviceParameters.Profile_PF3.id:				// PF3
+				case DeviceParameters.Profile_PF4.id:				// PF4
+				case DeviceParameters.Profile_PF5.id:				// PF5
+				case DeviceParameters.Profile_PF6.id:				// PF6
+				case DeviceParameters.Profile_PF7.id:				// PF7
+				case DeviceParameters.Profile_PF8.id:				// PF8
+					finalValue = value;
+					break;
+				//========================================================
+				case DeviceParameters.Profile_PM1.id:				// PM1
+				case DeviceParameters.Profile_PM2.id:				// PM2
+				case DeviceParameters.Profile_PM3.id:				// PM3
+				case DeviceParameters.Profile_PM4.id:				// PM4
+				case DeviceParameters.Profile_PM5.id:				// PM5
+				case DeviceParameters.Profile_PM6.id:				// PM6
+				case DeviceParameters.Profile_PM7.id:				// PM7
+				case DeviceParameters.Profile_PM8.id:				// PM8
+					finalValue = value;
+					break;
+				//========================================================
+				case DeviceParameters.Profile_PN1.id:				// PN1
+				case DeviceParameters.Profile_PN2.id:				// PN2
+				case DeviceParameters.Profile_PN3.id:				// PN3
+				case DeviceParameters.Profile_PN4.id:				// PN4
+				case DeviceParameters.Profile_PN5.id:				// PN5
+				case DeviceParameters.Profile_PN6.id:				// PN6
+				case DeviceParameters.Profile_PN7.id:				// PN7
+				case DeviceParameters.Profile_PN8.id:				// PN8
+					finalValue = value;
+					break;
+				//========================================================
+				case DeviceParameters.Profile_PR1.id:				// PR1
+				case DeviceParameters.Profile_PR2.id:				// PR2
+				case DeviceParameters.Profile_PR3.id:				// PR3
+				case DeviceParameters.Profile_PR4.id:				// PR4
+				case DeviceParameters.Profile_PR5.id:				// PR5
+				case DeviceParameters.Profile_PR6.id:				// PR6
+				case DeviceParameters.Profile_PR7.id:				// PR7
+				case DeviceParameters.Profile_PR8.id:				// PR8
+					finalValue = value;
+					break;
+				//========================================================
+				case DeviceParameters.Profile_PT1.id:				// PT1
+				case DeviceParameters.Profile_PT2.id:				// PT2
+				case DeviceParameters.Profile_PT3.id:				// PT3
+				case DeviceParameters.Profile_PT4.id:				// PT4
+				case DeviceParameters.Profile_PT5.id:				// PT5
+				case DeviceParameters.Profile_PT6.id:				// PT6
+				case DeviceParameters.Profile_PT7.id:				// PT7
+				case DeviceParameters.Profile_PT8.id:				// PT8
+					finalValue = value;
+					break;
+				//========================================================
+				case DeviceParameters.Profile_PV1.id:				// PV1
+				case DeviceParameters.Profile_PV2.id:				// PV2
+				case DeviceParameters.Profile_PV3.id:				// PV3
+				case DeviceParameters.Profile_PV4.id:				// PV4
+				case DeviceParameters.Profile_PV5.id:				// PV5
+				case DeviceParameters.Profile_PV6.id:				// PV6
+				case DeviceParameters.Profile_PV7.id:				// PV7
+				case DeviceParameters.Profile_PV8.id:				// PV8
+					finalValue = value;
+					break;
+				//========================================================
+				case DeviceParameters.Profile_PW1.id:				// PW1
+				case DeviceParameters.Profile_PW2.id:				// PW2
+				case DeviceParameters.Profile_PW3.id:				// PW3
+				case DeviceParameters.Profile_PW4.id:				// PW4
+				case DeviceParameters.Profile_PW5.id:				// PW5
+				case DeviceParameters.Profile_PW6.id:				// PW6
+				case DeviceParameters.Profile_PW7.id:				// PW7
+				case DeviceParameters.Profile_PW8.id:				// PW8
+					finalValue = value;
+					break;
+				//========================================================
 				default:
 					this.log.warn('[async convertDeviceReturnValue(valueKey, value)] Key (' + String(valueKey) + ') is not valid!');
 					finalValue = value;
