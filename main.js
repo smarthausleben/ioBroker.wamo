@@ -362,7 +362,7 @@ class wamo extends utils.Adapter {
 		{
 			//######################### TESTING ###############################################
 			await this.LeakageDevice_GetAll();
-			this.delay(10000);
+			this.delay(30000);
 			//####################### END TESTING #############################################
 		}
 
@@ -1427,7 +1427,7 @@ class wamo extends utils.Adapter {
 					{
 						if(DeviceParameters[key].id == attributename.substring(3))
 						{
-							JSON.parse('{"' + String(attributename) + ' : "' + String(LP_Data[attributename]) + '"}');
+							JSON.parse('{"' + String(attributename) + '" : "' + String(LP_Data[attributename]) + '"}');
 							try {
 								this.log.error(attributename + ': ' + JSON.stringify(JSON.parse('{"' + String(attributename) + ' : "' + String(LP_Data[attributename]) + '"}')));
 								await this.updateState(DeviceParameters[key], JSON.parse('{"' + String(attributename) + ' : "' + String(LP_Data[attributename]) + '"}'));
