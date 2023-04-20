@@ -1399,8 +1399,8 @@ class wamo extends utils.Adapter {
 					NetworkDevices.LeakageDevice_responding = true;
 					this.setInstanceLED();
 					if (LeakageProtectioData.status == 200) {
+						// handle returned data
 						this.LeakageDevice_HandleAll(LeakageProtectioData.data);
-						this.log.warn(JSON.stringify(LeakageProtectioData.data));
 					}
 					else{
 						this.log.warn('Leakage Devise response: ' + String(LeakageProtectioData.status + ' ' + String(LeakageProtectioData.statusText)));
@@ -1420,22 +1420,9 @@ class wamo extends utils.Adapter {
 	async LeakageDevice_HandleAll(LP_Data) {
 		try {
 			for (const attributename in LP_Data) {
-				if (LP_Data[attributename] == '[object Object]') {
-					for (const subAttribute in LP_Data[attributename]) {
-						if (LP_Data[attributename][subAttribute] == '[object Object]') {
-							for (const subSubAttribute in LP_Data[attributename][subAttribute]) {
-								this.log.warn(subSubAttribute + ': ' + LP_Data[attributename][subAttribute][subSubAttribute]);
-							}
-						}
-						else{
-							this.log.warn('Subatribute of ' + attributename + ': ' + subAttribute + ': ' + LP_Data[attributename][subAttribute]);
-						}
-					}
+				if (LP_Data[attributename] != '[object Object]') {
+					this.log.info(String(attributename) + ': ' + String(LP_Data[attributename]) +  ' => ' + String(attributename.substring(3)) + ': ' + String(await this.convertDeviceReturnValue(attributename.substring(3), LP_Data[attributename])));
 				}
-				else{
-					this.log.info('this.convertDeviceReturnValue() return: ' + String(await this.convertDeviceReturnValue(attributename.substring(3), LP_Data[attributename])));
-				}
-				this.log.warn(attributename + ': ' + LP_Data[attributename]);
 			}
 		} catch (err) {
 			this.log.error('[async LeakageDevice_HandleAll(Data)] ' + String(err));
