@@ -1416,8 +1416,10 @@ class wamo extends utils.Adapter {
 
 	async LeakageDevice_HandleAll(LP_Data) {
 		try {
-			const res = JSON.parse(JSON.stringify(LP_Data));
-			this.log.warn(res);
+			for (const attributename in LP_Data) {
+				if(attributename == '[object Object]'){this.log.warn(attributename + ' is an Object')}
+				this.log.warn(attributename + ': ' + LP_Data[attributename]);
+			}
 		} catch (err) {
 			this.log.error('[async LeakageDevice_HandleAll(Data)] ' + String(err));
 		}
@@ -1426,6 +1428,7 @@ class wamo extends utils.Adapter {
 		if (false) {
 			//iterate through all received JSON objects
 			for (const attributename in LP_Data) {
+				[object Object]
 				this.log.warn(attributename + ': ' + LP_Data[attributename]);
 			}
 			try {
