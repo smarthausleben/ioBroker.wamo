@@ -1418,25 +1418,26 @@ class wamo extends utils.Adapter {
 		for(const attributename in LP_Data){
 			this.log.warn(attributename + ': ' + LP_Data[attributename]);
 		}
-		try {
-			// iterate through all requested Parameters
-			for (const key in DeviceParameters) {
-				if (LP_Data['get' + DeviceParameters[key].id] != undefined) {
-					if (DeviceParameters[key].saveRawData && LP_Data['get' + String(DeviceParameters[key].id)] !== undefined) {
-						this.log.warn('Value of LP_Data[get' + String(DeviceParameters[key].id) + '] = ' + LP_Data['get' + String(DeviceParameters[key].id)]);
-						//this.log.warn('Raw Data storage needs integration!!!');
+		if (false) {
+			try {
+				// iterate through all requested Parameters
+				for (const key in DeviceParameters) {
+					if (LP_Data['get' + DeviceParameters[key].id] != undefined) {
+						if (DeviceParameters[key].saveRawData && LP_Data['get' + String(DeviceParameters[key].id)] !== undefined) {
+							this.log.warn('Value of LP_Data[get' + String(DeviceParameters[key].id) + '] = ' + LP_Data['get' + String(DeviceParameters[key].id)]);
+							//this.log.warn('Raw Data storage needs integration!!!');
+						}
+						this.log.warn('this.convertDeviceReturnValue() return: ' + String(await this.convertDeviceReturnValue(String(DeviceParameters[key].id), LP_Data['get' + String(DeviceParameters[key].id)])));
 					}
-					this.log.warn('this.convertDeviceReturnValue() return: ' + String(await this.convertDeviceReturnValue(String(DeviceParameters[key].id), LP_Data['get' + String(DeviceParameters[key].id)])));
+					else {
+						this.log.warn('Parameter ' + String(key) + ' is not implemented yet.');
+					}
 				}
-				else {
-					this.log.warn('Parameter ' + String(key) + ' is not implemented yet.');
-				}
+
+			} catch (err) {
+				this.log.error('[async LeakageDevice_HandleAll(Data)] ' + String(err));
 			}
-
-		} catch (err) {
-			this.log.error('[async LeakageDevice_HandleAll(Data)] ' + String(err));
 		}
-
 	}
 
 	/**
