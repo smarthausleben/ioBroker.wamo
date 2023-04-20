@@ -358,6 +358,14 @@ class wamo extends utils.Adapter {
 			}
 		}
 
+		if(this.syrApiClient != null)
+		{
+			//######################### TESTING ###############################################
+			await this.LeakageDevice_GetAll();
+			this.delay(10000);
+			//####################### END TESTING #############################################
+		}
+
 		//=================================================================================================
 		//===  Getting device data																		===
 		//=================================================================================================
@@ -480,12 +488,6 @@ class wamo extends utils.Adapter {
 			this.subscribeStates(DeviceParametersFS.AdminMode.statePath.replace('.X.', '.4.')  + '.' + DeviceParametersFS.AdminMode.id); // Floor Sensor 4 [ADM(2)f] Set device ADMIN mode
 		}
 
-		if(this.syrApiClient != null)
-		{
-			//######################### TESTING ###############################################
-			await this.LeakageDevice_GetAll();
-			//####################### END TESTING #############################################
-		}
 
 		// reference to Adapter
 		myAdapter = this;
