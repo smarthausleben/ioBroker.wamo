@@ -1428,6 +1428,7 @@ class wamo extends utils.Adapter {
 						if(DeviceParameters[key].id == attributename.substring(3))
 						{
 							try {
+								this.log.error(attributename + ': ' + JSON.stringify({}[attributename] = LP_Data[attributename]));
 								await this.updateState(DeviceParameters[key], {}[attributename] = LP_Data[attributename]);
 								this.log.info(String(attributename) + ': ' + String(LP_Data[attributename]) + ' => ' + String(attributename.substring(3)) + ': ' + String(await this.convertDeviceReturnValue(attributename.substring(3), LP_Data[attributename])));
 								break;
