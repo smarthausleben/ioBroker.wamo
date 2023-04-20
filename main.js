@@ -1415,9 +1415,12 @@ class wamo extends utils.Adapter {
 	}
 
 	async LeakageDevice_HandleAll(LP_Data) {
-
-		const res = JSON.parse(LP_Data);
-		this.log.warn(res);
+		try {
+			const res = JSON.parse(LP_Data);
+			this.log.warn(res);
+		} catch (err) {
+			this.log.error('[async LeakageDevice_HandleAll(Data)] ' + String(err));
+		}
 
 
 		if (false) {
