@@ -1430,7 +1430,7 @@ class wamo extends utils.Adapter {
 					}
 				}
 				else{
-					this.log.warn('this.convertDeviceReturnValue() return: ' + String(await this.convertDeviceReturnValue(attributename.substring(2), LP_Data[attributename])));
+					this.log.info('this.convertDeviceReturnValue() return: ' + String(await this.convertDeviceReturnValue(attributename.substring(3), LP_Data[attributename])));
 				}
 				this.log.warn(attributename + ': ' + LP_Data[attributename]);
 			}
