@@ -1416,14 +1416,12 @@ class wamo extends utils.Adapter {
 
 	async LeakageDevice_HandleAll(LP_Data) {
 
-		//iterate through all received JSON objects
 		const res = JSON.parse(LP_Data);
+		this.log.warn(res);
 
-		Object.entries(res).forEach((entry) => {
-			const [key, value] = entry;
-			this.log.warn(`${key}: ${value}`);
-		});
+
 		if (false) {
+			//iterate through all received JSON objects
 			for (const attributename in LP_Data) {
 				this.log.warn(attributename + ': ' + LP_Data[attributename]);
 			}
