@@ -362,7 +362,7 @@ class wamo extends utils.Adapter {
 		{
 			//######################### TESTING ###############################################
 			await this.LeakageDevice_GetAll();
-			this.delay(30000);
+			await this.delay(10000);
 			//####################### END TESTING #############################################
 		}
 
