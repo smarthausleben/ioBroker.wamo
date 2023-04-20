@@ -1438,6 +1438,9 @@ class wamo extends utils.Adapter {
 								break;
 							}
 						}
+						else{
+							this.log.warn('Parameter not yet supported: ' + String(attributename));
+						}
 					}
 				}
 			}
