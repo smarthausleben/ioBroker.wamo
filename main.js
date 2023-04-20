@@ -1422,11 +1422,13 @@ class wamo extends utils.Adapter {
 	async LeakageDevice_HandleAll(LP_Data) {
 		try {
 			for (const attributename in LP_Data) {
+				let supportedParameter = false;
 				if (LP_Data[attributename] != '[object Object]') {
 					for(const key in DeviceParameters)
 					{
 						if(DeviceParameters[key].id == attributename.substring(3))
 						{
+							supportedParameter = true;
 							const JSONstring = JSON.stringify(JSON.parse('{"' + String(attributename) + '" : "' + String(LP_Data[attributename]) + '"}'));
 							this.log.error(JSONstring);
 							try {
@@ -1438,10 +1440,10 @@ class wamo extends utils.Adapter {
 								break;
 							}
 						}
-						else{
-							this.log.warn('Parameter not yet supported: ' + String(attributename));
-						}
 					}
+				}
+				if (!supportedParameter) {
+					this.log.warn('Parameter not yet supported: ' + String(attributename));
 				}
 			}
 		} catch (err) {
