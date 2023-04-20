@@ -1421,13 +1421,16 @@ class wamo extends utils.Adapter {
 					for (const subAttribute in LP_Data[attributename]) {
 						if (LP_Data[attributename][subAttribute] == '[object Object]') {
 							for (const subSubAttribute in LP_Data[attributename][subAttribute]) {
-								this.log.warn('Sub Subatribute of ' + subAttribute + ': ' + subSubAttribute + ': ' + LP_Data[attributename][subAttribute][subSubAttribute]);
+								this.log.warn(subSubAttribute + ': ' + LP_Data[attributename][subAttribute][subSubAttribute]);
 							}
 						}
 						else{
 							this.log.warn('Subatribute of ' + attributename + ': ' + subAttribute + ': ' + LP_Data[attributename][subAttribute]);
 						}
 					}
+				}
+				else{
+					this.log.warn('this.convertDeviceReturnValue() return: ' + String(await this.convertDeviceReturnValue(attributename.substring(2), LP_Data[attributename])));
 				}
 				this.log.warn(attributename + ': ' + LP_Data[attributename]);
 			}
