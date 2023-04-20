@@ -1427,10 +1427,10 @@ class wamo extends utils.Adapter {
 					{
 						if(DeviceParameters[key].id == attributename.substring(3))
 						{
-							JSON.parse('{"' + String(attributename) + '" : "' + String(LP_Data[attributename]) + '"}');
+							const JSONstring = JSON.stringify(JSON.parse('{"' + String(attributename) + '" : "' + String(LP_Data[attributename]) + '"}'));
+							this.log.error(JSONstring);
 							try {
-								this.log.error(attributename + ': ' + JSON.stringify(JSON.parse('{"' + String(attributename) + ' : "' + String(LP_Data[attributename]) + '"}')));
-								await this.updateState(DeviceParameters[key], JSON.parse('{"' + String(attributename) + ' : "' + String(LP_Data[attributename]) + '"}'));
+								await this.updateState(DeviceParameters[key], JSON.parse(JSONstring));
 								this.log.info(String(attributename) + ': ' + String(LP_Data[attributename]) + ' => ' + String(attributename.substring(3)) + ': ' + String(await this.convertDeviceReturnValue(attributename.substring(3), LP_Data[attributename])));
 								break;
 							} catch (err) {
