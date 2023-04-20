@@ -1421,39 +1421,28 @@ class wamo extends utils.Adapter {
 		try {
 			for (const attributename in LP_Data) {
 				if (LP_Data[attributename] != '[object Object]') {
-					this.log.info(String(attributename) + ': ' + String(LP_Data[attributename]) +  ' => ' + String(attributename.substring(3)) + ': ' + String(await this.convertDeviceReturnValue(attributename.substring(3), LP_Data[attributename])));
+					for(const key in DeviceParameters)
+					{
+						if(DeviceParameters[key].id == attributename.substring(3))
+						{
+							try {
+								await this.updateState(DeviceParameters[key], {}[attributename] = LP_Data[attributename]);
+								this.log.info(String(attributename) + ': ' + String(LP_Data[attributename]) + ' => ' + String(attributename.substring(3)) + ': ' + String(await this.convertDeviceReturnValue(attributename.substring(3), LP_Data[attributename])));
+								break;
+							} catch (err) {
+								this.log.error('updateState ' + DeviceParameters[key] + ':' + LP_Data[attributename] + ' ' + err);
+								break;
+							}
+						}
+					}
 				}
 			}
 		} catch (err) {
 			this.log.error('[async LeakageDevice_HandleAll(Data)] ' + String(err));
 		}
-
-
-		if (false) {
-			//iterate through all received JSON objects
-			for (const attributename in LP_Data) {
-				this.log.warn(attributename + ': ' + LP_Data[attributename]);
-			}
-			try {
-				// iterate through all requested Parameters
-				for (const key in DeviceParameters) {
-					if (LP_Data['get' + DeviceParameters[key].id] != undefined) {
-						if (DeviceParameters[key].saveRawData && LP_Data['get' + String(DeviceParameters[key].id)] !== undefined) {
-							this.log.warn('Value of LP_Data[get' + String(DeviceParameters[key].id) + '] = ' + LP_Data['get' + String(DeviceParameters[key].id)]);
-							//this.log.warn('Raw Data storage needs integration!!!');
-						}
-						this.log.warn('this.convertDeviceReturnValue() return: ' + String(await this.convertDeviceReturnValue(String(DeviceParameters[key].id), LP_Data['get' + String(DeviceParameters[key].id)])));
-					}
-					else {
-						this.log.warn('Parameter ' + String(key) + ' is not implemented yet.');
-					}
-				}
-
-			} catch (err) {
-				this.log.error('[async LeakageDevice_HandleAll(Data)] ' + String(err));
-			}
-		}
 	}
+
+
 
 	/**
 	 * start all timers
