@@ -1417,9 +1417,12 @@ class wamo extends utils.Adapter {
 	async LeakageDevice_HandleAll(LP_Data) {
 		try {
 			for (const attributename in LP_Data) {
-				if (LP_Data[attributename] == '[object Object]') 
+				if (LP_Data[attributename] == '[object Object]')
 				{
-					this.log.warn(attributename + ' is an Object');
+					for(const subAttribute in LP_Data[attributename])
+					{
+						this.log.warn('Subatribute of' + attributename + ': ' + subAttribute + ': '   + LP_Data[attributename][subAttribute]);
+					}
 				}
 				this.log.warn(attributename + ': ' + LP_Data[attributename]);
 			}
