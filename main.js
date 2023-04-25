@@ -55,6 +55,7 @@ const FloorSenso4_LoopTimeout = 5;
 
 //=======================================================================================
 let executeTestingLoop; // Flag to indicate if Testing Loop should be executed
+const RunTestfunction = false;
 //=======================================================================================
 
 const Parameter_FACTORY_Mode = 'ADM/(2)f';
@@ -242,11 +243,11 @@ class wamo extends utils.Adapter {
 		//=================================================================================================
 		if (this.config.device_ip != '0.0.0.0' && this.config.device_ip != '') {
 			// Jam protection running Flag
-			this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: false, ack: true });
+			this.setStateAsync(DeviceParameters.JPR.statePath + '.' + DeviceParameters.JPR.id, { val: false, ack: true });
 			// Jam protection activated
-			this.setStateAsync(DeviceParameters.JamProtectionEnabled.statePath + '.' + DeviceParameters.JamProtectionEnabled.id, { val: this.config.regularmainvalvemovement, ack: true });
+			this.setStateAsync(DeviceParameters.JPE.statePath + '.' + DeviceParameters.JPE.id, { val: this.config.regularmainvalvemovement, ack: true });
 			// Jam protection Cron Timing
-			this.setStateAsync(DeviceParameters.JamProtectionTiming.statePath + '.' + DeviceParameters.JamProtectionTiming.id, { val: this.config.regularemovementcron, ack: true });
+			this.setStateAsync(DeviceParameters.JPT.statePath + '.' + DeviceParameters.JPT.id, { val: this.config.regularemovementcron, ack: true });
 		}
 		//=================================================================================================
 		// Initialize Axios Client (this client will be used to communicate with the device)			===
@@ -358,12 +359,13 @@ class wamo extends utils.Adapter {
 			}
 		}
 
-		if(this.syrApiClient != null)
-		{
-			//######################### TESTING ###############################################
-			await this.LeakageDevice_GetAll();
-			await this.delay(10000);
-			//####################### END TESTING #############################################
+		if (RunTestfunction) {
+			if (this.syrApiClient != null) {
+				//######################### TESTING ###############################################
+				await this.LeakageDevice_GetAll();
+				await this.delay(10000);
+				//####################### END TESTING #############################################
+			}
 		}
 
 		//=================================================================================================
@@ -446,25 +448,25 @@ class wamo extends utils.Adapter {
 		//=== Subscribe to user changable states ===
 		//==========================================
 		if (this.syrApiClient != null) {
-			this.subscribeStates(DeviceParameters.systemRestart.statePath + '.' + DeviceParameters.systemRestart.id); // [RST] System Restart
-			this.subscribeStates(DeviceParameters.DeactivateConductivitySensor.statePath + '.' + DeviceParameters.DeactivateConductivitySensor.id); // [CSD] Deactivate conductivity sensor
-			this.subscribeStates(DeviceParameters.DeactivatePressureSensor.statePath + '.' + DeviceParameters.DeactivatePressureSensor.id); // [PSD] Deactivate pressure sensor
-			this.subscribeStates(DeviceParameters.DeactivateTemperatureSensor.statePath + '.' + DeviceParameters.DeactivateTemperatureSensor.id); // [TSD] Deactivate temperature sensor
-			this.subscribeStates(DeviceParameters.MaxFlowLeakageTime.statePath + '.' + DeviceParameters.MaxFlowLeakageTime.id); // [T2] Max flow leakage time
-			this.subscribeStates(DeviceParameters.Units.statePath + '.' + DeviceParameters.Units.id); // [UNI] units
-			this.subscribeStates(DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id); // [SRO] Screen Rotation
-			this.subscribeStates(DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id); // [AB] Shutoff valve
-			this.subscribeStates(DeviceParameters.APTimeout.statePath + '.' + DeviceParameters.APTimeout.id); // [APT] WiFi AP timeout
-			this.subscribeStates(DeviceParameters.ButtonProfileChange.statePath + '.' + DeviceParameters.ButtonProfileChange.id); // [BPB] Enable profile changes by button (0 = blocked, 1 = possible)
-			this.subscribeStates(DeviceParameters.FloorSensor.statePath + '.' + DeviceParameters.FloorSensor.id); // [BSE] Floor sensor
-			this.subscribeStates(DeviceParameters.BuzzerOnAlarm.statePath + '.' + DeviceParameters.BuzzerOnAlarm.id); // [BUZ] Buzzer on alarm
-			this.subscribeStates(DeviceParameters.MicroLeakageTest.statePath + '.' + DeviceParameters.MicroLeakageTest.id); // [BUZ] Buzzer on alarm
-			this.subscribeStates(DeviceParameters.MicroLeakageTestPeriod.statePath + '.' + DeviceParameters.MicroLeakageTestPeriod.id); // [DRP] Micro-Leakage-Test period
-			this.subscribeStates(DeviceParameters.DaylightSavingTime.statePath + '.' + DeviceParameters.DaylightSavingTime.id); // [IDS] Daylight saving time
-			this.subscribeStates(DeviceParameters.Language.statePath + '.' + DeviceParameters.Language.id); // [LNG] Language
-			this.subscribeStates(DeviceParameters.LeakProtectionTemporaryDeactivation.statePath + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id);// [TMP] temporary protection deactivation
-			this.subscribeStates(DeviceParameters.LeakageNotificationWarningThreshold.statePath + '.' + DeviceParameters.LeakageNotificationWarningThreshold.id); // [LWT] Leakage notification (warning) threshold
-			this.subscribeStates(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id); // [PRF] Selected profile
+			this.subscribeStates(DeviceParameters.RST.statePath + '.' + DeviceParameters.RST.id); // [RST] System Restart
+			this.subscribeStates(DeviceParameters.CSD.statePath + '.' + DeviceParameters.CSD.id); // [CSD] Deactivate conductivity sensor
+			this.subscribeStates(DeviceParameters.PSD.statePath + '.' + DeviceParameters.PSD.id); // [PSD] Deactivate pressure sensor
+			this.subscribeStates(DeviceParameters.TSD.statePath + '.' + DeviceParameters.TSD.id); // [TSD] Deactivate temperature sensor
+			this.subscribeStates(DeviceParameters.T2.statePath + '.' + DeviceParameters.T2.id); // [T2] Max flow leakage time
+			this.subscribeStates(DeviceParameters.UNI.statePath + '.' + DeviceParameters.UNI.id); // [UNI] units
+			this.subscribeStates(DeviceParameters.SRO.statePath + '.' + DeviceParameters.SRO.id); // [SRO] Screen Rotation
+			this.subscribeStates(DeviceParameters.AB.statePath + '.' + DeviceParameters.AB.id); // [AB] Shutoff valve
+			this.subscribeStates(DeviceParameters.APT.statePath + '.' + DeviceParameters.APT.id); // [APT] WiFi AP timeout
+			this.subscribeStates(DeviceParameters.BPB.statePath + '.' + DeviceParameters.BPB.id); // [BPB] Enable profile changes by button (0 = blocked, 1 = possible)
+			this.subscribeStates(DeviceParameters.BSA.statePath + '.' + DeviceParameters.BSA.id); // [BSE] Floor sensor
+			this.subscribeStates(DeviceParameters.BUZ.statePath + '.' + DeviceParameters.BUZ.id); // [BUZ] Buzzer on alarm
+			this.subscribeStates(DeviceParameters.DMA.statePath + '.' + DeviceParameters.DMA.id); // [BUZ] Buzzer on alarm
+			this.subscribeStates(DeviceParameters.DRP.statePath + '.' + DeviceParameters.DRP.id); // [DRP] Micro-Leakage-Test period
+			this.subscribeStates(DeviceParameters.IDS.statePath + '.' + DeviceParameters.IDS.id); // [IDS] Daylight saving time
+			this.subscribeStates(DeviceParameters.LNG.statePath + '.' + DeviceParameters.LNG.id); // [LNG] Language
+			this.subscribeStates(DeviceParameters.TMP.statePath + '.' + DeviceParameters.TMP.id);// [TMP] temporary protection deactivation
+			this.subscribeStates(DeviceParameters.LWT.statePath + '.' + DeviceParameters.LWT.id); // [LWT] Leakage notification (warning) threshold
+			this.subscribeStates(DeviceParameters.PRF.statePath + '.' + DeviceParameters.PRF.id); // [PRF] Selected profile
 			this.subscribeStates(adapterChannels.DevicePofiles.path + '.*'); // ALL profile states
 		}
 		if(this.syrSaveFloor1APIClient != null)
@@ -537,18 +539,18 @@ class wamo extends utils.Adapter {
 				//============================================================================
 				// Screen Rotation
 				//============================================================================
-				if ((id == statePrefix + DeviceParameters.ScreenRotation.statePath + '.' + DeviceParameters.ScreenRotation.id) && state.ack == false) {
+				if ((id == statePrefix + DeviceParameters.SRO.statePath + '.' + DeviceParameters.SRO.id) && state.ack == false) {
 					switch (state.val) {
 						case 0:
 						case 90:
 						case 180:
 						case 270:
 							try {
-								await this.set_DevieParameter(DeviceParameters.ScreenRotation, String(state.val));
+								await this.set_DevieParameter(DeviceParameters.SRO, String(state.val));
 								this.log.info('[SRO] Screen rotation changed to ' + String(state.val) + '°');
 							}
 							catch (err) {
-								this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.ScreenRotation ... ERROR: ' + err);
+								this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.SRO ... ERROR: ' + err);
 							}
 							break;
 						default:
@@ -559,12 +561,12 @@ class wamo extends utils.Adapter {
 				//============================================================================
 				// Shutoff valve AB
 				//============================================================================
-				else if ((id == statePrefix + DeviceParameters.ShutOff.statePath + '.' + DeviceParameters.ShutOff.id) && state.ack == false) {
+				else if ((id == statePrefix + DeviceParameters.AB.statePath + '.' + DeviceParameters.AB.id) && state.ack == false) {
 					switch (state.val) {
 						case 1:
 						case 2:
 							try {
-								await this.set_DevieParameter(DeviceParameters.ShutOff, String(state.val));
+								await this.set_DevieParameter(DeviceParameters.AB, String(state.val));
 								if (state.val == 1) {
 									this.log.info('Command: [AB] Shutoff valve OPENED');
 								}
@@ -573,23 +575,23 @@ class wamo extends utils.Adapter {
 								}
 							}
 							catch (err) {
-								this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.ShutOff ... ERROR: ' + err);
+								this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.AB ... ERROR: ' + err);
 							}
 							break;
 						default:
-							this.log.error(String(state.val) + ' is not valid for ' + String(DeviceParameters.ScreenRotation.id + ' Valid values: 1=open 2=closed'));
+							this.log.error(String(state.val) + ' is not valid for ' + String(DeviceParameters.SRO.id + ' Valid values: 1=open 2=closed'));
 							break;
 					}
 				}
 				//============================================================================
 				// APT WiFi AP timeout changed
 				//============================================================================
-				else if ((id == statePrefix + DeviceParameters.APTimeout.statePath + '.' + DeviceParameters.APTimeout.id) && (state.ack == false)) {
+				else if ((id == statePrefix + DeviceParameters.APT.statePath + '.' + DeviceParameters.APT.id) && (state.ack == false)) {
 					if (state.val != null) {
 						try {
-							if ((Number(state.val) >= Number(DeviceParameters.APTimeout.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.APTimeout.objectdefinition.common.max)) {
-								await this.set_DevieParameter(DeviceParameters.APTimeout, state.val);
-								if (moreMessages) { this.log.info(DeviceParameters.APTimeout.id + ' changed to ' + String(state.val)); }
+							if ((Number(state.val) >= Number(DeviceParameters.APT.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.APT.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.APT, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.APT.id + ' changed to ' + String(state.val)); }
 							}
 							else { this.log.error(DeviceParameters.ButtonProAPTimeoutfileChange.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
@@ -600,14 +602,14 @@ class wamo extends utils.Adapter {
 				//============================================================================
 				// BPB ButtonProfileChange
 				//============================================================================
-				else if ((id == statePrefix + DeviceParameters.ButtonProfileChange.statePath + '.' + DeviceParameters.ButtonProfileChange.id) && (state.ack == false)) {
+				else if ((id == statePrefix + DeviceParameters.BPB.statePath + '.' + DeviceParameters.BPB.id) && (state.ack == false)) {
 					if (state.val != null) {
 						try {
-							if ((Number(state.val) >= Number(DeviceParameters.ButtonProfileChange.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.ButtonProfileChange.objectdefinition.common.max)) {
-								await this.set_DevieParameter(DeviceParameters.ButtonProfileChange, state.val);
-								if (moreMessages) { this.log.info(DeviceParameters.ButtonProfileChange.id + ' changed to ' + String(state.val)); }
+							if ((Number(state.val) >= Number(DeviceParameters.BPB.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.BPB.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.BPB, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.BPB.id + ' changed to ' + String(state.val)); }
 							}
-							else { this.log.error(DeviceParameters.ButtonProfileChange.id + ' new value [' + String(state.val) + '] is out of range!'); }
+							else { this.log.error(DeviceParameters.BPB.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [BPB]: ' + err.message);
 						}
@@ -616,14 +618,14 @@ class wamo extends utils.Adapter {
 				//============================================================================
 				// BSA Floor Sensor
 				//============================================================================
-				else if ((id == statePrefix + DeviceParameters.FloorSensor.statePath + '.' + DeviceParameters.FloorSensor.id) && (state.ack == false)) {
+				else if ((id == statePrefix + DeviceParameters.BSA.statePath + '.' + DeviceParameters.BSA.id) && (state.ack == false)) {
 					if (state.val != null) {
 						try {
-							if ((Number(state.val) >= Number(DeviceParameters.FloorSensor.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.FloorSensor.objectdefinition.common.max)) {
-								await this.set_DevieParameter(DeviceParameters.FloorSensor, state.val);
-								if (moreMessages) { this.log.info(DeviceParameters.FloorSensor.id + ' changed to ' + String(state.val)); }
+							if ((Number(state.val) >= Number(DeviceParameters.BSA.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.BSA.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.BSA, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.BSA.id + ' changed to ' + String(state.val)); }
 							}
-							else { this.log.error(DeviceParameters.FloorSensor.id + ' new value [' + String(state.val) + '] is out of range!'); }
+							else { this.log.error(DeviceParameters.BSA.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [BSA]: ' + err.message);
 						}
@@ -632,14 +634,14 @@ class wamo extends utils.Adapter {
 				//============================================================================
 				// BUZ Buzzer on alarm
 				//============================================================================
-				else if ((id == statePrefix + DeviceParameters.BuzzerOnAlarm.statePath + '.' + DeviceParameters.BuzzerOnAlarm.id) && (state.ack == false)) {
+				else if ((id == statePrefix + DeviceParameters.BUZ.statePath + '.' + DeviceParameters.BUZ.id) && (state.ack == false)) {
 					if (state.val != null) {
 						try {
-							if ((Number(state.val) >= Number(DeviceParameters.BuzzerOnAlarm.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.BuzzerOnAlarm.objectdefinition.common.max)) {
-								await this.set_DevieParameter(DeviceParameters.BuzzerOnAlarm, state.val);
-								if (moreMessages) { this.log.info(DeviceParameters.BuzzerOnAlarm.id + ' changed to ' + String(state.val)); }
+							if ((Number(state.val) >= Number(DeviceParameters.BUZ.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.BUZ.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.BUZ, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.BUZ.id + ' changed to ' + String(state.val)); }
 							}
-							else { this.log.error(DeviceParameters.BuzzerOnAlarm.id + ' new value [' + String(state.val) + '] is out of range!'); }
+							else { this.log.error(DeviceParameters.BUZ.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [BUZ]: ' + err.message);
 						}
@@ -648,14 +650,14 @@ class wamo extends utils.Adapter {
 				//============================================================================
 				// DMA Micro-Leakage-Test
 				//============================================================================
-				else if ((id == statePrefix + DeviceParameters.MicroLeakageTest.statePath + '.' + DeviceParameters.MicroLeakageTest.id) && (state.ack == false)) {
+				else if ((id == statePrefix + DeviceParameters.DMA.statePath + '.' + DeviceParameters.DMA.id) && (state.ack == false)) {
 					if (state.val != null) {
 						try {
-							if ((Number(state.val) >= Number(DeviceParameters.MicroLeakageTest.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.MicroLeakageTest.objectdefinition.common.max)) {
-								await this.set_DevieParameter(DeviceParameters.MicroLeakageTest, state.val);
-								if (moreMessages) { this.log.info(DeviceParameters.MicroLeakageTest.id + ' changed to ' + String(state.val)); }
+							if ((Number(state.val) >= Number(DeviceParameters.DMA.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DMA.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.DMA, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.DMA.id + ' changed to ' + String(state.val)); }
 							}
-							else { this.log.error(DeviceParameters.MicroLeakageTest.id + ' new value [' + String(state.val) + '] is out of range!'); }
+							else { this.log.error(DeviceParameters.DMA.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [DMA]: ' + err.message);
 						}
@@ -664,14 +666,14 @@ class wamo extends utils.Adapter {
 				//============================================================================
 				// DRP Micro-Leakage-Test period
 				//============================================================================
-				else if ((id == statePrefix + DeviceParameters.MicroLeakageTestPeriod.statePath + '.' + DeviceParameters.MicroLeakageTestPeriod.id) && (state.ack == false)) {
+				else if ((id == statePrefix + DeviceParameters.DRP.statePath + '.' + DeviceParameters.DRP.id) && (state.ack == false)) {
 					if (state.val != null) {
 						try {
-							if ((Number(state.val) >= Number(DeviceParameters.MicroLeakageTestPeriod.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.MicroLeakageTestPeriod.objectdefinition.common.max)) {
-								await this.set_DevieParameter(DeviceParameters.MicroLeakageTestPeriod, state.val);
-								if (moreMessages) { this.log.info(DeviceParameters.MicroLeakageTestPeriod.id + ' changed to ' + String(state.val)); }
+							if ((Number(state.val) >= Number(DeviceParameters.DRP.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DRP.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.DRP, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.DRP.id + ' changed to ' + String(state.val)); }
 							}
-							else { this.log.error(DeviceParameters.MicroLeakageTestPeriod.id + ' new value [' + String(state.val) + '] is out of range!'); }
+							else { this.log.error(DeviceParameters.DRP.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [DRP]: ' + err.message);
 						}
@@ -680,14 +682,14 @@ class wamo extends utils.Adapter {
 				//============================================================================
 				// IDS Daylight saving time
 				//============================================================================
-				else if ((id == statePrefix + DeviceParameters.DaylightSavingTime.statePath + '.' + DeviceParameters.DaylightSavingTime.id) && (state.ack == false)) {
+				else if ((id == statePrefix + DeviceParameters.IDS.statePath + '.' + DeviceParameters.IDS.id) && (state.ack == false)) {
 					if (state.val != null) {
 						try {
-							if ((Number(state.val) >= Number(DeviceParameters.DaylightSavingTime.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DaylightSavingTime.objectdefinition.common.max)) {
-								await this.set_DevieParameter(DeviceParameters.DaylightSavingTime, state.val);
-								if (moreMessages) { this.log.info(DeviceParameters.DaylightSavingTime.id + ' changed to ' + String(state.val)); }
+							if ((Number(state.val) >= Number(DeviceParameters.IDS.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.IDS.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.IDS, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.IDS.id + ' changed to ' + String(state.val)); }
 							}
-							else { this.log.error(DeviceParameters.DaylightSavingTime.id + ' new value [' + String(state.val) + '] is out of range!'); }
+							else { this.log.error(DeviceParameters.IDS.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [IDS]: ' + err.message);
 						}
@@ -696,14 +698,14 @@ class wamo extends utils.Adapter {
 				//============================================================================
 				// LNG Language
 				//============================================================================
-				else if ((id == statePrefix + DeviceParameters.Language.statePath + '.' + DeviceParameters.Language.id) && (state.ack == false)) {
+				else if ((id == statePrefix + DeviceParameters.LNG.statePath + '.' + DeviceParameters.LNG.id) && (state.ack == false)) {
 					if (state.val != null) {
 						try {
-							if ((Number(state.val) >= Number(DeviceParameters.Language.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.Language.objectdefinition.common.max)) {
-								await this.set_DevieParameter(DeviceParameters.Language, state.val);
-								if (moreMessages) { this.log.info(DeviceParameters.Language.id + ' changed to ' + String(state.val)); }
+							if ((Number(state.val) >= Number(DeviceParameters.LNG.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.LNG.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.LNG, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.LNG.id + ' changed to ' + String(state.val)); }
 							}
-							else { this.log.error(DeviceParameters.Language.id + ' new value [' + String(state.val) + '] is out of range!'); }
+							else { this.log.error(DeviceParameters.LNG.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [LNG]: ' + err.message);
 						}
@@ -712,14 +714,14 @@ class wamo extends utils.Adapter {
 				//============================================================================
 				// LWT Leakage notification (warning) threshold
 				//============================================================================
-				else if ((id == statePrefix + DeviceParameters.LeakageNotificationWarningThreshold.statePath + '.' + DeviceParameters.LeakageNotificationWarningThreshold.id) && (state.ack == false)) {
+				else if ((id == statePrefix + DeviceParameters.LWT.statePath + '.' + DeviceParameters.LWT.id) && (state.ack == false)) {
 					if (state.val != null) {
 						try {
-							if ((Number(state.val) >= Number(DeviceParameters.LeakageNotificationWarningThreshold.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.LeakageNotificationWarningThreshold.objectdefinition.common.max)) {
-								await this.set_DevieParameter(DeviceParameters.LeakageNotificationWarningThreshold, state.val);
-								if (moreMessages) { this.log.info(DeviceParameters.LeakageNotificationWarningThreshold.id + ' changed to ' + String(state.val)); }
+							if ((Number(state.val) >= Number(DeviceParameters.LWT.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.LWT.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.LWT, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.LWT.id + ' changed to ' + String(state.val)); }
 							}
-							else { this.log.error(DeviceParameters.LeakageNotificationWarningThreshold.id + ' new value [' + String(state.val) + '] is out of range!'); }
+							else { this.log.error(DeviceParameters.LWT.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [LWT]: ' + err.message);
 						}
@@ -728,14 +730,14 @@ class wamo extends utils.Adapter {
 				//============================================================================
 				// UNI Units
 				//============================================================================
-				else if ((id == statePrefix + DeviceParameters.Units.statePath + '.' + DeviceParameters.Units.id) && (state.ack == false)) {
+				else if ((id == statePrefix + DeviceParameters.UNI.statePath + '.' + DeviceParameters.UNI.id) && (state.ack == false)) {
 					if (state.val != null) {
 						try {
-							if ((Number(state.val) >= Number(DeviceParameters.Units.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.Units.objectdefinition.common.max)) {
-								await this.set_DevieParameter(DeviceParameters.Units, state.val);
-								if (moreMessages) { this.log.info(DeviceParameters.Units.id + ' changed to ' + String(state.val)); }
+							if ((Number(state.val) >= Number(DeviceParameters.UNI.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.UNI.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.UNI, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.UNI.id + ' changed to ' + String(state.val)); }
 							}
-							else { this.log.error(DeviceParameters.Units.id + ' new value [' + String(state.val) + '] is out of range!'); }
+							else { this.log.error(DeviceParameters.UNI.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [UNI]: ' + err.message);
 						}
@@ -744,14 +746,14 @@ class wamo extends utils.Adapter {
 				//============================================================================
 				// CSD Deactivate conductivity sensor
 				//============================================================================
-				else if ((id == statePrefix + DeviceParameters.DeactivateConductivitySensor.statePath + '.' + DeviceParameters.DeactivateConductivitySensor.id) && (state.ack == false)) {
+				else if ((id == statePrefix + DeviceParameters.CSD.statePath + '.' + DeviceParameters.CSD.id) && (state.ack == false)) {
 					if (state.val != null) {
 						try {
-							if ((Number(state.val) >= Number(DeviceParameters.DeactivateConductivitySensor.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DeactivateConductivitySensor.objectdefinition.common.max)) {
-								await this.set_DevieParameter(DeviceParameters.DeactivateConductivitySensor, state.val);
-								if (moreMessages) { this.log.info(DeviceParameters.DeactivateConductivitySensor.id + ' changed to ' + String(state.val)); }
+							if ((Number(state.val) >= Number(DeviceParameters.CSD.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.CSD.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.CSD, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.CSD.id + ' changed to ' + String(state.val)); }
 							}
-							else { this.log.error(DeviceParameters.DeactivateConductivitySensor.id + ' new value [' + String(state.val) + '] is out of range!'); }
+							else { this.log.error(DeviceParameters.CSD.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [CSD]: ' + err.message);
 						}
@@ -760,14 +762,14 @@ class wamo extends utils.Adapter {
 				//============================================================================
 				// PSD Deactivate pressure sensor
 				//============================================================================
-				else if ((id == statePrefix + DeviceParameters.DeactivatePressureSensor.statePath + '.' + DeviceParameters.DeactivatePressureSensor.id) && (state.ack == false)) {
+				else if ((id == statePrefix + DeviceParameters.PSD.statePath + '.' + DeviceParameters.PSD.id) && (state.ack == false)) {
 					if (state.val != null) {
 						try {
-							if ((Number(state.val) >= Number(DeviceParameters.DeactivatePressureSensor.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DeactivatePressureSensor.objectdefinition.common.max)) {
-								await this.set_DevieParameter(DeviceParameters.DeactivatePressureSensor, state.val);
-								if (moreMessages) { this.log.info(DeviceParameters.DeactivatePressureSensor.id + ' changed to ' + String(state.val)); }
+							if ((Number(state.val) >= Number(DeviceParameters.PSD.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.PSD.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.PSD, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.PSD.id + ' changed to ' + String(state.val)); }
 							}
-							else { this.log.error(DeviceParameters.DeactivatePressureSensor.id + ' new value [' + String(state.val) + '] is out of range!'); }
+							else { this.log.error(DeviceParameters.PSD.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [PSD]: ' + err.message);
 						}
@@ -776,14 +778,14 @@ class wamo extends utils.Adapter {
 				//============================================================================
 				// TSD Deactivate temperature sensor
 				//============================================================================
-				else if ((id == statePrefix + DeviceParameters.DeactivateTemperatureSensor.statePath + '.' + DeviceParameters.DeactivateTemperatureSensor.id) && (state.ack == false)) {
+				else if ((id == statePrefix + DeviceParameters.TSD.statePath + '.' + DeviceParameters.TSD.id) && (state.ack == false)) {
 					if (state.val != null) {
 						try {
-							if ((Number(state.val) >= Number(DeviceParameters.DeactivateTemperatureSensor.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DeactivateTemperatureSensor.objectdefinition.common.max)) {
-								await this.set_DevieParameter(DeviceParameters.DeactivateTemperatureSensor, state.val);
-								if (moreMessages) { this.log.info(DeviceParameters.DeactivateTemperatureSensor.id + ' changed to ' + String(state.val)); }
+							if ((Number(state.val) >= Number(DeviceParameters.TSD.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.TSD.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.TSD, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.TSD.id + ' changed to ' + String(state.val)); }
 							}
-							else { this.log.error(DeviceParameters.DeactivateTemperatureSensor.id + ' new value [' + String(state.val) + '] is out of range!'); }
+							else { this.log.error(DeviceParameters.TSD.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [TSD]: ' + err.message);
 						}
@@ -792,14 +794,14 @@ class wamo extends utils.Adapter {
 				//============================================================================
 				// T2 Max flow leakage time
 				//============================================================================
-				else if ((id == statePrefix + DeviceParameters.MaxFlowLeakageTime.statePath + '.' + DeviceParameters.MaxFlowLeakageTime.id) && (state.ack == false)) {
+				else if ((id == statePrefix + DeviceParameters.T2.statePath + '.' + DeviceParameters.T2.id) && (state.ack == false)) {
 					if (state.val != null) {
 						try {
-							if ((Number(state.val) >= Number(DeviceParameters.MaxFlowLeakageTime.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.MaxFlowLeakageTime.objectdefinition.common.max)) {
-								await this.set_DevieParameter(DeviceParameters.MaxFlowLeakageTime, state.val);
-								if (moreMessages) { this.log.info(DeviceParameters.MaxFlowLeakageTime.id + ' changed to ' + String(state.val)); }
+							if ((Number(state.val) >= Number(DeviceParameters.T2.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.T2.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.T2, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.T2.id + ' changed to ' + String(state.val)); }
 							}
-							else { this.log.error(DeviceParameters.MaxFlowLeakageTime.id + ' new value [' + String(state.val) + '] is out of range!'); }
+							else { this.log.error(DeviceParameters.T2.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [T2]: ' + err.message);
 						}
@@ -808,18 +810,18 @@ class wamo extends utils.Adapter {
 				//============================================================================
 				// RST System restart
 				//============================================================================
-				else if ((id == statePrefix + DeviceParameters.systemRestart.statePath + '.' + DeviceParameters.systemRestart.id) && (state.ack == false)) {
+				else if ((id == statePrefix + DeviceParameters.RST.statePath + '.' + DeviceParameters.RST.id) && (state.ack == false)) {
 					if (state.val != null) {
 						try {
 							if (state.val == 1) {
 								this.log.warn('System restart initiated by user!');
 								// send restart command (1 as number) to device
-								await this.set_DevieParameter(DeviceParameters.systemRestart, state.val);
+								await this.set_DevieParameter(DeviceParameters.RST, state.val);
 								this.log.debug('Setting state RST (sytem restart) back to 0!');
 								// set state back to 0
-								await this.setStateAsync(DeviceParameters.systemRestart.statePath + '.' + DeviceParameters.systemRestart.id, { val: 0, ack: true });
+								await this.setStateAsync(DeviceParameters.RST.statePath + '.' + DeviceParameters.RST.id, { val: 0, ack: true });
 
-								if (moreMessages) { this.log.info(DeviceParameters.systemRestart.id + ' changed to ' + String(state.val)); }
+								if (moreMessages) { this.log.info(DeviceParameters.RST.id + ' changed to ' + String(state.val)); }
 							}
 						} catch (err) {
 							this.log.error('ERROR setting [RST]: ' + err.message);
@@ -829,12 +831,12 @@ class wamo extends utils.Adapter {
 				//============================================================================
 				// Leakage protection deactivation time
 				//============================================================================
-				else if ((id == statePrefix + DeviceParameters.LeakProtectionTemporaryDeactivation.statePath + '.' + DeviceParameters.LeakProtectionTemporaryDeactivation.id) && state.ack == false) {
+				else if ((id == statePrefix + DeviceParameters.TMP.statePath + '.' + DeviceParameters.TMP.id) && state.ack == false) {
 					try {
-						await this.set_DevieParameter(DeviceParameters.LeakProtectionTemporaryDeactivation, String(state.val));
+						await this.set_DevieParameter(DeviceParameters.TMP, String(state.val));
 					}
 					catch (err) {
-						this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.LeakProtectionTemporaryDeactivation ... ERROR: ' + err);
+						this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.TMP ... ERROR: ' + err);
 					}
 					const tempDisabledSeconds = parseFloat(String(state.val));
 					const offTime = new Date(tempDisabledSeconds * 1000).toISOString().substring(11, 19);
@@ -845,71 +847,71 @@ class wamo extends utils.Adapter {
 				//============================================================================
 				// Selected Profile
 				//============================================================================
-				else if ((id == statePrefix + DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id) && state.ack == false) {
+				else if ((id == statePrefix + DeviceParameters.PRF.statePath + '.' + DeviceParameters.PRF.id) && state.ack == false) {
 					let profileEnabled = Object();
 					let changeOK = false;
 					switch (state.val) {
 						case 1:
 							// Profile available?
-							profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA1.statePath + '.' + DeviceParameters.Profile_PA1.id);
+							profileEnabled = await this.getStateAsync(DeviceParameters.PA1.statePath + '.' + DeviceParameters.PA1.id);
 							if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
 							break;
 						case 2:
 							// Profile available?
-							profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA2.statePath + '.' + DeviceParameters.Profile_PA2.id);
+							profileEnabled = await this.getStateAsync(DeviceParameters.PA2.statePath + '.' + DeviceParameters.PA2.id);
 							if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
 							break;
 						case 3:
 							// Profile available?
-							profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA3.statePath + '.' + DeviceParameters.Profile_PA3.id);
+							profileEnabled = await this.getStateAsync(DeviceParameters.PA3.statePath + '.' + DeviceParameters.PA3.id);
 							if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
 							break;
 						case 4:
 							// Profile available?
-							profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA4.statePath + '.' + DeviceParameters.Profile_PA4.id);
+							profileEnabled = await this.getStateAsync(DeviceParameters.PA4.statePath + '.' + DeviceParameters.PA4.id);
 							if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
 							break;
 						case 5:
 							// Profile available?
-							profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA5.statePath + '.' + DeviceParameters.Profile_PA5.id);
+							profileEnabled = await this.getStateAsync(DeviceParameters.PA5.statePath + '.' + DeviceParameters.PA5.id);
 							if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
 							break;
 						case 6:
 							// Profile available?
-							profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA6.statePath + '.' + DeviceParameters.Profile_PA6.id);
+							profileEnabled = await this.getStateAsync(DeviceParameters.PA6.statePath + '.' + DeviceParameters.PA6.id);
 							if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
 							break;
 						case 7:
 							// Profile available?
-							profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA7.statePath + '.' + DeviceParameters.Profile_PA7.id);
+							profileEnabled = await this.getStateAsync(DeviceParameters.PA7.statePath + '.' + DeviceParameters.PA7.id);
 							if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
 							break;
 						case 8:
 							// Profile available?
-							profileEnabled = await this.getStateAsync(DeviceParameters.Profile_PA8.statePath + '.' + DeviceParameters.Profile_PA8.id);
+							profileEnabled = await this.getStateAsync(DeviceParameters.PA8.statePath + '.' + DeviceParameters.PA8.id);
 							if ((profileEnabled != null) && parseInt(profileEnabled.val) == 1) { changeOK = true; } else { changeOK = false; }
 							break;
 						default:
-							this.log.error(String(state.val) + ' is not valid for ' + String(DeviceParameters.SelectedProfile.id + ' Valid values: 1...8'));
+							this.log.error(String(state.val) + ' is not valid for ' + String(DeviceParameters.PRF.id + ' Valid values: 1...8'));
 							break;
 					}
 					if (changeOK) {
 						try {
-							await this.set_DevieParameter(DeviceParameters.SelectedProfile, String(state.val));
+							await this.set_DevieParameter(DeviceParameters.PRF, String(state.val));
 							this.log.info('Selected profile changed to number ' + String(state.val));
 						}
 						catch (err) {
-							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.SelectedProfile ... ERROR: ' + err);
+							this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.PRF ... ERROR: ' + err);
 						}
 					}
 					else {
 						this.log.error('You cant change to an unavailable profile! Please make profil ' + String(state.val) + ' available first.');
 						// Rerstore old active Profile back to State
 						// Read selected Profile from Device
-						const currentAktiveProfile = await this.get_DevieParameter(DeviceParameters.SelectedProfile);
+						const currentAktiveProfile = await this.get_DevieParameter(DeviceParameters.PRF);
 						if (currentAktiveProfile != null) {
 							// Save aktive profile from Device in state
-							await this.set_DevieParameter(DeviceParameters.SelectedProfile, String(currentAktiveProfile['getPRF']));
+							await this.set_DevieParameter(DeviceParameters.PRF, String(currentAktiveProfile['getPRF']));
 						} else {
 							this.log.debug('couldn\'t read aktive Profile Parameter');
 						}
@@ -928,7 +930,7 @@ class wamo extends utils.Adapter {
 						this.log.debug('onStateChange Profile Number is: ' + String(stateChangeProfileNo));
 
 						// identify currentAktiveProfile
-						const AktiveProfileNumber = await this.getStateAsync(DeviceParameters.SelectedProfile.statePath + '.' + DeviceParameters.SelectedProfile.id);
+						const AktiveProfileNumber = await this.getStateAsync(DeviceParameters.PRF.statePath + '.' + DeviceParameters.PRF.id);
 
 						switch (currentProfileState) {
 							case 'PA':	// Available
@@ -939,28 +941,28 @@ class wamo extends utils.Adapter {
 									// Restore availability parameter to 1 (on)
 									switch (stateChangeProfileNo) {
 										case 1:
-											await this.set_DevieParameter(DeviceParameters.Profile_PA1, '1');
+											await this.set_DevieParameter(DeviceParameters.PA1, '1');
 											break;
 										case 2:
-											await this.set_DevieParameter(DeviceParameters.Profile_PA2, '1');
+											await this.set_DevieParameter(DeviceParameters.PA2, '1');
 											break;
 										case 3:
-											await this.set_DevieParameter(DeviceParameters.Profile_PA3, '1');
+											await this.set_DevieParameter(DeviceParameters.PA3, '1');
 											break;
 										case 4:
-											await this.set_DevieParameter(DeviceParameters.Profile_PA4, '1');
+											await this.set_DevieParameter(DeviceParameters.PA4, '1');
 											break;
 										case 5:
-											await this.set_DevieParameter(DeviceParameters.Profile_PA5, '1');
+											await this.set_DevieParameter(DeviceParameters.PA5, '1');
 											break;
 										case 6:
-											await this.set_DevieParameter(DeviceParameters.Profile_PA6, '1');
+											await this.set_DevieParameter(DeviceParameters.PA6, '1');
 											break;
 										case 7:
-											await this.set_DevieParameter(DeviceParameters.Profile_PA7, '1');
+											await this.set_DevieParameter(DeviceParameters.PA7, '1');
 											break;
 										case 8:
-											await this.set_DevieParameter(DeviceParameters.Profile_PA8, '1');
+											await this.set_DevieParameter(DeviceParameters.PA8, '1');
 											break;
 									}
 									this.log.warn('Restored profile ' + String(stateChangeProfileNo) + 'availability to 1 (on)');
@@ -974,28 +976,28 @@ class wamo extends utils.Adapter {
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
-											await this.set_DevieParameter(DeviceParameters.Profile_PA1, String(profAvailableState));
+											await this.set_DevieParameter(DeviceParameters.PA1, String(profAvailableState));
 											break;
 										case 2:
-											await this.set_DevieParameter(DeviceParameters.Profile_PA2, String(profAvailableState));
+											await this.set_DevieParameter(DeviceParameters.PA2, String(profAvailableState));
 											break;
 										case 3:
-											await this.set_DevieParameter(DeviceParameters.Profile_PA3, String(profAvailableState));
+											await this.set_DevieParameter(DeviceParameters.PA3, String(profAvailableState));
 											break;
 										case 4:
-											await this.set_DevieParameter(DeviceParameters.Profile_PA4, String(profAvailableState));
+											await this.set_DevieParameter(DeviceParameters.PA4, String(profAvailableState));
 											break;
 										case 5:
-											await this.set_DevieParameter(DeviceParameters.Profile_PA5, String(profAvailableState));
+											await this.set_DevieParameter(DeviceParameters.PA5, String(profAvailableState));
 											break;
 										case 6:
-											await this.set_DevieParameter(DeviceParameters.Profile_PA6, String(profAvailableState));
+											await this.set_DevieParameter(DeviceParameters.PA6, String(profAvailableState));
 											break;
 										case 7:
-											await this.set_DevieParameter(DeviceParameters.Profile_PA7, String(profAvailableState));
+											await this.set_DevieParameter(DeviceParameters.PA7, String(profAvailableState));
 											break;
 										case 8:
-											await this.set_DevieParameter(DeviceParameters.Profile_PA8, String(profAvailableState));
+											await this.set_DevieParameter(DeviceParameters.PA8, String(profAvailableState));
 											break;
 										default:
 											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PA');
@@ -1014,28 +1016,28 @@ class wamo extends utils.Adapter {
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
-											await this.set_DevieParameter(DeviceParameters.Profile_PN1, newProfileName);
+											await this.set_DevieParameter(DeviceParameters.PN1, newProfileName);
 											break;
 										case 2:
-											await this.set_DevieParameter(DeviceParameters.Profile_PN2, newProfileName);
+											await this.set_DevieParameter(DeviceParameters.PN2, newProfileName);
 											break;
 										case 3:
-											await this.set_DevieParameter(DeviceParameters.Profile_PN3, newProfileName);
+											await this.set_DevieParameter(DeviceParameters.PN3, newProfileName);
 											break;
 										case 4:
-											await this.set_DevieParameter(DeviceParameters.Profile_PN4, newProfileName);
+											await this.set_DevieParameter(DeviceParameters.PN4, newProfileName);
 											break;
 										case 5:
-											await this.set_DevieParameter(DeviceParameters.Profile_PN5, newProfileName);
+											await this.set_DevieParameter(DeviceParameters.PN5, newProfileName);
 											break;
 										case 6:
-											await this.set_DevieParameter(DeviceParameters.Profile_PN6, newProfileName);
+											await this.set_DevieParameter(DeviceParameters.PN6, newProfileName);
 											break;
 										case 7:
-											await this.set_DevieParameter(DeviceParameters.Profile_PN7, newProfileName);
+											await this.set_DevieParameter(DeviceParameters.PN7, newProfileName);
 											break;
 										case 8:
-											await this.set_DevieParameter(DeviceParameters.Profile_PN8, newProfileName);
+											await this.set_DevieParameter(DeviceParameters.PN8, newProfileName);
 											break;
 										default:
 											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PN');
@@ -1052,28 +1054,28 @@ class wamo extends utils.Adapter {
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
-											await this.set_DevieParameter(DeviceParameters.Profile_PB1, String(profileBuzzer));
+											await this.set_DevieParameter(DeviceParameters.PB1, String(profileBuzzer));
 											break;
 										case 2:
-											await this.set_DevieParameter(DeviceParameters.Profile_PB2, String(profileBuzzer));
+											await this.set_DevieParameter(DeviceParameters.PB2, String(profileBuzzer));
 											break;
 										case 3:
-											await this.set_DevieParameter(DeviceParameters.Profile_PB3, String(profileBuzzer));
+											await this.set_DevieParameter(DeviceParameters.PB3, String(profileBuzzer));
 											break;
 										case 4:
-											await this.set_DevieParameter(DeviceParameters.Profile_PB4, String(profileBuzzer));
+											await this.set_DevieParameter(DeviceParameters.PB4, String(profileBuzzer));
 											break;
 										case 5:
-											await this.set_DevieParameter(DeviceParameters.Profile_PB5, String(profileBuzzer));
+											await this.set_DevieParameter(DeviceParameters.PB5, String(profileBuzzer));
 											break;
 										case 6:
-											await this.set_DevieParameter(DeviceParameters.Profile_PB6, String(profileBuzzer));
+											await this.set_DevieParameter(DeviceParameters.PB6, String(profileBuzzer));
 											break;
 										case 7:
-											await this.set_DevieParameter(DeviceParameters.Profile_PB7, String(profileBuzzer));
+											await this.set_DevieParameter(DeviceParameters.PB7, String(profileBuzzer));
 											break;
 										case 8:
-											await this.set_DevieParameter(DeviceParameters.Profile_PB8, String(profileBuzzer));
+											await this.set_DevieParameter(DeviceParameters.PB8, String(profileBuzzer));
 											break;
 										default:
 											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PB');
@@ -1093,28 +1095,28 @@ class wamo extends utils.Adapter {
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
-											await this.set_DevieParameter(DeviceParameters.Profile_PF1, String(profileMaxFlow));
+											await this.set_DevieParameter(DeviceParameters.PF1, String(profileMaxFlow));
 											break;
 										case 2:
-											await this.set_DevieParameter(DeviceParameters.Profile_PF2, String(profileMaxFlow));
+											await this.set_DevieParameter(DeviceParameters.PF2, String(profileMaxFlow));
 											break;
 										case 3:
-											await this.set_DevieParameter(DeviceParameters.Profile_PF3, String(profileMaxFlow));
+											await this.set_DevieParameter(DeviceParameters.PF3, String(profileMaxFlow));
 											break;
 										case 4:
-											await this.set_DevieParameter(DeviceParameters.Profile_PF4, String(profileMaxFlow));
+											await this.set_DevieParameter(DeviceParameters.PF4, String(profileMaxFlow));
 											break;
 										case 5:
-											await this.set_DevieParameter(DeviceParameters.Profile_PF5, String(profileMaxFlow));
+											await this.set_DevieParameter(DeviceParameters.PF5, String(profileMaxFlow));
 											break;
 										case 6:
-											await this.set_DevieParameter(DeviceParameters.Profile_PF6, String(profileMaxFlow));
+											await this.set_DevieParameter(DeviceParameters.PF6, String(profileMaxFlow));
 											break;
 										case 7:
-											await this.set_DevieParameter(DeviceParameters.Profile_PF7, String(profileMaxFlow));
+											await this.set_DevieParameter(DeviceParameters.PF7, String(profileMaxFlow));
 											break;
 										case 8:
-											await this.set_DevieParameter(DeviceParameters.Profile_PF8, String(profileMaxFlow));
+											await this.set_DevieParameter(DeviceParameters.PF8, String(profileMaxFlow));
 											break;
 										default:
 											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PF');
@@ -1134,28 +1136,28 @@ class wamo extends utils.Adapter {
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
-											await this.set_DevieParameter(DeviceParameters.Profile_PM1, String(profileMicroLeak));
+											await this.set_DevieParameter(DeviceParameters.PM1, String(profileMicroLeak));
 											break;
 										case 2:
-											await this.set_DevieParameter(DeviceParameters.Profile_PM2, String(profileMicroLeak));
+											await this.set_DevieParameter(DeviceParameters.PM2, String(profileMicroLeak));
 											break;
 										case 3:
-											await this.set_DevieParameter(DeviceParameters.Profile_PM3, String(profileMicroLeak));
+											await this.set_DevieParameter(DeviceParameters.PM3, String(profileMicroLeak));
 											break;
 										case 4:
-											await this.set_DevieParameter(DeviceParameters.Profile_PM4, String(profileMicroLeak));
+											await this.set_DevieParameter(DeviceParameters.PM4, String(profileMicroLeak));
 											break;
 										case 5:
-											await this.set_DevieParameter(DeviceParameters.Profile_PM5, String(profileMicroLeak));
+											await this.set_DevieParameter(DeviceParameters.PM5, String(profileMicroLeak));
 											break;
 										case 6:
-											await this.set_DevieParameter(DeviceParameters.Profile_PM6, String(profileMicroLeak));
+											await this.set_DevieParameter(DeviceParameters.PM6, String(profileMicroLeak));
 											break;
 										case 7:
-											await this.set_DevieParameter(DeviceParameters.Profile_PM7, String(profileMicroLeak));
+											await this.set_DevieParameter(DeviceParameters.PM7, String(profileMicroLeak));
 											break;
 										case 8:
-											await this.set_DevieParameter(DeviceParameters.Profile_PM8, String(profileMicroLeak));
+											await this.set_DevieParameter(DeviceParameters.PM8, String(profileMicroLeak));
 											break;
 										default:
 											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PM');
@@ -1175,28 +1177,28 @@ class wamo extends utils.Adapter {
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
-											await this.set_DevieParameter(DeviceParameters.Profile_PR1, String(profileTimeBackStandardProfile));
+											await this.set_DevieParameter(DeviceParameters.PR1, String(profileTimeBackStandardProfile));
 											break;
 										case 2:
-											await this.set_DevieParameter(DeviceParameters.Profile_PR2, String(profileTimeBackStandardProfile));
+											await this.set_DevieParameter(DeviceParameters.PR2, String(profileTimeBackStandardProfile));
 											break;
 										case 3:
-											await this.set_DevieParameter(DeviceParameters.Profile_PR3, String(profileTimeBackStandardProfile));
+											await this.set_DevieParameter(DeviceParameters.PR3, String(profileTimeBackStandardProfile));
 											break;
 										case 4:
-											await this.set_DevieParameter(DeviceParameters.Profile_PR4, String(profileTimeBackStandardProfile));
+											await this.set_DevieParameter(DeviceParameters.PR4, String(profileTimeBackStandardProfile));
 											break;
 										case 5:
-											await this.set_DevieParameter(DeviceParameters.Profile_PR5, String(profileTimeBackStandardProfile));
+											await this.set_DevieParameter(DeviceParameters.PR5, String(profileTimeBackStandardProfile));
 											break;
 										case 6:
-											await this.set_DevieParameter(DeviceParameters.Profile_PR6, String(profileTimeBackStandardProfile));
+											await this.set_DevieParameter(DeviceParameters.PR6, String(profileTimeBackStandardProfile));
 											break;
 										case 7:
-											await this.set_DevieParameter(DeviceParameters.Profile_PR7, String(profileTimeBackStandardProfile));
+											await this.set_DevieParameter(DeviceParameters.PR7, String(profileTimeBackStandardProfile));
 											break;
 										case 8:
-											await this.set_DevieParameter(DeviceParameters.Profile_PR8, String(profileTimeBackStandardProfile));
+											await this.set_DevieParameter(DeviceParameters.PR8, String(profileTimeBackStandardProfile));
 											break;
 										default:
 											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PR');
@@ -1216,28 +1218,28 @@ class wamo extends utils.Adapter {
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
-											await this.set_DevieParameter(DeviceParameters.Profile_PT1, String(profileLeakageTimeLimit));
+											await this.set_DevieParameter(DeviceParameters.PT1, String(profileLeakageTimeLimit));
 											break;
 										case 2:
-											await this.set_DevieParameter(DeviceParameters.Profile_PT2, String(profileLeakageTimeLimit));
+											await this.set_DevieParameter(DeviceParameters.PT2, String(profileLeakageTimeLimit));
 											break;
 										case 3:
-											await this.set_DevieParameter(DeviceParameters.Profile_PT3, String(profileLeakageTimeLimit));
+											await this.set_DevieParameter(DeviceParameters.PT3, String(profileLeakageTimeLimit));
 											break;
 										case 4:
-											await this.set_DevieParameter(DeviceParameters.Profile_PT4, String(profileLeakageTimeLimit));
+											await this.set_DevieParameter(DeviceParameters.PT4, String(profileLeakageTimeLimit));
 											break;
 										case 5:
-											await this.set_DevieParameter(DeviceParameters.Profile_PT5, String(profileLeakageTimeLimit));
+											await this.set_DevieParameter(DeviceParameters.PT5, String(profileLeakageTimeLimit));
 											break;
 										case 6:
-											await this.set_DevieParameter(DeviceParameters.Profile_PT6, String(profileLeakageTimeLimit));
+											await this.set_DevieParameter(DeviceParameters.PT6, String(profileLeakageTimeLimit));
 											break;
 										case 7:
-											await this.set_DevieParameter(DeviceParameters.Profile_PT7, String(profileLeakageTimeLimit));
+											await this.set_DevieParameter(DeviceParameters.PT7, String(profileLeakageTimeLimit));
 											break;
 										case 8:
-											await this.set_DevieParameter(DeviceParameters.Profile_PT8, String(profileLeakageTimeLimit));
+											await this.set_DevieParameter(DeviceParameters.PT8, String(profileLeakageTimeLimit));
 											break;
 										default:
 											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PT');
@@ -1257,28 +1259,28 @@ class wamo extends utils.Adapter {
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
-											await this.set_DevieParameter(DeviceParameters.Profile_PV1, String(profileLeakageVolumeLimit));
+											await this.set_DevieParameter(DeviceParameters.PV1, String(profileLeakageVolumeLimit));
 											break;
 										case 2:
-											await this.set_DevieParameter(DeviceParameters.Profile_PV2, String(profileLeakageVolumeLimit));
+											await this.set_DevieParameter(DeviceParameters.PV2, String(profileLeakageVolumeLimit));
 											break;
 										case 3:
-											await this.set_DevieParameter(DeviceParameters.Profile_PV3, String(profileLeakageVolumeLimit));
+											await this.set_DevieParameter(DeviceParameters.PV3, String(profileLeakageVolumeLimit));
 											break;
 										case 4:
-											await this.set_DevieParameter(DeviceParameters.Profile_PV4, String(profileLeakageVolumeLimit));
+											await this.set_DevieParameter(DeviceParameters.PV4, String(profileLeakageVolumeLimit));
 											break;
 										case 5:
-											await this.set_DevieParameter(DeviceParameters.Profile_PV5, String(profileLeakageVolumeLimit));
+											await this.set_DevieParameter(DeviceParameters.PV5, String(profileLeakageVolumeLimit));
 											break;
 										case 6:
-											await this.set_DevieParameter(DeviceParameters.Profile_PV6, String(profileLeakageVolumeLimit));
+											await this.set_DevieParameter(DeviceParameters.PV6, String(profileLeakageVolumeLimit));
 											break;
 										case 7:
-											await this.set_DevieParameter(DeviceParameters.Profile_PV7, String(profileLeakageVolumeLimit));
+											await this.set_DevieParameter(DeviceParameters.PV7, String(profileLeakageVolumeLimit));
 											break;
 										case 8:
-											await this.set_DevieParameter(DeviceParameters.Profile_PV8, String(profileLeakageVolumeLimit));
+											await this.set_DevieParameter(DeviceParameters.PV8, String(profileLeakageVolumeLimit));
 											break;
 										default:
 											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PV');
@@ -1298,28 +1300,28 @@ class wamo extends utils.Adapter {
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
-											await this.set_DevieParameter(DeviceParameters.Profile_PW1, String(profileLeakageWarning));
+											await this.set_DevieParameter(DeviceParameters.PW1, String(profileLeakageWarning));
 											break;
 										case 2:
-											await this.set_DevieParameter(DeviceParameters.Profile_PW2, String(profileLeakageWarning));
+											await this.set_DevieParameter(DeviceParameters.PW2, String(profileLeakageWarning));
 											break;
 										case 3:
-											await this.set_DevieParameter(DeviceParameters.Profile_PW3, String(profileLeakageWarning));
+											await this.set_DevieParameter(DeviceParameters.PW3, String(profileLeakageWarning));
 											break;
 										case 4:
-											await this.set_DevieParameter(DeviceParameters.Profile_PW4, String(profileLeakageWarning));
+											await this.set_DevieParameter(DeviceParameters.PW4, String(profileLeakageWarning));
 											break;
 										case 5:
-											await this.set_DevieParameter(DeviceParameters.Profile_PW5, String(profileLeakageWarning));
+											await this.set_DevieParameter(DeviceParameters.PW5, String(profileLeakageWarning));
 											break;
 										case 6:
-											await this.set_DevieParameter(DeviceParameters.Profile_PW6, String(profileLeakageWarning));
+											await this.set_DevieParameter(DeviceParameters.PW6, String(profileLeakageWarning));
 											break;
 										case 7:
-											await this.set_DevieParameter(DeviceParameters.Profile_PW7, String(profileLeakageWarning));
+											await this.set_DevieParameter(DeviceParameters.PW7, String(profileLeakageWarning));
 											break;
 										case 8:
-											await this.set_DevieParameter(DeviceParameters.Profile_PW8, String(profileLeakageWarning));
+											await this.set_DevieParameter(DeviceParameters.PW8, String(profileLeakageWarning));
 											break;
 										default:
 											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PW');
@@ -1450,8 +1452,6 @@ class wamo extends utils.Adapter {
 			this.log.error('[async LeakageDevice_HandleAll(Data)] ' + String(err));
 		}
 	}
-
-
 
 	/**
 	 * start all timers
@@ -1800,8 +1800,8 @@ class wamo extends utils.Adapter {
 						}
 					}
 					else {
-						this.set_FloorSensorConnectionStatus(FlooreSensNo, true); // no await on purpose 
-						this.log.warn('Floor Sensor ' + FlooreSensNo + ' API response Status: ' + String(FS_Data.status) + ' ' + String(FS_Data.statusText)); 
+						this.set_FloorSensorConnectionStatus(FlooreSensNo, true); // no await on purpose
+						this.log.warn('Floor Sensor ' + FlooreSensNo + ' API response Status: ' + String(FS_Data.status) + ' ' + String(FS_Data.statusText));
 					}
 				} catch (err) {
 					this.set_FloorSensorConnectionStatus(FlooreSensNo, false); // no await on purpose
@@ -2048,7 +2048,7 @@ class wamo extends utils.Adapter {
 					interfaceBusy = true;
 					// get current water consumption from device
 					try{
-						currentconsumption = await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentVolume.id));
+						currentconsumption = await this.syrApiClient.get('get/' + String(DeviceParameters.AVO.id));
 						NetworkDevices.LeakageDevice_responding = true;
 						this.setInstanceLED();
 						interfaceBusy = false;
@@ -2089,7 +2089,7 @@ class wamo extends utils.Adapter {
 
 			MainValveJammProtection_running = true; // set flag that jam protection is running
 			// set state accordingly
-			this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: true, ack: true });
+			this.setStateAsync(DeviceParameters.JPR.statePath + '.' + DeviceParameters.JPR.id, { val: true, ack: true });
 
 			this.log.info('[JAM PROTECTION] Starting');
 			this.log.info('[JAM PROTECTION] Valve operation delay to avoide disturbing running device requests');
@@ -2100,13 +2100,13 @@ class wamo extends utils.Adapter {
 				if (!await this.move_main_valve(closeValveCommand)) {
 					// Main valve was already closed! Maybe for a good reason So we cancel Jam Protection
 					this.log.error('Jam Protection canceld because main valve is already closed');
-					this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: false, ack: true }); // set state accordingly
+					this.setStateAsync(DeviceParameters.JPR.statePath + '.' + DeviceParameters.JPR.id, { val: false, ack: true }); // set state accordingly
 					MainValveJammProtection_running = false; // clear flag that jam protection is running
 					return;
 				}
 			} catch (err) {
 				this.log.warn('[JAM PROTECTION] closing main valve ERROR: ' + err);
-				this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: false, ack: true }); // set state accordingly
+				this.setStateAsync(DeviceParameters.JPR.statePath + '.' + DeviceParameters.JPR.id, { val: false, ack: true }); // set state accordingly
 				MainValveJammProtection_running = false; // clear flag that jam protection is running
 				return;
 			}
@@ -2117,26 +2117,26 @@ class wamo extends utils.Adapter {
 				if (!await this.move_main_valve(openValveCommand)) {
 					// something went wron .. we cancel the wohle action.
 					this.log.error('Jam Protection canceld because main valve could not be opened again');
-					this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: false, ack: true }); // set state accordingly
+					this.setStateAsync(DeviceParameters.JPR.statePath + '.' + DeviceParameters.JPR.id, { val: false, ack: true }); // set state accordingly
 					MainValveJammProtection_running = false; // clear flag that jam protection is running
 					return;
 				}
 			} catch (err) {
 				this.log.warn('[JAM PROTECTION] opening main valve ERROR: ' + err);
-				this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: false, ack: true }); // set state accordingly
+				this.setStateAsync(DeviceParameters.JPR.statePath + '.' + DeviceParameters.JPR.id, { val: false, ack: true }); // set state accordingly
 				MainValveJammProtection_running = false; // clear flag that jam protection is running
 				return;
 			}
 
 			MainValveJammProtection_running = false; // clear flag that jam protection is running
 			// set state accordingly
-			this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: false, ack: true });
+			this.setStateAsync(DeviceParameters.JPR.statePath + '.' + DeviceParameters.JPR.id, { val: false, ack: true });
 
 			this.log.info('[JAM PROTECTION] Finished');
 		} catch (err) {
 			MainValveJammProtection_running = false; // clear flag that jam protection is running
 			// set state accordingly
-			this.setStateAsync(DeviceParameters.JamProtectionOngoing.statePath + '.' + DeviceParameters.JamProtectionOngoing.id, { val: false, ack: true });
+			this.setStateAsync(DeviceParameters.JPR.statePath + '.' + DeviceParameters.JPR.id, { val: false, ack: true });
 			throw new Error(err);
 		}
 	}
@@ -2186,7 +2186,7 @@ class wamo extends utils.Adapter {
 				let deviceResponse = null;
 				try{
 					// Get current Valve Status
-					deviceResponse = await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentValveStatus.id));
+					deviceResponse = await this.syrApiClient.get('get/' + String(DeviceParameters.VLV.id));
 					if (deviceResponse.status === 200) {
 						NetworkDevices.LeakageDevice_responding = true;
 						this.setInstanceLED();
@@ -2229,7 +2229,7 @@ class wamo extends utils.Adapter {
 
 				try {
 					// Send moving command to Device
-					await this.syrApiClient.get('set/' + String(DeviceParameters.ShutOff.id + '/' + String(valveCommand)));
+					await this.syrApiClient.get('set/' + String(DeviceParameters.AB.id + '/' + String(valveCommand)));
 					NetworkDevices.LeakageDevice_responding = true;
 					this.setInstanceLED();
 				} catch (err) {
@@ -2251,7 +2251,7 @@ class wamo extends utils.Adapter {
 					await this.set_SERVICE_Mode();
 					try{
 					// read valve state from device
-						deviceResponse = await this.syrApiClient.get('get/' + String(DeviceParameters.CurrentValveStatus.id));
+						deviceResponse = await this.syrApiClient.get('get/' + String(DeviceParameters.VLV.id));
 						NetworkDevices.LeakageDevice_responding = true;
 						this.setInstanceLED();
 						// clear special mode
@@ -2496,8 +2496,8 @@ class wamo extends utils.Adapter {
 	 * Updates the object containing Hardnes Factor calculation
 	 */
 	async updateHardnesFactorObject() {
-		await this.setObjectNotExistsAsync(DeviceParameters.gerWaterHardnessFactor.statePath + '.' + DeviceParameters.gerWaterHardnessFactor.id, Object(DeviceParameters.gerWaterHardnessFactor.objectdefinition));
-		await this.setStateAsync(DeviceParameters.gerWaterHardnessFactor.statePath + '.' + DeviceParameters.gerWaterHardnessFactor.id, { val: this.config.factor_german_water_hardnes, ack: true });
+		await this.setObjectNotExistsAsync(DeviceParameters.GHARDFACTOR.statePath + '.' + DeviceParameters.GHARDFACTOR.id, Object(DeviceParameters.GHARDFACTOR.objectdefinition));
+		await this.setStateAsync(DeviceParameters.GHARDFACTOR.statePath + '.' + DeviceParameters.GHARDFACTOR.id, { val: this.config.factor_german_water_hardnes, ack: true });
 	}
 
 	/**
@@ -2803,14 +2803,14 @@ class wamo extends utils.Adapter {
 							this.log.info('Coductivity sensor is present');
 							try {
 								// create Object for conductivity value
-								await this.setObjectNotExistsAsync(DeviceParameters.WaterConductivity.statePath + '.' + DeviceParameters.WaterConductivity.id, Object(DeviceParameters.WaterConductivity.objectdefinition));
+								await this.setObjectNotExistsAsync(DeviceParameters.CND.statePath + '.' + DeviceParameters.CND.id, Object(DeviceParameters.CND.objectdefinition));
 								// create RAW data object if needed
-								if (DeviceParameters.WaterConductivity.saveRawData) {
+								if (DeviceParameters.CND.saveRawData) {
 									// basic RAW object definition
 									const raw_objectdefinition = {
 										type: 'state',
 										common: {
-											name: DeviceParameters.WaterConductivity.objectdefinition.common.name,
+											name: DeviceParameters.CND.objectdefinition.common.name,
 											type: 'string',
 											unit: null,
 											role: 'json',
@@ -2819,7 +2819,7 @@ class wamo extends utils.Adapter {
 										},
 										native: {}
 									};
-									await this.setObjectNotExistsAsync(adapterChannels.DeviceRawData.path + '.' + DeviceParameters.WaterConductivity.id, Object(raw_objectdefinition));
+									await this.setObjectNotExistsAsync(adapterChannels.DeviceRawData.path + '.' + DeviceParameters.CND.id, Object(raw_objectdefinition));
 								}
 							}
 							catch (err) {
@@ -2844,14 +2844,14 @@ class wamo extends utils.Adapter {
 							this.log.info('Temperature sensor is present');
 							try {
 								// create Object for temperature value
-								await this.setObjectNotExistsAsync(DeviceParameters.WaterTemperature.statePath + '.' + DeviceParameters.WaterTemperature.id, Object(DeviceParameters.WaterTemperature.objectdefinition));
+								await this.setObjectNotExistsAsync(DeviceParameters.CEL.statePath + '.' + DeviceParameters.CEL.id, Object(DeviceParameters.CEL.objectdefinition));
 								// create RAW data object if needed
-								if (DeviceParameters.WaterTemperature.saveRawData) {
+								if (DeviceParameters.CEL.saveRawData) {
 									// basic RAW object definition
 									const raw_objectdefinition = {
 										type: 'state',
 										common: {
-											name: DeviceParameters.WaterTemperature.objectdefinition.common.name,
+											name: DeviceParameters.CEL.objectdefinition.common.name,
 											type: 'string',
 											unit: null,
 											role: 'json',
@@ -2860,7 +2860,7 @@ class wamo extends utils.Adapter {
 										},
 										native: {}
 									};
-									await this.setObjectNotExistsAsync(adapterChannels.DeviceRawData.path + '.' + DeviceParameters.WaterTemperature.id, Object(raw_objectdefinition));
+									await this.setObjectNotExistsAsync(adapterChannels.DeviceRawData.path + '.' + DeviceParameters.CEL.id, Object(raw_objectdefinition));
 								}
 							}
 							catch (err) {
@@ -2885,14 +2885,14 @@ class wamo extends utils.Adapter {
 							this.log.info('Pressure sensor is present');
 							try {
 								// create Object for pressure value
-								await this.setObjectNotExistsAsync(DeviceParameters.WaterPressure.statePath + '.' + DeviceParameters.WaterPressure.id, Object(DeviceParameters.WaterPressure.objectdefinition));
+								await this.setObjectNotExistsAsync(DeviceParameters.BAR.statePath + '.' + DeviceParameters.BAR.id, Object(DeviceParameters.BAR.objectdefinition));
 								// create RAW data object if needed
-								if (DeviceParameters.WaterPressure.saveRawData) {
+								if (DeviceParameters.BAR.saveRawData) {
 									// basic RAW object definition
 									const raw_objectdefinition = {
 										type: 'state',
 										common: {
-											name: DeviceParameters.WaterPressure.objectdefinition.common.name,
+											name: DeviceParameters.BAR.objectdefinition.common.name,
 											type: 'string',
 											unit: null,
 											role: 'json',
@@ -2901,7 +2901,7 @@ class wamo extends utils.Adapter {
 										},
 										native: {}
 									};
-									await this.setObjectNotExistsAsync(adapterChannels.DeviceRawData.path + '.' + DeviceParameters.WaterPressure.id, Object(raw_objectdefinition));
+									await this.setObjectNotExistsAsync(adapterChannels.DeviceRawData.path + '.' + DeviceParameters.BAR.id, Object(raw_objectdefinition));
 								}
 							}
 							catch (err) {
@@ -3024,9 +3024,9 @@ class wamo extends utils.Adapter {
 			let skip = false;
 
 			// checking if we deal with parameters which need to skip some later operations
-			if (cur_ParameterID === DeviceParameters.WaterConductivity.id && sensor_conductivity_present === false) { skip = true; }
-			else if (cur_ParameterID === DeviceParameters.WaterPressure.id && sensor_pressure_present === false) { skip = true; }
-			else if (cur_ParameterID === DeviceParameters.WaterTemperature.id && sensor_temperature_present === false) { skip = true; }
+			if (cur_ParameterID === DeviceParameters.CND.id && sensor_conductivity_present === false) { skip = true; }
+			else if (cur_ParameterID === DeviceParameters.BAR.id && sensor_pressure_present === false) { skip = true; }
+			else if (cur_ParameterID === DeviceParameters.CEL.id && sensor_temperature_present === false) { skip = true; }
 
 			// do we need to skip this parameter?
 			if (skip) {
@@ -3134,60 +3134,60 @@ class wamo extends utils.Adapter {
 		try {
 			let finalValue;
 			switch (String(valueKey)) {
-				case DeviceParameters.Units.id:						// UNI - Units
-					finalValue = await this.getGlobalisedValue(DeviceParameters.Units, value);
+				case DeviceParameters.UNI.id:						// UNI - Units
+					finalValue = await this.getGlobalisedValue(DeviceParameters.UNI, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.Units, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.UNI, finalValue); }
 					break;
-				case DeviceParameters.Language.id:					// LNG - Language
-					finalValue = await this.getGlobalisedValue(DeviceParameters.Language, value);
+				case DeviceParameters.LNG.id:					// LNG - Language
+					finalValue = await this.getGlobalisedValue(DeviceParameters.LNG, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.Language, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.LNG, finalValue); }
 					break;
-				case DeviceParameters.AvailableProfiles.id: 		// PRN - available profiles
-					finalValue = await this.getGlobalisedValue(DeviceParameters.AvailableProfiles, value);
+				case DeviceParameters.PRN.id: 		// PRN - available profiles
+					finalValue = await this.getGlobalisedValue(DeviceParameters.PRN, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = parseInt(value);
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.AvailableProfiles, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.PRN, finalValue); }
 					break;
-				case DeviceParameters.SelectedProfile.id: 			// PRF - selected profile
-					finalValue = await this.getGlobalisedValue(DeviceParameters.SelectedProfile, value);
+				case DeviceParameters.PRF.id: 			// PRF - selected profile
+					finalValue = await this.getGlobalisedValue(DeviceParameters.PRF, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = parseInt(value);
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SelectedProfile, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.PRF, finalValue); }
 					break;
-				case DeviceParameters.DeactivateTemperatureSensor.id:	// TSD - Temp sensor present
+				case DeviceParameters.TSD.id:	// TSD - Temp sensor present
 					if (parseInt(value) == 0) { sensor_temperature_present = true; } else { sensor_temperature_present = false; }
-					finalValue = await this.getGlobalisedValue(DeviceParameters.DeactivateTemperatureSensor, value);
+					finalValue = await this.getGlobalisedValue(DeviceParameters.TSD, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DeactivateTemperatureSensor, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.TSD, finalValue); }
 					break;
-				case DeviceParameters.DeactivateConductivitySensor.id:	// CSD - conductivity sensor present
+				case DeviceParameters.CSD.id:	// CSD - conductivity sensor present
 					if (parseInt(value) == 0) { sensor_conductivity_present = true; } else { sensor_conductivity_present = false; }
-					finalValue = await this.getGlobalisedValue(DeviceParameters.DeactivateConductivitySensor, value);
+					finalValue = await this.getGlobalisedValue(DeviceParameters.CSD, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DeactivateConductivitySensor, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CSD, finalValue); }
 					break;
-				case DeviceParameters.DeactivatePressureSensor.id:	// PSD - Pressure sensor present
+				case DeviceParameters.PSD.id:	// PSD - Pressure sensor present
 					if (parseInt(value) == 0) { sensor_pressure_present = true; } else { sensor_pressure_present = false; }
-					finalValue = await this.getGlobalisedValue(DeviceParameters.DeactivatePressureSensor, value);
+					finalValue = await this.getGlobalisedValue(DeviceParameters.PSD, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DeactivatePressureSensor, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.PSD, finalValue); }
 					break;
-				case DeviceParameters.CurrentAlarmStatus.id:		// ALA Alarm status
-					finalValue = await this.getGlobalisedValue(DeviceParameters.CurrentAlarmStatus, value);
+				case DeviceParameters.ALA.id:		// ALA Alarm status
+					finalValue = await this.getGlobalisedValue(DeviceParameters.ALA, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						switch (String(value)) {
 							case 'FF':
@@ -3242,10 +3242,10 @@ class wamo extends utils.Adapter {
 								finalValue = 'undefined';
 						}
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CurrentAlarmStatus, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ALA, finalValue); }
 					break;
-				case DeviceParameters.CurrentValveStatus.id:		// VLV - Current Valve Status
-					finalValue = await this.getGlobalisedValue(DeviceParameters.CurrentValveStatus, value);
+				case DeviceParameters.VLV.id:		// VLV - Current Valve Status
+					finalValue = await this.getGlobalisedValue(DeviceParameters.VLV, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						switch (String(value)) {
 							case '10':
@@ -3268,40 +3268,40 @@ class wamo extends utils.Adapter {
 								finalValue = null;
 						}
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CurrentValveStatus, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.VLV, finalValue); }
 					break;
-				case DeviceParameters.SystemTime.id:				// RTC - System Time
-					finalValue = await this.getGlobalisedValue(DeviceParameters.SystemTime, value);
+				case DeviceParameters.RTC.id:				// RTC - System Time
+					finalValue = await this.getGlobalisedValue(DeviceParameters.RTC, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = (new Date(parseInt(value) * 1000)).toLocaleString();
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SystemTime, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.RTC, finalValue); }
 					break;
-				case DeviceParameters.WaterTemperature.id:			// CEL - Water temperature
+				case DeviceParameters.CEL.id:			// CEL - Water temperature
 					if (sensor_temperature_present) {
-						finalValue = await this.getGlobalisedValue(DeviceParameters.WaterTemperature, value);
+						finalValue = await this.getGlobalisedValue(DeviceParameters.CEL, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = parseFloat(value) / 10;
 							_WaterTemperature = finalValue;
 						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WaterTemperature, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CEL, finalValue); }
 					}
 					break;
-				case DeviceParameters.WaterPressure.id:				// BAR Water pressure
+				case DeviceParameters.BAR.id:				// BAR Water pressure
 					if (sensor_pressure_present) {
 						value = parseFloat(String(value).replace(',', '.'));
-						finalValue = await this.getGlobalisedValue(DeviceParameters.WaterPressure, value);
+						finalValue = await this.getGlobalisedValue(DeviceParameters.BAR, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
 							finalValue = parseFloat(value);
 							_WaterPressure = finalValue;
 						}
-						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WaterPressure, finalValue); }
+						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BAR, finalValue); }
 					}
 					break;
-				case DeviceParameters.WaterConductivity.id:			// CND - Water conductivity
+				case DeviceParameters.CND.id:			// CND - Water conductivity
 					if (sensor_conductivity_present) {
 						try {
-							finalValue = await this.getGlobalisedValue(DeviceParameters.WaterConductivity, value);
+							finalValue = await this.getGlobalisedValue(DeviceParameters.CND, value);
 							if (finalValue === null) {	// did we get a globalised Value back?
 								finalValue = parseFloat(String(value).replace(',', '.'));
 								_WaterConductivity = finalValue;
@@ -3312,54 +3312,54 @@ class wamo extends utils.Adapter {
 								}
 								try { await this.updateGermanWaterHardnes(); } catch (err) { this.log.error('convertDeviceReturnValue -> WaterConductivity -> updateGermanWaterHardnes ERROR: ' + err); }
 							}
-							if (valuesInfoMessages) { try { await this.moremessages(DeviceParameters.WaterConductivity, _WaterConductivity); } catch (err) { this.log.error('convertDeviceReturnValue -> WaterConductivity -> moremessages ERROR: ' + err); } }
+							if (valuesInfoMessages) { try { await this.moremessages(DeviceParameters.CND, _WaterConductivity); } catch (err) { this.log.error('convertDeviceReturnValue -> WaterConductivity -> moremessages ERROR: ' + err); } }
 						} catch (err) {
 							this.log.error('convertDeviceReturnValue -> WaterConductivity -> getGlobalisedValue ERROR: ' + err);
 						}
 					}
 					break;
-				case DeviceParameters.BatteryVoltage.id:			// BAT Batterie voltage
+				case DeviceParameters.BAT.id:			// BAT Batterie voltage
 					value = parseFloat(String(value).replace(',', '.'));
-					finalValue = await this.getGlobalisedValue(DeviceParameters.BatteryVoltage, value);
+					finalValue = await this.getGlobalisedValue(DeviceParameters.BAT, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = parseFloat(value);
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BatteryVoltage, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BAT, finalValue); }
 					break;
-				case DeviceParameters.PowerAdapterVoltage.id:		// NET - DC voltage (power adaptor)
+				case DeviceParameters.NET.id:		// NET - DC voltage (power adaptor)
 					value = parseFloat(String(value).replace(',', '.'));
-					finalValue = await this.getGlobalisedValue(DeviceParameters.PowerAdapterVoltage, value);
+					finalValue = await this.getGlobalisedValue(DeviceParameters.NET, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = parseFloat(value);
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.PowerAdapterVoltage, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.NET, finalValue); }
 					break;
-				case DeviceParameters.LastTappedVolume.id:			// LTV - Last tapped Volume
+				case DeviceParameters.LTV.id:			// LTV - Last tapped Volume
 					value = parseFloat(String(value).replace(',', '.'));
-					finalValue = await this.getGlobalisedValue(DeviceParameters.LastTappedVolume, value);
+					finalValue = await this.getGlobalisedValue(DeviceParameters.LTV, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = parseFloat(value);
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.LastTappedVolume, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.LTV, finalValue); }
 					break;
-				case DeviceParameters.TotalVolume.id:				// VOL - total consumed water
+				case DeviceParameters.VOL.id:				// VOL - total consumed water
 					value = parseFloat(String(value).replace(',', '.').replace('Vol[L]', '')) / 1000;
-					finalValue = await this.getGlobalisedValue(DeviceParameters.TotalVolume, value);
+					finalValue = await this.getGlobalisedValue(DeviceParameters.VOL, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = parseFloat(value);
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.TotalVolume, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.VOL, finalValue); }
 					break;
-				case DeviceParameters.CurrentVolume.id:				// AVO - current water volume
+				case DeviceParameters.AVO.id:				// AVO - current water volume
 					value = parseFloat(String(value).replace(',', '.').replace('mL', ''));
-					finalValue = await this.getGlobalisedValue(DeviceParameters.CurrentVolume, value);
+					finalValue = await this.getGlobalisedValue(DeviceParameters.AVO, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = parseFloat(value);
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CurrentVolume, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.AVO, finalValue); }
 					break;
-				case DeviceParameters.APHidden.id:					// WAH - WiFi AP hidden
-					finalValue = await this.getGlobalisedValue(DeviceParameters.APHidden, value);
+				case DeviceParameters.WAH.id:					// WAH - WiFi AP hidden
+					finalValue = await this.getGlobalisedValue(DeviceParameters.WAH, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						if (parseInt(value) == 0) {
 							finalValue = 'AP not hidden (visible)';
@@ -3367,10 +3367,10 @@ class wamo extends utils.Adapter {
 							finalValue = 'AP hidden';
 						}
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.APHidden, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WAH, finalValue); }
 					break;
-				case DeviceParameters.APDisabled.id:				// WAD - WiFi AP dissabled
-					finalValue = await this.getGlobalisedValue(DeviceParameters.APDisabled, value);
+				case DeviceParameters.WAD.id:				// WAD - WiFi AP dissabled
+					finalValue = await this.getGlobalisedValue(DeviceParameters.WAD, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						if (parseInt(value) == 0) {
 							finalValue = 'AP not disabled';
@@ -3378,24 +3378,24 @@ class wamo extends utils.Adapter {
 							finalValue = 'AP disabled';
 						}
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.APDisabled, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WAD, finalValue); }
 					break;
-				case DeviceParameters.APTimeout.id:					// APT - WiFi AP timeout
-					finalValue = await this.getGlobalisedValue(DeviceParameters.APTimeout, value);
+				case DeviceParameters.APT.id:					// APT - WiFi AP timeout
+					finalValue = await this.getGlobalisedValue(DeviceParameters.APT, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.APTimeout, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.APT, finalValue); }
 					break;
-				case DeviceParameters.WiFiDeaktivate.id:			// DWL - WiFi deactivated
-					finalValue = await this.getGlobalisedValue(DeviceParameters.WiFiDeaktivate, value);
+				case DeviceParameters.DWL.id:			// DWL - WiFi deactivated
+					finalValue = await this.getGlobalisedValue(DeviceParameters.DWL, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WiFiDeaktivate, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DWL, finalValue); }
 					break;
-				case DeviceParameters.WiFiState.id:					// WFS - WiFi state
-					finalValue = await this.getGlobalisedValue(DeviceParameters.WiFiState, value);
+				case DeviceParameters.WFS.id:					// WFS - WiFi state
+					finalValue = await this.getGlobalisedValue(DeviceParameters.WFS, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						if (parseInt(value) == 0) {
 							finalValue = 'disconnected';
@@ -3407,87 +3407,87 @@ class wamo extends utils.Adapter {
 							finalValue = 'undefined';
 						}
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WiFiState, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WFS, finalValue); }
 					break;
-				case DeviceParameters.DaylightSavingTime.id:		// IDS - Daylight saving time
-					finalValue = await this.getGlobalisedValue(DeviceParameters.DaylightSavingTime, value);
+				case DeviceParameters.IDS.id:		// IDS - Daylight saving time
+					finalValue = await this.getGlobalisedValue(DeviceParameters.IDS, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DaylightSavingTime, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.IDS, finalValue); }
 					break;
-				case DeviceParameters.FirmwareVersion.id:			// VER -Firmware Version
-					finalValue = await this.getGlobalisedValue(DeviceParameters.FirmwareVersion, value);
+				case DeviceParameters.VER.id:			// VER -Firmware Version
+					finalValue = await this.getGlobalisedValue(DeviceParameters.VER, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.FirmwareVersion, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.VER, finalValue); }
 					break;
-				case DeviceParameters.IPAddress.id: 				// WIP - IP address
-					finalValue = await this.getGlobalisedValue(DeviceParameters.IPAddress, value);
+				case DeviceParameters.WIP.id: 				// WIP - IP address
+					finalValue = await this.getGlobalisedValue(DeviceParameters.WIP, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.IPAddress, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WIP, finalValue); }
 					break;
-				case DeviceParameters.MACAddress.id:				// MAC -MAC address
-					finalValue = await this.getGlobalisedValue(DeviceParameters.MACAddress, value);
+				case DeviceParameters.MAC.id:				// MAC -MAC address
+					finalValue = await this.getGlobalisedValue(DeviceParameters.MAC, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MACAddress, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MAC, finalValue); }
 					break;
-				case DeviceParameters.DefaultGateway.id:			// WGW - Default gateway
-					finalValue = await this.getGlobalisedValue(DeviceParameters.DefaultGateway, value);
+				case DeviceParameters.WGW.id:			// WGW - Default gateway
+					finalValue = await this.getGlobalisedValue(DeviceParameters.WGW, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DefaultGateway, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WGW, finalValue); }
 					break;
-				case DeviceParameters.SerialNumber.id:				// SRN - Device serial number
-					finalValue = await this.getGlobalisedValue(DeviceParameters.SerialNumber, value);
+				case DeviceParameters.SRN.id:				// SRN - Device serial number
+					finalValue = await this.getGlobalisedValue(DeviceParameters.SRN, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SerialNumber, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SRN, finalValue); }
 					break;
-				case DeviceParameters.CodeNumber.id:				// CNO - Code Number
-					finalValue = await this.getGlobalisedValue(DeviceParameters.CodeNumber, value);
+				case DeviceParameters.CNO.id:				// CNO - Code Number
+					finalValue = await this.getGlobalisedValue(DeviceParameters.CNO, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CodeNumber, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CNO, finalValue); }
 					break;
-				case DeviceParameters.WiFiRSSI.id:					// WFR - WiFi RSSI
-					finalValue = await this.getGlobalisedValue(DeviceParameters.WiFiRSSI, value);
+				case DeviceParameters.WFR.id:					// WFR - WiFi RSSI
+					finalValue = await this.getGlobalisedValue(DeviceParameters.WFR, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WiFiRSSI, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WFR, finalValue); }
 					break;
-				case DeviceParameters.WiFiSSID.id:					// WFC - WiFi SSID
-					finalValue = await this.getGlobalisedValue(DeviceParameters.WiFiSSID, value);
+				case DeviceParameters.WFC.id:					// WFC - WiFi SSID
+					finalValue = await this.getGlobalisedValue(DeviceParameters.WFC, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WiFiSSID, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WFC, finalValue); }
 					break;
-				case DeviceParameters.NextMaintenance.id:			// SRV - Next Maintenance
-					finalValue = await this.getGlobalisedValue(DeviceParameters.NextMaintenance, value);
+				case DeviceParameters.SRV.id:			// SRV - Next Maintenance
+					finalValue = await this.getGlobalisedValue(DeviceParameters.SRV, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.NextMaintenance, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SRV, finalValue); }
 					break;
-				case DeviceParameters.FloorSensor.id:				// BSA - Floor Sensor
-					finalValue = await this.getGlobalisedValue(DeviceParameters.FloorSensor, value);
+				case DeviceParameters.BSA.id:				// BSA - Floor Sensor
+					finalValue = await this.getGlobalisedValue(DeviceParameters.BSA, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.FloorSensor, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BSA, finalValue); }
 					break;
-				case DeviceParameters.ShutOff.id:					// AB - Shutoff state
-					finalValue = await this.getGlobalisedValue(DeviceParameters.ShutOff, value);
+				case DeviceParameters.AB.id:					// AB - Shutoff state
+					finalValue = await this.getGlobalisedValue(DeviceParameters.AB, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						if (parseInt(value) == 1) {
 							finalValue = 1;
@@ -3498,66 +3498,66 @@ class wamo extends utils.Adapter {
 							finalValue = 'Shutoff undefined';
 						}
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ShutOff, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.AB, finalValue); }
 					break;
-				case DeviceParameters.LeakProtectionTemporaryDeactivation.id:	// TMP Leackage protection temporary deactivation
-					finalValue = await this.getGlobalisedValue(DeviceParameters.LeakProtectionTemporaryDeactivation, value);
+				case DeviceParameters.TMP.id:	// TMP Leackage protection temporary deactivation
+					finalValue = await this.getGlobalisedValue(DeviceParameters.TMP, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.LeakProtectionTemporaryDeactivation, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.TMP, finalValue); }
 					break;
-				case DeviceParameters.MaxFlowLeakageTime.id:		// T2 - Max flow leakage time
-					finalValue = await this.getGlobalisedValue(DeviceParameters.MaxFlowLeakageTime, value);
+				case DeviceParameters.T2.id:		// T2 - Max flow leakage time
+					finalValue = await this.getGlobalisedValue(DeviceParameters.T2, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MaxFlowLeakageTime, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.T2, finalValue); }
 					break;
-				case DeviceParameters.MicroLeakageTest.id:			// DMA - Micro leakage test
-					finalValue = await this.getGlobalisedValue(DeviceParameters.MicroLeakageTest, value);
+				case DeviceParameters.DMA.id:			// DMA - Micro leakage test
+					finalValue = await this.getGlobalisedValue(DeviceParameters.DMA, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MicroLeakageTest, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DMA, finalValue); }
 					break;
-				case DeviceParameters.MicroLeakageTestPeriod.id:	// DRP - Micro leakage test period
-					finalValue = await this.getGlobalisedValue(DeviceParameters.MicroLeakageTestPeriod, value);
+				case DeviceParameters.DRP.id:	// DRP - Micro leakage test period
+					finalValue = await this.getGlobalisedValue(DeviceParameters.DRP, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MicroLeakageTestPeriod, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DRP, finalValue); }
 					break;
-				case DeviceParameters.BuzzerOnAlarm.id:				// BUZ - Buzzer on alarm
-					finalValue = await this.getGlobalisedValue(DeviceParameters.BuzzerOnAlarm, value);
+				case DeviceParameters.BUZ.id:				// BUZ - Buzzer on alarm
+					finalValue = await this.getGlobalisedValue(DeviceParameters.BUZ, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BuzzerOnAlarm, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BUZ, finalValue); }
 					break;
-				case DeviceParameters.LeakageNotificationWarningThreshold.id:	// LWT - Leakage notification (warning) threshold
-					finalValue = await this.getGlobalisedValue(DeviceParameters.LeakageNotificationWarningThreshold, value);
+				case DeviceParameters.LWT.id:	// LWT - Leakage notification (warning) threshold
+					finalValue = await this.getGlobalisedValue(DeviceParameters.LWT, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.LeakageNotificationWarningThreshold, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.LWT, finalValue); }
 					break;
-				case DeviceParameters.WaterFlow.id:					// FLO - Water flow
-					finalValue = await this.getGlobalisedValue(DeviceParameters.WaterFlow, value);
+				case DeviceParameters.FLO.id:					// FLO - Water flow
+					finalValue = await this.getGlobalisedValue(DeviceParameters.FLO, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WaterFlow, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.FLO, finalValue); }
 					break;
-				case DeviceParameters.TurbineNoPulseTime.id:		// NPS - Turbine no pulse time
-					finalValue = await this.getGlobalisedValue(DeviceParameters.TurbineNoPulseTime, value);
+				case DeviceParameters.NPS.id:		// NPS - Turbine no pulse time
+					finalValue = await this.getGlobalisedValue(DeviceParameters.NPS, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.TurbineNoPulseTime, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.NPS, finalValue); }
 					break;
-				case DeviceParameters.ValveTestOngoing.id:			// VTO - Valve test ongoing
-					finalValue = await this.getGlobalisedValue(DeviceParameters.ValveTestOngoing, value);
+				case DeviceParameters.VTO.id:			// VTO - Valve test ongoing
+					finalValue = await this.getGlobalisedValue(DeviceParameters.VTO, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						if (parseInt(value) == 0) {
 							finalValue = 'inactive';
@@ -3565,10 +3565,10 @@ class wamo extends utils.Adapter {
 							finalValue = 'active';
 						}
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ValveTestOngoing, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.VTO, finalValue); }
 					break;
-				case DeviceParameters.FirmwareCheck.id:				// SFV - Check if new firmware is available
-					finalValue = await this.getGlobalisedValue(DeviceParameters.FirmwareCheck, value);
+				case DeviceParameters.SFV.id:				// SFV - Check if new firmware is available
+					finalValue = await this.getGlobalisedValue(DeviceParameters.SFV, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						if (parseInt(value) == 0) {
 							finalValue = 'new firmware not available';
@@ -3576,212 +3576,212 @@ class wamo extends utils.Adapter {
 							finalValue = 'new firmware available';
 						}
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.FirmwareCheck, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SFV, finalValue); }
 					break;
-				case DeviceParameters.ScreenRotation.id:			// SRO - Screen rotation
-					finalValue = await this.getGlobalisedValue(DeviceParameters.ScreenRotation, value);
+				case DeviceParameters.SRO.id:			// SRO - Screen rotation
+					finalValue = await this.getGlobalisedValue(DeviceParameters.SRO, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ScreenRotation, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SRO, finalValue); }
 					break;
-				case DeviceParameters.SelfLearningPhase.id:			// SLP - Self learning phase
-					finalValue = await this.getGlobalisedValue(DeviceParameters.SelfLearningPhase, value);
+				case DeviceParameters.SLP.id:			// SLP - Self learning phase
+					finalValue = await this.getGlobalisedValue(DeviceParameters.SLP, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SelfLearningPhase, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SLP, finalValue); }
 					break;
-				case DeviceParameters.SelfLearningOffset.id:		// SLO - Self learning offset
-					finalValue = await this.getGlobalisedValue(DeviceParameters.SelfLearningOffset, value);
+				case DeviceParameters.SLO.id:		// SLO - Self learning offset
+					finalValue = await this.getGlobalisedValue(DeviceParameters.SLO, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SelfLearningOffset, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SLO, finalValue); }
 					break;
-				case DeviceParameters.SelfLearningFlowOffset.id:	// SOF - Self learning offset flow
-					finalValue = await this.getGlobalisedValue(DeviceParameters.SelfLearningFlowOffset, value);
+				case DeviceParameters.SOF.id:	// SOF - Self learning offset flow
+					finalValue = await this.getGlobalisedValue(DeviceParameters.SOF, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SelfLearningFlowOffset, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SOF, finalValue); }
 					break;
-				case DeviceParameters.SelfLearningMinimumFlow.id:	// SMF - Self learning minimum flow
-					finalValue = await this.getGlobalisedValue(DeviceParameters.SelfLearningMinimumFlow, value);
+				case DeviceParameters.SMF.id:	// SMF - Self learning minimum flow
+					finalValue = await this.getGlobalisedValue(DeviceParameters.SMF, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SelfLearningMinimumFlow, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SMF, finalValue); }
 					break;
-				case DeviceParameters.SelfLearningTimeToEnd.id:		// SLE - Self learning time to end
-					finalValue = await this.getGlobalisedValue(DeviceParameters.SelfLearningTimeToEnd, value);
+				case DeviceParameters.SLE.id:		// SLE - Self learning time to end
+					finalValue = await this.getGlobalisedValue(DeviceParameters.SLE, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SelfLearningTimeToEnd, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SLE, finalValue); }
 					break;
-				case DeviceParameters.SelfLearningVolumeValue.id:	// SLV - Self learning current volume
-					finalValue = await this.getGlobalisedValue(DeviceParameters.SelfLearningVolumeValue, value);
+				case DeviceParameters.SLV.id:	// SLV - Self learning current volume
+					finalValue = await this.getGlobalisedValue(DeviceParameters.SLV, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SelfLearningVolumeValue, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SLV, finalValue); }
 					break;
-				case DeviceParameters.SelfLearningTimeValue.id:		// SLF - Self learning max flow volume
-					finalValue = await this.getGlobalisedValue(DeviceParameters.SelfLearningTimeValue, value);
+				case DeviceParameters.SLT.id:		// SLF - Self learning max flow volume
+					finalValue = await this.getGlobalisedValue(DeviceParameters.SLT, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SelfLearningVolumeValue, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SLT, finalValue); }
 					break;
-				case DeviceParameters.SelfLearningFlowValue.id:		// SLT - Self learning Time volume
-					finalValue = await this.getGlobalisedValue(DeviceParameters.SelfLearningFlowValue, value);
+				case DeviceParameters.SLF.id:		// SLT - Self learning Time volume
+					finalValue = await this.getGlobalisedValue(DeviceParameters.SLF, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SelfLearningFlowValue, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SLF, finalValue); }
 					break;
-				case DeviceParameters.TimeZone.id:					// TMZ - Time zone
-					finalValue = await this.getGlobalisedValue(DeviceParameters.TimeZone, value);
+				case DeviceParameters.TMZ.id:					// TMZ - Time zone
+					finalValue = await this.getGlobalisedValue(DeviceParameters.TMZ, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.TimeZone, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.TMZ, finalValue); }
 					break;
-				case DeviceParameters.MotorOverrun.id:				// TN  - Motor overrun
-					finalValue = await this.getGlobalisedValue(DeviceParameters.MotorOverrun, value);
+				case DeviceParameters.TN.id:				// TN  - Motor overrun
+					finalValue = await this.getGlobalisedValue(DeviceParameters.TN, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MotorOverrun, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.TN, finalValue); }
 					break;
-				case DeviceParameters.LeakageProtectionDeactivated.id:	// 71 - Leakage protection deactivated
-					finalValue = await this.getGlobalisedValue(DeviceParameters.LeakageProtectionDeactivated, value);
+				case DeviceParameters.P71.id:	// 71 - Leakage protection deactivated
+					finalValue = await this.getGlobalisedValue(DeviceParameters.P71, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.LeakageProtectionDeactivated, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.P71, finalValue); }
 					break;
-				case DeviceParameters.AlarmDuration.id:				// ALD - Alarm duration
-					finalValue = await this.getGlobalisedValue(DeviceParameters.AlarmDuration, value);
+				case DeviceParameters.ALD.id:				// ALD - Alarm duration
+					finalValue = await this.getGlobalisedValue(DeviceParameters.ALD, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.AlarmDuration, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ALD, finalValue); }
 					break;
-				case DeviceParameters.ClusterProfile.id:			// CLP - Cluster Profile
-					finalValue = await this.getGlobalisedValue(DeviceParameters.ClusterProfile, value);
+				case DeviceParameters.CLP.id:			// CLP - Cluster Profile
+					finalValue = await this.getGlobalisedValue(DeviceParameters.CLP, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ClusterProfile, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CLP, finalValue); }
 					break;
-				case DeviceParameters.ButtonProfileChange.id:		// BPB - Profile change by button
-					finalValue = await this.getGlobalisedValue(DeviceParameters.ButtonProfileChange, value);
+				case DeviceParameters.BPB.id:		// BPB - Profile change by button
+					finalValue = await this.getGlobalisedValue(DeviceParameters.BPB, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ButtonProfileChange, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BPB, finalValue); }
 					break;
 				//#############################################################################################
 				//### 								PROFILES												###
 				//#############################################################################################
-				case DeviceParameters.Profile_PA1.id:				// PA1
-				case DeviceParameters.Profile_PA2.id:				// PA2
-				case DeviceParameters.Profile_PA3.id:				// PA3
-				case DeviceParameters.Profile_PA4.id:				// PA4
-				case DeviceParameters.Profile_PA5.id:				// PA5
-				case DeviceParameters.Profile_PA6.id:				// PA6
-				case DeviceParameters.Profile_PA7.id:				// PA7
-				case DeviceParameters.Profile_PA8.id:				// PA8
+				case DeviceParameters.PA1.id:				// PA1
+				case DeviceParameters.PA2.id:				// PA2
+				case DeviceParameters.PA3.id:				// PA3
+				case DeviceParameters.PA4.id:				// PA4
+				case DeviceParameters.PA5.id:				// PA5
+				case DeviceParameters.PA6.id:				// PA6
+				case DeviceParameters.PA7.id:				// PA7
+				case DeviceParameters.PA8.id:				// PA8
 					finalValue = value;
 					break;
 				//========================================================
-				case DeviceParameters.Profile_PB1.id:				// PB1
-				case DeviceParameters.Profile_PB2.id:				// PB2
-				case DeviceParameters.Profile_PB3.id:				// PB3
-				case DeviceParameters.Profile_PB4.id:				// PB4
-				case DeviceParameters.Profile_PB5.id:				// PB5
-				case DeviceParameters.Profile_PB6.id:				// PB6
-				case DeviceParameters.Profile_PB7.id:				// PB7
-				case DeviceParameters.Profile_PB8.id:				// PB8
+				case DeviceParameters.PB1.id:				// PB1
+				case DeviceParameters.PB2.id:				// PB2
+				case DeviceParameters.PB3.id:				// PB3
+				case DeviceParameters.PB4.id:				// PB4
+				case DeviceParameters.PB5.id:				// PB5
+				case DeviceParameters.PB6.id:				// PB6
+				case DeviceParameters.PB7.id:				// PB7
+				case DeviceParameters.PB8.id:				// PB8
 					finalValue = value;
 					break;
 				//========================================================
-				case DeviceParameters.Profile_PF1.id:				// PF1
-				case DeviceParameters.Profile_PF2.id:				// PF2
-				case DeviceParameters.Profile_PF3.id:				// PF3
-				case DeviceParameters.Profile_PF4.id:				// PF4
-				case DeviceParameters.Profile_PF5.id:				// PF5
-				case DeviceParameters.Profile_PF6.id:				// PF6
-				case DeviceParameters.Profile_PF7.id:				// PF7
-				case DeviceParameters.Profile_PF8.id:				// PF8
+				case DeviceParameters.PF1.id:				// PF1
+				case DeviceParameters.PF2.id:				// PF2
+				case DeviceParameters.PF3.id:				// PF3
+				case DeviceParameters.PF4.id:				// PF4
+				case DeviceParameters.PF5.id:				// PF5
+				case DeviceParameters.PF6.id:				// PF6
+				case DeviceParameters.PF7.id:				// PF7
+				case DeviceParameters.PF8.id:				// PF8
 					finalValue = value;
 					break;
 				//========================================================
-				case DeviceParameters.Profile_PM1.id:				// PM1
-				case DeviceParameters.Profile_PM2.id:				// PM2
-				case DeviceParameters.Profile_PM3.id:				// PM3
-				case DeviceParameters.Profile_PM4.id:				// PM4
-				case DeviceParameters.Profile_PM5.id:				// PM5
-				case DeviceParameters.Profile_PM6.id:				// PM6
-				case DeviceParameters.Profile_PM7.id:				// PM7
-				case DeviceParameters.Profile_PM8.id:				// PM8
+				case DeviceParameters.PM1.id:				// PM1
+				case DeviceParameters.PM2.id:				// PM2
+				case DeviceParameters.PM3.id:				// PM3
+				case DeviceParameters.PM4.id:				// PM4
+				case DeviceParameters.PM5.id:				// PM5
+				case DeviceParameters.PM6.id:				// PM6
+				case DeviceParameters.PM7.id:				// PM7
+				case DeviceParameters.PM8.id:				// PM8
 					finalValue = value;
 					break;
 				//========================================================
-				case DeviceParameters.Profile_PN1.id:				// PN1
-				case DeviceParameters.Profile_PN2.id:				// PN2
-				case DeviceParameters.Profile_PN3.id:				// PN3
-				case DeviceParameters.Profile_PN4.id:				// PN4
-				case DeviceParameters.Profile_PN5.id:				// PN5
-				case DeviceParameters.Profile_PN6.id:				// PN6
-				case DeviceParameters.Profile_PN7.id:				// PN7
-				case DeviceParameters.Profile_PN8.id:				// PN8
+				case DeviceParameters.PN1.id:				// PN1
+				case DeviceParameters.PN2.id:				// PN2
+				case DeviceParameters.PN3.id:				// PN3
+				case DeviceParameters.PN4.id:				// PN4
+				case DeviceParameters.PN5.id:				// PN5
+				case DeviceParameters.PN6.id:				// PN6
+				case DeviceParameters.PN7.id:				// PN7
+				case DeviceParameters.PN8.id:				// PN8
 					finalValue = value;
 					break;
 				//========================================================
-				case DeviceParameters.Profile_PR1.id:				// PR1
-				case DeviceParameters.Profile_PR2.id:				// PR2
-				case DeviceParameters.Profile_PR3.id:				// PR3
-				case DeviceParameters.Profile_PR4.id:				// PR4
-				case DeviceParameters.Profile_PR5.id:				// PR5
-				case DeviceParameters.Profile_PR6.id:				// PR6
-				case DeviceParameters.Profile_PR7.id:				// PR7
-				case DeviceParameters.Profile_PR8.id:				// PR8
+				case DeviceParameters.PR1.id:				// PR1
+				case DeviceParameters.PR2.id:				// PR2
+				case DeviceParameters.PR3.id:				// PR3
+				case DeviceParameters.PR4.id:				// PR4
+				case DeviceParameters.PR5.id:				// PR5
+				case DeviceParameters.PR6.id:				// PR6
+				case DeviceParameters.PR7.id:				// PR7
+				case DeviceParameters.PR8.id:				// PR8
 					finalValue = value;
 					break;
 				//========================================================
-				case DeviceParameters.Profile_PT1.id:				// PT1
-				case DeviceParameters.Profile_PT2.id:				// PT2
-				case DeviceParameters.Profile_PT3.id:				// PT3
-				case DeviceParameters.Profile_PT4.id:				// PT4
-				case DeviceParameters.Profile_PT5.id:				// PT5
-				case DeviceParameters.Profile_PT6.id:				// PT6
-				case DeviceParameters.Profile_PT7.id:				// PT7
-				case DeviceParameters.Profile_PT8.id:				// PT8
+				case DeviceParameters.PT1.id:				// PT1
+				case DeviceParameters.PT2.id:				// PT2
+				case DeviceParameters.PT3.id:				// PT3
+				case DeviceParameters.PT4.id:				// PT4
+				case DeviceParameters.PT5.id:				// PT5
+				case DeviceParameters.PT6.id:				// PT6
+				case DeviceParameters.PT7.id:				// PT7
+				case DeviceParameters.PT8.id:				// PT8
 					finalValue = value;
 					break;
 				//========================================================
-				case DeviceParameters.Profile_PV1.id:				// PV1
-				case DeviceParameters.Profile_PV2.id:				// PV2
-				case DeviceParameters.Profile_PV3.id:				// PV3
-				case DeviceParameters.Profile_PV4.id:				// PV4
-				case DeviceParameters.Profile_PV5.id:				// PV5
-				case DeviceParameters.Profile_PV6.id:				// PV6
-				case DeviceParameters.Profile_PV7.id:				// PV7
-				case DeviceParameters.Profile_PV8.id:				// PV8
+				case DeviceParameters.PV1.id:				// PV1
+				case DeviceParameters.PV2.id:				// PV2
+				case DeviceParameters.PV3.id:				// PV3
+				case DeviceParameters.PV4.id:				// PV4
+				case DeviceParameters.PV5.id:				// PV5
+				case DeviceParameters.PV6.id:				// PV6
+				case DeviceParameters.PV7.id:				// PV7
+				case DeviceParameters.PV8.id:				// PV8
 					finalValue = value;
 					break;
 				//========================================================
-				case DeviceParameters.Profile_PW1.id:				// PW1
-				case DeviceParameters.Profile_PW2.id:				// PW2
-				case DeviceParameters.Profile_PW3.id:				// PW3
-				case DeviceParameters.Profile_PW4.id:				// PW4
-				case DeviceParameters.Profile_PW5.id:				// PW5
-				case DeviceParameters.Profile_PW6.id:				// PW6
-				case DeviceParameters.Profile_PW7.id:				// PW7
-				case DeviceParameters.Profile_PW8.id:				// PW8
+				case DeviceParameters.PW1.id:				// PW1
+				case DeviceParameters.PW2.id:				// PW2
+				case DeviceParameters.PW3.id:				// PW3
+				case DeviceParameters.PW4.id:				// PW4
+				case DeviceParameters.PW5.id:				// PW5
+				case DeviceParameters.PW6.id:				// PW6
+				case DeviceParameters.PW7.id:				// PW7
+				case DeviceParameters.PW8.id:				// PW8
 					finalValue = value;
 					break;
 				//========================================================
@@ -3933,14 +3933,14 @@ class wamo extends utils.Adapter {
 			}
 
 			try {
-				currentTotalvalueState = await this.getStateAsync(DeviceParameters.TotalVolume.statePath + '.' + DeviceParameters.TotalVolume.id);
+				currentTotalvalueState = await this.getStateAsync(DeviceParameters.VOL.statePath + '.' + DeviceParameters.VOL.id);
 				if ((currentTotalvalueState != null) && (currentTotalvalueState.val != null)) {
 					// pulling values from state if state already existed
 					currentTotalValue = parseFloat(String(currentTotalvalueState.val)) * 1000;
 				}
 			}
 			catch (err) {
-				this.log.error('async updateStatistics() -> currentTotalvalueState = await this.getStateAsync(DeviceParameters.TotalVolume.statePath + \'.\' + DeviceParameters.TotalVolume.id) -> returned ERROR: ' + err);
+				this.log.error('async updateStatistics() -> currentTotalvalueState = await this.getStateAsync(DeviceParameters.VOL.statePath + \'.\' + DeviceParameters.VOL.id) -> returned ERROR: ' + err);
 			}
 
 			try {
@@ -4488,36 +4488,36 @@ class wamo extends utils.Adapter {
 
 			switch (ProfileNumber) {
 				case 1:
-					currentStatePath = String(DeviceParameters.Profile_PA1.statePath) + '.' + String(DeviceParameters.Profile_PA1.id);
-					currentstateObject = Object(DeviceParameters.Profile_PA1.objectdefinition);
+					currentStatePath = String(DeviceParameters.PA1.statePath) + '.' + String(DeviceParameters.PA1.id);
+					currentstateObject = Object(DeviceParameters.PA1.objectdefinition);
 					break;
 				case 2:
-					currentStatePath = String(DeviceParameters.Profile_PA2.statePath) + '.' + String(DeviceParameters.Profile_PA2.id);
-					currentstateObject = Object(DeviceParameters.Profile_PA2.objectdefinition);
+					currentStatePath = String(DeviceParameters.PA2.statePath) + '.' + String(DeviceParameters.PA2.id);
+					currentstateObject = Object(DeviceParameters.PA2.objectdefinition);
 					break;
 				case 3:
-					currentStatePath = String(DeviceParameters.Profile_PA3.statePath) + '.' + String(DeviceParameters.Profile_PA3.id);
-					currentstateObject = Object(DeviceParameters.Profile_PA3.objectdefinition);
+					currentStatePath = String(DeviceParameters.PA3.statePath) + '.' + String(DeviceParameters.PA3.id);
+					currentstateObject = Object(DeviceParameters.PA3.objectdefinition);
 					break;
 				case 4:
-					currentStatePath = String(DeviceParameters.Profile_PA4.statePath) + '.' + String(DeviceParameters.Profile_PA4.id);
-					currentstateObject = Object(DeviceParameters.Profile_PA4.objectdefinition);
+					currentStatePath = String(DeviceParameters.PA4.statePath) + '.' + String(DeviceParameters.PA4.id);
+					currentstateObject = Object(DeviceParameters.PA4.objectdefinition);
 					break;
 				case 5:
-					currentStatePath = String(DeviceParameters.Profile_PA5.statePath) + '.' + String(DeviceParameters.Profile_PA5.id);
-					currentstateObject = Object(DeviceParameters.Profile_PA5.objectdefinition);
+					currentStatePath = String(DeviceParameters.PA5.statePath) + '.' + String(DeviceParameters.PA5.id);
+					currentstateObject = Object(DeviceParameters.PA5.objectdefinition);
 					break;
 				case 6:
-					currentStatePath = String(DeviceParameters.Profile_PA6.statePath) + '.' + String(DeviceParameters.Profile_PA6.id);
-					currentstateObject = Object(DeviceParameters.Profile_PA6.objectdefinition);
+					currentStatePath = String(DeviceParameters.PA6.statePath) + '.' + String(DeviceParameters.PA6.id);
+					currentstateObject = Object(DeviceParameters.PA6.objectdefinition);
 					break;
 				case 7:
-					currentStatePath = String(DeviceParameters.Profile_PA7.statePath) + '.' + String(DeviceParameters.Profile_PA7.id);
-					currentstateObject = Object(DeviceParameters.Profile_PA7.objectdefinition);
+					currentStatePath = String(DeviceParameters.PA7.statePath) + '.' + String(DeviceParameters.PA7.id);
+					currentstateObject = Object(DeviceParameters.PA7.objectdefinition);
 					break;
 				case 8:
-					currentStatePath = String(DeviceParameters.Profile_PA8.statePath) + '.' + String(DeviceParameters.Profile_PA8.id);
-					currentstateObject = Object(DeviceParameters.Profile_PA8.objectdefinition);
+					currentStatePath = String(DeviceParameters.PA8.statePath) + '.' + String(DeviceParameters.PA8.id);
+					currentstateObject = Object(DeviceParameters.PA8.objectdefinition);
 					break;
 				default:
 					this.log.error('async state_profile_PA(ProfileNumber, value) -> switch (ProfileNumber) hit \'default:\'');
@@ -4563,36 +4563,36 @@ class wamo extends utils.Adapter {
 
 			switch (ProfileNumber) {
 				case 1:
-					currentStatePath = String(DeviceParameters.Profile_PN1.statePath) + '.' + String(DeviceParameters.Profile_PN1.id);
-					currentstateObject = Object(DeviceParameters.Profile_PN1.objectdefinition);
+					currentStatePath = String(DeviceParameters.PN1.statePath) + '.' + String(DeviceParameters.PN1.id);
+					currentstateObject = Object(DeviceParameters.PN1.objectdefinition);
 					break;
 				case 2:
-					currentStatePath = String(DeviceParameters.Profile_PN2.statePath) + '.' + String(DeviceParameters.Profile_PN2.id);
-					currentstateObject = Object(DeviceParameters.Profile_PN2.objectdefinition);
+					currentStatePath = String(DeviceParameters.PN2.statePath) + '.' + String(DeviceParameters.PN2.id);
+					currentstateObject = Object(DeviceParameters.PN2.objectdefinition);
 					break;
 				case 3:
-					currentStatePath = String(DeviceParameters.Profile_PN3.statePath) + '.' + String(DeviceParameters.Profile_PN3.id);
-					currentstateObject = Object(DeviceParameters.Profile_PN3.objectdefinition);
+					currentStatePath = String(DeviceParameters.PN3.statePath) + '.' + String(DeviceParameters.PN3.id);
+					currentstateObject = Object(DeviceParameters.PN3.objectdefinition);
 					break;
 				case 4:
-					currentStatePath = String(DeviceParameters.Profile_PN4.statePath) + '.' + String(DeviceParameters.Profile_PN4.id);
-					currentstateObject = Object(DeviceParameters.Profile_PN4.objectdefinition);
+					currentStatePath = String(DeviceParameters.PN4.statePath) + '.' + String(DeviceParameters.PN4.id);
+					currentstateObject = Object(DeviceParameters.PN4.objectdefinition);
 					break;
 				case 5:
-					currentStatePath = String(DeviceParameters.Profile_PN5.statePath) + '.' + String(DeviceParameters.Profile_PN5.id);
-					currentstateObject = Object(DeviceParameters.Profile_PN5.objectdefinition);
+					currentStatePath = String(DeviceParameters.PN5.statePath) + '.' + String(DeviceParameters.PN5.id);
+					currentstateObject = Object(DeviceParameters.PN5.objectdefinition);
 					break;
 				case 6:
-					currentStatePath = String(DeviceParameters.Profile_PN6.statePath) + '.' + String(DeviceParameters.Profile_PN6.id);
-					currentstateObject = Object(DeviceParameters.Profile_PN6.objectdefinition);
+					currentStatePath = String(DeviceParameters.PN6.statePath) + '.' + String(DeviceParameters.PN6.id);
+					currentstateObject = Object(DeviceParameters.PN6.objectdefinition);
 					break;
 				case 7:
-					currentStatePath = String(DeviceParameters.Profile_PN7.statePath) + '.' + String(DeviceParameters.Profile_PN7.id);
-					currentstateObject = Object(DeviceParameters.Profile_PN7.objectdefinition);
+					currentStatePath = String(DeviceParameters.PN7.statePath) + '.' + String(DeviceParameters.PN7.id);
+					currentstateObject = Object(DeviceParameters.PN7.objectdefinition);
 					break;
 				case 8:
-					currentStatePath = String(DeviceParameters.Profile_PN8.statePath) + '.' + String(DeviceParameters.Profile_PN8.id);
-					currentstateObject = Object(DeviceParameters.Profile_PN8.objectdefinition);
+					currentStatePath = String(DeviceParameters.PN8.statePath) + '.' + String(DeviceParameters.PN8.id);
+					currentstateObject = Object(DeviceParameters.PN8.objectdefinition);
 					break;
 			}
 
@@ -4634,36 +4634,36 @@ class wamo extends utils.Adapter {
 
 			switch (ProfileNumber) {
 				case 1:
-					currentStatePath = String(DeviceParameters.Profile_PV1.statePath) + '.' + String(DeviceParameters.Profile_PV1.id);
-					currentstateObject = Object(DeviceParameters.Profile_PV1.objectdefinition);
+					currentStatePath = String(DeviceParameters.PV1.statePath) + '.' + String(DeviceParameters.PV1.id);
+					currentstateObject = Object(DeviceParameters.PV1.objectdefinition);
 					break;
 				case 2:
-					currentStatePath = String(DeviceParameters.Profile_PV2.statePath) + '.' + String(DeviceParameters.Profile_PV2.id);
-					currentstateObject = Object(DeviceParameters.Profile_PV2.objectdefinition);
+					currentStatePath = String(DeviceParameters.PV2.statePath) + '.' + String(DeviceParameters.PV2.id);
+					currentstateObject = Object(DeviceParameters.PV2.objectdefinition);
 					break;
 				case 3:
-					currentStatePath = String(DeviceParameters.Profile_PV3.statePath) + '.' + String(DeviceParameters.Profile_PV3.id);
-					currentstateObject = Object(DeviceParameters.Profile_PV3.objectdefinition);
+					currentStatePath = String(DeviceParameters.PV3.statePath) + '.' + String(DeviceParameters.PV3.id);
+					currentstateObject = Object(DeviceParameters.PV3.objectdefinition);
 					break;
 				case 4:
-					currentStatePath = String(DeviceParameters.Profile_PV4.statePath) + '.' + String(DeviceParameters.Profile_PV4.id);
-					currentstateObject = Object(DeviceParameters.Profile_PV4.objectdefinition);
+					currentStatePath = String(DeviceParameters.PV4.statePath) + '.' + String(DeviceParameters.PV4.id);
+					currentstateObject = Object(DeviceParameters.PV4.objectdefinition);
 					break;
 				case 5:
-					currentStatePath = String(DeviceParameters.Profile_PV5.statePath) + '.' + String(DeviceParameters.Profile_PV5.id);
-					currentstateObject = Object(DeviceParameters.Profile_PV5.objectdefinition);
+					currentStatePath = String(DeviceParameters.PV5.statePath) + '.' + String(DeviceParameters.PV5.id);
+					currentstateObject = Object(DeviceParameters.PV5.objectdefinition);
 					break;
 				case 6:
-					currentStatePath = String(DeviceParameters.Profile_PV6.statePath) + '.' + String(DeviceParameters.Profile_PV6.id);
-					currentstateObject = Object(DeviceParameters.Profile_PV6.objectdefinition);
+					currentStatePath = String(DeviceParameters.PV6.statePath) + '.' + String(DeviceParameters.PV6.id);
+					currentstateObject = Object(DeviceParameters.PV6.objectdefinition);
 					break;
 				case 7:
-					currentStatePath = String(DeviceParameters.Profile_PV7.statePath) + '.' + String(DeviceParameters.Profile_PV7.id);
-					currentstateObject = Object(DeviceParameters.Profile_PV7.objectdefinition);
+					currentStatePath = String(DeviceParameters.PV7.statePath) + '.' + String(DeviceParameters.PV7.id);
+					currentstateObject = Object(DeviceParameters.PV7.objectdefinition);
 					break;
 				case 8:
-					currentStatePath = String(DeviceParameters.Profile_PV8.statePath) + '.' + String(DeviceParameters.Profile_PV8.id);
-					currentstateObject = Object(DeviceParameters.Profile_PV8.objectdefinition);
+					currentStatePath = String(DeviceParameters.PV8.statePath) + '.' + String(DeviceParameters.PV8.id);
+					currentstateObject = Object(DeviceParameters.PV8.objectdefinition);
 					break;
 			}
 			this.log.debug('State path before setStateAsync = ' + currentStatePath);
@@ -4707,36 +4707,36 @@ class wamo extends utils.Adapter {
 
 			switch (ProfileNumber) {
 				case 1:
-					currentStatePath = String(DeviceParameters.Profile_PT1.statePath) + '.' + String(DeviceParameters.Profile_PT1.id);
-					currentstateObject = Object(DeviceParameters.Profile_PT1.objectdefinition);
+					currentStatePath = String(DeviceParameters.PT1.statePath) + '.' + String(DeviceParameters.PT1.id);
+					currentstateObject = Object(DeviceParameters.PT1.objectdefinition);
 					break;
 				case 2:
-					currentStatePath = String(DeviceParameters.Profile_PT2.statePath) + '.' + String(DeviceParameters.Profile_PT2.id);
-					currentstateObject = Object(DeviceParameters.Profile_PT2.objectdefinition);
+					currentStatePath = String(DeviceParameters.PT2.statePath) + '.' + String(DeviceParameters.PT2.id);
+					currentstateObject = Object(DeviceParameters.PT2.objectdefinition);
 					break;
 				case 3:
-					currentStatePath = String(DeviceParameters.Profile_PT3.statePath) + '.' + String(DeviceParameters.Profile_PT3.id);
-					currentstateObject = Object(DeviceParameters.Profile_PT3.objectdefinition);
+					currentStatePath = String(DeviceParameters.PT3.statePath) + '.' + String(DeviceParameters.PT3.id);
+					currentstateObject = Object(DeviceParameters.PT3.objectdefinition);
 					break;
 				case 4:
-					currentStatePath = String(DeviceParameters.Profile_PT4.statePath) + '.' + String(DeviceParameters.Profile_PT4.id);
-					currentstateObject = Object(DeviceParameters.Profile_PT4.objectdefinition);
+					currentStatePath = String(DeviceParameters.PT4.statePath) + '.' + String(DeviceParameters.PT4.id);
+					currentstateObject = Object(DeviceParameters.PT4.objectdefinition);
 					break;
 				case 5:
-					currentStatePath = String(DeviceParameters.Profile_PT5.statePath) + '.' + String(DeviceParameters.Profile_PT5.id);
-					currentstateObject = Object(DeviceParameters.Profile_PT5.objectdefinition);
+					currentStatePath = String(DeviceParameters.PT5.statePath) + '.' + String(DeviceParameters.PT5.id);
+					currentstateObject = Object(DeviceParameters.PT5.objectdefinition);
 					break;
 				case 6:
-					currentStatePath = String(DeviceParameters.Profile_PT6.statePath) + '.' + String(DeviceParameters.Profile_PT6.id);
-					currentstateObject = Object(DeviceParameters.Profile_PT6.objectdefinition);
+					currentStatePath = String(DeviceParameters.PT6.statePath) + '.' + String(DeviceParameters.PT6.id);
+					currentstateObject = Object(DeviceParameters.PT6.objectdefinition);
 					break;
 				case 7:
-					currentStatePath = String(DeviceParameters.Profile_PT7.statePath) + '.' + String(DeviceParameters.Profile_PT7.id);
-					currentstateObject = Object(DeviceParameters.Profile_PT7.objectdefinition);
+					currentStatePath = String(DeviceParameters.PT7.statePath) + '.' + String(DeviceParameters.PT7.id);
+					currentstateObject = Object(DeviceParameters.PT7.objectdefinition);
 					break;
 				case 8:
-					currentStatePath = String(DeviceParameters.Profile_PT8.statePath) + '.' + String(DeviceParameters.Profile_PT8.id);
-					currentstateObject = Object(DeviceParameters.Profile_PT8.objectdefinition);
+					currentStatePath = String(DeviceParameters.PT8.statePath) + '.' + String(DeviceParameters.PT8.id);
+					currentstateObject = Object(DeviceParameters.PT8.objectdefinition);
 					break;
 			}
 			this.log.debug('State path before setStateAsync = ' + currentStatePath);
@@ -4778,36 +4778,36 @@ class wamo extends utils.Adapter {
 
 			switch (ProfileNumber) {
 				case 1:
-					currentStatePath = String(DeviceParameters.Profile_PF1.statePath) + '.' + String(DeviceParameters.Profile_PF1.id);
-					currentstateObject = Object(DeviceParameters.Profile_PF1.objectdefinition);
+					currentStatePath = String(DeviceParameters.PF1.statePath) + '.' + String(DeviceParameters.PF1.id);
+					currentstateObject = Object(DeviceParameters.PF1.objectdefinition);
 					break;
 				case 2:
-					currentStatePath = String(DeviceParameters.Profile_PF2.statePath) + '.' + String(DeviceParameters.Profile_PF2.id);
-					currentstateObject = Object(DeviceParameters.Profile_PF2.objectdefinition);
+					currentStatePath = String(DeviceParameters.PF2.statePath) + '.' + String(DeviceParameters.PF2.id);
+					currentstateObject = Object(DeviceParameters.PF2.objectdefinition);
 					break;
 				case 3:
-					currentStatePath = String(DeviceParameters.Profile_PF3.statePath) + '.' + String(DeviceParameters.Profile_PF3.id);
-					currentstateObject = Object(DeviceParameters.Profile_PF3.objectdefinition);
+					currentStatePath = String(DeviceParameters.PF3.statePath) + '.' + String(DeviceParameters.PF3.id);
+					currentstateObject = Object(DeviceParameters.PF3.objectdefinition);
 					break;
 				case 4:
-					currentStatePath = String(DeviceParameters.Profile_PF4.statePath) + '.' + String(DeviceParameters.Profile_PF4.id);
-					currentstateObject = Object(DeviceParameters.Profile_PF4.objectdefinition);
+					currentStatePath = String(DeviceParameters.PF4.statePath) + '.' + String(DeviceParameters.PF4.id);
+					currentstateObject = Object(DeviceParameters.PF4.objectdefinition);
 					break;
 				case 5:
-					currentStatePath = String(DeviceParameters.Profile_PF5.statePath) + '.' + String(DeviceParameters.Profile_PF5.id);
-					currentstateObject = Object(DeviceParameters.Profile_PF5.objectdefinition);
+					currentStatePath = String(DeviceParameters.PF5.statePath) + '.' + String(DeviceParameters.PF5.id);
+					currentstateObject = Object(DeviceParameters.PF5.objectdefinition);
 					break;
 				case 6:
-					currentStatePath = String(DeviceParameters.Profile_PF6.statePath) + '.' + String(DeviceParameters.Profile_PF6.id);
-					currentstateObject = Object(DeviceParameters.Profile_PF6.objectdefinition);
+					currentStatePath = String(DeviceParameters.PF6.statePath) + '.' + String(DeviceParameters.PF6.id);
+					currentstateObject = Object(DeviceParameters.PF6.objectdefinition);
 					break;
 				case 7:
-					currentStatePath = String(DeviceParameters.Profile_PF7.statePath) + '.' + String(DeviceParameters.Profile_PF7.id);
-					currentstateObject = Object(DeviceParameters.Profile_PF7.objectdefinition);
+					currentStatePath = String(DeviceParameters.PF7.statePath) + '.' + String(DeviceParameters.PF7.id);
+					currentstateObject = Object(DeviceParameters.PF7.objectdefinition);
 					break;
 				case 8:
-					currentStatePath = String(DeviceParameters.Profile_PF8.statePath) + '.' + String(DeviceParameters.Profile_PF8.id);
-					currentstateObject = Object(DeviceParameters.Profile_PF8.objectdefinition);
+					currentStatePath = String(DeviceParameters.PF8.statePath) + '.' + String(DeviceParameters.PF8.id);
+					currentstateObject = Object(DeviceParameters.PF8.objectdefinition);
 					break;
 			}
 			this.log.debug('State path before setStateAsync = ' + currentStatePath);
@@ -4850,36 +4850,36 @@ class wamo extends utils.Adapter {
 
 			switch (ProfileNumber) {
 				case 1:
-					currentStatePath = String(DeviceParameters.Profile_PM1.statePath) + '.' + String(DeviceParameters.Profile_PM1.id);
-					currentstateObject = Object(DeviceParameters.Profile_PM1.objectdefinition);
+					currentStatePath = String(DeviceParameters.PM1.statePath) + '.' + String(DeviceParameters.PM1.id);
+					currentstateObject = Object(DeviceParameters.PM1.objectdefinition);
 					break;
 				case 2:
-					currentStatePath = String(DeviceParameters.Profile_PM2.statePath) + '.' + String(DeviceParameters.Profile_PM2.id);
-					currentstateObject = Object(DeviceParameters.Profile_PM2.objectdefinition);
+					currentStatePath = String(DeviceParameters.PM2.statePath) + '.' + String(DeviceParameters.PM2.id);
+					currentstateObject = Object(DeviceParameters.PM2.objectdefinition);
 					break;
 				case 3:
-					currentStatePath = String(DeviceParameters.Profile_PM3.statePath) + '.' + String(DeviceParameters.Profile_PM3.id);
-					currentstateObject = Object(DeviceParameters.Profile_PM3.objectdefinition);
+					currentStatePath = String(DeviceParameters.PM3.statePath) + '.' + String(DeviceParameters.PM3.id);
+					currentstateObject = Object(DeviceParameters.PM3.objectdefinition);
 					break;
 				case 4:
-					currentStatePath = String(DeviceParameters.Profile_PM4.statePath) + '.' + String(DeviceParameters.Profile_PM4.id);
-					currentstateObject = Object(DeviceParameters.Profile_PM4.objectdefinition);
+					currentStatePath = String(DeviceParameters.PM4.statePath) + '.' + String(DeviceParameters.PM4.id);
+					currentstateObject = Object(DeviceParameters.PM4.objectdefinition);
 					break;
 				case 5:
-					currentStatePath = String(DeviceParameters.Profile_PM5.statePath) + '.' + String(DeviceParameters.Profile_PM5.id);
-					currentstateObject = Object(DeviceParameters.Profile_PM5.objectdefinition);
+					currentStatePath = String(DeviceParameters.PM5.statePath) + '.' + String(DeviceParameters.PM5.id);
+					currentstateObject = Object(DeviceParameters.PM5.objectdefinition);
 					break;
 				case 6:
-					currentStatePath = String(DeviceParameters.Profile_PM6.statePath) + '.' + String(DeviceParameters.Profile_PM6.id);
-					currentstateObject = Object(DeviceParameters.Profile_PM6.objectdefinition);
+					currentStatePath = String(DeviceParameters.PM6.statePath) + '.' + String(DeviceParameters.PM6.id);
+					currentstateObject = Object(DeviceParameters.PM6.objectdefinition);
 					break;
 				case 7:
-					currentStatePath = String(DeviceParameters.Profile_PM7.statePath) + '.' + String(DeviceParameters.Profile_PM7.id);
-					currentstateObject = Object(DeviceParameters.Profile_PM7.objectdefinition);
+					currentStatePath = String(DeviceParameters.PM7.statePath) + '.' + String(DeviceParameters.PM7.id);
+					currentstateObject = Object(DeviceParameters.PM7.objectdefinition);
 					break;
 				case 8:
-					currentStatePath = String(DeviceParameters.Profile_PM8.statePath) + '.' + String(DeviceParameters.Profile_PM8.id);
-					currentstateObject = Object(DeviceParameters.Profile_PM8.objectdefinition);
+					currentStatePath = String(DeviceParameters.PM8.statePath) + '.' + String(DeviceParameters.PM8.id);
+					currentstateObject = Object(DeviceParameters.PM8.objectdefinition);
 					break;
 				default:
 					this.log.error('async state_profile_PM(ProfileNumber, value) -> switch (ProfileNumber) hit \'default:\'');
@@ -4925,36 +4925,36 @@ class wamo extends utils.Adapter {
 
 			switch (ProfileNumber) {
 				case 1:
-					currentStatePath = String(DeviceParameters.Profile_PR1.statePath) + '.' + String(DeviceParameters.Profile_PR1.id);
-					currentstateObject = Object(DeviceParameters.Profile_PR1.objectdefinition);
+					currentStatePath = String(DeviceParameters.PR1.statePath) + '.' + String(DeviceParameters.PR1.id);
+					currentstateObject = Object(DeviceParameters.PR1.objectdefinition);
 					break;
 				case 2:
-					currentStatePath = String(DeviceParameters.Profile_PR2.statePath) + '.' + String(DeviceParameters.Profile_PR2.id);
-					currentstateObject = Object(DeviceParameters.Profile_PR2.objectdefinition);
+					currentStatePath = String(DeviceParameters.PR2.statePath) + '.' + String(DeviceParameters.PR2.id);
+					currentstateObject = Object(DeviceParameters.PR2.objectdefinition);
 					break;
 				case 3:
-					currentStatePath = String(DeviceParameters.Profile_PR3.statePath) + '.' + String(DeviceParameters.Profile_PR3.id);
-					currentstateObject = Object(DeviceParameters.Profile_PR3.objectdefinition);
+					currentStatePath = String(DeviceParameters.PR3.statePath) + '.' + String(DeviceParameters.PR3.id);
+					currentstateObject = Object(DeviceParameters.PR3.objectdefinition);
 					break;
 				case 4:
-					currentStatePath = String(DeviceParameters.Profile_PR4.statePath) + '.' + String(DeviceParameters.Profile_PR4.id);
-					currentstateObject = Object(DeviceParameters.Profile_PR4.objectdefinition);
+					currentStatePath = String(DeviceParameters.PR4.statePath) + '.' + String(DeviceParameters.PR4.id);
+					currentstateObject = Object(DeviceParameters.PR4.objectdefinition);
 					break;
 				case 5:
-					currentStatePath = String(DeviceParameters.Profile_PR5.statePath) + '.' + String(DeviceParameters.Profile_PR5.id);
-					currentstateObject = Object(DeviceParameters.Profile_PR5.objectdefinition);
+					currentStatePath = String(DeviceParameters.PR5.statePath) + '.' + String(DeviceParameters.PR5.id);
+					currentstateObject = Object(DeviceParameters.PR5.objectdefinition);
 					break;
 				case 6:
-					currentStatePath = String(DeviceParameters.Profile_PR6.statePath) + '.' + String(DeviceParameters.Profile_PR6.id);
-					currentstateObject = Object(DeviceParameters.Profile_PR6.objectdefinition);
+					currentStatePath = String(DeviceParameters.PR6.statePath) + '.' + String(DeviceParameters.PR6.id);
+					currentstateObject = Object(DeviceParameters.PR6.objectdefinition);
 					break;
 				case 7:
-					currentStatePath = String(DeviceParameters.Profile_PR7.statePath) + '.' + String(DeviceParameters.Profile_PR7.id);
-					currentstateObject = Object(DeviceParameters.Profile_PR7.objectdefinition);
+					currentStatePath = String(DeviceParameters.PR7.statePath) + '.' + String(DeviceParameters.PR7.id);
+					currentstateObject = Object(DeviceParameters.PR7.objectdefinition);
 					break;
 				case 8:
-					currentStatePath = String(DeviceParameters.Profile_PR8.statePath) + '.' + String(DeviceParameters.Profile_PR8.id);
-					currentstateObject = Object(DeviceParameters.Profile_PR8.objectdefinition);
+					currentStatePath = String(DeviceParameters.PR8.statePath) + '.' + String(DeviceParameters.PR8.id);
+					currentstateObject = Object(DeviceParameters.PR8.objectdefinition);
 					break;
 			}
 			this.log.debug('State path before setStateAsync = ' + currentStatePath);
@@ -4994,36 +4994,36 @@ class wamo extends utils.Adapter {
 
 			switch (ProfileNumber) {
 				case 1:
-					currentStatePath = String(DeviceParameters.Profile_PB1.statePath) + '.' + String(DeviceParameters.Profile_PB1.id);
-					currentstateObject = Object(DeviceParameters.Profile_PB1.objectdefinition);
+					currentStatePath = String(DeviceParameters.PB1.statePath) + '.' + String(DeviceParameters.PB1.id);
+					currentstateObject = Object(DeviceParameters.PB1.objectdefinition);
 					break;
 				case 2:
-					currentStatePath = String(DeviceParameters.Profile_PB2.statePath) + '.' + String(DeviceParameters.Profile_PB2.id);
-					currentstateObject = Object(DeviceParameters.Profile_PB2.objectdefinition);
+					currentStatePath = String(DeviceParameters.PB2.statePath) + '.' + String(DeviceParameters.PB2.id);
+					currentstateObject = Object(DeviceParameters.PB2.objectdefinition);
 					break;
 				case 3:
-					currentStatePath = String(DeviceParameters.Profile_PB3.statePath) + '.' + String(DeviceParameters.Profile_PB3.id);
-					currentstateObject = Object(DeviceParameters.Profile_PB3.objectdefinition);
+					currentStatePath = String(DeviceParameters.PB3.statePath) + '.' + String(DeviceParameters.PB3.id);
+					currentstateObject = Object(DeviceParameters.PB3.objectdefinition);
 					break;
 				case 4:
-					currentStatePath = String(DeviceParameters.Profile_PB4.statePath) + '.' + String(DeviceParameters.Profile_PB4.id);
-					currentstateObject = Object(DeviceParameters.Profile_PB4.objectdefinition);
+					currentStatePath = String(DeviceParameters.PB4.statePath) + '.' + String(DeviceParameters.PB4.id);
+					currentstateObject = Object(DeviceParameters.PB4.objectdefinition);
 					break;
 				case 5:
-					currentStatePath = String(DeviceParameters.Profile_PB5.statePath) + '.' + String(DeviceParameters.Profile_PB5.id);
-					currentstateObject = Object(DeviceParameters.Profile_PB5.objectdefinition);
+					currentStatePath = String(DeviceParameters.PB5.statePath) + '.' + String(DeviceParameters.PB5.id);
+					currentstateObject = Object(DeviceParameters.PB5.objectdefinition);
 					break;
 				case 6:
-					currentStatePath = String(DeviceParameters.Profile_PB6.statePath) + '.' + String(DeviceParameters.Profile_PB6.id);
-					currentstateObject = Object(DeviceParameters.Profile_PB6.objectdefinition);
+					currentStatePath = String(DeviceParameters.PB6.statePath) + '.' + String(DeviceParameters.PB6.id);
+					currentstateObject = Object(DeviceParameters.PB6.objectdefinition);
 					break;
 				case 7:
-					currentStatePath = String(DeviceParameters.Profile_PB7.statePath) + '.' + String(DeviceParameters.Profile_PB7.id);
-					currentstateObject = Object(DeviceParameters.Profile_PB7.objectdefinition);
+					currentStatePath = String(DeviceParameters.PB7.statePath) + '.' + String(DeviceParameters.PB7.id);
+					currentstateObject = Object(DeviceParameters.PB7.objectdefinition);
 					break;
 				case 8:
-					currentStatePath = String(DeviceParameters.Profile_PB8.statePath) + '.' + String(DeviceParameters.Profile_PB8.id);
-					currentstateObject = Object(DeviceParameters.Profile_PB7.objectdefinition);
+					currentStatePath = String(DeviceParameters.PB8.statePath) + '.' + String(DeviceParameters.PB8.id);
+					currentstateObject = Object(DeviceParameters.PB8.objectdefinition);
 					break;
 			}
 
@@ -5067,36 +5067,36 @@ class wamo extends utils.Adapter {
 
 			switch (ProfileNumber) {
 				case 1:
-					currentStatePath = String(DeviceParameters.Profile_PW1.statePath) + '.' + String(DeviceParameters.Profile_PW1.id);
-					currentstateObject = Object(DeviceParameters.Profile_PW1.objectdefinition);
+					currentStatePath = String(DeviceParameters.PW1.statePath) + '.' + String(DeviceParameters.PW1.id);
+					currentstateObject = Object(DeviceParameters.PW1.objectdefinition);
 					break;
 				case 2:
-					currentStatePath = String(DeviceParameters.Profile_PW2.statePath) + '.' + String(DeviceParameters.Profile_PW2.id);
-					currentstateObject = Object(DeviceParameters.Profile_PW2.objectdefinition);
+					currentStatePath = String(DeviceParameters.PW2.statePath) + '.' + String(DeviceParameters.PW2.id);
+					currentstateObject = Object(DeviceParameters.PW2.objectdefinition);
 					break;
 				case 3:
-					currentStatePath = String(DeviceParameters.Profile_PW3.statePath) + '.' + String(DeviceParameters.Profile_PW3.id);
-					currentstateObject = Object(DeviceParameters.Profile_PW3.objectdefinition);
+					currentStatePath = String(DeviceParameters.PW3.statePath) + '.' + String(DeviceParameters.PW3.id);
+					currentstateObject = Object(DeviceParameters.PW3.objectdefinition);
 					break;
 				case 4:
-					currentStatePath = String(DeviceParameters.Profile_PW4.statePath) + '.' + String(DeviceParameters.Profile_PW4.id);
-					currentstateObject = Object(DeviceParameters.Profile_PW4.objectdefinition);
+					currentStatePath = String(DeviceParameters.PW4.statePath) + '.' + String(DeviceParameters.PW4.id);
+					currentstateObject = Object(DeviceParameters.PW4.objectdefinition);
 					break;
 				case 5:
-					currentStatePath = String(DeviceParameters.Profile_PW5.statePath) + '.' + String(DeviceParameters.Profile_PW5.id);
-					currentstateObject = Object(DeviceParameters.Profile_PW5.objectdefinition);
+					currentStatePath = String(DeviceParameters.PW5.statePath) + '.' + String(DeviceParameters.PW5.id);
+					currentstateObject = Object(DeviceParameters.PW5.objectdefinition);
 					break;
 				case 6:
-					currentStatePath = String(DeviceParameters.Profile_PW6.statePath) + '.' + String(DeviceParameters.Profile_PW6.id);
-					currentstateObject = Object(DeviceParameters.Profile_PW6.objectdefinition);
+					currentStatePath = String(DeviceParameters.PW6.statePath) + '.' + String(DeviceParameters.PW6.id);
+					currentstateObject = Object(DeviceParameters.PW6.objectdefinition);
 					break;
 				case 7:
-					currentStatePath = String(DeviceParameters.Profile_PW7.statePath) + '.' + String(DeviceParameters.Profile_PW7.id);
-					currentstateObject = Object(DeviceParameters.Profile_PW7.objectdefinition);
+					currentStatePath = String(DeviceParameters.PW7.statePath) + '.' + String(DeviceParameters.PW7.id);
+					currentstateObject = Object(DeviceParameters.PW7.objectdefinition);
 					break;
 				case 8:
-					currentStatePath = String(DeviceParameters.Profile_PW8.statePath) + '.' + String(DeviceParameters.Profile_PW8.id);
-					currentstateObject = Object(DeviceParameters.Profile_PW8.objectdefinition);
+					currentStatePath = String(DeviceParameters.PW8.statePath) + '.' + String(DeviceParameters.PW8.id);
+					currentstateObject = Object(DeviceParameters.PW8.objectdefinition);
 					break;
 				default:
 					this.log.error('async state_profile_PA(ProfileNumber, value) -> switch (ProfileNumber) hit \'default:\'');
