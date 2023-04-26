@@ -54,6 +54,7 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) ADD: State **_CNF_** - Conductivity factor
 * (smarthausleben) ADD: State **_CNL_** - Conductivity limit
 * (smarthausleben) ADD: State **_DBD_** - MLT pressure drop
+* (smarthausleben) ADD: State **_DBT_** - MLT pressure drop time
 * (smarthausleben) CHG: State **_ALD_** - Alarm duration (signaling time) can now be changed by user
 * (smarthausleben) CHG: State **_CLP_** - Cluster Profile can now be changed by user
 
