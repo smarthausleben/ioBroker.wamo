@@ -52,6 +52,7 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) ADD: State **_BFT_** - Button filter threshold
 * (smarthausleben) ADD: State **_BPT_** - Button proximity threshold
 * (smarthausleben) ADD: State **_CNF_** - Conductivity factor
+* (smarthausleben) ADD: State **_CNL_** - Conductivity limit
 * (smarthausleben) CHG: State **_ALD_** - Alarm duration (signaling time) can now be changed by user
 * (smarthausleben) CHG: State **_CLP_** - Cluster Profile can now be changed by user
 

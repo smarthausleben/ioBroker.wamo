@@ -453,6 +453,7 @@ class wamo extends utils.Adapter {
 			this.subscribeStates(DeviceParameters.BPT.statePath + '.' + DeviceParameters.BPT.id);	// [BPT] Button proximity threshold
 			this.subscribeStates(DeviceParameters.CLP.statePath + '.' + DeviceParameters.CLP.id);	// [CLP] Cluster Profile
 			this.subscribeStates(DeviceParameters.CNF.statePath + '.' + DeviceParameters.CNF.id);	// [CNF] Conductivity factor
+			this.subscribeStates(DeviceParameters.CNL.statePath + '.' + DeviceParameters.CNL.id);	// [CNL] Conductivity limit
 			this.subscribeStates(DeviceParameters.RST.statePath + '.' + DeviceParameters.RST.id);	// [RST] System Restart
 			this.subscribeStates(DeviceParameters.CSD.statePath + '.' + DeviceParameters.CSD.id);	// [CSD] Deactivate conductivity sensor
 			this.subscribeStates(DeviceParameters.PSD.statePath + '.' + DeviceParameters.PSD.id);	// [PSD] Deactivate pressure sensor
@@ -638,6 +639,22 @@ class wamo extends utils.Adapter {
 								this.log.info('User changed parameter ' + DeviceParameters.CNF.id + ' to ' + String(state.val));
 							}
 							else { this.log.error(DeviceParameters.CNF.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [BPT]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// CNL Conductivity limit
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.CNL.statePath + '.' + DeviceParameters.CNL.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.CNL.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.CNL.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.CNL, state.val);
+								this.log.info('User changed parameter ' + DeviceParameters.CNL.id + ' to ' + String(state.val));
+							}
+							else { this.log.error(DeviceParameters.CNL.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [BPT]: ' + err.message);
 						}
@@ -3788,6 +3805,13 @@ class wamo extends utils.Adapter {
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CNF, finalValue); }
+					break;
+				case DeviceParameters.CNL.id:	// CNF - Conductivity limit
+					finalValue = await this.getGlobalisedValue(DeviceParameters.CNL, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CNL, finalValue); }
 					break;
 				//#############################################################################################
 				//### 								PROFILES												###
