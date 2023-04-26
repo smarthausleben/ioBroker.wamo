@@ -50,6 +50,7 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) ADD: [SafeFloor Device] New **SafeFloor Units** Tab in adapter settings to manage up to 4 **_SafeFloor Connect_** devices
 * (smarthausleben) ADD: New option **_"Enable executing test loop"_** in Tab **_"Advanced Options"_** to enable/disable cron based executed [Test Loop]
 * (smarthausleben) ADD: State **_BFT_** - Button filter threshold
+* (smarthausleben) ADD: State **_BPT_** - Button proximity threshold
 
 ### 0.3.0 (2023-04-04) - ***Jam Protection*** release
 * (smarthausleben) ADD: [Main valve jam protection] New State JPR for Jam protection running 

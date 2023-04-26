@@ -449,6 +449,7 @@ class wamo extends utils.Adapter {
 		//==========================================
 		if (this.syrApiClient != null) {
 			this.subscribeStates(DeviceParameters.BFT.statePath + '.' + DeviceParameters.BFT.id); // [BFT] Button filter threshold
+			this.subscribeStates(DeviceParameters.BPT.statePath + '.' + DeviceParameters.BPT.id); // [BPT] Button proximity threshold
 			this.subscribeStates(DeviceParameters.RST.statePath + '.' + DeviceParameters.RST.id); // [RST] System Restart
 			this.subscribeStates(DeviceParameters.CSD.statePath + '.' + DeviceParameters.CSD.id); // [CSD] Deactivate conductivity sensor
 			this.subscribeStates(DeviceParameters.PSD.statePath + '.' + DeviceParameters.PSD.id); // [PSD] Deactivate pressure sensor
@@ -560,18 +561,34 @@ class wamo extends utils.Adapter {
 					}
 				}
 				//============================================================================
-				//[BFT] Button filter threshold
+				// BFT Button filter threshold
 				//============================================================================
 				else if ((id == statePrefix + DeviceParameters.BFT.statePath + '.' + DeviceParameters.BFT.id) && (state.ack == false)) {
 					if (state.val != null) {
 						try {
 							if ((Number(state.val) >= Number(DeviceParameters.BFT.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.BFT.objectdefinition.common.max)) {
 								await this.set_DevieParameter(DeviceParameters.BFT, state.val);
-								if (moreMessages) { this.log.info(DeviceParameters.APT.id + ' changed to ' + String(state.val)); }
+								if (moreMessages) { this.log.info(DeviceParameters.BFT.id + ' changed to ' + String(state.val)); }
 							}
 							else { this.log.error(DeviceParameters.BFT.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [BFT]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// BPT Button proximity threshold
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.BPT.statePath + '.' + DeviceParameters.BPT.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.BPT.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.BPT.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.BPT, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.BPT.id + ' changed to ' + String(state.val)); }
+							}
+							else { this.log.error(DeviceParameters.BPT.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [BPT]: ' + err.message);
 						}
 					}
 				}
@@ -846,7 +863,7 @@ class wamo extends utils.Adapter {
 					}
 				}
 				//============================================================================
-				// Leakage protection deactivation time
+				// TMP Leakage protection deactivation time
 				//============================================================================
 				else if ((id == statePrefix + DeviceParameters.TMP.statePath + '.' + DeviceParameters.TMP.id) && state.ack == false) {
 					try {
@@ -862,7 +879,7 @@ class wamo extends utils.Adapter {
 					else { this.log.warn('Command: [TMP] Leakage protection temporary disabled for ' + offTime + ' (hh:mm:ss)'); }
 				}
 				//============================================================================
-				// Selected Profile
+				// PRF Selected Profile
 				//============================================================================
 				else if ((id == statePrefix + DeviceParameters.PRF.statePath + '.' + DeviceParameters.PRF.id) && state.ack == false) {
 					let profileEnabled = Object();
@@ -935,13 +952,13 @@ class wamo extends utils.Adapter {
 					}
 				}
 				//============================================================================
-				// Profile(s) Parameter
+				// Profile(s) Parameter PAx,PNx,PBx,PFx,PMx,PRx,PTx,PVx,PWx
 				//============================================================================
 				else if ((id.includes('Device.Profiles.')) && (state.ack == false)) {
 					try {
 						// identify Profile parameter
-						const currentProfileState = id.substring(id.lastIndexOf('.') + 1, id.length - 1);
-						this.log.debug('onStateChange Profile Parameter is: ' + String(currentProfileState));
+						const currentProfileStateID = id.substring(id.lastIndexOf('.') + 1, id.length - 1);
+						this.log.debug('onStateChange Profile Parameter is: ' + String(currentProfileStateID));
 						// identify profile number
 						const stateChangeProfileNo = parseInt(id.substring(id.length - 1));
 						this.log.debug('onStateChange Profile Number is: ' + String(stateChangeProfileNo));
@@ -949,7 +966,7 @@ class wamo extends utils.Adapter {
 						// identify currentAktiveProfile
 						const AktiveProfileNumber = await this.getStateAsync(DeviceParameters.PRF.statePath + '.' + DeviceParameters.PRF.id);
 
-						switch (currentProfileState) {
+						switch (currentProfileStateID) {
 							case 'PA':	// Available
 								// Trying to disable the ACTIVE profile?
 								if ((AktiveProfileNumber != null) && (parseInt(String(AktiveProfileNumber.val)) == stateChangeProfileNo) && (parseInt(String(state.val)) == 0)) {
@@ -3706,6 +3723,13 @@ class wamo extends utils.Adapter {
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BFT, finalValue); }
+					break;
+				case DeviceParameters.BPT.id:	// BPT - Button proximity threshold
+					finalValue = await this.getGlobalisedValue(DeviceParameters.BPT, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BPT, finalValue); }
 					break;
 				//#############################################################################################
 				//### 								PROFILES												###
