@@ -451,6 +451,8 @@ class wamo extends utils.Adapter {
 			this.subscribeStates(DeviceParameters.ALD.statePath + '.' + DeviceParameters.ALD.id);	// [ALD] Alarm duration (signaling time)
 			this.subscribeStates(DeviceParameters.BFT.statePath + '.' + DeviceParameters.BFT.id);	// [BFT] Button filter threshold
 			this.subscribeStates(DeviceParameters.BPT.statePath + '.' + DeviceParameters.BPT.id);	// [BPT] Button proximity threshold
+			this.subscribeStates(DeviceParameters.CLP.statePath + '.' + DeviceParameters.CLP.id);	// [CLP] Cluster Profile
+			this.subscribeStates(DeviceParameters.CNF.statePath + '.' + DeviceParameters.CNF.id);	// [CNF] Conductivity factor
 			this.subscribeStates(DeviceParameters.RST.statePath + '.' + DeviceParameters.RST.id);	// [RST] System Restart
 			this.subscribeStates(DeviceParameters.CSD.statePath + '.' + DeviceParameters.CSD.id);	// [CSD] Deactivate conductivity sensor
 			this.subscribeStates(DeviceParameters.PSD.statePath + '.' + DeviceParameters.PSD.id);	// [PSD] Deactivate pressure sensor
@@ -604,6 +606,38 @@ class wamo extends utils.Adapter {
 								this.log.info('User changed parameter ' + DeviceParameters.BPT.id + ' to ' + String(state.val));
 							}
 							else { this.log.error(DeviceParameters.BPT.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [BPT]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// CLP Cluster profile
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.CLP.statePath + '.' + DeviceParameters.CLP.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.CLP.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.CLP.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.CLP, state.val);
+								this.log.info('User changed parameter ' + DeviceParameters.CLP.id + ' to ' + String(state.val));
+							}
+							else { this.log.error(DeviceParameters.CLP.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [BPT]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// CNF Conductivity factor
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.CNF.statePath + '.' + DeviceParameters.CNF.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.CNF.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.CNF.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.CNF, state.val);
+								this.log.info('User changed parameter ' + DeviceParameters.CNF.id + ' to ' + String(state.val));
+							}
+							else { this.log.error(DeviceParameters.CNF.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [BPT]: ' + err.message);
 						}
@@ -3747,6 +3781,13 @@ class wamo extends utils.Adapter {
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BPT, finalValue); }
+					break;
+				case DeviceParameters.CNF.id:	// CNF - Conductivity factor
+					finalValue = await this.getGlobalisedValue(DeviceParameters.CNF, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CNF, finalValue); }
 					break;
 				//#############################################################################################
 				//### 								PROFILES												###

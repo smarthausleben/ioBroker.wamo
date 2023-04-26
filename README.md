@@ -51,7 +51,9 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) ADD: New option **_"Enable executing test loop"_** in Tab **_"Advanced Options"_** to enable/disable cron based executed [Test Loop]
 * (smarthausleben) ADD: State **_BFT_** - Button filter threshold
 * (smarthausleben) ADD: State **_BPT_** - Button proximity threshold
+* (smarthausleben) ADD: State **_CNF_** - Conductivity factor
 * (smarthausleben) CHG: State **_ALD_** - Alarm duration (signaling time) can now be changed by user
+* (smarthausleben) CHG: State **_CLP_** - Cluster Profile can now be changed by user
 
 ### 0.3.0 (2023-04-04) - ***Jam Protection*** release
 * (smarthausleben) ADD: [Main valve jam protection] New State JPR for Jam protection running 
