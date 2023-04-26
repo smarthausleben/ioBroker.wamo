@@ -3151,28 +3151,28 @@ class wamo extends utils.Adapter {
 		try {
 			let finalValue;
 			switch (String(valueKey)) {
-				case DeviceParameters.UNI.id:						// UNI - Units
+				case DeviceParameters.UNI.id:	// UNI - Units
 					finalValue = await this.getGlobalisedValue(DeviceParameters.UNI, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.UNI, finalValue); }
 					break;
-				case DeviceParameters.LNG.id:					// LNG - Language
+				case DeviceParameters.LNG.id:	// LNG - Language
 					finalValue = await this.getGlobalisedValue(DeviceParameters.LNG, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.LNG, finalValue); }
 					break;
-				case DeviceParameters.PRN.id: 		// PRN - available profiles
+				case DeviceParameters.PRN.id: 	// PRN - available profiles
 					finalValue = await this.getGlobalisedValue(DeviceParameters.PRN, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = parseInt(value);
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.PRN, finalValue); }
 					break;
-				case DeviceParameters.PRF.id: 			// PRF - selected profile
+				case DeviceParameters.PRF.id: 	// PRF - selected profile
 					finalValue = await this.getGlobalisedValue(DeviceParameters.PRF, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = parseInt(value);
@@ -3203,7 +3203,7 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.PSD, finalValue); }
 					break;
-				case DeviceParameters.ALA.id:		// ALA Alarm status
+				case DeviceParameters.ALA.id:	// ALA Alarm status
 					finalValue = await this.getGlobalisedValue(DeviceParameters.ALA, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						switch (String(value)) {
@@ -3261,7 +3261,7 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ALA, finalValue); }
 					break;
-				case DeviceParameters.VLV.id:		// VLV - Current Valve Status
+				case DeviceParameters.VLV.id:	// VLV - Current Valve Status
 					finalValue = await this.getGlobalisedValue(DeviceParameters.VLV, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						switch (String(value)) {
@@ -3287,14 +3287,14 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.VLV, finalValue); }
 					break;
-				case DeviceParameters.RTC.id:				// RTC - System Time
+				case DeviceParameters.RTC.id:	// RTC - System Time
 					finalValue = await this.getGlobalisedValue(DeviceParameters.RTC, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = (new Date(parseInt(value) * 1000)).toLocaleString();
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.RTC, finalValue); }
 					break;
-				case DeviceParameters.CEL.id:			// CEL - Water temperature
+				case DeviceParameters.CEL.id:	// CEL - Water temperature
 					if (sensor_temperature_present) {
 						finalValue = await this.getGlobalisedValue(DeviceParameters.CEL, value);
 						if (finalValue === null) {	// did we get a globalised Value back?
@@ -3304,7 +3304,7 @@ class wamo extends utils.Adapter {
 						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CEL, finalValue); }
 					}
 					break;
-				case DeviceParameters.BAR.id:				// BAR Water pressure
+				case DeviceParameters.BAR.id:	// BAR Water pressure
 					if (sensor_pressure_present) {
 						value = parseFloat(String(value).replace(',', '.'));
 						finalValue = await this.getGlobalisedValue(DeviceParameters.BAR, value);
@@ -3315,7 +3315,7 @@ class wamo extends utils.Adapter {
 						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BAR, finalValue); }
 					}
 					break;
-				case DeviceParameters.CND.id:			// CND - Water conductivity
+				case DeviceParameters.CND.id:	// CND - Water conductivity
 					if (sensor_conductivity_present) {
 						try {
 							finalValue = await this.getGlobalisedValue(DeviceParameters.CND, value);
@@ -3335,7 +3335,7 @@ class wamo extends utils.Adapter {
 						}
 					}
 					break;
-				case DeviceParameters.BAT.id:			// BAT Batterie voltage
+				case DeviceParameters.BAT.id:	// BAT Batterie voltage
 					value = parseFloat(String(value).replace(',', '.'));
 					finalValue = await this.getGlobalisedValue(DeviceParameters.BAT, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
@@ -3343,7 +3343,7 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BAT, finalValue); }
 					break;
-				case DeviceParameters.NET.id:		// NET - DC voltage (power adaptor)
+				case DeviceParameters.NET.id:	// NET - DC voltage (power adaptor)
 					value = parseFloat(String(value).replace(',', '.'));
 					finalValue = await this.getGlobalisedValue(DeviceParameters.NET, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
@@ -3351,7 +3351,7 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.NET, finalValue); }
 					break;
-				case DeviceParameters.LTV.id:			// LTV - Last tapped Volume
+				case DeviceParameters.LTV.id:	// LTV - Last tapped Volume
 					value = parseFloat(String(value).replace(',', '.'));
 					finalValue = await this.getGlobalisedValue(DeviceParameters.LTV, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
@@ -3359,7 +3359,7 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.LTV, finalValue); }
 					break;
-				case DeviceParameters.VOL.id:				// VOL - total consumed water
+				case DeviceParameters.VOL.id:	// VOL - total consumed water
 					value = parseFloat(String(value).replace(',', '.').replace('Vol[L]', '')) / 1000;
 					finalValue = await this.getGlobalisedValue(DeviceParameters.VOL, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
@@ -3367,7 +3367,7 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.VOL, finalValue); }
 					break;
-				case DeviceParameters.AVO.id:				// AVO - current water volume
+				case DeviceParameters.AVO.id:	// AVO - current water volume
 					value = parseFloat(String(value).replace(',', '.').replace('mL', ''));
 					finalValue = await this.getGlobalisedValue(DeviceParameters.AVO, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
@@ -3375,7 +3375,7 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.AVO, finalValue); }
 					break;
-				case DeviceParameters.WAH.id:					// WAH - WiFi AP hidden
+				case DeviceParameters.WAH.id:	// WAH - WiFi AP hidden
 					finalValue = await this.getGlobalisedValue(DeviceParameters.WAH, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						if (parseInt(value) == 0) {
@@ -3386,7 +3386,7 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WAH, finalValue); }
 					break;
-				case DeviceParameters.WAD.id:				// WAD - WiFi AP dissabled
+				case DeviceParameters.WAD.id:	// WAD - WiFi AP dissabled
 					finalValue = await this.getGlobalisedValue(DeviceParameters.WAD, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						if (parseInt(value) == 0) {
@@ -3397,21 +3397,21 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WAD, finalValue); }
 					break;
-				case DeviceParameters.APT.id:					// APT - WiFi AP timeout
+				case DeviceParameters.APT.id:	// APT - WiFi AP timeout
 					finalValue = await this.getGlobalisedValue(DeviceParameters.APT, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.APT, finalValue); }
 					break;
-				case DeviceParameters.DWL.id:			// DWL - WiFi deactivated
+				case DeviceParameters.DWL.id:	// DWL - WiFi deactivated
 					finalValue = await this.getGlobalisedValue(DeviceParameters.DWL, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DWL, finalValue); }
 					break;
-				case DeviceParameters.WFS.id:					// WFS - WiFi state
+				case DeviceParameters.WFS.id:	// WFS - WiFi state
 					finalValue = await this.getGlobalisedValue(DeviceParameters.WFS, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						if (parseInt(value) == 0) {
@@ -3426,84 +3426,84 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WFS, finalValue); }
 					break;
-				case DeviceParameters.IDS.id:		// IDS - Daylight saving time
+				case DeviceParameters.IDS.id:	// IDS - Daylight saving time
 					finalValue = await this.getGlobalisedValue(DeviceParameters.IDS, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.IDS, finalValue); }
 					break;
-				case DeviceParameters.VER.id:			// VER -Firmware Version
+				case DeviceParameters.VER.id:	// VER -Firmware Version
 					finalValue = await this.getGlobalisedValue(DeviceParameters.VER, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.VER, finalValue); }
 					break;
-				case DeviceParameters.WIP.id: 				// WIP - IP address
+				case DeviceParameters.WIP.id: 	// WIP - IP address
 					finalValue = await this.getGlobalisedValue(DeviceParameters.WIP, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WIP, finalValue); }
 					break;
-				case DeviceParameters.MAC.id:				// MAC -MAC address
+				case DeviceParameters.MAC.id:	// MAC -MAC address
 					finalValue = await this.getGlobalisedValue(DeviceParameters.MAC, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MAC, finalValue); }
 					break;
-				case DeviceParameters.WGW.id:			// WGW - Default gateway
+				case DeviceParameters.WGW.id:	// WGW - Default gateway
 					finalValue = await this.getGlobalisedValue(DeviceParameters.WGW, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WGW, finalValue); }
 					break;
-				case DeviceParameters.SRN.id:				// SRN - Device serial number
+				case DeviceParameters.SRN.id:	// SRN - Device serial number
 					finalValue = await this.getGlobalisedValue(DeviceParameters.SRN, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SRN, finalValue); }
 					break;
-				case DeviceParameters.CNO.id:				// CNO - Code Number
+				case DeviceParameters.CNO.id:	// CNO - Code Number
 					finalValue = await this.getGlobalisedValue(DeviceParameters.CNO, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CNO, finalValue); }
 					break;
-				case DeviceParameters.WFR.id:					// WFR - WiFi RSSI
+				case DeviceParameters.WFR.id:	// WFR - WiFi RSSI
 					finalValue = await this.getGlobalisedValue(DeviceParameters.WFR, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WFR, finalValue); }
 					break;
-				case DeviceParameters.WFC.id:					// WFC - WiFi SSID
+				case DeviceParameters.WFC.id:	// WFC - WiFi SSID
 					finalValue = await this.getGlobalisedValue(DeviceParameters.WFC, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WFC, finalValue); }
 					break;
-				case DeviceParameters.SRV.id:			// SRV - Next Maintenance
+				case DeviceParameters.SRV.id:	// SRV - Next Maintenance
 					finalValue = await this.getGlobalisedValue(DeviceParameters.SRV, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SRV, finalValue); }
 					break;
-				case DeviceParameters.BSA.id:				// BSA - Floor Sensor
+				case DeviceParameters.BSA.id:	// BSA - Floor Sensor
 					finalValue = await this.getGlobalisedValue(DeviceParameters.BSA, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BSA, finalValue); }
 					break;
-				case DeviceParameters.AB.id:					// AB - Shutoff state
+				case DeviceParameters.AB.id:	// AB - Shutoff state
 					finalValue = await this.getGlobalisedValue(DeviceParameters.AB, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						if (parseInt(value) == 1) {
@@ -3524,14 +3524,14 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.TMP, finalValue); }
 					break;
-				case DeviceParameters.T2.id:		// T2 - Max flow leakage time
+				case DeviceParameters.T2.id:	// T2 - Max flow leakage time
 					finalValue = await this.getGlobalisedValue(DeviceParameters.T2, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.T2, finalValue); }
 					break;
-				case DeviceParameters.DMA.id:			// DMA - Micro leakage test
+				case DeviceParameters.DMA.id:	// DMA - Micro leakage test
 					finalValue = await this.getGlobalisedValue(DeviceParameters.DMA, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
@@ -3545,7 +3545,7 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DRP, finalValue); }
 					break;
-				case DeviceParameters.BUZ.id:				// BUZ - Buzzer on alarm
+				case DeviceParameters.BUZ.id:	// BUZ - Buzzer on alarm
 					finalValue = await this.getGlobalisedValue(DeviceParameters.BUZ, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
@@ -3559,21 +3559,21 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.LWT, finalValue); }
 					break;
-				case DeviceParameters.FLO.id:					// FLO - Water flow
+				case DeviceParameters.FLO.id:	// FLO - Water flow
 					finalValue = await this.getGlobalisedValue(DeviceParameters.FLO, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.FLO, finalValue); }
 					break;
-				case DeviceParameters.NPS.id:		// NPS - Turbine no pulse time
+				case DeviceParameters.NPS.id:	// NPS - Turbine no pulse time
 					finalValue = await this.getGlobalisedValue(DeviceParameters.NPS, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.NPS, finalValue); }
 					break;
-				case DeviceParameters.VTO.id:			// VTO - Valve test ongoing
+				case DeviceParameters.VTO.id:	// VTO - Valve test ongoing
 					finalValue = await this.getGlobalisedValue(DeviceParameters.VTO, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						if (parseInt(value) == 0) {
@@ -3584,7 +3584,7 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.VTO, finalValue); }
 					break;
-				case DeviceParameters.SFV.id:				// SFV - Check if new firmware is available
+				case DeviceParameters.SFV.id:	// SFV - Check if new firmware is available
 					finalValue = await this.getGlobalisedValue(DeviceParameters.SFV, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						if (parseInt(value) == 0) {
@@ -3595,21 +3595,21 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SFV, finalValue); }
 					break;
-				case DeviceParameters.SRO.id:			// SRO - Screen rotation
+				case DeviceParameters.SRO.id:	// SRO - Screen rotation
 					finalValue = await this.getGlobalisedValue(DeviceParameters.SRO, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SRO, finalValue); }
 					break;
-				case DeviceParameters.SLP.id:			// SLP - Self learning phase
+				case DeviceParameters.SLP.id:	// SLP - Self learning phase
 					finalValue = await this.getGlobalisedValue(DeviceParameters.SLP, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SLP, finalValue); }
 					break;
-				case DeviceParameters.SLO.id:		// SLO - Self learning offset
+				case DeviceParameters.SLO.id:	// SLO - Self learning offset
 					finalValue = await this.getGlobalisedValue(DeviceParameters.SLO, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
@@ -3630,7 +3630,7 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SMF, finalValue); }
 					break;
-				case DeviceParameters.SLE.id:		// SLE - Self learning time to end
+				case DeviceParameters.SLE.id:	// SLE - Self learning time to end
 					finalValue = await this.getGlobalisedValue(DeviceParameters.SLE, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
@@ -3644,28 +3644,28 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SLV, finalValue); }
 					break;
-				case DeviceParameters.SLT.id:		// SLF - Self learning max flow volume
+				case DeviceParameters.SLT.id:	// SLF - Self learning max flow volume
 					finalValue = await this.getGlobalisedValue(DeviceParameters.SLT, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SLT, finalValue); }
 					break;
-				case DeviceParameters.SLF.id:		// SLT - Self learning Time volume
+				case DeviceParameters.SLF.id:	// SLT - Self learning Time volume
 					finalValue = await this.getGlobalisedValue(DeviceParameters.SLF, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.SLF, finalValue); }
 					break;
-				case DeviceParameters.TMZ.id:					// TMZ - Time zone
+				case DeviceParameters.TMZ.id:	// TMZ - Time zone
 					finalValue = await this.getGlobalisedValue(DeviceParameters.TMZ, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.TMZ, finalValue); }
 					break;
-				case DeviceParameters.TN.id:				// TN  - Motor overrun
+				case DeviceParameters.TN.id:	// TN  - Motor overrun
 					finalValue = await this.getGlobalisedValue(DeviceParameters.TN, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
@@ -3679,26 +3679,33 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.P71, finalValue); }
 					break;
-				case DeviceParameters.ALD.id:				// ALD - Alarm duration
+				case DeviceParameters.ALD.id:	// ALD - Alarm duration
 					finalValue = await this.getGlobalisedValue(DeviceParameters.ALD, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ALD, finalValue); }
 					break;
-				case DeviceParameters.CLP.id:			// CLP - Cluster Profile
+				case DeviceParameters.CLP.id:	// CLP - Cluster Profile
 					finalValue = await this.getGlobalisedValue(DeviceParameters.CLP, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CLP, finalValue); }
 					break;
-				case DeviceParameters.BPB.id:		// BPB - Profile change by button
+				case DeviceParameters.BPB.id:	// BPB - Profile change by button
 					finalValue = await this.getGlobalisedValue(DeviceParameters.BPB, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BPB, finalValue); }
+					break;
+				case DeviceParameters.BFT.id:	// BFT - Button filter threshold
+					finalValue = await this.getGlobalisedValue(DeviceParameters.BFT, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BFT, finalValue); }
 					break;
 				//#############################################################################################
 				//### 								PROFILES												###
