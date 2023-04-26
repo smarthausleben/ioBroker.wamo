@@ -456,6 +456,7 @@ class wamo extends utils.Adapter {
 			this.subscribeStates(DeviceParameters.CNL.statePath + '.' + DeviceParameters.CNL.id);	// [CNL] Conductivity limit
 			this.subscribeStates(DeviceParameters.DBD.statePath + '.' + DeviceParameters.DBD.id);	// [DBD] MLT pressure drop
 			this.subscribeStates(DeviceParameters.DBT.statePath + '.' + DeviceParameters.DBT.id);	// [DBT] MLT pressure drop time
+			this.subscribeStates(DeviceParameters.DCM.statePath + '.' + DeviceParameters.DCM.id);	// [DCM] MLT test time close
 			this.subscribeStates(DeviceParameters.RST.statePath + '.' + DeviceParameters.RST.id);	// [RST] System Restart
 			this.subscribeStates(DeviceParameters.CSD.statePath + '.' + DeviceParameters.CSD.id);	// [CSD] Deactivate conductivity sensor
 			this.subscribeStates(DeviceParameters.PSD.statePath + '.' + DeviceParameters.PSD.id);	// [PSD] Deactivate pressure sensor
@@ -626,7 +627,7 @@ class wamo extends utils.Adapter {
 							}
 							else { this.log.error(DeviceParameters.CLP.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
-							this.log.error('ERROR setting [BPT]: ' + err.message);
+							this.log.error('ERROR setting [CLP]: ' + err.message);
 						}
 					}
 				}
@@ -642,7 +643,7 @@ class wamo extends utils.Adapter {
 							}
 							else { this.log.error(DeviceParameters.CNF.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
-							this.log.error('ERROR setting [BPT]: ' + err.message);
+							this.log.error('ERROR setting [CNF]: ' + err.message);
 						}
 					}
 				}
@@ -658,7 +659,7 @@ class wamo extends utils.Adapter {
 							}
 							else { this.log.error(DeviceParameters.CNL.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
-							this.log.error('ERROR setting [BPT]: ' + err.message);
+							this.log.error('ERROR setting [CNL]: ' + err.message);
 						}
 					}
 				}
@@ -674,7 +675,7 @@ class wamo extends utils.Adapter {
 							}
 							else { this.log.error(DeviceParameters.DBD.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
-							this.log.error('ERROR setting [BPT]: ' + err.message);
+							this.log.error('ERROR setting [DBD]: ' + err.message);
 						}
 					}
 				}
@@ -690,7 +691,23 @@ class wamo extends utils.Adapter {
 							}
 							else { this.log.error(DeviceParameters.DBT.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
-							this.log.error('ERROR setting [BPT]: ' + err.message);
+							this.log.error('ERROR setting [DBT]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// DCM MLT test time close
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.DCM.statePath + '.' + DeviceParameters.DCM.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.DCM.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DCM.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.DCM, state.val);
+								this.log.info('User changed parameter ' + DeviceParameters.DCM.id + ' to ' + String(state.val));
+							}
+							else { this.log.error(DeviceParameters.DCM.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [DCM]: ' + err.message);
 						}
 					}
 				}
@@ -3854,12 +3871,19 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DBD, finalValue); }
 					break;
-				case DeviceParameters.DBT.id:	// DBD - MLT pressure drop time
+				case DeviceParameters.DBT.id:	// DBT - MLT pressure drop time
 					finalValue = await this.getGlobalisedValue(DeviceParameters.DBT, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DBT, finalValue); }
+					break;
+				case DeviceParameters.DCM.id:	// DCM - MLT test time close
+					finalValue = await this.getGlobalisedValue(DeviceParameters.DCM, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DCM, finalValue); }
 					break;
 				//#############################################################################################
 				//### 								PROFILES												###
