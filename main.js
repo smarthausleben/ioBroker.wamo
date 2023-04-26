@@ -448,6 +448,7 @@ class wamo extends utils.Adapter {
 		//=== Subscribe to user changable states ===
 		//==========================================
 		if (this.syrApiClient != null) {
+			this.subscribeStates(DeviceParameters.BFT.statePath + '.' + DeviceParameters.BFT.id); // [BFT] Button filter threshold
 			this.subscribeStates(DeviceParameters.RST.statePath + '.' + DeviceParameters.RST.id); // [RST] System Restart
 			this.subscribeStates(DeviceParameters.CSD.statePath + '.' + DeviceParameters.CSD.id); // [CSD] Deactivate conductivity sensor
 			this.subscribeStates(DeviceParameters.PSD.statePath + '.' + DeviceParameters.PSD.id); // [PSD] Deactivate pressure sensor
@@ -559,6 +560,22 @@ class wamo extends utils.Adapter {
 					}
 				}
 				//============================================================================
+				//[BFT] Button filter threshold
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.BFT.statePath + '.' + DeviceParameters.BFT.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.BFT.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.BFT.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.BFT, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.APT.id + ' changed to ' + String(state.val)); }
+							}
+							else { this.log.error(DeviceParameters.BFT.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [BFT]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
 				// Shutoff valve AB
 				//============================================================================
 				else if ((id == statePrefix + DeviceParameters.AB.statePath + '.' + DeviceParameters.AB.id) && state.ack == false) {
@@ -593,7 +610,7 @@ class wamo extends utils.Adapter {
 								await this.set_DevieParameter(DeviceParameters.APT, state.val);
 								if (moreMessages) { this.log.info(DeviceParameters.APT.id + ' changed to ' + String(state.val)); }
 							}
-							else { this.log.error(DeviceParameters.ButtonProAPTimeoutfileChange.id + ' new value [' + String(state.val) + '] is out of range!'); }
+							else { this.log.error(DeviceParameters.APT.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [APT]: ' + err.message);
 						}
