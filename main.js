@@ -448,27 +448,28 @@ class wamo extends utils.Adapter {
 		//=== Subscribe to user changable states ===
 		//==========================================
 		if (this.syrApiClient != null) {
-			this.subscribeStates(DeviceParameters.BFT.statePath + '.' + DeviceParameters.BFT.id); // [BFT] Button filter threshold
-			this.subscribeStates(DeviceParameters.BPT.statePath + '.' + DeviceParameters.BPT.id); // [BPT] Button proximity threshold
-			this.subscribeStates(DeviceParameters.RST.statePath + '.' + DeviceParameters.RST.id); // [RST] System Restart
-			this.subscribeStates(DeviceParameters.CSD.statePath + '.' + DeviceParameters.CSD.id); // [CSD] Deactivate conductivity sensor
-			this.subscribeStates(DeviceParameters.PSD.statePath + '.' + DeviceParameters.PSD.id); // [PSD] Deactivate pressure sensor
-			this.subscribeStates(DeviceParameters.TSD.statePath + '.' + DeviceParameters.TSD.id); // [TSD] Deactivate temperature sensor
-			this.subscribeStates(DeviceParameters.T2.statePath + '.' + DeviceParameters.T2.id); // [T2] Max flow leakage time
-			this.subscribeStates(DeviceParameters.UNI.statePath + '.' + DeviceParameters.UNI.id); // [UNI] units
-			this.subscribeStates(DeviceParameters.SRO.statePath + '.' + DeviceParameters.SRO.id); // [SRO] Screen Rotation
-			this.subscribeStates(DeviceParameters.AB.statePath + '.' + DeviceParameters.AB.id); // [AB] Shutoff valve
-			this.subscribeStates(DeviceParameters.APT.statePath + '.' + DeviceParameters.APT.id); // [APT] WiFi AP timeout
-			this.subscribeStates(DeviceParameters.BPB.statePath + '.' + DeviceParameters.BPB.id); // [BPB] Enable profile changes by button (0 = blocked, 1 = possible)
-			this.subscribeStates(DeviceParameters.BSA.statePath + '.' + DeviceParameters.BSA.id); // [BSE] Floor sensor
-			this.subscribeStates(DeviceParameters.BUZ.statePath + '.' + DeviceParameters.BUZ.id); // [BUZ] Buzzer on alarm
-			this.subscribeStates(DeviceParameters.DMA.statePath + '.' + DeviceParameters.DMA.id); // [BUZ] Buzzer on alarm
-			this.subscribeStates(DeviceParameters.DRP.statePath + '.' + DeviceParameters.DRP.id); // [DRP] Micro-Leakage-Test period
-			this.subscribeStates(DeviceParameters.IDS.statePath + '.' + DeviceParameters.IDS.id); // [IDS] Daylight saving time
-			this.subscribeStates(DeviceParameters.LNG.statePath + '.' + DeviceParameters.LNG.id); // [LNG] Language
-			this.subscribeStates(DeviceParameters.TMP.statePath + '.' + DeviceParameters.TMP.id);// [TMP] temporary protection deactivation
-			this.subscribeStates(DeviceParameters.LWT.statePath + '.' + DeviceParameters.LWT.id); // [LWT] Leakage notification (warning) threshold
-			this.subscribeStates(DeviceParameters.PRF.statePath + '.' + DeviceParameters.PRF.id); // [PRF] Selected profile
+			this.subscribeStates(DeviceParameters.ALD.statePath + '.' + DeviceParameters.ALD.id);	// [ALD] Alarm duration (signaling time)
+			this.subscribeStates(DeviceParameters.BFT.statePath + '.' + DeviceParameters.BFT.id);	// [BFT] Button filter threshold
+			this.subscribeStates(DeviceParameters.BPT.statePath + '.' + DeviceParameters.BPT.id);	// [BPT] Button proximity threshold
+			this.subscribeStates(DeviceParameters.RST.statePath + '.' + DeviceParameters.RST.id);	// [RST] System Restart
+			this.subscribeStates(DeviceParameters.CSD.statePath + '.' + DeviceParameters.CSD.id);	// [CSD] Deactivate conductivity sensor
+			this.subscribeStates(DeviceParameters.PSD.statePath + '.' + DeviceParameters.PSD.id);	// [PSD] Deactivate pressure sensor
+			this.subscribeStates(DeviceParameters.TSD.statePath + '.' + DeviceParameters.TSD.id);	// [TSD] Deactivate temperature sensor
+			this.subscribeStates(DeviceParameters.T2.statePath + '.' + DeviceParameters.T2.id);		// [T2] Max flow leakage time
+			this.subscribeStates(DeviceParameters.UNI.statePath + '.' + DeviceParameters.UNI.id);	// [UNI] units
+			this.subscribeStates(DeviceParameters.SRO.statePath + '.' + DeviceParameters.SRO.id);	// [SRO] Screen Rotation
+			this.subscribeStates(DeviceParameters.AB.statePath + '.' + DeviceParameters.AB.id);		// [AB] Shutoff valve
+			this.subscribeStates(DeviceParameters.APT.statePath + '.' + DeviceParameters.APT.id);	// [APT] WiFi AP timeout
+			this.subscribeStates(DeviceParameters.BPB.statePath + '.' + DeviceParameters.BPB.id);	// [BPB] Enable profile changes by button (0 = blocked, 1 = possible)
+			this.subscribeStates(DeviceParameters.BSA.statePath + '.' + DeviceParameters.BSA.id);	// [BSE] Floor sensor
+			this.subscribeStates(DeviceParameters.BUZ.statePath + '.' + DeviceParameters.BUZ.id);	// [BUZ] Buzzer on alarm
+			this.subscribeStates(DeviceParameters.DMA.statePath + '.' + DeviceParameters.DMA.id);	// [BUZ] Buzzer on alarm
+			this.subscribeStates(DeviceParameters.DRP.statePath + '.' + DeviceParameters.DRP.id);	// [DRP] Micro-Leakage-Test period
+			this.subscribeStates(DeviceParameters.IDS.statePath + '.' + DeviceParameters.IDS.id);	// [IDS] Daylight saving time
+			this.subscribeStates(DeviceParameters.LNG.statePath + '.' + DeviceParameters.LNG.id);	// [LNG] Language
+			this.subscribeStates(DeviceParameters.TMP.statePath + '.' + DeviceParameters.TMP.id);	// [TMP] temporary protection deactivation
+			this.subscribeStates(DeviceParameters.LWT.statePath + '.' + DeviceParameters.LWT.id);	// [LWT] Leakage notification (warning) threshold
+			this.subscribeStates(DeviceParameters.PRF.statePath + '.' + DeviceParameters.PRF.id);	// [PRF] Selected profile
 			this.subscribeStates(adapterChannels.DevicePofiles.path + '.*'); // ALL profile states
 		}
 		if(this.syrSaveFloor1APIClient != null)
@@ -558,6 +559,22 @@ class wamo extends utils.Adapter {
 						default:
 							this.log.error('Screen rotation value of ' + String(state.val) + '° is not a valid angle!');
 							break;
+					}
+				}
+				//============================================================================
+				// ALD Alarm duration (signaling time)
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.ALD.statePath + '.' + DeviceParameters.ALD.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.ALD.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.ALD.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.ALD, state.val);
+								this.log.info('User changed parameter ' + DeviceParameters.ALD.id + ' to ' + String(state.val));
+							}
+							else { this.log.error(DeviceParameters.ALD.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [ALD]: ' + err.message);
+						}
 					}
 				}
 				//============================================================================
