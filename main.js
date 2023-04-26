@@ -549,7 +549,7 @@ class wamo extends utils.Adapter {
 						case 270:
 							try {
 								await this.set_DevieParameter(DeviceParameters.SRO, String(state.val));
-								this.log.info('[SRO] Screen rotation changed to ' + String(state.val) + '°');
+								this.log.info('User changed [SRO] Screen rotation to ' + String(state.val) + '°');
 							}
 							catch (err) {
 								this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.SRO ... ERROR: ' + err);
@@ -568,7 +568,7 @@ class wamo extends utils.Adapter {
 						try {
 							if ((Number(state.val) >= Number(DeviceParameters.BFT.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.BFT.objectdefinition.common.max)) {
 								await this.set_DevieParameter(DeviceParameters.BFT, state.val);
-								if (moreMessages) { this.log.info(DeviceParameters.BFT.id + ' changed to ' + String(state.val)); }
+								this.log.info('User changed parameter ' + DeviceParameters.BFT.id + ' to ' + String(state.val));
 							}
 							else { this.log.error(DeviceParameters.BFT.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
@@ -584,7 +584,7 @@ class wamo extends utils.Adapter {
 						try {
 							if ((Number(state.val) >= Number(DeviceParameters.BPT.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.BPT.objectdefinition.common.max)) {
 								await this.set_DevieParameter(DeviceParameters.BPT, state.val);
-								if (moreMessages) { this.log.info(DeviceParameters.BPT.id + ' changed to ' + String(state.val)); }
+								this.log.info('User changed parameter ' + DeviceParameters.BPT.id + ' to ' + String(state.val));
 							}
 							else { this.log.error(DeviceParameters.BPT.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
