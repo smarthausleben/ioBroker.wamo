@@ -471,23 +471,23 @@ class wamo extends utils.Adapter {
 		}
 		if(this.syrSaveFloor1APIClient != null)
 		{
-			this.subscribeStates(DeviceParametersFS.SleepMode.statePath.replace('.X.', '.1.')  + '.' + DeviceParametersFS.SleepMode.id); // Floor Sensor 1 [SLP] Send device to sleep
-			this.subscribeStates(DeviceParametersFS.AdminMode.statePath.replace('.X.', '.1.')  + '.' + DeviceParametersFS.AdminMode.id); // Floor Sensor 1 [ADM(2)f] Set device ADMIN mode
+			this.subscribeStates(DeviceParametersFS.SLP.statePath.replace('.X.', '.1.')  + '.' + DeviceParametersFS.SLP.id); // Floor Sensor 1 [SLP] Send device to sleep
+			this.subscribeStates(DeviceParametersFS.ADM2f.statePath.replace('.X.', '.1.')  + '.' + DeviceParametersFS.ADM2f.id); // Floor Sensor 1 [ADM(2)f] Set device ADMIN mode
 		}
 		if(this.syrSaveFloor2APIClient != null)
 		{
-			this.subscribeStates(DeviceParametersFS.SleepMode.statePath.replace('.X.', '.2.')  + '.' + DeviceParametersFS.SleepMode.id); // Floor Sensor 2 [SLP] Send device to sleep
-			this.subscribeStates(DeviceParametersFS.AdminMode.statePath.replace('.X.', '.2.')  + '.' + DeviceParametersFS.AdminMode.id); // Floor Sensor 2 [ADM(2)f] Set device ADMIN mode
+			this.subscribeStates(DeviceParametersFS.SLP.statePath.replace('.X.', '.2.')  + '.' + DeviceParametersFS.SLP.id); // Floor Sensor 2 [SLP] Send device to sleep
+			this.subscribeStates(DeviceParametersFS.ADM2f.statePath.replace('.X.', '.2.')  + '.' + DeviceParametersFS.ADM2f.id); // Floor Sensor 2 [ADM(2)f] Set device ADMIN mode
 		}
 		if(this.syrSaveFloor3APIClient != null)
 		{
-			this.subscribeStates(DeviceParametersFS.SleepMode.statePath.replace('.X.', '.3.')  + '.' + DeviceParametersFS.SleepMode.id); // Floor Sensor 3 [SLP] Send device to sleep
-			this.subscribeStates(DeviceParametersFS.AdminMode.statePath.replace('.X.', '.3.')  + '.' + DeviceParametersFS.AdminMode.id); // Floor Sensor 3 [ADM(2)f] Set device ADMIN mode
+			this.subscribeStates(DeviceParametersFS.SLP.statePath.replace('.X.', '.3.')  + '.' + DeviceParametersFS.SLP.id); // Floor Sensor 3 [SLP] Send device to sleep
+			this.subscribeStates(DeviceParametersFS.ADM2f.statePath.replace('.X.', '.3.')  + '.' + DeviceParametersFS.ADM2f.id); // Floor Sensor 3 [ADM(2)f] Set device ADMIN mode
 		}
 		if(this.syrSaveFloor4APIClient != null)
 		{
-			this.subscribeStates(DeviceParametersFS.SleepMode.statePath.replace('.X.', '.4.')  + '.' + DeviceParametersFS.SleepMode.id); // Floor Sensor 4 [SLP] Send device to sleep
-			this.subscribeStates(DeviceParametersFS.AdminMode.statePath.replace('.X.', '.4.')  + '.' + DeviceParametersFS.AdminMode.id); // Floor Sensor 4 [ADM(2)f] Set device ADMIN mode
+			this.subscribeStates(DeviceParametersFS.SLP.statePath.replace('.X.', '.4.')  + '.' + DeviceParametersFS.SLP.id); // Floor Sensor 4 [SLP] Send device to sleep
+			this.subscribeStates(DeviceParametersFS.ADM2f.statePath.replace('.X.', '.4.')  + '.' + DeviceParametersFS.ADM2f.id); // Floor Sensor 4 [ADM(2)f] Set device ADMIN mode
 		}
 
 
@@ -1343,14 +1343,14 @@ class wamo extends utils.Adapter {
 				//============================================================================
 				// Floor Sensor 1: Sleep Mode
 				//============================================================================
-				else if ((id == statePrefix + DeviceParametersFS.SleepMode.statePath.replace('.X.', '.1.') + '.' + DeviceParametersFS.SleepMode.id) && state.ack == false) {
-					this.handle_FS_state_changes(this.syrSaveFloor1APIClient, 1, DeviceParametersFS.SleepMode.id);
+				else if ((id == statePrefix + DeviceParametersFS.SLP.statePath.replace('.X.', '.1.') + '.' + DeviceParametersFS.SLP.id) && state.ack == false) {
+					this.handle_FS_state_changes(this.syrSaveFloor1APIClient, 1, DeviceParametersFS.SLP.id);
 				}
 				//============================================================================
 				// Floor Sensor 1: Admin Mode
 				//============================================================================
-				else if ((id == statePrefix + DeviceParametersFS.AdminMode.statePath.replace('.X.', '.1.') + '.' + DeviceParametersFS.AdminMode.id) && state.ack == false) {
-					this.handle_FS_state_changes(this.syrSaveFloor1APIClient, 1, DeviceParametersFS.AdminMode.id);
+				else if ((id == statePrefix + DeviceParametersFS.ADM2f.statePath.replace('.X.', '.1.') + '.' + DeviceParametersFS.ADM2f.id) && state.ack == false) {
+					this.handle_FS_state_changes(this.syrSaveFloor1APIClient, 1, DeviceParametersFS.ADM2f.id);
 				}
 
 				//############################################################################
@@ -1377,10 +1377,10 @@ class wamo extends utils.Adapter {
 	{
 		this.log.warn('Floor sensor state change: Floor Sensor No. ' + String(FS_Number) + ' State ID: ' + String(FS_State_ID));
 		switch (FS_State_ID) {
-			case DeviceParametersFS.AdminMode.id:
+			case DeviceParametersFS.ADM2f.id:
 				this.FS_set_AMIN_Mode(FS_Handler, FS_Number);
 				break;
-			case DeviceParametersFS.SleepMode.id:
+			case DeviceParametersFS.SLP.id:
 				this.FS_set_SLEEP_Mode(FS_Handler, FS_Number);
 				break;
 
@@ -1934,7 +1934,7 @@ class wamo extends utils.Adapter {
 			let stateValue = null;
 			if(String(FS_Value['ADM(2)f']) == 'FACTORY'){stateValue = true;}else{stateValue = false;}
 			// save Values to State Object
-			this.setStateAsync(DeviceParametersFS.AdminMode.statePath.replace('.X.', '.' + String(FS_Num) + '.') + '.' + DeviceParametersFS.AdminMode.id, { val: stateValue, ack: true, expire: 30});
+			this.setStateAsync(DeviceParametersFS.ADM2f.statePath.replace('.X.', '.' + String(FS_Num) + '.') + '.' + DeviceParametersFS.ADM2f.id, { val: stateValue, ack: true, expire: 30});
 		} catch (err) { this.log.error('Saving Set Admin Result of Floor Sensor No. ' + String(FS_Num) + '" has failed. ' + err); }
 	}
 
@@ -1950,7 +1950,7 @@ class wamo extends utils.Adapter {
 			let stateValue = null;
 			if(String(FS_Value['SLP']) == 'OK'){stateValue = true;}else{stateValue = false;}
 			// save Values to State Object
-			this.setStateAsync(DeviceParametersFS.SleepMode.statePath.replace('.X.', '.' + String(FS_Num) + '.') + '.' + DeviceParametersFS.SleepMode.id, { val: stateValue, ack: true, expire: 30});
+			this.setStateAsync(DeviceParametersFS.SLP.statePath.replace('.X.', '.' + String(FS_Num) + '.') + '.' + DeviceParametersFS.SLP.id, { val: stateValue, ack: true, expire: 30});
 		} catch (err) { this.log.error('Set Sleep mode Result of Floor Sensor No. ' + String(FS_Num) + '" has failed. ' + err); }
 	}
 
