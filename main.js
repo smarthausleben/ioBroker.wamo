@@ -546,7 +546,7 @@ class wamo extends utils.Adapter {
 				const statePrefix = this.name + '.' + String(this.instance) + '.';
 				// The state was changed
 				//============================================================================
-				// Screen Rotation
+				// SRO Screen Rotation
 				//============================================================================
 				if ((id == statePrefix + DeviceParameters.SRO.statePath + '.' + DeviceParameters.SRO.id) && state.ack == false) {
 					switch (state.val) {
@@ -712,7 +712,7 @@ class wamo extends utils.Adapter {
 					}
 				}
 				//============================================================================
-				// Shutoff valve AB
+				// AB Shutoff valve AB
 				//============================================================================
 				else if ((id == statePrefix + DeviceParameters.AB.statePath + '.' + DeviceParameters.AB.id) && state.ack == false) {
 					switch (state.val) {
