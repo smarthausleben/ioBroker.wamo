@@ -3956,6 +3956,13 @@ class wamo extends utils.Adapter {
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WNS, finalValue); }
+				break;
+				case DeviceParameters.HWV.id:	// HWV - Hardware version
+					finalValue = await this.getGlobalisedValue(DeviceParameters.HWV, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.HWV, finalValue); }
 					break;
 				//#############################################################################################
 				//### 								PROFILES												###

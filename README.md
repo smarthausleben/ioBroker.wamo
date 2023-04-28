@@ -59,6 +59,7 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) ADD: State **_TTM_** - Turbine no pulse max. time
 * (smarthausleben) ADD: State **_TYP_** - Safe-Tec type
 * (smarthausleben) ADD: State **_WNS_** - WiFi AP disabled
+* (smarthausleben) ADD: State **_HWV_** - Hardware version
 * (smarthausleben) CHG: State **_ALD_** - Alarm duration (signaling time) can now be changed by user
 * (smarthausleben) CHG: State **_CLP_** - Cluster Profile can now be changed by user
 
