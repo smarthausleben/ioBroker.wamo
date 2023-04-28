@@ -459,6 +459,7 @@ class wamo extends utils.Adapter {
 			this.subscribeStates(DeviceParameters.DCM.statePath + '.' + DeviceParameters.DCM.id);	// [DCM] MLT test time close
 			this.subscribeStates(DeviceParameters.RST.statePath + '.' + DeviceParameters.RST.id);	// [RST] System Restart
 			this.subscribeStates(DeviceParameters.TTM.statePath + '.' + DeviceParameters.TTM.id);	// [TTM] Turbine no pulse max. time
+			this.subscribeStates(DeviceParameters.TYP.statePath + '.' + DeviceParameters.TYP.id);	// [TYP] Safe-Tec type
 			this.subscribeStates(DeviceParameters.CSD.statePath + '.' + DeviceParameters.CSD.id);	// [CSD] Deactivate conductivity sensor
 			this.subscribeStates(DeviceParameters.PSD.statePath + '.' + DeviceParameters.PSD.id);	// [PSD] Deactivate pressure sensor
 			this.subscribeStates(DeviceParameters.TSD.statePath + '.' + DeviceParameters.TSD.id);	// [TSD] Deactivate temperature sensor
@@ -725,6 +726,22 @@ class wamo extends utils.Adapter {
 							else { this.log.error(DeviceParameters.TTM.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [TTM]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// TYP Safe-Tec type
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.TYP.statePath + '.' + DeviceParameters.TYP.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.TYP.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.TYP.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.TYP, state.val);
+								this.log.info('User changed parameter ' + DeviceParameters.TYP.id + ' to ' + String(state.val));
+							}
+							else { this.log.error(DeviceParameters.TYP.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [TYP]: ' + err.message);
 						}
 					}
 				}
@@ -3908,6 +3925,13 @@ class wamo extends utils.Adapter {
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.TTM, finalValue); }
+					break;
+				case DeviceParameters.TYP.id:	// TYP - Safe-Tec type
+					finalValue = await this.getGlobalisedValue(DeviceParameters.TYP, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.TYP, finalValue); }
 					break;
 				//#############################################################################################
 				//### 								PROFILES												###
