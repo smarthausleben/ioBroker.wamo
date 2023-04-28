@@ -460,6 +460,7 @@ class wamo extends utils.Adapter {
 			this.subscribeStates(DeviceParameters.DOM.statePath + '.' + DeviceParameters.DOM.id);	// [DOM] MLT test time open
 			this.subscribeStates(DeviceParameters.DPL.statePath + '.' + DeviceParameters.DPL.id);	// [DPL] MLT pulses
 			this.subscribeStates(DeviceParameters.DST.statePath + '.' + DeviceParameters.DST.id);	// [DST] MLT test time NOPULS
+			this.subscribeStates(DeviceParameters.DTC.statePath + '.' + DeviceParameters.DTC.id);	// [DTC] MLT verification cycles
 			this.subscribeStates(DeviceParameters.RST.statePath + '.' + DeviceParameters.RST.id);	// [RST] System Restart
 			this.subscribeStates(DeviceParameters.TTM.statePath + '.' + DeviceParameters.TTM.id);	// [TTM] Turbine no pulse max. time
 			this.subscribeStates(DeviceParameters.TYP.statePath + '.' + DeviceParameters.TYP.id);	// [TYP] Safe-Tec type
@@ -827,6 +828,22 @@ class wamo extends utils.Adapter {
 							else { this.log.error(DeviceParameters.DST.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [DST]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// DTC MLT verification cycles
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.DTC.statePath + '.' + DeviceParameters.DTC.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.DTC.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DTC.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.DTC, state.val);
+								this.log.info('User changed parameter ' + DeviceParameters.DTC.id + ' to ' + String(state.val));
+							}
+							else { this.log.error(DeviceParameters.DTC.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [DTC]: ' + err.message);
 						}
 					}
 				}
@@ -4024,6 +4041,13 @@ class wamo extends utils.Adapter {
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DST, finalValue); }
+					break;
+				case DeviceParameters.DTC.id:	// DTC - MLT verification cycles
+					finalValue = await this.getGlobalisedValue(DeviceParameters.DTC, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DTC, finalValue); }
 					break;
 				case DeviceParameters.TTM.id:	// TTM - Turbine no pulse max. time
 					finalValue = await this.getGlobalisedValue(DeviceParameters.TTM, value);
