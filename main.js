@@ -461,6 +461,7 @@ class wamo extends utils.Adapter {
 			this.subscribeStates(DeviceParameters.DPL.statePath + '.' + DeviceParameters.DPL.id);	// [DPL] MLT pulses
 			this.subscribeStates(DeviceParameters.DST.statePath + '.' + DeviceParameters.DST.id);	// [DST] MLT test time NOPULS
 			this.subscribeStates(DeviceParameters.DTC.statePath + '.' + DeviceParameters.DTC.id);	// [DTC] MLT verification cycles
+			this.subscribeStates(DeviceParameters.DTT.statePath + '.' + DeviceParameters.DTT.id);	// [DTT] Micro-Leakage-Test start time
 			this.subscribeStates(DeviceParameters.RST.statePath + '.' + DeviceParameters.RST.id);	// [RST] System Restart
 			this.subscribeStates(DeviceParameters.TTM.statePath + '.' + DeviceParameters.TTM.id);	// [TTM] Turbine no pulse max. time
 			this.subscribeStates(DeviceParameters.TYP.statePath + '.' + DeviceParameters.TYP.id);	// [TYP] Safe-Tec type
@@ -844,6 +845,22 @@ class wamo extends utils.Adapter {
 							else { this.log.error(DeviceParameters.DTC.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [DTC]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// DTT Micro-Leakage-Test start time
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.DTT.statePath + '.' + DeviceParameters.DTT.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if(String(state.val).length == 5 && String(state.val).substring(2,3) == ':' && !isNaN(parseFloat(String(state.val).substring(0,2)))  && !isNaN(parseFloat(String(state.val).substring(3,5)))){
+								await this.set_DevieParameter(DeviceParameters.DTT, state.val);
+								this.log.info('User changed parameter ' + DeviceParameters.DTT.id + ' to ' + String(state.val));
+							}
+							else { this.log.error(DeviceParameters.DTT.id + ' new value [' + String(state.val) + '] is not a valid Time string eg "04:35"!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [DTT]: ' + err.message);
 						}
 					}
 				}
@@ -4048,6 +4065,13 @@ class wamo extends utils.Adapter {
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DTC, finalValue); }
+					break;
+				case DeviceParameters.DTT.id:	// DTT - Micro-Leakage-Test start time
+					finalValue = await this.getGlobalisedValue(DeviceParameters.DTT, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DTT, finalValue); }
 					break;
 				case DeviceParameters.TTM.id:	// TTM - Turbine no pulse max. time
 					finalValue = await this.getGlobalisedValue(DeviceParameters.TTM, value);
