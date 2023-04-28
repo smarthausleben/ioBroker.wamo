@@ -458,6 +458,7 @@ class wamo extends utils.Adapter {
 			this.subscribeStates(DeviceParameters.DBT.statePath + '.' + DeviceParameters.DBT.id);	// [DBT] MLT pressure drop time
 			this.subscribeStates(DeviceParameters.DCM.statePath + '.' + DeviceParameters.DCM.id);	// [DCM] MLT test time close
 			this.subscribeStates(DeviceParameters.RST.statePath + '.' + DeviceParameters.RST.id);	// [RST] System Restart
+			this.subscribeStates(DeviceParameters.TTM.statePath + '.' + DeviceParameters.TTM.id);	// [TTM] Turbine no pulse max. time
 			this.subscribeStates(DeviceParameters.CSD.statePath + '.' + DeviceParameters.CSD.id);	// [CSD] Deactivate conductivity sensor
 			this.subscribeStates(DeviceParameters.PSD.statePath + '.' + DeviceParameters.PSD.id);	// [PSD] Deactivate pressure sensor
 			this.subscribeStates(DeviceParameters.TSD.statePath + '.' + DeviceParameters.TSD.id);	// [TSD] Deactivate temperature sensor
@@ -708,6 +709,22 @@ class wamo extends utils.Adapter {
 							else { this.log.error(DeviceParameters.DCM.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [DCM]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// TTM Turbine no pulse max. time
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.TTM.statePath + '.' + DeviceParameters.TTM.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.TTM.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.TTM.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.TTM, state.val);
+								this.log.info('User changed parameter ' + DeviceParameters.TTM.id + ' to ' + String(state.val));
+							}
+							else { this.log.error(DeviceParameters.TTM.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [TTM]: ' + err.message);
 						}
 					}
 				}
@@ -3884,6 +3901,13 @@ class wamo extends utils.Adapter {
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DCM, finalValue); }
+					break;
+				case DeviceParameters.TTM.id:	// TTM - Turbine no pulse max. time
+					finalValue = await this.getGlobalisedValue(DeviceParameters.TTM, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.TTM, finalValue); }
 					break;
 				//#############################################################################################
 				//### 								PROFILES												###
