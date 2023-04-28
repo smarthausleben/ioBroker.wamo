@@ -56,6 +56,7 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) ADD: State **_DBD_** - MLT pressure drop
 * (smarthausleben) ADD: State **_DBT_** - MLT pressure drop time
 * (smarthausleben) ADD: State **_DCM_** - MLT test time close
+* (smarthausleben) ADD: State **_DOM_** - MLT test time open
 * (smarthausleben) ADD: State **_TTM_** - Turbine no pulse max. time
 * (smarthausleben) ADD: State **_TYP_** - Safe-Tec type
 * (smarthausleben) ADD: State **_WNS_** - WiFi AP disabled
