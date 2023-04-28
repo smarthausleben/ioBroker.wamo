@@ -460,6 +460,7 @@ class wamo extends utils.Adapter {
 			this.subscribeStates(DeviceParameters.RST.statePath + '.' + DeviceParameters.RST.id);	// [RST] System Restart
 			this.subscribeStates(DeviceParameters.TTM.statePath + '.' + DeviceParameters.TTM.id);	// [TTM] Turbine no pulse max. time
 			this.subscribeStates(DeviceParameters.TYP.statePath + '.' + DeviceParameters.TYP.id);	// [TYP] Safe-Tec type
+			this.subscribeStates(DeviceParameters.WNS.statePath + '.' + DeviceParameters.WNS.id);	// [WNS] WiFi AP disabled
 			this.subscribeStates(DeviceParameters.CSD.statePath + '.' + DeviceParameters.CSD.id);	// [CSD] Deactivate conductivity sensor
 			this.subscribeStates(DeviceParameters.PSD.statePath + '.' + DeviceParameters.PSD.id);	// [PSD] Deactivate pressure sensor
 			this.subscribeStates(DeviceParameters.TSD.statePath + '.' + DeviceParameters.TSD.id);	// [TSD] Deactivate temperature sensor
@@ -742,6 +743,22 @@ class wamo extends utils.Adapter {
 							else { this.log.error(DeviceParameters.TYP.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [TYP]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// WNS WiFi AP disabled
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.WNS.statePath + '.' + DeviceParameters.WNS.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.WNS.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.WNS.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.WNS, state.val);
+								this.log.info('User changed parameter ' + DeviceParameters.WNS.id + ' to ' + String(state.val));
+							}
+							else { this.log.error(DeviceParameters.WNS.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [WNS]: ' + err.message);
 						}
 					}
 				}
@@ -3932,6 +3949,13 @@ class wamo extends utils.Adapter {
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.TYP, finalValue); }
+					break;
+				case DeviceParameters.WNS.id:	// WNS - WiFi AP disabled
+					finalValue = await this.getGlobalisedValue(DeviceParameters.WNS, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WNS, finalValue); }
 					break;
 				//#############################################################################################
 				//### 								PROFILES												###
