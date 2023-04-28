@@ -461,6 +461,7 @@ class wamo extends utils.Adapter {
 			this.subscribeStates(DeviceParameters.TTM.statePath + '.' + DeviceParameters.TTM.id);	// [TTM] Turbine no pulse max. time
 			this.subscribeStates(DeviceParameters.TYP.statePath + '.' + DeviceParameters.TYP.id);	// [TYP] Safe-Tec type
 			this.subscribeStates(DeviceParameters.WNS.statePath + '.' + DeviceParameters.WNS.id);	// [WNS] WiFi AP disabled
+			this.subscribeStates(DeviceParameters.DKI.statePath + '.' + DeviceParameters.DKI.id);	// [DKI] Safe-Tec device kind ID
 			this.subscribeStates(DeviceParameters.CSD.statePath + '.' + DeviceParameters.CSD.id);	// [CSD] Deactivate conductivity sensor
 			this.subscribeStates(DeviceParameters.PSD.statePath + '.' + DeviceParameters.PSD.id);	// [PSD] Deactivate pressure sensor
 			this.subscribeStates(DeviceParameters.TSD.statePath + '.' + DeviceParameters.TSD.id);	// [TSD] Deactivate temperature sensor
@@ -759,6 +760,22 @@ class wamo extends utils.Adapter {
 							else { this.log.error(DeviceParameters.WNS.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [WNS]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// DKI Safe-Tec device kind ID
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.DKI.statePath + '.' + DeviceParameters.DKI.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.DKI.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DKI.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.DKI, state.val);
+								this.log.info('User changed parameter ' + DeviceParameters.DKI.id + ' to ' + String(state.val));
+							}
+							else { this.log.error(DeviceParameters.DKI.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [DKI]: ' + err.message);
 						}
 					}
 				}
@@ -3957,12 +3974,19 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WNS, finalValue); }
 				break;
-				case DeviceParameters.HWV.id:	// HWV -  Hardware version
+				case DeviceParameters.HWV.id:	// HWV - Hardware version
 					finalValue = await this.getGlobalisedValue(DeviceParameters.HWV, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.HWV, finalValue); }
+					break;
+				case DeviceParameters.DKI.id:	// DKI - Safe-Tec device kind ID
+					finalValue = await this.getGlobalisedValue(DeviceParameters.DKI, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DKI, finalValue); }
 					break;
 				//#############################################################################################
 				//### 								PROFILES												###
