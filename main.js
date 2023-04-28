@@ -458,6 +458,7 @@ class wamo extends utils.Adapter {
 			this.subscribeStates(DeviceParameters.DBT.statePath + '.' + DeviceParameters.DBT.id);	// [DBT] MLT pressure drop time
 			this.subscribeStates(DeviceParameters.DCM.statePath + '.' + DeviceParameters.DCM.id);	// [DCM] MLT test time close
 			this.subscribeStates(DeviceParameters.DOM.statePath + '.' + DeviceParameters.DOM.id);	// [DOM] MLT test time open
+			this.subscribeStates(DeviceParameters.DPL.statePath + '.' + DeviceParameters.DPL.id);	// [DPL] MLT pulses
 			this.subscribeStates(DeviceParameters.RST.statePath + '.' + DeviceParameters.RST.id);	// [RST] System Restart
 			this.subscribeStates(DeviceParameters.TTM.statePath + '.' + DeviceParameters.TTM.id);	// [TTM] Turbine no pulse max. time
 			this.subscribeStates(DeviceParameters.TYP.statePath + '.' + DeviceParameters.TYP.id);	// [TYP] Safe-Tec type
@@ -793,6 +794,22 @@ class wamo extends utils.Adapter {
 							else { this.log.error(DeviceParameters.DOM.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [DOM]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// DPL MLT pulses
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.DPL.statePath + '.' + DeviceParameters.DPL.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.DPL.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.DPL.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.DPL, state.val);
+								this.log.info('User changed parameter ' + DeviceParameters.DPL.id + ' to ' + String(state.val));
+							}
+							else { this.log.error(DeviceParameters.DPL.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [DPL]: ' + err.message);
 						}
 					}
 				}
@@ -3976,6 +3993,13 @@ class wamo extends utils.Adapter {
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DOM, finalValue); }
+					break;
+				case DeviceParameters.DPL.id:	// DPL - MLT pulses
+					finalValue = await this.getGlobalisedValue(DeviceParameters.DPL, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DPL, finalValue); }
 					break;
 				case DeviceParameters.TTM.id:	// TTM - Turbine no pulse max. time
 					finalValue = await this.getGlobalisedValue(DeviceParameters.TTM, value);
