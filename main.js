@@ -4175,6 +4175,13 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MSC, finalValue); }
 					break;
+				case DeviceParameters.DSV.id:	// DSV - Micro-Leakage-Test state
+					finalValue = await this.getGlobalisedValue(DeviceParameters.DSV, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DSV, finalValue); }
+					break;
 				case DeviceParameters.TTM.id:	// TTM - Turbine no pulse max. time
 					finalValue = await this.getGlobalisedValue(DeviceParameters.TTM, value);
 					if (finalValue === null) {	// did we get a globalised Value back?

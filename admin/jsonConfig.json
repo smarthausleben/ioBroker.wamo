@@ -238,6 +238,9 @@
                     "max": 10,
                     "label": "Timeout device data request in seconds"
                 },
+                "divider1":{
+                    "type": "divider"
+                },
                 "valueinfomessages": {
                     "newLine": true,
                     "type": "checkbox",
@@ -261,6 +264,9 @@
                     "lg": 6,
                     "label": "show API response as info logging messages"
                 },
+                "divider2":{
+                    "type": "divider"
+                },
                 "allow_service_and_factory_changes": {
                     "newLine": true,
                     "type": "checkbox",
@@ -270,7 +276,7 @@
                     "label": "Allow SERVICE and FACTORY state changes",
                     "help": "If this option is activated, states protected by SERVICE and FACTORY level can be changed in object view."
                 },
-                "divider1":{
+                "divider3":{
                     "type": "divider"
                 },
                 "executetestloop": {

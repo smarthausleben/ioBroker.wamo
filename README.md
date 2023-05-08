@@ -66,6 +66,7 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) ADD: State **_MQT_** - MQTT connection type
 * (smarthausleben) ADD: State **_MRT_** - Maintenance (Husty) server connection
 * (smarthausleben) ADD: State **_MSC_** - MQTT reconnect time
+* (smarthausleben) ADD: State **_DSV_** - Micro-Leakage-Test state
 * (smarthausleben) ADD: State **_TTM_** - Turbine no pulse max. time
 * (smarthausleben) ADD: State **_TYP_** - Safe-Tec type
 * (smarthausleben) ADD: State **_WNS_** - WiFi AP disabled
