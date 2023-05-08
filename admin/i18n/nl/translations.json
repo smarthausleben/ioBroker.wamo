@@ -42,5 +42,7 @@
     "slow polling time in seconds": "langzame pollingtijd in seconden",
     "timing of regular main valve movement": "timing van regelmatige beweging van de hoofdklep",
     "very slow polling time in seconds": "zeer langzame pollingtijd in seconden",
-    "wamo adapter settings": "Adapterinstellingen voor wamo"
+    "wamo adapter settings": "Adapterinstellingen voor wamo",
+    "Allow SERVICE and FACTORY state changes": "Staat wijzigingen in de SERVICE- en FABRIEKSstatus toe",
+    "If this option is activated, states protected by SERVICE and FACTORY level can be changed in object view.": "Als deze optie is geactiveerd, kunnen statussen die worden beschermd door SERVICE- en FABRIEK-niveau worden gewijzigd in de objectweergave."
 }

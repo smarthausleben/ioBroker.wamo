@@ -49,6 +49,7 @@ If you find this adapter useful and you want to support this project, your kindn
 ### **WORK IN PROGRESS**
 * (smarthausleben) ADD: [SafeFloor Device] New **SafeFloor Units** Tab in adapter settings to manage up to 4 **_SafeFloor Connect_** devices
 * (smarthausleben) ADD: New option **_"Enable executing test loop"_** in Tab **_"Advanced Options"_** to enable/disable cron based executed [Test Loop]
+* (smarthausleben) ADD: New option **_"Allow SERVICE and FACTORY state changes"_** in Tab **_"Advanced Options"_** to enable/disable changes of objects protected by manufacturer 
 * (smarthausleben) ADD: State **_BFT_** - Button filter threshold
 * (smarthausleben) ADD: State **_BPT_** - Button proximity threshold
 * (smarthausleben) ADD: State **_CNF_** - Conductivity factor

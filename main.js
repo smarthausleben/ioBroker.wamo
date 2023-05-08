@@ -87,6 +87,7 @@ let sensor_conductivity_present = false;
 let valuesInfoMessages = true;
 let moreMessages = false;
 let apiResponseInfoMessages = false;
+let allow_SERVICE_and_FACTORY_changes = false;
 
 let interfaceBusy;
 let interfaceBusyCounter = 0;
@@ -141,6 +142,7 @@ class wamo extends utils.Adapter {
 		delay_reconnection = this.config.reconnectingdelaytime;
 		timeout_axios_request = this.config.requesttimeout;
 		executeTestingLoop = this.config.executetestloop;
+		allow_SERVICE_and_FACTORY_changes = this.config.allow_service_and_factory_changes;
 		this.log.debug('config Device IP: ' + String(this.config.device_ip));
 		this.log.debug('config Device Port: ' + String(this.config.device_port));
 		this.log.debug('More log messages: ' + String(this.config.moremessages));
@@ -448,37 +450,15 @@ class wamo extends utils.Adapter {
 		//=== Subscribe to user changable states ===
 		//==========================================
 		if (this.syrApiClient != null) {
-			this.subscribeStates(DeviceParameters.ALD.statePath + '.' + DeviceParameters.ALD.id);	// [ALD] Alarm duration (signaling time)
-			this.subscribeStates(DeviceParameters.BFT.statePath + '.' + DeviceParameters.BFT.id);	// [BFT] Button filter threshold
-			this.subscribeStates(DeviceParameters.BPT.statePath + '.' + DeviceParameters.BPT.id);	// [BPT] Button proximity threshold
 			this.subscribeStates(DeviceParameters.CLP.statePath + '.' + DeviceParameters.CLP.id);	// [CLP] Cluster Profile
 			this.subscribeStates(DeviceParameters.CNF.statePath + '.' + DeviceParameters.CNF.id);	// [CNF] Conductivity factor
 			this.subscribeStates(DeviceParameters.CNL.statePath + '.' + DeviceParameters.CNL.id);	// [CNL] Conductivity limit
-			this.subscribeStates(DeviceParameters.DBD.statePath + '.' + DeviceParameters.DBD.id);	// [DBD] MLT pressure drop
-			this.subscribeStates(DeviceParameters.DBT.statePath + '.' + DeviceParameters.DBT.id);	// [DBT] MLT pressure drop time
-			this.subscribeStates(DeviceParameters.DCM.statePath + '.' + DeviceParameters.DCM.id);	// [DCM] MLT test time close
-			this.subscribeStates(DeviceParameters.DOM.statePath + '.' + DeviceParameters.DOM.id);	// [DOM] MLT test time open
-			this.subscribeStates(DeviceParameters.DPL.statePath + '.' + DeviceParameters.DPL.id);	// [DPL] MLT pulses
-			this.subscribeStates(DeviceParameters.DST.statePath + '.' + DeviceParameters.DST.id);	// [DST] MLT test time NOPULS
-			this.subscribeStates(DeviceParameters.DTC.statePath + '.' + DeviceParameters.DTC.id);	// [DTC] MLT verification cycles
 			this.subscribeStates(DeviceParameters.DTT.statePath + '.' + DeviceParameters.DTT.id);	// [DTT] Micro-Leakage-Test start time
 			this.subscribeStates(DeviceParameters.HTD.statePath + '.' + DeviceParameters.HTD.id);	// [HTD] Disable HTTPS connection (only MQTT)
 			this.subscribeStates(DeviceParameters.MQT.statePath + '.' + DeviceParameters.MQT.id);	// [MQT] MQTT connection type
-			this.subscribeStates(DeviceParameters.MRT.statePath + '.' + DeviceParameters.MRT.id);	// [MRT] Maintenance (Husty) server connection
-			this.subscribeStates(DeviceParameters.MSC.statePath + '.' + DeviceParameters.MSC.id);	// [MSC] MQTT reconnect time
-			this.subscribeStates(DeviceParameters.RST.statePath + '.' + DeviceParameters.RST.id);	// [RST] System Restart
-			this.subscribeStates(DeviceParameters.TTM.statePath + '.' + DeviceParameters.TTM.id);	// [TTM] Turbine no pulse max. time
-			this.subscribeStates(DeviceParameters.TYP.statePath + '.' + DeviceParameters.TYP.id);	// [TYP] Safe-Tec type
-			this.subscribeStates(DeviceParameters.WNS.statePath + '.' + DeviceParameters.WNS.id);	// [WNS] WiFi AP disabled
-			this.subscribeStates(DeviceParameters.DKI.statePath + '.' + DeviceParameters.DKI.id);	// [DKI] Safe-Tec device kind ID
-			this.subscribeStates(DeviceParameters.CSD.statePath + '.' + DeviceParameters.CSD.id);	// [CSD] Deactivate conductivity sensor
-			this.subscribeStates(DeviceParameters.PSD.statePath + '.' + DeviceParameters.PSD.id);	// [PSD] Deactivate pressure sensor
-			this.subscribeStates(DeviceParameters.TSD.statePath + '.' + DeviceParameters.TSD.id);	// [TSD] Deactivate temperature sensor
 			this.subscribeStates(DeviceParameters.T2.statePath + '.' + DeviceParameters.T2.id);		// [T2] Max flow leakage time
 			this.subscribeStates(DeviceParameters.UNI.statePath + '.' + DeviceParameters.UNI.id);	// [UNI] units
-			this.subscribeStates(DeviceParameters.SRO.statePath + '.' + DeviceParameters.SRO.id);	// [SRO] Screen Rotation
 			this.subscribeStates(DeviceParameters.AB.statePath + '.' + DeviceParameters.AB.id);		// [AB] Shutoff valve
-			this.subscribeStates(DeviceParameters.APT.statePath + '.' + DeviceParameters.APT.id);	// [APT] WiFi AP timeout
 			this.subscribeStates(DeviceParameters.BPB.statePath + '.' + DeviceParameters.BPB.id);	// [BPB] Enable profile changes by button (0 = blocked, 1 = possible)
 			this.subscribeStates(DeviceParameters.BSA.statePath + '.' + DeviceParameters.BSA.id);	// [BSE] Floor sensor
 			this.subscribeStates(DeviceParameters.BUZ.statePath + '.' + DeviceParameters.BUZ.id);	// [BUZ] Buzzer on alarm
@@ -490,6 +470,32 @@ class wamo extends utils.Adapter {
 			this.subscribeStates(DeviceParameters.LWT.statePath + '.' + DeviceParameters.LWT.id);	// [LWT] Leakage notification (warning) threshold
 			this.subscribeStates(DeviceParameters.PRF.statePath + '.' + DeviceParameters.PRF.id);	// [PRF] Selected profile
 			this.subscribeStates(adapterChannels.DevicePofiles.path + '.*'); // ALL profile states
+
+			// only adopt SERVICE and FACTORY events if enabled in adapter Options
+			if(allow_SERVICE_and_FACTORY_changes){
+				this.subscribeStates(DeviceParameters.MSC.statePath + '.' + DeviceParameters.MSC.id);	// [MSC] MQTT reconnect time
+				this.subscribeStates(DeviceParameters.MRT.statePath + '.' + DeviceParameters.MRT.id);	// [MRT] Maintenance (Husty) server connection
+				this.subscribeStates(DeviceParameters.DTC.statePath + '.' + DeviceParameters.DTC.id);	// [DTC] MLT verification cycles
+				this.subscribeStates(DeviceParameters.DST.statePath + '.' + DeviceParameters.DST.id);	// [DST] MLT test time NOPULS
+				this.subscribeStates(DeviceParameters.DPL.statePath + '.' + DeviceParameters.DPL.id);	// [DPL] MLT pulses
+				this.subscribeStates(DeviceParameters.DOM.statePath + '.' + DeviceParameters.DOM.id);	// [DOM] MLT test time open
+				this.subscribeStates(DeviceParameters.DKI.statePath + '.' + DeviceParameters.DKI.id);	// [DKI] Safe-Tec device kind ID
+				this.subscribeStates(DeviceParameters.WNS.statePath + '.' + DeviceParameters.WNS.id);	// [WNS] WiFi AP disabled
+				this.subscribeStates(DeviceParameters.TYP.statePath + '.' + DeviceParameters.TYP.id);	// [TYP] Safe-Tec type
+				this.subscribeStates(DeviceParameters.TTM.statePath + '.' + DeviceParameters.TTM.id);	// [TTM] Turbine no pulse max. time
+				this.subscribeStates(DeviceParameters.BFT.statePath + '.' + DeviceParameters.BFT.id);	// [BFT] Button filter threshold
+				this.subscribeStates(DeviceParameters.BPT.statePath + '.' + DeviceParameters.BPT.id);	// [BPT] Button proximity threshold
+				this.subscribeStates(DeviceParameters.DBD.statePath + '.' + DeviceParameters.DBD.id);	// [DBD] MLT pressure drop
+				this.subscribeStates(DeviceParameters.DBT.statePath + '.' + DeviceParameters.DBT.id);	// [DBT] MLT pressure drop time
+				this.subscribeStates(DeviceParameters.DCM.statePath + '.' + DeviceParameters.DCM.id);	// [DCM] MLT test time close
+				this.subscribeStates(DeviceParameters.RST.statePath + '.' + DeviceParameters.RST.id);	// [RST] System Restart
+				this.subscribeStates(DeviceParameters.SRO.statePath + '.' + DeviceParameters.SRO.id);	// [SRO] Screen Rotation
+				this.subscribeStates(DeviceParameters.CSD.statePath + '.' + DeviceParameters.CSD.id);	// [CSD] Deactivate conductivity sensor
+				this.subscribeStates(DeviceParameters.TSD.statePath + '.' + DeviceParameters.TSD.id);	// [TSD] Deactivate temperature sensor
+				this.subscribeStates(DeviceParameters.PSD.statePath + '.' + DeviceParameters.PSD.id);	// [PSD] Deactivate pressure sensor
+				this.subscribeStates(DeviceParameters.APT.statePath + '.' + DeviceParameters.APT.id);	// [APT] WiFi AP timeout
+				this.subscribeStates(DeviceParameters.ALD.statePath + '.' + DeviceParameters.ALD.id);	// [ALD] Alarm duration (signaling time)
+			}
 		}
 		if(this.syrSaveFloor1APIClient != null)
 		{

@@ -42,5 +42,7 @@
     "slow polling time in seconds": "以秒为单位的慢轮询时间",
     "timing of regular main valve movement": "定期主阀运动的时间",
     "very slow polling time in seconds": "轮询时间非常慢（以秒为单位）",
-    "wamo adapter settings": "wamo的适配器设置"
+    "wamo adapter settings": "wamo的适配器设置",
+    "Allow SERVICE and FACTORY state changes": "允许服务和工厂状态更改",
+    "If this option is activated, states protected by SERVICE and FACTORY level can be changed in object view.": "如果激活此选项，则可以在对象视图中更改受 SERVICE 和 FACTORY 级别保护的状态。"
 }

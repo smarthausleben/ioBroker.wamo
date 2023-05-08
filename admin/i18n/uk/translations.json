@@ -42,5 +42,7 @@
     "slow polling time in seconds": "повільний час опитування в секундах",
     "timing of regular main valve movement": "час регулярного руху головного клапана",
     "very slow polling time in seconds": "дуже повільний час опитування в секундах",
-    "wamo adapter settings": "Налаштування адаптера для wamo"
+    "wamo adapter settings": "Налаштування адаптера для wamo",
+    "Allow SERVICE and FACTORY state changes": "Дозволити зміни стану SERVICE і FACTORY",
+    "If this option is activated, states protected by SERVICE and FACTORY level can be changed in object view.": "Якщо цей параметр увімкнено, стани, захищені рівнями SERVICE та FACTORY, можна змінити в режимі перегляду об’єктів."
 }

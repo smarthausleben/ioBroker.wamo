@@ -42,5 +42,7 @@
     "slow polling time in seconds": "slow polling time in seconds",
     "timing of regular main valve movement": "timing of regular main valve movement",
     "very slow polling time in seconds": "very slow polling time in seconds",
-    "wamo adapter settings": "Adapter settings for wamo"
+    "wamo adapter settings": "Adapter settings for wamo",
+    "Allow SERVICE and FACTORY state changes": "Allow SERVICE and FACTORY state changes",
+    "If this option is activated, states protected by SERVICE and FACTORY level can be changed in object view.": "If this option is activated, states protected by SERVICE and FACTORY level can be changed in object view."
 }

@@ -42,5 +42,7 @@
     "slow polling time in seconds": "powolny czas odpytywania w sekundach",
     "timing of regular main valve movement": "czas regularnego ruchu zaworu głównego",
     "very slow polling time in seconds": "bardzo wolny czas odpytywania w sekundach",
-    "wamo adapter settings": "Ustawienia adaptera dla wamo"
+    "wamo adapter settings": "Ustawienia adaptera dla wamo",
+    "Allow SERVICE and FACTORY state changes": "Zezwalaj na zmiany stanu SERWIS i FABRYKA",
+    "If this option is activated, states protected by SERVICE and FACTORY level can be changed in object view.": "Włączenie tej opcji umożliwia zmianę stanów chronionych poziomem SERWIS i FABRYKA w widoku obiektów."
 }

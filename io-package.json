@@ -258,6 +258,7 @@
         "safefloor_4_ip": "0.0.0.0",
         "safefloor_4_serial": "",
         "executetestloop": false,
+        "allow_service_and_factory_changes": false,
         "safefloor_1_keep_online": false,
         "safefloor_2_keep_online": false,
         "safefloor_3_keep_online": false,
