@@ -61,6 +61,7 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) ADD: State **_DST_** - MLT test time NOPULS
 * (smarthausleben) ADD: State **_DTC_** - MLT verification cycles
 * (smarthausleben) ADD: State **_DTT_** - Micro-Leakage-Test start time
+* (smarthausleben) ADD: State **_HTD_** - Disable HTTPS connection (only MQTT)
 * (smarthausleben) ADD: State **_TTM_** - Turbine no pulse max. time
 * (smarthausleben) ADD: State **_TYP_** - Safe-Tec type
 * (smarthausleben) ADD: State **_WNS_** - WiFi AP disabled

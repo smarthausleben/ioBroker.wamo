@@ -462,6 +462,7 @@ class wamo extends utils.Adapter {
 			this.subscribeStates(DeviceParameters.DST.statePath + '.' + DeviceParameters.DST.id);	// [DST] MLT test time NOPULS
 			this.subscribeStates(DeviceParameters.DTC.statePath + '.' + DeviceParameters.DTC.id);	// [DTC] MLT verification cycles
 			this.subscribeStates(DeviceParameters.DTT.statePath + '.' + DeviceParameters.DTT.id);	// [DTT] Micro-Leakage-Test start time
+			this.subscribeStates(DeviceParameters.HTD.statePath + '.' + DeviceParameters.HTD.id);	// [HTD] Disable HTTPS connection (only MQTT)
 			this.subscribeStates(DeviceParameters.RST.statePath + '.' + DeviceParameters.RST.id);	// [RST] System Restart
 			this.subscribeStates(DeviceParameters.TTM.statePath + '.' + DeviceParameters.TTM.id);	// [TTM] Turbine no pulse max. time
 			this.subscribeStates(DeviceParameters.TYP.statePath + '.' + DeviceParameters.TYP.id);	// [TYP] Safe-Tec type
@@ -861,6 +862,22 @@ class wamo extends utils.Adapter {
 							else { this.log.error(DeviceParameters.DTT.id + ' new value [' + String(state.val) + '] is not a valid Time string eg "04:35"!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [DTT]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// HTD Disable HTTPS connection (only MQTT)
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.HTD.statePath + '.' + DeviceParameters.HTD.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.HTD.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.HTD.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.HTD, state.val);
+								this.log.info('User changed parameter ' + DeviceParameters.HTD.id + ' to ' + String(state.val));
+							}
+							else { this.log.error(DeviceParameters.HTD.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [HTD]: ' + err.message);
 						}
 					}
 				}
@@ -4073,6 +4090,13 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DTT, finalValue); }
 					break;
+				case DeviceParameters.HTD.id:	// HTD - Disable HTTPS connection (only MQTT)
+					finalValue = await this.getGlobalisedValue(DeviceParameters.HTD, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.HTD, finalValue); }
+					break;
 				case DeviceParameters.TTM.id:	// TTM - Turbine no pulse max. time
 					finalValue = await this.getGlobalisedValue(DeviceParameters.TTM, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
@@ -4093,7 +4117,7 @@ class wamo extends utils.Adapter {
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WNS, finalValue); }
-				break;
+					break;
 				case DeviceParameters.HWV.id:	// HWV - Hardware version
 					finalValue = await this.getGlobalisedValue(DeviceParameters.HWV, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
