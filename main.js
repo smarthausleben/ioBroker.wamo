@@ -473,6 +473,7 @@ class wamo extends utils.Adapter {
 
 			// only adopt SERVICE and FACTORY events if enabled in adapter Options
 			if(allow_SERVICE_and_FACTORY_changes){
+				this.log.info('SERVICE and FACTORY changes are enabled!');
 				this.subscribeStates(DeviceParameters.MSC.statePath + '.' + DeviceParameters.MSC.id);	// [MSC] MQTT reconnect time
 				this.subscribeStates(DeviceParameters.MRT.statePath + '.' + DeviceParameters.MRT.id);	// [MRT] Maintenance (Husty) server connection
 				this.subscribeStates(DeviceParameters.DTC.statePath + '.' + DeviceParameters.DTC.id);	// [DTC] MLT verification cycles
