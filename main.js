@@ -464,7 +464,8 @@ class wamo extends utils.Adapter {
 			this.subscribeStates(DeviceParameters.DTT.statePath + '.' + DeviceParameters.DTT.id);	// [DTT] Micro-Leakage-Test start time
 			this.subscribeStates(DeviceParameters.HTD.statePath + '.' + DeviceParameters.HTD.id);	// [HTD] Disable HTTPS connection (only MQTT)
 			this.subscribeStates(DeviceParameters.MQT.statePath + '.' + DeviceParameters.MQT.id);	// [MQT] MQTT connection type
-			this.subscribeStates(DeviceParameters.MRT.statePath + '.' + DeviceParameters.MRT.id);	// [MRT] MQTT reconnect time
+			this.subscribeStates(DeviceParameters.MRT.statePath + '.' + DeviceParameters.MRT.id);	// [MRT] Maintenance (Husty) server connection
+			this.subscribeStates(DeviceParameters.MSC.statePath + '.' + DeviceParameters.MSC.id);	// [MSC] MQTT reconnect time
 			this.subscribeStates(DeviceParameters.RST.statePath + '.' + DeviceParameters.RST.id);	// [RST] System Restart
 			this.subscribeStates(DeviceParameters.TTM.statePath + '.' + DeviceParameters.TTM.id);	// [TTM] Turbine no pulse max. time
 			this.subscribeStates(DeviceParameters.TYP.statePath + '.' + DeviceParameters.TYP.id);	// [TYP] Safe-Tec type
@@ -912,6 +913,22 @@ class wamo extends utils.Adapter {
 							else { this.log.error(DeviceParameters.MRT.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [MRT]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// MSC Maintenance (Husty) server connection
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.MSC.statePath + '.' + DeviceParameters.MSC.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.MSC.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.MSC.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.MSC, state.val);
+								this.log.info('User changed parameter ' + DeviceParameters.MSC.id + ' to ' + String(state.val));
+							}
+							else { this.log.error(DeviceParameters.MSC.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [MSC]: ' + err.message);
 						}
 					}
 				}
@@ -4144,6 +4161,13 @@ class wamo extends utils.Adapter {
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MRT, finalValue); }
+					break;
+				case DeviceParameters.MSC.id:	// MSC - Maintenance (Husty) server connection
+					finalValue = await this.getGlobalisedValue(DeviceParameters.MSC, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.MSC, finalValue); }
 					break;
 				case DeviceParameters.TTM.id:	// TTM - Turbine no pulse max. time
 					finalValue = await this.getGlobalisedValue(DeviceParameters.TTM, value);
