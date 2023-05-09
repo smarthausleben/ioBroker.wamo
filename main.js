@@ -4346,9 +4346,13 @@ class wamo extends utils.Adapter {
 
 	async handle_FloorSensor_List(FLS_Data)
 	{
+		this.log.warn(FLS_Data);
+		this.log.warn(String(FLS_Data));
+		this.log.warn(JSON.stringify(String(FLS_Data)));
+
 		const start = String(FLS_Data).search('{');
 		const end = String(FLS_Data).search('}');
-		this.log.warn('Start: ' +String(start) + ' End: ' + String(end) + ' final: ' + String(FLS_Data).substring(start, end));
+		this.log.warn('Start: ' + String(start) + ' End: ' + String(end) + ' final: ' + String(FLS_Data).substring(start, end));
 		return String(FLS_Data).substring(start, end);
 	}
 
