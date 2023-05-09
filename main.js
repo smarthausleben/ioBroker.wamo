@@ -4350,10 +4350,10 @@ class wamo extends utils.Adapter {
 		this.log.warn(String(FLS_Data));
 		this.log.warn(JSON.stringify(FLS_Data));
 
-		const start = String(FLS_Data).search('{');
-		const end = String(FLS_Data).search('}');
-		this.log.warn('Start: ' + String(start) + ' End: ' + String(end) + ' final: ' + String(FLS_Data).substring(start, end));
-		return String(FLS_Data).substring(start, end);
+		const start = JSON.stringify(FLS_Data).search('{');
+		const end = JSON.stringify(FLS_Data).search('}');
+		this.log.warn('Start: ' + String(start) + ' End: ' + String(end) + ' final: ' + JSON.stringify(FLS_Data).substring(start, end));
+		return JSON.stringify(FLS_Data);
 	}
 
 	/**
