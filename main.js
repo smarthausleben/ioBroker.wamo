@@ -4344,16 +4344,20 @@ class wamo extends utils.Adapter {
 		}
 	}
 
+	/**
+	 *  converts FSL (Floor sensor list) into string
+	 * @param {*} FLS_Data - data goten from device
+	 * @returns JSON data as string
+	 */
 	async handle_FloorSensor_List(FLS_Data)
 	{
-		this.log.warn(FLS_Data);
-		this.log.warn(String(FLS_Data));
-		this.log.warn(JSON.stringify(FLS_Data));
-
-		const start = JSON.stringify(FLS_Data).search('{');
-		const end = JSON.stringify(FLS_Data).search('}');
-		this.log.warn('Start: ' + String(start) + ' End: ' + String(end) + ' final: ' + JSON.stringify(FLS_Data).substring(start, end));
-		return JSON.stringify(FLS_Data);
+		try{
+			return JSON.stringify(FLS_Data);
+		}
+		catch (err){
+			this.log.error('[async handle_FloorSensor_List(FLS_Data)] ERROR: ' + err);
+			return null;
+		}
 	}
 
 	/**
@@ -4436,6 +4440,7 @@ class wamo extends utils.Adapter {
 		}
 		catch(err){
 			this.log.error('[async handle_Alar_History_File(ALH_Data)] ERROR: ' + err);
+			return null;
 		}
 	}
 
