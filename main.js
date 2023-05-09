@@ -4223,7 +4223,7 @@ class wamo extends utils.Adapter {
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
-					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DSV, finalValue); }
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ALH_GET, finalValue); }
 					break;
 				//#############################################################################################
 				//### 								PROFILES												###
@@ -4348,10 +4348,8 @@ class wamo extends utils.Adapter {
 
 			// Split the received Alarms
 			const Alarms = String(ALH_Data).split('\r\n');
-			if (Alarms != null && Alarms.length - 1 > 0) {
-				for (let z = 0; z < Alarms.length; z++) {
-					this.log.warn('Line ' + String(z) + ': ' + String(Alarms[z]));
-
+			if (Alarms != null && Alarms.length > 0) {
+				for (let z = 0; z < Alarms.length - 1; z++) {
 					const Alarm = Alarms[z].split(';');
 					if (Alarm != null && Alarm.length == 3) {
 						FinalAlarmHistory += String(Alarm[0]) + ' [' + String(Alarm[2]) + '] ';
@@ -4414,7 +4412,7 @@ class wamo extends utils.Adapter {
 					}
 				}
 			}
-			// this.log.warn(FinalAlarmHistory);
+			this.log.debug('ALH data' + FinalAlarmHistory);
 			return FinalAlarmHistory;
 		}
 		catch(err){
