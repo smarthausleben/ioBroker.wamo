@@ -4226,9 +4226,9 @@ class wamo extends utils.Adapter {
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ALH_GET, finalValue); }
 					break;
 				case DeviceParameters.FSL.id:	// FSL - Paired Floorsensors list
-					finalValue = await this.getGlobalisedValue(DeviceParameters.FSL, JSON.stringify(value));
+					finalValue = await this.getGlobalisedValue(DeviceParameters.FSL, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
-						finalValue = value;
+						finalValue = String(value);
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.FSL, finalValue); }
 					break;
