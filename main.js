@@ -4341,14 +4341,16 @@ class wamo extends utils.Adapter {
 		try{
 			// Split the received Alarms
 			const Alarms = String(ALH_Data).split('\r\n');
-			for(let z=0; z < Alarms.length -1 ; z++)
-			{
-				this.log.warn('Line ' + String(z) + ': ' + String(Alarms[z]));
+			if (Alarms != null && Alarms.length - 1 > 0) {
+				for (let z = 0; z < Alarms.length; z++) {
+					this.log.warn('Line ' + String(z) + ': ' + String(Alarms[z]));
 
-				const Alarm = Alarms[z].split(';');
-				for(let zz=0; zz < Alarm.length -1 ; zz++)
-				{
-					this.log.warn('Column ' + String(zz) + ': ' + String(Alarm[zz]));
+					const Alarm = Alarms[z].split(';');
+					if (Alarm != null && Alarm.length == 2) {
+						this.log.warn('Date:' + String(Alarm[0]));
+						this.log.warn('Number?:' + String(Alarm[1]));
+						this.log.warn('Alarm code:' + String(Alarm[2]));
+					}
 				}
 			}
 			this.log.warn(String(ALH_Data));
