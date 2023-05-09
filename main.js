@@ -4348,7 +4348,7 @@ class wamo extends utils.Adapter {
 	{
 		this.log.warn(FLS_Data);
 		this.log.warn(String(FLS_Data));
-		this.log.warn(JSON.stringify(String(FLS_Data)));
+		this.log.warn(JSON.stringify(FLS_Data));
 
 		const start = String(FLS_Data).search('{');
 		const end = String(FLS_Data).search('}');
