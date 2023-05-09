@@ -4226,7 +4226,10 @@ class wamo extends utils.Adapter {
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ALH_GET, finalValue); }
 					break;
 				case DeviceParameters.FSL.id:	// FSL - Paired Floorsensors list
-					finalValue = '{"' + DeviceParameters.FSL.id + '":"' + String(value) + '"}';
+					finalValue = await this.handle_FloorSensor_List(value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.FSL, finalValue); }
 					break;
 				//#############################################################################################
@@ -4339,6 +4342,13 @@ class wamo extends utils.Adapter {
 		} catch (err) {
 			throw new Error(err);
 		}
+	}
+
+	async handle_FloorSensor_List(FLS_Data)
+	{
+		const start = String(FLS_Data).search('{');
+		const end = String(FLS_Data).search('}');
+		return String(FLS_Data).substring(start, end);
 	}
 
 	/**
