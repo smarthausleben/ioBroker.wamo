@@ -4354,7 +4354,7 @@ class wamo extends utils.Adapter {
 
 					const Alarm = Alarms[z].split(';');
 					if (Alarm != null && Alarm.length == 3) {
-						FinalAlarmHistory += String(Alarm[0]) + ' ' + String(Alarm[2]) + ' ';
+						FinalAlarmHistory += String(Alarm[0]) + ' [' + String(Alarm[2]) + '] ';
 						//this.log.warn('Date:' + String(Alarm[0]));
 						//this.log.warn('Number?:' + String(Alarm[1]));
 						//this.log.warn('Alarm code:' + String(Alarm[2]));
@@ -4414,7 +4414,7 @@ class wamo extends utils.Adapter {
 					}
 				}
 			}
-			this.log.warn(FinalAlarmHistory);
+			// this.log.warn(FinalAlarmHistory);
 			return FinalAlarmHistory;
 		}
 		catch(err){
