@@ -4339,6 +4339,11 @@ class wamo extends utils.Adapter {
 
 	async handle_Alarm_History_File(ALH_Data){
 		try{
+			const Splitt1 = String(ALH_Data).split('"');
+			for(let z=0;z< Splitt1.length;z++)
+			{
+				this.log.warn('Line ' + String(z) + ': ' + String(Splitt1[z]));
+			}
 			this.log.warn(String(ALH_Data));
 			return String(ALH_Data);
 		}
