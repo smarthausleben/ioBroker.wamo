@@ -4218,6 +4218,13 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DKI, finalValue); }
 					break;
+				case DeviceParameters.ALH_GET.id:	// ALH_GET - Get Alarm History File (CSV Format)
+					finalValue = await this.handle_Alarm_History_File(value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DSV, finalValue); }
+					break;
 				//#############################################################################################
 				//### 								PROFILES												###
 				//#############################################################################################
@@ -4330,6 +4337,15 @@ class wamo extends utils.Adapter {
 		}
 	}
 
+	async handle_Alarm_History_File(ALH_Data){
+		try{
+			this.log.warn(String(ALH_Data));
+			return String(ALH_Data);
+		}
+		catch(err){
+			this.log.error('[async handle_Alar_History_File(ALH_Data)] ERROR: ' + err);
+		}
+	}
 	/**
 	 * sends the comand to the device to bring it into FACTORY mode
 	 * @returns true or error
