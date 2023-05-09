@@ -4346,14 +4346,14 @@ class wamo extends utils.Adapter {
 					this.log.warn('Line ' + String(z) + ': ' + String(Alarms[z]));
 
 					const Alarm = Alarms[z].split(';');
-					if (Alarm != null && Alarm.length == 2) {
+					if (Alarm != null && Alarm.length == 3) {
 						this.log.warn('Date:' + String(Alarm[0]));
 						this.log.warn('Number?:' + String(Alarm[1]));
 						this.log.warn('Alarm code:' + String(Alarm[2]));
 					}
 				}
 			}
-			this.log.warn(String(ALH_Data));
+			this.log.warn(ALH_Data);
 			return String(ALH_Data);
 		}
 		catch(err){
