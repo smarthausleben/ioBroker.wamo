@@ -4337,8 +4337,15 @@ class wamo extends utils.Adapter {
 		}
 	}
 
+	/**
+	 * converts ALH (alarm history file) into user frendly format
+	 * @param {*} ALH_Data - data goten from device
+	 * @returns userfrendly version of data
+	 */
 	async handle_Alarm_History_File(ALH_Data){
 		try{
+			let FinalAlarmHistory = '';
+
 			// Split the received Alarms
 			const Alarms = String(ALH_Data).split('\r\n');
 			if (Alarms != null && Alarms.length - 1 > 0) {
@@ -4347,19 +4354,74 @@ class wamo extends utils.Adapter {
 
 					const Alarm = Alarms[z].split(';');
 					if (Alarm != null && Alarm.length == 3) {
-						this.log.warn('Date:' + String(Alarm[0]));
-						this.log.warn('Number?:' + String(Alarm[1]));
-						this.log.warn('Alarm code:' + String(Alarm[2]));
+						FinalAlarmHistory += String(Alarm[0]) + ' ' + String(Alarm[2]) + ' ';
+						//this.log.warn('Date:' + String(Alarm[0]));
+						//this.log.warn('Number?:' + String(Alarm[1]));
+						//this.log.warn('Alarm code:' + String(Alarm[2]));
+						switch (Alarm[2]) {
+							case 'FF': // NO ALARM
+								FinalAlarmHistory += 'NO ALARM';
+								break;
+							case 'A1': // ALARM END SWITCH
+								FinalAlarmHistory += 'ALARM END SWITCH';
+								break;
+							case 'A2': // NO NETWORK
+								FinalAlarmHistory += 'NO NETWORK';
+								break;
+							case 'A3': // ALARM VOLUME LEAKAGE
+								FinalAlarmHistory += 'ALARM VOLUME LEAKAGE';
+								break;
+							case 'A4': // ALARM TIME LEAKAGE
+								FinalAlarmHistory += 'ALARM TIME LEAKAGE';
+								break;
+							case 'A5': // ALARM MAX FLOW LEAKAGE
+								FinalAlarmHistory += 'ALARM MAX FLOW LEAKAGE';
+								break;
+							case 'A6': // ALARM MICRO LEAKAGE
+								FinalAlarmHistory += 'ALARM MICRO LEAKAGE';
+								break;
+							case 'A7': // ALARM EXT. SENSOR LEAKAGE
+								FinalAlarmHistory += 'ALARM EXT. SENSOR LEAKAGE';
+								break;
+							case 'A8': // ALARM TURBINE BLOCKED
+								FinalAlarmHistory += 'ALARM TURBINE BLOCKED';
+								break;
+							case 'A9': // ALARM PRESSURE SENSOR ERROR
+								FinalAlarmHistory += 'ALARM PRESSURE SENSOR ERROR';
+								break;
+							case 'AA': // ALARM TEMPERATURE SENSOR ERROR
+								FinalAlarmHistory += 'ALARM TEMPERATURE SENSOR ERROR';
+								break;
+							case 'AB': // ALARM CONDUCTIVITY SENSOR ERROR
+								FinalAlarmHistory += 'ALARM CONDUCTIVITY SENSOR ERROR';
+								break;
+							case 'AC': // ALARM TO HIGH CONDUCTIVITY
+								FinalAlarmHistory += 'ALARM TO HIGH CONDUCTIVITY';
+								break;
+							case 'AD': // LOW BATTERY
+								FinalAlarmHistory += 'LOW BATTERY';
+								break;
+							case 'AE': // WARNING VOLUME LEAKAGE
+								FinalAlarmHistory += 'WARNING VOLUME LEAKAGE';
+								break;
+							case 'AF': // ALARM NO POWER SUPPLY
+								FinalAlarmHistory += 'ALARM NO POWER SUPPLY';
+								break;
+							default:
+								FinalAlarmHistory += 'UNKNOWN ALARM';
+						}
+						FinalAlarmHistory += '\r\n';
 					}
 				}
 			}
-			this.log.warn(ALH_Data);
-			return String(ALH_Data);
+			this.log.warn(FinalAlarmHistory);
+			return FinalAlarmHistory;
 		}
 		catch(err){
 			this.log.error('[async handle_Alar_History_File(ALH_Data)] ERROR: ' + err);
 		}
 	}
+
 	/**
 	 * sends the comand to the device to bring it into FACTORY mode
 	 * @returns true or error
