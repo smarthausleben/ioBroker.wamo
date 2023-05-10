@@ -69,6 +69,7 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) ADD: State **_DSV_** - Micro-Leakage-Test state
 * (smarthausleben) ADD: State **_ALH_** - Alarm history file
 * (smarthausleben) ADD: State **_FSL_** - Paired Floorsensors list
+* (smarthausleben) ADD: State **_STH_** - Statistics history file
 * (smarthausleben) ADD: State **_TTM_** - Turbine no pulse max. time
 * (smarthausleben) ADD: State **_TYP_** - Safe-Tec type
 * (smarthausleben) ADD: State **_WNS_** - WiFi AP disabled
