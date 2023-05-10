@@ -4508,12 +4508,12 @@ class wamo extends utils.Adapter {
 
 			let Final_WiFi_List = '';
 			const wifi_List = JSON.parse(WFL_Data);
-			this.log.warn(String(wifi_List['getWFL'].length));
+			/* this.log.warn(String(wifi_List['getWFL'].length));
 
 			for(const attributename in wifi_List['getWFL']){
 				this.log.warn(attributename);
 			}
-
+			*/
 			return WFL_Data;
 
 			const WiFi_List_String = String(JSON.stringify(WFL_Data));
