@@ -4389,7 +4389,12 @@ class wamo extends utils.Adapter {
 			const Alarms = tmp.split('\r\n');
 			if (Alarms != null && Alarms.length > 0) {
 				for (let z = 0; z < Alarms.length; z++) {
+					this.log.warn(Alarms[z]);
 					const Alarm = Alarms[z].split(';');
+					if (Alarm != null)
+					{
+						this.log.warn(Alarm[0]);
+					}
 					if (Alarm != null && Alarm.length == 3) {
 						FinalAlarmHistory += String(Alarm[0]) + ' [' + String(Alarm[2]) + '] ';
 						//this.log.warn('Date:' + String(Alarm[0]));
