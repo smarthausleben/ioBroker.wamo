@@ -4510,7 +4510,6 @@ class wamo extends utils.Adapter {
 			for (let z = 0; z < WFL_Data.length; z++)
 			{
 				Final_WiFi_List += 'ssid: ' + WFL_Data[z].ssid + ' security: ' + WFL_Data[z].security + ' rssi: ' + WFL_Data[z].rssi;
-				this.log.warn('ssid: ' + WFL_Data[z].ssid + ' security: ' + WFL_Data[z].security + ' rssi: ' + WFL_Data[z].rssi);
 				// only \r\n add if it is not the last enty
 				if (z < WFL_Data.length - 1) {
 					Final_WiFi_List += '\r\n';
