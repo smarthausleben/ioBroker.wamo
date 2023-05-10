@@ -4463,19 +4463,18 @@ class wamo extends utils.Adapter {
 	async handle_Statistic_History_File(STH_Data){
 		try{
 			this.log.warn(JSON.stringify(STH_Data));
-			return JSON.stringify(STH_Data);
 
 			let FinalStatisticHistory = '';
 
 			// Split the received Alarms
 			const Statistics = String(STH_Data).split('\r\n');
 			if (Statistics != null && Statistics.length > 0) {
-				for (let z = 0; z < Statistics.length - 1; z++) {
+				for (let z = 0; z < Statistics.length; z++) {
 					const Statistic = Statistics[z].split(';');
-					if (Statistic != null && Statistic.length == 3) {
-						FinalStatisticHistory += String(Statistic[0]) + ' [' + String(Statistic[2]) + '] ';
-						FinalStatisticHistory += '\r\n';
+					for (let zz = 0; zz < Statistic.length; zz++) {
+						FinalStatisticHistory += String(Statistic[zz]) + ' ';
 					}
+					FinalStatisticHistory += '\r\n';
 				}
 			}
 			this.log.debug('STH data' + FinalStatisticHistory);
