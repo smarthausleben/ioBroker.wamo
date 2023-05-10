@@ -4381,9 +4381,9 @@ class wamo extends utils.Adapter {
 			let FinalAlarmHistory = '';
 
 			// Split the received Alarms
-			const Alarms = String(ALH_Data).split('\r\n');
+			const Alarms = JSON.stringify(ALH_Data).split('\r\n');
 			if (Alarms != null && Alarms.length > 0) {
-				for (let z = 0; z < Alarms.length - 1; z++) {
+				for (let z = 0; z < Alarms.length; z++) {
 					const Alarm = Alarms[z].split(';');
 					if (Alarm != null && Alarm.length == 3) {
 						FinalAlarmHistory += String(Alarm[0]) + ' [' + String(Alarm[2]) + '] ';
@@ -4457,7 +4457,7 @@ class wamo extends utils.Adapter {
 
 	/**
 	 * converts ALH (alarm history file) into user frendly format
-	 * @param {*} ALH_Data - data goten from device
+	 * @param {*} STH_Data - data goten from device
 	 * @returns userfrendly version of data
 	 */
 	async handle_Statistic_History_File(STH_Data){
@@ -4467,7 +4467,7 @@ class wamo extends utils.Adapter {
 			let FinalStatisticHistory = '';
 
 			// Split the received Alarms
-			const Statistics = String(STH_Data).split('\r\n');
+			const Statistics = JSON.stringify(STH_Data).split('\r\n');
 			if (Statistics != null && Statistics.length > 0) {
 				for (let z = 0; z < Statistics.length; z++) {
 					const Statistic = Statistics[z].split(';');
