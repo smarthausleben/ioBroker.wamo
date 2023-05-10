@@ -4505,18 +4505,19 @@ class wamo extends utils.Adapter {
 	 */
 	async handle_WiFi_List(WFL_Data){
 		try{
+			let Final_WiFi_List = '';
+
 			for (let z = 0; z < WFL_Data.length; z++)
 			{
-				this.log.warn('ssid: ' + WFL_Data[z].ssid);
-			}
-			let Final_WiFi_List = '';
-			/* this.log.warn(String(wifi_List['getWFL'].length));
+				Final_WiFi_List += 'ssid: ' + WFL_Data[z].ssid + ' security: ' + WFL_Data[z].security + ' rssi: ' + WFL_Data[z].rssi;
+				this.log.warn('ssid: ' + WFL_Data[z].ssid + ' security: ' + WFL_Data[z].security + ' rssi: ' + WFL_Data[z].rssi);
+				// only \r\n add if it is not the last enty
+				if (z < WFL_Data.length - 1) {
+					Final_WiFi_List += '\r\n';
+				}
 
-			for(const attributename in wifi_List['getWFL']){
-				this.log.warn(attributename);
 			}
-			*/
-			return WFL_Data;
+			return Final_WiFi_List;
 		}
 		catch(err){
 			this.log.error('[async handle_WiFi_List(WFL_Data)] ERROR: ' + err);
