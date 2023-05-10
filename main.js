@@ -4384,7 +4384,7 @@ class wamo extends utils.Adapter {
 			let tmp = String(JSON.stringify(ALH_Data));
 			const end =tmp.length;
 			const endfinal = end - 5; // minus (\r\n") at the end
-			tmp = tmp.substring(1, endfinal);
+			tmp = tmp.substring(1, tmp.length - 5);
 			this.log.warn(tmp);
 			const Alarms = tmp.split('\\r\\n');
 			this.log.warn('Array Length after Splitt = ' + String(Alarms.length));
@@ -4394,9 +4394,6 @@ class wamo extends utils.Adapter {
 					const Alarm = Alarms[z].split(';');
 					if (Alarm != null && Alarm.length == 3) {
 						FinalAlarmHistory += String(Alarm[0]) + ' [' + String(Alarm[2]) + '] ';
-						//this.log.warn('Date:' + String(Alarm[0]));
-						//this.log.warn('Number?:' + String(Alarm[1]));
-						//this.log.warn('Alarm code:' + String(Alarm[2]));
 						switch (Alarm[2]) {
 							case 'FF': // NO ALARM
 								FinalAlarmHistory += 'NO ALARM';
@@ -4449,7 +4446,11 @@ class wamo extends utils.Adapter {
 							default:
 								FinalAlarmHistory += 'UNKNOWN ALARM';
 						}
-						FinalAlarmHistory += '\r\n';
+						// only \r\n add if it is not the last enty
+						if(z < Alarms.length -1)
+						{
+							FinalAlarmHistory += '\r\n';
+						}
 					}
 				}
 			}
@@ -4474,7 +4475,7 @@ class wamo extends utils.Adapter {
 			let FinalStatisticHistory = '';
 
 			// Split the received Alarms
-			const Statistics = JSON.stringify(STH_Data).split('\r\n');
+			const Statistics = JSON.stringify(STH_Data).split('\\r\\n');
 			if (Statistics != null && Statistics.length > 0) {
 				for (let z = 0; z < Statistics.length; z++) {
 					const Statistic = Statistics[z].split(';');
