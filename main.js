@@ -4505,33 +4505,11 @@ class wamo extends utils.Adapter {
 	 */
 	async handle_WiFi_List(WFL_Data){
 		try{
-
-			this.log.warn(WFL_Data);
-			const stringConstructor = 'test'.constructor;
-			const arrayConstructor = [].constructor;
-			const objectConstructor = ({}).constructor;
-
-			if (WFL_Data === null) {
-				this.log.warn('null');
+			for (let z = 0; z < WFL_Data.length; z++)
+			{
+				this.log.warn('ssid: ' + WFL_Data[z].ssid);
 			}
-			else if (WFL_Data === undefined) {
-				this.log.warn('undefined');
-			}
-			else if (WFL_Data.constructor === stringConstructor) {
-				this.log.warn('String');
-			}
-			else if (WFL_Data.constructor === arrayConstructor) {
-				this.log.warn('Array');
-			}
-			else if (WFL_Data.constructor === objectConstructor) {
-				this.log.warn('Object');
-			}
-			else{
-				this.log.warn('don\'t know');
-			}
-
 			let Final_WiFi_List = '';
-			const wifi_List = JSON.parse(WFL_Data);
 			/* this.log.warn(String(wifi_List['getWFL'].length));
 
 			for(const attributename in wifi_List['getWFL']){
@@ -4539,28 +4517,34 @@ class wamo extends utils.Adapter {
 			}
 			*/
 			return WFL_Data;
-
-			const WiFi_List_String = String(JSON.stringify(WFL_Data));
-			const Statistics = WiFi_List_String.substring(1, WiFi_List_String.length - 5).split('\\r\\n'); // minus (") at begin and (\r\n") at the end
-			if (Statistics != null && Statistics.length > 0) {
-				for (let z = 0; z < Statistics.length; z++) {
-					const Statistic = Statistics[z].split(';');
-					for (let zz = 0; zz < Statistic.length; zz++) {
-						Final_WiFi_List += String(Statistic[zz]) + ' ';
-					}
-					// only \r\n add if it is not the last enty
-					if (z < Statistics.length - 1) {
-						Final_WiFi_List += '\r\n';
-					}
-				}
-			}
-			this.log.debug('STH data' + Final_WiFi_List);
-			return Final_WiFi_List;
 		}
 		catch(err){
 			this.log.error('[async handle_WiFi_List(WFL_Data)] ERROR: ' + err);
 			return null;
 		}
+	}
+
+	checkObjectType(WFL_Data) {
+		const stringConstructor = 'test'.constructor;
+		const arrayConstructor = [].constructor;
+		const objectConstructor = ({}).constructor;
+
+		if (WFL_Data === null) {
+			return 'null';
+		}
+		if (WFL_Data === undefined) {
+			return 'undefined';
+		}
+		if (WFL_Data.constructor === stringConstructor) {
+			return 'String';
+		}
+		if (WFL_Data.constructor === arrayConstructor) {
+			return 'Array';
+		}
+		if (WFL_Data.constructor === objectConstructor) {
+			return 'Object';
+		}
+		return 'don\'t know';
 	}
 
 	/**
