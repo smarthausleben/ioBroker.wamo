@@ -4381,7 +4381,9 @@ class wamo extends utils.Adapter {
 			let FinalAlarmHistory = '';
 
 			// Split the received Alarms
-			const Alarms = JSON.stringify(ALH_Data).split('\r\n');
+			let tmp = JSON.stringify(ALH_Data); //.split('\r\n');
+			tmp = String(tmp).substring(1,String(tmp).length -1);
+			const Alarms = tmp.split('\r\n');
 			if (Alarms != null && Alarms.length > 0) {
 				for (let z = 0; z < Alarms.length; z++) {
 					const Alarm = Alarms[z].split(';');
