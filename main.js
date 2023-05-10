@@ -4387,6 +4387,7 @@ class wamo extends utils.Adapter {
 			tmp = String(tmp).substring(1, endfinal);
 			this.log.warn(tmp);
 			const Alarms = tmp.split('\r\n');
+			this.log.warn('Array Length after Splitt = ' + String(Alarms.length));
 			if (Alarms != null && Alarms.length > 0) {
 				for (let z = 0; z < Alarms.length; z++) {
 					this.log.warn(Alarms[z]);
