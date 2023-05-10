@@ -2212,6 +2212,10 @@ class wamo extends utils.Adapter {
 		this.setInstanceLED(); // no await on purpose
 	}
 
+	/**
+	 * if one of the defined network devices is connected
+	 * the "Connection LED" of the instance will be set to green
+	 */
 	async setInstanceLED()
 	{
 		let ConnLED_ON = false;
@@ -4218,12 +4222,19 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DKI, finalValue); }
 					break;
-				case DeviceParameters.ALH_GET.id:	// ALH_GET - Get Alarm History File (CSV Format)
+				case DeviceParameters.ALH_GET.id:	// ALH_GET - Get Alarm history file (CSV Format)
 					finalValue = await this.handle_Alarm_History_File(value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ALH_GET, finalValue); }
+					break;
+				case DeviceParameters.STH_GET.id:	// STH_GET - Get Statistics history file (CSV Format)
+					finalValue = await this.handle_Statistic_History_File(value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.STH_GET, finalValue); }
 					break;
 				case DeviceParameters.FSL.id:	// FSL - Paired Floorsensors list
 					finalValue = await this.handle_FloorSensor_List(value);
@@ -4440,6 +4451,38 @@ class wamo extends utils.Adapter {
 		}
 		catch(err){
 			this.log.error('[async handle_Alar_History_File(ALH_Data)] ERROR: ' + err);
+			return null;
+		}
+	}
+
+	/**
+	 * converts ALH (alarm history file) into user frendly format
+	 * @param {*} ALH_Data - data goten from device
+	 * @returns userfrendly version of data
+	 */
+	async handle_Statistic_History_File(STH_Data){
+		try{
+			this.log.warn(JSON.stringify(STH_Data));
+			return JSON.stringify(STH_Data);
+
+			let FinalStatisticHistory = '';
+
+			// Split the received Alarms
+			const Statistics = String(STH_Data).split('\r\n');
+			if (Statistics != null && Statistics.length > 0) {
+				for (let z = 0; z < Statistics.length - 1; z++) {
+					const Statistic = Statistics[z].split(';');
+					if (Statistic != null && Statistic.length == 3) {
+						FinalStatisticHistory += String(Statistic[0]) + ' [' + String(Statistic[2]) + '] ';
+						FinalStatisticHistory += '\r\n';
+					}
+				}
+			}
+			this.log.debug('STH data' + FinalStatisticHistory);
+			return FinalStatisticHistory;
+		}
+		catch(err){
+			this.log.error('[async handle_Alar_Statistic_File(STH_Data)] ERROR: ' + err);
 			return null;
 		}
 	}
