@@ -4383,7 +4383,7 @@ class wamo extends utils.Adapter {
 			// Split the received Alarms
 			let tmp = String(JSON.stringify(ALH_Data));
 			const end =tmp.length;
-			const endfinal = end - 1;
+			const endfinal = end - 5; // minus (\r\n") at the end
 			tmp = tmp.substring(1, endfinal);
 			this.log.warn(tmp);
 			const Alarms = tmp.split('\\r\\n');
@@ -4392,10 +4392,6 @@ class wamo extends utils.Adapter {
 				for (let z = 0; z < Alarms.length; z++) {
 					this.log.warn(Alarms[z]);
 					const Alarm = Alarms[z].split(';');
-					if (Alarm != null)
-					{
-						this.log.warn(Alarm[0]);
-					}
 					if (Alarm != null && Alarm.length == 3) {
 						FinalAlarmHistory += String(Alarm[0]) + ' [' + String(Alarm[2]) + '] ';
 						//this.log.warn('Date:' + String(Alarm[0]));
