@@ -4243,6 +4243,13 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.FSL, finalValue); }
 					break;
+				case DeviceParameters.WFL.id:	// WFLL - WiFi list
+					finalValue = await this.handle_WiFi_List(value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WFL, finalValue); }
+					break;
 				//#############################################################################################
 				//### 								PROFILES												###
 				//#############################################################################################
@@ -4464,7 +4471,6 @@ class wamo extends utils.Adapter {
 	 */
 	async handle_Statistic_History_File(STH_Data){
 		try{
-			this.log.warn(JSON.stringify(STH_Data));
 
 			let FinalStatisticHistory = '';
 
@@ -4487,7 +4493,46 @@ class wamo extends utils.Adapter {
 			return FinalStatisticHistory;
 		}
 		catch(err){
-			this.log.error('[async handle_Alar_Statistic_File(STH_Data)] ERROR: ' + err);
+			this.log.error('[async handle_Alarm_Statistic_File(STH_Data)] ERROR: ' + err);
+			return null;
+		}
+	}
+
+	/**
+	 * converts ALH (alarm history file) into user frendly format
+	 * @param {*} WFL_Data - data goten from device
+	 * @returns userfrendly version of data
+	 */
+	async handle_WiFi_List(WFL_Data){
+		try{
+
+			let Final_WiFi_List = '';
+
+			for(const attributename in WFL_Data['getWFL']){
+				this.log.warn(String(JSON.stringify(attributename)));
+			}
+
+			return WFL_Data;
+
+			const WiFi_List_String = String(JSON.stringify(WFL_Data));
+			const Statistics = WiFi_List_String.substring(1, WiFi_List_String.length - 5).split('\\r\\n'); // minus (") at begin and (\r\n") at the end
+			if (Statistics != null && Statistics.length > 0) {
+				for (let z = 0; z < Statistics.length; z++) {
+					const Statistic = Statistics[z].split(';');
+					for (let zz = 0; zz < Statistic.length; zz++) {
+						Final_WiFi_List += String(Statistic[zz]) + ' ';
+					}
+					// only \r\n add if it is not the last enty
+					if (z < Statistics.length - 1) {
+						Final_WiFi_List += '\r\n';
+					}
+				}
+			}
+			this.log.debug('STH data' + Final_WiFi_List);
+			return Final_WiFi_List;
+		}
+		catch(err){
+			this.log.error('[async handle_WiFi_List(WFL_Data)] ERROR: ' + err);
 			return null;
 		}
 	}
