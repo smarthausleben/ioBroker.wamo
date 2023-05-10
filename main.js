@@ -4506,6 +4506,29 @@ class wamo extends utils.Adapter {
 	async handle_WiFi_List(WFL_Data){
 		try{
 
+			const stringConstructor = 'test'.constructor;
+			const arrayConstructor = [].constructor;
+			const objectConstructor = ({}).constructor;
+			
+			if (WFL_Data === null) {
+				this.log.warn('null');
+			}
+			if (WFL_Data === undefined) {
+				this.log.warn('undefined');
+			}
+			if (WFL_Data.constructor === stringConstructor) {
+				this.log.warn('String');
+			}
+			if (WFL_Data.constructor === arrayConstructor) {
+				this.log.warn('Array');
+			}
+			if (WFL_Data.constructor === objectConstructor) {
+				this.log.warn('Object');
+			}
+			{
+				this.log.warn('don\'t know');
+			}
+
 			let Final_WiFi_List = '';
 			const wifi_List = JSON.parse(WFL_Data);
 			/* this.log.warn(String(wifi_List['getWFL'].length));
