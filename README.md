@@ -80,6 +80,7 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) ADD: State `DKI` - Safe-Tec device kind ID
 * (smarthausleben) CHG: State `ALD` - Alarm duration (signaling time) can now be changed by user
 * (smarthausleben) CHG: State `CLP` - Cluster Profile can now be changed by user
+* (smarthausleben) CHG: State `SLO` - Self learning offset can now be changed by user
 
 ### 0.3.0 (2023-04-04) - ***Jam Protection*** release
 * (smarthausleben) ADD: [Main valve jam protection] New State JPR for Jam protection running 
