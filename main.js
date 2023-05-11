@@ -469,6 +469,7 @@ class wamo extends utils.Adapter {
 			this.subscribeStates(DeviceParameters.TMP.statePath + '.' + DeviceParameters.TMP.id);	// [TMP] temporary protection deactivation
 			this.subscribeStates(DeviceParameters.LWT.statePath + '.' + DeviceParameters.LWT.id);	// [LWT] Leakage notification (warning) threshold
 			this.subscribeStates(DeviceParameters.PRF.statePath + '.' + DeviceParameters.PRF.id);	// [PRF] Selected profile
+			this.subscribeStates(DeviceParameters.SMF.statePath + '.' + DeviceParameters.SMF.id);	// [SMF] Self learning minimum flow
 			this.subscribeStates(adapterChannels.DevicePofiles.path + '.*'); // ALL profile states
 
 			// only adopt SERVICE and FACTORY events if enabled in adapter Options
@@ -1219,6 +1220,22 @@ class wamo extends utils.Adapter {
 							else { this.log.error(DeviceParameters.SLP.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [SLP]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// SMF Self learning minimum flow
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.SMF.statePath + '.' + DeviceParameters.SMF.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.SMF.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.SMF.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.SMF, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.SMF.id + ' changed to ' + String(state.val)); }
+							}
+							else { this.log.error(DeviceParameters.SMF.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [SMF]: ' + err.message);
 						}
 					}
 				}
