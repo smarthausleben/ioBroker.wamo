@@ -499,6 +499,7 @@ class wamo extends utils.Adapter {
 				this.subscribeStates(DeviceParameters.ALD.statePath + '.' + DeviceParameters.ALD.id);	// [ALD] Alarm duration (signaling time)
 				this.subscribeStates(DeviceParameters.SLO.statePath + '.' + DeviceParameters.SLO.id);	// [SLO] Self learning offset
 				this.subscribeStates(DeviceParameters.SLP.statePath + '.' + DeviceParameters.SLP.id);	// [SLP] Self learning phase
+				this.subscribeStates(DeviceParameters.SOF.statePath + '.' + DeviceParameters.SOF.id);	// [SOF] Self learning offset flow
 			}
 		}
 		if(this.syrSaveFloor1APIClient != null)
@@ -1236,6 +1237,22 @@ class wamo extends utils.Adapter {
 							else { this.log.error(DeviceParameters.SMF.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [SMF]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// SOF Self learning offset flow
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.SOF.statePath + '.' + DeviceParameters.SOF.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.SOF.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.SOF.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.SOF, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.SOF.id + ' changed to ' + String(state.val)); }
+							}
+							else { this.log.error(DeviceParameters.SOF.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [SOF]: ' + err.message);
 						}
 					}
 				}
