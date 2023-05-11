@@ -85,6 +85,7 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) CHG: State `SLP` - Self learning phase can now be changed by user
 * (smarthausleben) CHG: State `SMF` - Self learning minimum flow can now be changed by user
 * (smarthausleben) CHG: State `SOF` - Self learning offset flow can now be changed by user
+* (smarthausleben) ADD: Device Control State `UPG` set to true initiates **_Firmware upgrase_** (only if new firmware is available)
 
 ### 0.3.0 (2023-04-04) - ***Jam Protection*** release
 * (smarthausleben) ADD: [Main valve jam protection] New State JPR for Jam protection running 

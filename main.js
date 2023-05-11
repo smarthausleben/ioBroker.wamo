@@ -528,21 +528,6 @@ class wamo extends utils.Adapter {
 		// reference to Adapter
 		myAdapter = this;
 
-		try {
-			const FW_available = await this.get_DevieParameter(DeviceParameters.SFV);
-			if (FW_available['getSFV'] == 1) {
-				this.log.warn('if (FW_available[\'getSFV\'] == 1) result = true');
-			}
-			else if (FW_available['getSFV'] == 0) {
-				this.log.warn('if (FW_available[\'getSFV\'] == 1) result = false');
-			}
-			else{
-				this.log.warn('if (FW_available[\'getSFV\'] == 1) result = false ' + JSON.stringify(FW_available));
-			}
-		} catch (err) {
-			this.log.error(err);
-		}
-
 		if (moreMessages) { this.log.info('wamo adapter is running'); }
 	}
 
@@ -1302,13 +1287,15 @@ class wamo extends utils.Adapter {
 							const FW_available = await this.get_DevieParameter(DeviceParameters.SFV);
 							if (FW_available['getSFV'] == 1) {
 								if (state.val == true) {
-									this.log.warn('System upgrad initiated by user!');
+									this.log.warn('Firmware upgrade initiated by user!');
 									// send upgrade command to device
-									await this.set_DevieParameter(DeviceParameters.UPG, state.val);
+									await this.set_DevieParameter(DeviceParameters.UPG, null);
 									this.log.debug('Setting state UPG (sytem upgrade) back to false!');
 									// set state back to false
 									await this.setStateAsync(DeviceParameters.UPG.statePath + '.' + DeviceParameters.UPG.id, { val: false, ack: true });
 									if (moreMessages) { this.log.info(DeviceParameters.UPG.id + ' changed to ' + String(state.val)); }
+								}else{
+									this.log.warn('To initiate a firmware upgrade you have to set UPG state to TRUE!');
 								}
 							}else{
 								this.log.warn('Firmware upgrade not initiated because there is no newer firmware available!');
@@ -5238,11 +5225,15 @@ class wamo extends utils.Adapter {
 	 */
 	async set_DevieParameter(Parameter, Value) {
 
-		let oldParameter = null;
+		let oldParameter = null;	// place to store old value of the parameter we will change
+		let set_without_value = false; // Flag if this parameter has a set value
 
-		if (Parameter.readCommand != null) {
-			oldParameter = await this.get_DevieParameter(Parameter);
-		}
+		// do we have a value to set?
+		if(Value == null){set_without_value = true}
+
+		// can we read this parameter from device?
+		if (Parameter.readCommand != null) {oldParameter = await this.get_DevieParameter(Parameter);}
+
 		// Flag indicating if we had to modifiy Admin Mode
 		let writeModeChanged = false;
 
@@ -5279,7 +5270,12 @@ class wamo extends utils.Adapter {
 
 			if (this.syrApiClient != null) {
 				interfaceBusy = true;
-				const deviceResponse = await this.syrApiClient.get('set/' + String(Parameter.id) + '/' + String(Value));
+				let deviceResponse = null;
+				if (set_without_value) {
+					deviceResponse = await this.syrApiClient.get('set/' + String(Parameter.id));
+				} else {
+					deviceResponse = await this.syrApiClient.get('set/' + String(Parameter.id) + '/' + String(Value));
+				}
 				interfaceBusy = false;
 				interfaceBusyCounter = 0;	// Counter of interfaceBusy Reqwuest reset
 				if (deviceResponse.status === 200) {
