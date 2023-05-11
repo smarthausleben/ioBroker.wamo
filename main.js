@@ -529,7 +529,7 @@ class wamo extends utils.Adapter {
 		myAdapter = this;
 
 		try {
-			const FW_available = await this.get_DevieParameter(DeviceParameters.UPG);
+			const FW_available = await this.get_DevieParameter(DeviceParameters.SFV);
 			if (FW_available['getSFV'] == 1) {
 				this.log.warn('if (FW_available[\'getSFV\'] == 1) result = true');
 			}else{
@@ -1295,7 +1295,7 @@ class wamo extends utils.Adapter {
 				else if ((id == statePrefix + DeviceParameters.UPG.statePath + '.' + DeviceParameters.UPG.id) && (state.ack == false)) {
 					if (state.val != null) {
 						try {
-							const FW_available = await this.get_DevieParameter(DeviceParameters.UPG);
+							const FW_available = await this.get_DevieParameter(DeviceParameters.SFV);
 							if (FW_available['getSFV'] == 1) {
 								if (state.val == true) {
 									this.log.warn('System upgrad initiated by user!');
