@@ -497,6 +497,7 @@ class wamo extends utils.Adapter {
 				this.subscribeStates(DeviceParameters.APT.statePath + '.' + DeviceParameters.APT.id);	// [APT] WiFi AP timeout
 				this.subscribeStates(DeviceParameters.ALD.statePath + '.' + DeviceParameters.ALD.id);	// [ALD] Alarm duration (signaling time)
 				this.subscribeStates(DeviceParameters.SLO.statePath + '.' + DeviceParameters.SLO.id);	// [SLO] Self learning offset
+				this.subscribeStates(DeviceParameters.SLP.statePath + '.' + DeviceParameters.SLP.id);	// [SLP] Self learning phase
 			}
 		}
 		if(this.syrSaveFloor1APIClient != null)
@@ -1202,6 +1203,22 @@ class wamo extends utils.Adapter {
 							else { this.log.error(DeviceParameters.SLO.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [SLO]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// SLP Self learning phase
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.SLP.statePath + '.' + DeviceParameters.SLP.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.SLP.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.SLP.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.SLP, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.SLP.id + ' changed to ' + String(state.val)); }
+							}
+							else { this.log.error(DeviceParameters.SLP.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [SLP]: ' + err.message);
 						}
 					}
 				}
