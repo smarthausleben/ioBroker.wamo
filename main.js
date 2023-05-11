@@ -532,7 +532,11 @@ class wamo extends utils.Adapter {
 			const FW_available = await this.get_DevieParameter(DeviceParameters.SFV);
 			if (FW_available['getSFV'] == 1) {
 				this.log.warn('if (FW_available[\'getSFV\'] == 1) result = true');
-			}else{
+			}
+			else if (FW_available['getSFV'] == 0) {
+				this.log.warn('if (FW_available[\'getSFV\'] == 1) result = false');
+			}
+			else{
 				this.log.warn('if (FW_available[\'getSFV\'] == 1) result = false ' + JSON.stringify(FW_available));
 			}
 		} catch (err) {
