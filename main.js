@@ -4518,13 +4518,19 @@ class wamo extends utils.Adapter {
 			}
 			else if(ALM_Memory != null && ALM_Memory.length > 2)
 			{
-				const alms = ALM_Memory.substring(9).replace(/ /g, '');
-				this.log.warn(alms);
-
+				let alms = ALM_Memory.substring(9).replace(/ /g, '');
+				while(alms.length >= 2)
+				{
+					Final_Alarm_Memory += '[' +	alms.substring(0,2)  + '] ' + await this.get_Alarm_ClearText(alms.substring(0,2));
+					alms = alms.substring(2);
+					if(alms.length > 2)
+					{
+						Final_Alarm_Memory += '\r\n';
+					}
+				}
 			}
 			this.log.warn(ALM_Memory);
-			this.log.warn(await this.checkObjectType(ALM_Memory));
-			Final_Alarm_Memory = ALM_Memory;
+			this.log.warn(Final_Alarm_Memory);
 			return Final_Alarm_Memory;
 		}
 		catch(err){
