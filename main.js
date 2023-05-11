@@ -4523,14 +4523,12 @@ class wamo extends utils.Adapter {
 				{
 					Final_Alarm_Memory += '[' +	alms.substring(0,2)  + '] ' + await this.get_Alarm_ClearText(alms.substring(0,2));
 					alms = alms.substring(2);
-					if(alms.length > 2)
+					if(alms.length >= 2)
 					{
 						Final_Alarm_Memory += '\r\n';
 					}
 				}
 			}
-			this.log.warn(ALM_Memory);
-			this.log.warn(Final_Alarm_Memory);
 			return Final_Alarm_Memory;
 		}
 		catch(err){
