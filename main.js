@@ -5182,6 +5182,7 @@ class wamo extends utils.Adapter {
 							try { await this.clear_SERVICE_FACTORY_Mode(); }
 							catch (err) { this.log.error('async get_DevieParameter(Parameter) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err); }
 						}
+						this.checkIfSpecialActionAfterParameterRead(Parameter, deviceResponse.data);
 						return deviceResponse.data;
 					}
 					NetworkDevices.LeakageDevice_responding = true;
@@ -5215,6 +5216,26 @@ class wamo extends utils.Adapter {
 			this.log.debug('Sensor ' + String(Parameter.id) + ' not present -> readout skipped');
 			return null;
 		}
+	}
+
+	/**
+	 * check if we have to do som special things after we got
+	 * data back from device
+	 * @param {*} Parameter - Deviceparameter object
+	 * @param {*} data - data response data from device (JSON data)
+	 */
+	async checkIfSpecialActionAfterParameterRead(Parameter, data)
+	{
+		try{
+			switch(Parameter.id){
+				case 'SFV':
+					if(data['getSFV'] == 1){this.log.warn('New firmware is available for your SafeTech Connect device!');}
+					break;
+			}
+		}catch(err){
+			this.log.error('[async checkIfSpecialActionafterParameterRead(Parameter, data)] ' + err);
+		}
+
 	}
 
 	/**
