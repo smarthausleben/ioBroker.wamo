@@ -67,9 +67,10 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) ADD: State `MRT` - Maintenance (Husty) server connection
 * (smarthausleben) ADD: State `MSC` - MQTT reconnect time
 * (smarthausleben) ADD: State `DSV` - Micro-Leakage-Test state
-* (smarthausleben) ADD: State `ALH` - Alarm history file
 * (smarthausleben) ADD: State `FSL` - Paired Floorsensors list
+* (smarthausleben) ADD: State `ALH` - Alarm history file
 * (smarthausleben) ADD: State `STH` - Statistics history file
+* (smarthausleben) ADD: State `PAH` - Parameters history file
 * (smarthausleben) ADD: State `WFL` - WiFi scan
 * (smarthausleben) ADD: State `BUZ` - Buzzer parameters
 * (smarthausleben) ADD: State `ALM` - Alarm memory
