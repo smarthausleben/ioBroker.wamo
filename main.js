@@ -4540,9 +4540,7 @@ class wamo extends utils.Adapter {
 		try{
 			let Final_BUZ_Parameters = '';
 
-			this.log.warn(this.checkObjectType(BUZ_Parameters));
-
-			Final_BUZ_Parameters = BUZ_Parameters;
+			Final_BUZ_Parameters = BUZ_Parameters.substring(5);
 			return Final_BUZ_Parameters;
 		}
 		catch(err){
