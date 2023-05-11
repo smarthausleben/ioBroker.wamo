@@ -1411,35 +1411,35 @@ class wamo extends utils.Adapter {
 
 						switch (currentProfileStateID) {
 							case 'PA':	// Available
-								// Trying to disable the ACTIVE profile?
+								// Is user trying to disable the ACTIVE profile?
 								if ((AktiveProfileNumber != null) && (parseInt(String(AktiveProfileNumber.val)) == stateChangeProfileNo) && (parseInt(String(state.val)) == 0)) {
 									this.log.error('You can\'t disable the aktive profile! You need to select an other aktiv profile first!');
 
 									// Restore availability parameter to 1 (on)
 									switch (stateChangeProfileNo) {
 										case 1:
-											await this.set_DevieParameter(DeviceParameters.PA1, '1');
+											await this.set_DevieParameter(DeviceParameters.PA1, 1);
 											break;
 										case 2:
-											await this.set_DevieParameter(DeviceParameters.PA2, '1');
+											await this.set_DevieParameter(DeviceParameters.PA2, 1);
 											break;
 										case 3:
-											await this.set_DevieParameter(DeviceParameters.PA3, '1');
+											await this.set_DevieParameter(DeviceParameters.PA3, 1);
 											break;
 										case 4:
-											await this.set_DevieParameter(DeviceParameters.PA4, '1');
+											await this.set_DevieParameter(DeviceParameters.PA4, 1);
 											break;
 										case 5:
-											await this.set_DevieParameter(DeviceParameters.PA5, '1');
+											await this.set_DevieParameter(DeviceParameters.PA5, 1);
 											break;
 										case 6:
-											await this.set_DevieParameter(DeviceParameters.PA6, '1');
+											await this.set_DevieParameter(DeviceParameters.PA6, 1);
 											break;
 										case 7:
-											await this.set_DevieParameter(DeviceParameters.PA7, '1');
+											await this.set_DevieParameter(DeviceParameters.PA7, 1);
 											break;
 										case 8:
-											await this.set_DevieParameter(DeviceParameters.PA8, '1');
+											await this.set_DevieParameter(DeviceParameters.PA8, 1);
 											break;
 									}
 									this.log.warn('Restored profile ' + String(stateChangeProfileNo) + 'availability to 1 (on)');
@@ -1453,28 +1453,28 @@ class wamo extends utils.Adapter {
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
-											await this.set_DevieParameter(DeviceParameters.PA1, String(profAvailableState));
+											await this.set_DevieParameter(DeviceParameters.PA1, profAvailableState);
 											break;
 										case 2:
-											await this.set_DevieParameter(DeviceParameters.PA2, String(profAvailableState));
+											await this.set_DevieParameter(DeviceParameters.PA2, profAvailableState);
 											break;
 										case 3:
-											await this.set_DevieParameter(DeviceParameters.PA3, String(profAvailableState));
+											await this.set_DevieParameter(DeviceParameters.PA3, profAvailableState);
 											break;
 										case 4:
-											await this.set_DevieParameter(DeviceParameters.PA4, String(profAvailableState));
+											await this.set_DevieParameter(DeviceParameters.PA4, profAvailableState);
 											break;
 										case 5:
-											await this.set_DevieParameter(DeviceParameters.PA5, String(profAvailableState));
+											await this.set_DevieParameter(DeviceParameters.PA5, profAvailableState);
 											break;
 										case 6:
-											await this.set_DevieParameter(DeviceParameters.PA6, String(profAvailableState));
+											await this.set_DevieParameter(DeviceParameters.PA6, profAvailableState);
 											break;
 										case 7:
-											await this.set_DevieParameter(DeviceParameters.PA7, String(profAvailableState));
+											await this.set_DevieParameter(DeviceParameters.PA7, profAvailableState);
 											break;
 										case 8:
-											await this.set_DevieParameter(DeviceParameters.PA8, String(profAvailableState));
+											await this.set_DevieParameter(DeviceParameters.PA8, profAvailableState);
 											break;
 										default:
 											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PA');
@@ -1531,28 +1531,28 @@ class wamo extends utils.Adapter {
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
-											await this.set_DevieParameter(DeviceParameters.PB1, String(profileBuzzer));
+											await this.set_DevieParameter(DeviceParameters.PB1, profileBuzzer);
 											break;
 										case 2:
-											await this.set_DevieParameter(DeviceParameters.PB2, String(profileBuzzer));
+											await this.set_DevieParameter(DeviceParameters.PB2, profileBuzzer);
 											break;
 										case 3:
-											await this.set_DevieParameter(DeviceParameters.PB3, String(profileBuzzer));
+											await this.set_DevieParameter(DeviceParameters.PB3, profileBuzzer);
 											break;
 										case 4:
-											await this.set_DevieParameter(DeviceParameters.PB4, String(profileBuzzer));
+											await this.set_DevieParameter(DeviceParameters.PB4, profileBuzzer);
 											break;
 										case 5:
-											await this.set_DevieParameter(DeviceParameters.PB5, String(profileBuzzer));
+											await this.set_DevieParameter(DeviceParameters.PB5, profileBuzzer);
 											break;
 										case 6:
-											await this.set_DevieParameter(DeviceParameters.PB6, String(profileBuzzer));
+											await this.set_DevieParameter(DeviceParameters.PB6, profileBuzzer);
 											break;
 										case 7:
-											await this.set_DevieParameter(DeviceParameters.PB7, String(profileBuzzer));
+											await this.set_DevieParameter(DeviceParameters.PB7, profileBuzzer);
 											break;
 										case 8:
-											await this.set_DevieParameter(DeviceParameters.PB8, String(profileBuzzer));
+											await this.set_DevieParameter(DeviceParameters.PB8, profileBuzzer);
 											break;
 										default:
 											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PB');
@@ -1613,28 +1613,28 @@ class wamo extends utils.Adapter {
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
-											await this.set_DevieParameter(DeviceParameters.PM1, String(profileMicroLeak));
+											await this.set_DevieParameter(DeviceParameters.PM1, profileMicroLeak);
 											break;
 										case 2:
-											await this.set_DevieParameter(DeviceParameters.PM2, String(profileMicroLeak));
+											await this.set_DevieParameter(DeviceParameters.PM2, profileMicroLeak);
 											break;
 										case 3:
-											await this.set_DevieParameter(DeviceParameters.PM3, String(profileMicroLeak));
+											await this.set_DevieParameter(DeviceParameters.PM3, profileMicroLeak);
 											break;
 										case 4:
-											await this.set_DevieParameter(DeviceParameters.PM4, String(profileMicroLeak));
+											await this.set_DevieParameter(DeviceParameters.PM4, profileMicroLeak);
 											break;
 										case 5:
-											await this.set_DevieParameter(DeviceParameters.PM5, String(profileMicroLeak));
+											await this.set_DevieParameter(DeviceParameters.PM5, profileMicroLeak);
 											break;
 										case 6:
-											await this.set_DevieParameter(DeviceParameters.PM6, String(profileMicroLeak));
+											await this.set_DevieParameter(DeviceParameters.PM6, profileMicroLeak);
 											break;
 										case 7:
-											await this.set_DevieParameter(DeviceParameters.PM7, String(profileMicroLeak));
+											await this.set_DevieParameter(DeviceParameters.PM7, profileMicroLeak);
 											break;
 										case 8:
-											await this.set_DevieParameter(DeviceParameters.PM8, String(profileMicroLeak));
+											await this.set_DevieParameter(DeviceParameters.PM8, profileMicroLeak);
 											break;
 										default:
 											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PM');
@@ -1654,28 +1654,28 @@ class wamo extends utils.Adapter {
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
-											await this.set_DevieParameter(DeviceParameters.PR1, String(profileTimeBackStandardProfile));
+											await this.set_DevieParameter(DeviceParameters.PR1, profileTimeBackStandardProfile);
 											break;
 										case 2:
-											await this.set_DevieParameter(DeviceParameters.PR2, String(profileTimeBackStandardProfile));
+											await this.set_DevieParameter(DeviceParameters.PR2, profileTimeBackStandardProfile);
 											break;
 										case 3:
-											await this.set_DevieParameter(DeviceParameters.PR3, String(profileTimeBackStandardProfile));
+											await this.set_DevieParameter(DeviceParameters.PR3, profileTimeBackStandardProfile);
 											break;
 										case 4:
-											await this.set_DevieParameter(DeviceParameters.PR4, String(profileTimeBackStandardProfile));
+											await this.set_DevieParameter(DeviceParameters.PR4, profileTimeBackStandardProfile);
 											break;
 										case 5:
-											await this.set_DevieParameter(DeviceParameters.PR5, String(profileTimeBackStandardProfile));
+											await this.set_DevieParameter(DeviceParameters.PR5, profileTimeBackStandardProfile);
 											break;
 										case 6:
-											await this.set_DevieParameter(DeviceParameters.PR6, String(profileTimeBackStandardProfile));
+											await this.set_DevieParameter(DeviceParameters.PR6, profileTimeBackStandardProfile);
 											break;
 										case 7:
-											await this.set_DevieParameter(DeviceParameters.PR7, String(profileTimeBackStandardProfile));
+											await this.set_DevieParameter(DeviceParameters.PR7, profileTimeBackStandardProfile);
 											break;
 										case 8:
-											await this.set_DevieParameter(DeviceParameters.PR8, String(profileTimeBackStandardProfile));
+											await this.set_DevieParameter(DeviceParameters.PR8, profileTimeBackStandardProfile);
 											break;
 										default:
 											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PR');
@@ -1695,28 +1695,28 @@ class wamo extends utils.Adapter {
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
-											await this.set_DevieParameter(DeviceParameters.PT1, String(profileLeakageTimeLimit));
+											await this.set_DevieParameter(DeviceParameters.PT1, profileLeakageTimeLimit);
 											break;
 										case 2:
-											await this.set_DevieParameter(DeviceParameters.PT2, String(profileLeakageTimeLimit));
+											await this.set_DevieParameter(DeviceParameters.PT2, profileLeakageTimeLimit);
 											break;
 										case 3:
-											await this.set_DevieParameter(DeviceParameters.PT3, String(profileLeakageTimeLimit));
+											await this.set_DevieParameter(DeviceParameters.PT3, profileLeakageTimeLimit);
 											break;
 										case 4:
-											await this.set_DevieParameter(DeviceParameters.PT4, String(profileLeakageTimeLimit));
+											await this.set_DevieParameter(DeviceParameters.PT4, profileLeakageTimeLimit);
 											break;
 										case 5:
-											await this.set_DevieParameter(DeviceParameters.PT5, String(profileLeakageTimeLimit));
+											await this.set_DevieParameter(DeviceParameters.PT5, profileLeakageTimeLimit);
 											break;
 										case 6:
-											await this.set_DevieParameter(DeviceParameters.PT6, String(profileLeakageTimeLimit));
+											await this.set_DevieParameter(DeviceParameters.PT6, profileLeakageTimeLimit);
 											break;
 										case 7:
-											await this.set_DevieParameter(DeviceParameters.PT7, String(profileLeakageTimeLimit));
+											await this.set_DevieParameter(DeviceParameters.PT7, profileLeakageTimeLimit);
 											break;
 										case 8:
-											await this.set_DevieParameter(DeviceParameters.PT8, String(profileLeakageTimeLimit));
+											await this.set_DevieParameter(DeviceParameters.PT8, profileLeakageTimeLimit);
 											break;
 										default:
 											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PT');
@@ -1736,28 +1736,28 @@ class wamo extends utils.Adapter {
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
-											await this.set_DevieParameter(DeviceParameters.PV1, String(profileLeakageVolumeLimit));
+											await this.set_DevieParameter(DeviceParameters.PV1, profileLeakageVolumeLimit);
 											break;
 										case 2:
-											await this.set_DevieParameter(DeviceParameters.PV2, String(profileLeakageVolumeLimit));
+											await this.set_DevieParameter(DeviceParameters.PV2, profileLeakageVolumeLimit);
 											break;
 										case 3:
-											await this.set_DevieParameter(DeviceParameters.PV3, String(profileLeakageVolumeLimit));
+											await this.set_DevieParameter(DeviceParameters.PV3, profileLeakageVolumeLimit);
 											break;
 										case 4:
-											await this.set_DevieParameter(DeviceParameters.PV4, String(profileLeakageVolumeLimit));
+											await this.set_DevieParameter(DeviceParameters.PV4, profileLeakageVolumeLimit);
 											break;
 										case 5:
-											await this.set_DevieParameter(DeviceParameters.PV5, String(profileLeakageVolumeLimit));
+											await this.set_DevieParameter(DeviceParameters.PV5, profileLeakageVolumeLimit);
 											break;
 										case 6:
-											await this.set_DevieParameter(DeviceParameters.PV6, String(profileLeakageVolumeLimit));
+											await this.set_DevieParameter(DeviceParameters.PV6, profileLeakageVolumeLimit);
 											break;
 										case 7:
-											await this.set_DevieParameter(DeviceParameters.PV7, String(profileLeakageVolumeLimit));
+											await this.set_DevieParameter(DeviceParameters.PV7, profileLeakageVolumeLimit);
 											break;
 										case 8:
-											await this.set_DevieParameter(DeviceParameters.PV8, String(profileLeakageVolumeLimit));
+											await this.set_DevieParameter(DeviceParameters.PV8, profileLeakageVolumeLimit);
 											break;
 										default:
 											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PV');
@@ -1777,28 +1777,28 @@ class wamo extends utils.Adapter {
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
-											await this.set_DevieParameter(DeviceParameters.PW1, String(profileLeakageWarning));
+											await this.set_DevieParameter(DeviceParameters.PW1, profileLeakageWarning);
 											break;
 										case 2:
-											await this.set_DevieParameter(DeviceParameters.PW2, String(profileLeakageWarning));
+											await this.set_DevieParameter(DeviceParameters.PW2, profileLeakageWarning);
 											break;
 										case 3:
-											await this.set_DevieParameter(DeviceParameters.PW3, String(profileLeakageWarning));
+											await this.set_DevieParameter(DeviceParameters.PW3, profileLeakageWarning);
 											break;
 										case 4:
-											await this.set_DevieParameter(DeviceParameters.PW4, String(profileLeakageWarning));
+											await this.set_DevieParameter(DeviceParameters.PW4, profileLeakageWarning);
 											break;
 										case 5:
-											await this.set_DevieParameter(DeviceParameters.PW5, String(profileLeakageWarning));
+											await this.set_DevieParameter(DeviceParameters.PW5, profileLeakageWarning);
 											break;
 										case 6:
-											await this.set_DevieParameter(DeviceParameters.PW6, String(profileLeakageWarning));
+											await this.set_DevieParameter(DeviceParameters.PW6, profileLeakageWarning);
 											break;
 										case 7:
-											await this.set_DevieParameter(DeviceParameters.PW7, String(profileLeakageWarning));
+											await this.set_DevieParameter(DeviceParameters.PW7, profileLeakageWarning);
 											break;
 										case 8:
-											await this.set_DevieParameter(DeviceParameters.PW8, String(profileLeakageWarning));
+											await this.set_DevieParameter(DeviceParameters.PW8, profileLeakageWarning);
 											break;
 										default:
 											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PW');
