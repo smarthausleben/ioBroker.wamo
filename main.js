@@ -1292,7 +1292,6 @@ class wamo extends utils.Adapter {
 									await this.set_DevieParameter(DeviceParameters.UPG, null);
 									this.log.debug('Setting state UPG (sytem upgrade) back to false!');
 									// set state back to false
-									await this.setStateAsync(DeviceParameters.UPG.statePath + '.' + DeviceParameters.UPG.id, { val: false, ack: true });
 									if (moreMessages) { this.log.info(DeviceParameters.UPG.id + ' changed to ' + String(state.val)); }
 								}else{
 									this.log.warn('To initiate a firmware upgrade you have to set UPG state to TRUE!');
@@ -1300,6 +1299,7 @@ class wamo extends utils.Adapter {
 							}else{
 								this.log.warn('Firmware upgrade not initiated because there is no newer firmware available!');
 							}
+							await this.setStateAsync(DeviceParameters.UPG.statePath + '.' + DeviceParameters.UPG.id, { val: false, ack: true });
 						} catch (err) {
 							this.log.error('ERROR setting [UPG]: ' + err.message);
 						}
