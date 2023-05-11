@@ -500,6 +500,7 @@ class wamo extends utils.Adapter {
 				this.subscribeStates(DeviceParameters.SLO.statePath + '.' + DeviceParameters.SLO.id);	// [SLO] Self learning offset
 				this.subscribeStates(DeviceParameters.SLP.statePath + '.' + DeviceParameters.SLP.id);	// [SLP] Self learning phase
 				this.subscribeStates(DeviceParameters.SOF.statePath + '.' + DeviceParameters.SOF.id);	// [SOF] Self learning offset flow
+				this.subscribeStates(DeviceParameters.UPG.statePath + '.' + DeviceParameters.UPG.id);	// [UPG] Firmware upgrade
 			}
 		}
 		if(this.syrSaveFloor1APIClient != null)
@@ -526,6 +527,17 @@ class wamo extends utils.Adapter {
 
 		// reference to Adapter
 		myAdapter = this;
+
+		try {
+			const FW_available = await this.get_DevieParameter(DeviceParameters.UPG);
+			if (FW_available['getSFV'] == 1) {
+				this.log.warn('if (FW_available[\'getSFV\'] == 1) result = true');
+			}else{
+				this.log.warn('if (FW_available[\'getSFV\'] == 1) result = false ' + JSON.stringify(FW_available));
+			}
+		} catch (err) {
+			this.log.error(err);
+		}
 
 		if (moreMessages) { this.log.info('wamo adapter is running'); }
 	}
@@ -1274,6 +1286,31 @@ class wamo extends utils.Adapter {
 							}
 						} catch (err) {
 							this.log.error('ERROR setting [RST]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// UPG Firmware upgrade
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.UPG.statePath + '.' + DeviceParameters.UPG.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							const FW_available = await this.get_DevieParameter(DeviceParameters.UPG);
+							if (FW_available['getSFV'] == 1) {
+								if (state.val == true) {
+									this.log.warn('System upgrad initiated by user!');
+									// send upgrade command to device
+									await this.set_DevieParameter(DeviceParameters.UPG, state.val);
+									this.log.debug('Setting state UPG (sytem upgrade) back to false!');
+									// set state back to false
+									await this.setStateAsync(DeviceParameters.UPG.statePath + '.' + DeviceParameters.UPG.id, { val: false, ack: true });
+									if (moreMessages) { this.log.info(DeviceParameters.UPG.id + ' changed to ' + String(state.val)); }
+								}
+							}else{
+								this.log.warn('Firmware upgrade not initiated because there is no newer firmware available!');
+							}
+						} catch (err) {
+							this.log.error('ERROR setting [UPG]: ' + err.message);
 						}
 					}
 				}
