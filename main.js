@@ -1297,7 +1297,7 @@ class wamo extends utils.Adapter {
 									this.log.warn('To initiate a firmware upgrade you have to set UPG state to TRUE!');
 								}
 							}else{
-								this.log.warn('Firmware upgrade not initiated because there is no newer firmware available!');
+								this.log.warn('Firmware upgrade NOT initiated because there is no new firmware available!');
 							}
 							await this.setStateAsync(DeviceParameters.UPG.statePath + '.' + DeviceParameters.UPG.id, { val: false, ack: true });
 						} catch (err) {
@@ -1572,28 +1572,28 @@ class wamo extends utils.Adapter {
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
-											await this.set_DevieParameter(DeviceParameters.PF1, String(profileMaxFlow));
+											await this.set_DevieParameter(DeviceParameters.PF1, profileMaxFlow);
 											break;
 										case 2:
-											await this.set_DevieParameter(DeviceParameters.PF2, String(profileMaxFlow));
+											await this.set_DevieParameter(DeviceParameters.PF2, profileMaxFlow);
 											break;
 										case 3:
-											await this.set_DevieParameter(DeviceParameters.PF3, String(profileMaxFlow));
+											await this.set_DevieParameter(DeviceParameters.PF3, profileMaxFlow);
 											break;
 										case 4:
-											await this.set_DevieParameter(DeviceParameters.PF4, String(profileMaxFlow));
+											await this.set_DevieParameter(DeviceParameters.PF4, profileMaxFlow);
 											break;
 										case 5:
-											await this.set_DevieParameter(DeviceParameters.PF5, String(profileMaxFlow));
+											await this.set_DevieParameter(DeviceParameters.PF5, profileMaxFlow);
 											break;
 										case 6:
-											await this.set_DevieParameter(DeviceParameters.PF6, String(profileMaxFlow));
+											await this.set_DevieParameter(DeviceParameters.PF6, profileMaxFlow);
 											break;
 										case 7:
-											await this.set_DevieParameter(DeviceParameters.PF7, String(profileMaxFlow));
+											await this.set_DevieParameter(DeviceParameters.PF7, profileMaxFlow);
 											break;
 										case 8:
-											await this.set_DevieParameter(DeviceParameters.PF8, String(profileMaxFlow));
+											await this.set_DevieParameter(DeviceParameters.PF8, profileMaxFlow);
 											break;
 										default:
 											this.log.error('Invalid Profile Number \'' + String(stateChangeProfileNo) + ' \' at: onStateChange... -> else if((id.includes(\'Device.Profiles.\')) && (state.ack == false)) -> PF');
