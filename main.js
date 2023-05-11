@@ -4243,12 +4243,19 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.FSL, finalValue); }
 					break;
-				case DeviceParameters.WFL.id:	// WFLL - WiFi list
+				case DeviceParameters.WFL.id:	// WFL - WiFi list
 					finalValue = await this.handle_WiFi_List(value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WFL, finalValue); }
+					break;
+				case DeviceParameters.BUP.id:	// BUP - Buzzer parameters
+					finalValue = await this.handle_Buzzer_Parameter(value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BUP, finalValue); }
 					break;
 				//#############################################################################################
 				//### 								PROFILES												###
@@ -4499,7 +4506,7 @@ class wamo extends utils.Adapter {
 	}
 
 	/**
-	 * converts ALH (alarm history file) into user frendly format
+	 * converts WiFi scann results into user frendly format
 	 * @param {*} WFL_Data - data goten from device
 	 * @returns userfrendly version of data
 	 */
@@ -4520,6 +4527,26 @@ class wamo extends utils.Adapter {
 		}
 		catch(err){
 			this.log.error('[async handle_WiFi_List(WFL_Data)] ERROR: ' + err);
+			return null;
+		}
+	}
+
+	/**
+	 * converts buzzer parameters into user frendly format
+	 * @param {*} BUZ_Parameters - data goten from device
+	 * @returns userfrendly version of data
+	 */
+	async handle_Buzzer_Parameter(BUZ_Parameters){
+		try{
+			let Final_BUZ_Parameters = '';
+
+			this.log.warn(this.checkObjectType(BUZ_Parameters));
+
+			Final_BUZ_Parameters = BUZ_Parameters;
+			return Final_BUZ_Parameters;
+		}
+		catch(err){
+			this.log.error('[async handle_Buzzer_Parameter(BUZ_Parameters)] ERROR: ' + err);
 			return null;
 		}
 	}
