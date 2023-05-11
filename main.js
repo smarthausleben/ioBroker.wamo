@@ -4512,6 +4512,16 @@ class wamo extends utils.Adapter {
 		try{
 			let Final_Alarm_Memory = '';
 
+			if(ALM_Memory != null && ALM_Memory.length == 2)
+			{
+				Final_Alarm_Memory = '[' + ALM_Memory + '] ' + await this.get_Alarm_ClearText(ALM_Memory);
+			}
+			else if(ALM_Memory != null && ALM_Memory.length > 2)
+			{
+				const alms = ALM_Memory.substring(9).replace(/ /g, '');
+				this.log.warn(alms);
+
+			}
 			this.log.warn(ALM_Memory);
 			this.log.warn(await this.checkObjectType(ALM_Memory));
 			Final_Alarm_Memory = ALM_Memory;
