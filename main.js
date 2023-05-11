@@ -4257,6 +4257,13 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BUP, finalValue); }
 					break;
+				case DeviceParameters.ALM.id:	// ALM - Alarm memory
+					finalValue = await this.handle_Alarm_Memory(value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.ALM, finalValue); }
+					break;
 				//#############################################################################################
 				//### 								PROFILES												###
 				//#############################################################################################
@@ -4401,59 +4408,7 @@ class wamo extends utils.Adapter {
 				for (let z = 0; z < Alarms.length; z++) {
 					const Alarm = Alarms[z].split(';');
 					if (Alarm != null && Alarm.length == 3) {
-						FinalAlarmHistory += String(Alarm[0]) + ' [' + String(Alarm[2]) + '] ';
-						switch (Alarm[2]) {
-							case 'FF': // NO ALARM
-								FinalAlarmHistory += 'NO ALARM';
-								break;
-							case 'A1': // ALARM END SWITCH
-								FinalAlarmHistory += 'ALARM END SWITCH';
-								break;
-							case 'A2': // NO NETWORK
-								FinalAlarmHistory += 'NO NETWORK';
-								break;
-							case 'A3': // ALARM VOLUME LEAKAGE
-								FinalAlarmHistory += 'ALARM VOLUME LEAKAGE';
-								break;
-							case 'A4': // ALARM TIME LEAKAGE
-								FinalAlarmHistory += 'ALARM TIME LEAKAGE';
-								break;
-							case 'A5': // ALARM MAX FLOW LEAKAGE
-								FinalAlarmHistory += 'ALARM MAX FLOW LEAKAGE';
-								break;
-							case 'A6': // ALARM MICRO LEAKAGE
-								FinalAlarmHistory += 'ALARM MICRO LEAKAGE';
-								break;
-							case 'A7': // ALARM EXT. SENSOR LEAKAGE
-								FinalAlarmHistory += 'ALARM EXT. SENSOR LEAKAGE';
-								break;
-							case 'A8': // ALARM TURBINE BLOCKED
-								FinalAlarmHistory += 'ALARM TURBINE BLOCKED';
-								break;
-							case 'A9': // ALARM PRESSURE SENSOR ERROR
-								FinalAlarmHistory += 'ALARM PRESSURE SENSOR ERROR';
-								break;
-							case 'AA': // ALARM TEMPERATURE SENSOR ERROR
-								FinalAlarmHistory += 'ALARM TEMPERATURE SENSOR ERROR';
-								break;
-							case 'AB': // ALARM CONDUCTIVITY SENSOR ERROR
-								FinalAlarmHistory += 'ALARM CONDUCTIVITY SENSOR ERROR';
-								break;
-							case 'AC': // ALARM TO HIGH CONDUCTIVITY
-								FinalAlarmHistory += 'ALARM TO HIGH CONDUCTIVITY';
-								break;
-							case 'AD': // LOW BATTERY
-								FinalAlarmHistory += 'LOW BATTERY';
-								break;
-							case 'AE': // WARNING VOLUME LEAKAGE
-								FinalAlarmHistory += 'WARNING VOLUME LEAKAGE';
-								break;
-							case 'AF': // ALARM NO POWER SUPPLY
-								FinalAlarmHistory += 'ALARM NO POWER SUPPLY';
-								break;
-							default:
-								FinalAlarmHistory += 'UNKNOWN ALARM';
-						}
+						FinalAlarmHistory += String(Alarm[0]) + ' [' + String(Alarm[2]) + '] ' + await this.get_Alarm_ClearText(Alarm[2]);
 						// only \r\n add if it is not the last enty
 						if(z < Alarms.length -1)
 						{
@@ -4548,8 +4503,77 @@ class wamo extends utils.Adapter {
 			return null;
 		}
 	}
+	/**
+	 * converts alarm memory data into user frendly format
+	 * @param {*} ALM_Memory - data goten from device
+	 * @returns userfrendly version of data
+	 */
+	async handle_Alarm_Memory(ALM_Memory){
+		try{
+			let Final_Alarm_Memory = '';
 
-	checkObjectType(WFL_Data) {
+			this.log.warn(ALM_Memory);
+			this.log.warn(await this.checkObjectType(ALM_Memory));
+			Final_Alarm_Memory = ALM_Memory;
+			return Final_Alarm_Memory;
+		}
+		catch(err){
+			this.log.error('[async handle_Buzzer_Parameter(BUZ_Parameters)] ERROR: ' + err);
+			return null;
+		}
+	}
+
+
+	/**
+	 * returns clear text alarm message according alarm code
+	 * @param {*} ALM - allarm code string e.g. 'A1'
+	 * @returns Alarm clear text
+	 */
+	async get_Alarm_ClearText(ALM) {
+		try {
+			switch (ALM) {
+				case 'FF': // NO ALARM
+					return 'NO ALARM';
+				case 'A1': // ALARM END SWITCH
+					return 'ALARM END SWITCH';
+				case 'A2': // NO NETWORK
+					return 'NO NETWORK';
+				case 'A3': // ALARM VOLUME LEAKAGE
+					return 'ALARM VOLUME LEAKAGE';
+				case 'A4': // ALARM TIME LEAKAGE
+					return 'ALARM TIME LEAKAGE';
+				case 'A5': // ALARM MAX FLOW LEAKAGE
+					return 'ALARM MAX FLOW LEAKAGE';
+				case 'A6': // ALARM MICRO LEAKAGE
+					return 'ALARM MICRO LEAKAGE';
+				case 'A7': // ALARM EXT. SENSOR LEAKAGE
+					return 'ALARM EXT. SENSOR LEAKAGE';
+				case 'A8': // ALARM TURBINE BLOCKED
+					return 'ALARM TURBINE BLOCKED';
+				case 'A9': // ALARM PRESSURE SENSOR ERROR
+					return 'ALARM PRESSURE SENSOR ERROR';
+				case 'AA': // ALARM TEMPERATURE SENSOR ERROR
+					return 'ALARM TEMPERATURE SENSOR ERROR';
+				case 'AB': // ALARM CONDUCTIVITY SENSOR ERROR
+					return 'ALARM CONDUCTIVITY SENSOR ERROR';
+				case 'AC': // ALARM TO HIGH CONDUCTIVITY
+					return 'ALARM TO HIGH CONDUCTIVITY';
+				case 'AD': // LOW BATTERY
+					return 'LOW BATTERY';
+				case 'AE': // WARNING VOLUME LEAKAGE
+					return 'WARNING VOLUME LEAKAGE';
+				case 'AF': // ALARM NO POWER SUPPLY
+					return 'ALARM NO POWER SUPPLY';
+				default:
+					return 'UNKNOWN ALARM';
+			}
+		} catch (err) {
+			this.log.error('[async get_Alarm_ClearText(ALM)] ERROR: ' + err);
+		}
+
+	}
+
+	async checkObjectType(WFL_Data) {
 		const stringConstructor = 'test'.constructor;
 		const arrayConstructor = [].constructor;
 		const objectConstructor = ({}).constructor;

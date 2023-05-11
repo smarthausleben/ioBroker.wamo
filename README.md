@@ -72,6 +72,7 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) ADD: State `STH` - Statistics history file
 * (smarthausleben) ADD: State `WFL` - WiFi scan
 * (smarthausleben) ADD: State `BUZ` - Buzzer parameters
+* (smarthausleben) ADD: State `ALM` - Alarm memory
 * (smarthausleben) ADD: State `TTM` - Turbine no pulse max. time
 * (smarthausleben) ADD: State `TYP` - Safe-Tec type
 * (smarthausleben) ADD: State `WNS` - WiFi AP disabled
