@@ -81,6 +81,7 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) ADD: State `WNS` - WiFi AP disabled
 * (smarthausleben) ADD: State `HWV` - Hardware version
 * (smarthausleben) ADD: State `DKI` - Safe-Tec device kind ID
+* (smarthausleben) ADD: State `FSA` - Add (Pair) Floorsensor
 * (smarthausleben) CHG: State `ALD` - Alarm duration (signaling time) can now be changed by user
 * (smarthausleben) CHG: State `CLP` - Cluster Profile can now be changed by user
 * (smarthausleben) CHG: State `SLO` - Self learning offset can now be changed by user

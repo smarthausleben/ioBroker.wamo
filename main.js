@@ -470,6 +470,7 @@ class wamo extends utils.Adapter {
 			this.subscribeStates(DeviceParameters.LWT.statePath + '.' + DeviceParameters.LWT.id);	// [LWT] Leakage notification (warning) threshold
 			this.subscribeStates(DeviceParameters.PRF.statePath + '.' + DeviceParameters.PRF.id);	// [PRF] Selected profile
 			this.subscribeStates(DeviceParameters.SMF.statePath + '.' + DeviceParameters.SMF.id);	// [SMF] Self learning minimum flow
+			this.subscribeStates(DeviceParameters.FSA.statePath + '.' + DeviceParameters.FSA.id);	// [FSA] Add (Pair) Floorsensor
 			this.subscribeStates(adapterChannels.DevicePofiles.path + '.*'); // ALL profile states
 
 			// only adopt SERVICE and FACTORY events if enabled in adapter Options
@@ -1360,6 +1361,20 @@ class wamo extends utils.Adapter {
 
 					if (tempDisabledSeconds == 0) { this.log.info('Command: [TMP] Leakage protection is aktive'); }
 					else { this.log.warn('Command: [TMP] Leakage protection temporary disabled for ' + offTime + ' (hh:mm:ss)'); }
+				}
+				//============================================================================
+				// FSA Add (Pair) Floorsensor
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.FSA.statePath + '.' + DeviceParameters.FSA.id) && state.ack == false) {
+					try {
+						this.log.warn('Usser adding Floorsensor with serial number: ' + String(state.val) + ' to leakage protection device');
+						await this.set_DevieParameter(DeviceParameters.FSA, state.val);
+						// set readParameter flag to true to true to get Status of pairing
+						DeviceParameters.FSA.readParameter = true;
+					}
+					catch (err) {
+						this.log.warn('onStateChange(id, state) -> await this.set_DevieParameter(DeviceParameters.FSA ... ERROR: ' + err);
+					}
 				}
 				//============================================================================
 				// PRF Selected Profile
@@ -5284,8 +5299,19 @@ class wamo extends utils.Adapter {
 					if (data['get71'] == 1) { this.log.warn('Leakage protection is deaktivated! To aktivate it, set object 71 back to 0.'); }
 					break;
 				case 'FSA':
-					if (data['getFSA'] == 1) { this.log.warn('Floorsensor pairing in progress (30s timeout)'); }
-					if (data['getFSA'] == 2) { this.log.warn('Floorsensor paired OK'); }
+					if (data['getFSA'] == 0) {
+						this.log.warn('Floorsensor not paired');
+						// set readParameter flag to false to end reading FSA Status of pairing
+						DeviceParameters.FSA.readParameter = false;
+					}
+					else if (data['getFSA'] == 1) {
+						this.log.warn('Floorsensor pairing in progress (30s timeout)');
+					}
+					else if (data['getFSA'] == 2) {
+						this.log.warn('Floorsensor paired OK');
+						// set readParameter flag to false to end reading FSA Status of pairing
+						DeviceParameters.FSA.readParameter = false;
+					}
 					break;
 			}
 		} catch (err) {
