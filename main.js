@@ -1368,7 +1368,7 @@ class wamo extends utils.Adapter {
 				else if ((id == statePrefix + DeviceParameters.FSA.statePath + '.' + DeviceParameters.FSA.id) && state.ack == false) {
 					try {
 						this.log.warn('Usser adding Floorsensor with serial number: ' + String(state.val) + ' to leakage protection device');
-						await this.set_DevieParameter(DeviceParameters.FSA, state.val);
+						await this.set_DevieParameter(DeviceParameters.FSA, String(state.val));
 						// set readParameter flag to true to true to get Status of pairing
 						DeviceParameters.FSA.readParameter = true;
 					}
