@@ -501,6 +501,7 @@ class wamo extends utils.Adapter {
 				this.subscribeStates(DeviceParameters.SLP.statePath + '.' + DeviceParameters.SLP.id);	// [SLP] Self learning phase
 				this.subscribeStates(DeviceParameters.SOF.statePath + '.' + DeviceParameters.SOF.id);	// [SOF] Self learning offset flow
 				this.subscribeStates(DeviceParameters.UPG.statePath + '.' + DeviceParameters.UPG.id);	// [UPG] Firmware upgrade
+				this.subscribeStates(DeviceParameters.P71.statePath + '.' + DeviceParameters.P71.id);	// [71] LS deactivated
 			}
 		}
 		if(this.syrSaveFloor1APIClient != null)
@@ -1254,6 +1255,22 @@ class wamo extends utils.Adapter {
 							else { this.log.error(DeviceParameters.SOF.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [SOF]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// 71 LS deactivated
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.P71.statePath + '.' + DeviceParameters.P71.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.P71.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.P71.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.P71, state.val);
+								if (moreMessages) { this.log.info(DeviceParameters.P71.id + ' changed to ' + String(state.val)); }
+							}
+							else { this.log.error(DeviceParameters.P71.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [P71]: ' + err.message);
 						}
 					}
 				}
@@ -5219,7 +5236,7 @@ class wamo extends utils.Adapter {
 	}
 
 	/**
-	 * check if we have to do som special things after we got
+	 * check if we have to do some special things after we got
 	 * data back from device
 	 * @param {*} Parameter - Deviceparameter object
 	 * @param {*} data - data response data from device (JSON data)
@@ -5227,12 +5244,15 @@ class wamo extends utils.Adapter {
 	async checkIfSpecialActionAfterParameterRead(Parameter, data)
 	{
 		try{
-			switch(Parameter.id){
+			switch (Parameter.id) {
 				case 'SFV':
-					if(data['getSFV'] == 1){this.log.warn('New firmware is available for your SafeTech Connect device!');}
+					if (data['getSFV'] == 1) { this.log.warn('New firmware is available for your SafeTech Connect device!'); }
+					break;
+				case '71':
+					if (data['get71'] == 1) { this.log.warn('Leakage protection is deaktivated! To aktivate it, set object 71 back to 0.'); }
 					break;
 			}
-		}catch(err){
+		} catch (err) {
 			this.log.error('[async checkIfSpecialActionafterParameterRead(Parameter, data)] ' + err);
 		}
 

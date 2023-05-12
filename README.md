@@ -49,7 +49,9 @@ If you find this adapter useful and you want to support this project, your kindn
 ### **WORK IN PROGRESS**
 * (smarthausleben) ADD: [SafeFloor Device] New **SafeFloor Units** Tab in adapter settings to manage up to 4 **_SafeFloor Connect_** devices
 * (smarthausleben) ADD: New option **_"Enable executing test loop"_** in Tab **_"Advanced Options"_** to enable/disable cron based executed [Test Loop]
-* (smarthausleben) ADD: New option **_"Allow SERVICE and FACTORY state changes"_** in Tab **_"Advanced Options"_** to enable/disable changes of objects protected by the manufacturer 
+* (smarthausleben) ADD: New option **_"Allow SERVICE and FACTORY state changes"_** in Tab **_"Advanced Options"_** to enable/disable changes of objects protected by the manufacturer
+* (smarthausleben) CHG: State `71` - Leakage protection deactivated - State moved from **_Settings_** to **_Device-Control_** (please delete Object **_71_** in object _Settings_ folder )
+* (smarthausleben) CHG: State `71` - Leakage protection deactivated - is now changable (warn message appears in log if Leakage protection is deaktivated) 
 * (smarthausleben) ADD: State `BFT` - Button filter threshold
 * (smarthausleben) ADD: State `BPT` - Button proximity threshold
 * (smarthausleben) ADD: State `CNF` - Conductivity factor
