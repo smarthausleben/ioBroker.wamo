@@ -3077,10 +3077,10 @@ class wamo extends utils.Adapter {
 			// iterate through all requested Parameters
 			for (let i = 0; i < deviceParametersToGet.length; i++) {
 				if(deviceParametersToGet[i].readParameter != null && deviceParametersToGet[i].readParameter == false){
-					this.log.warn('Parameteter ' + deviceParametersToGet[i] + ' read skipped');
+					this.log.error('Parameteter [' + deviceParametersToGet[i].id + '] read skipped');
 					continue;
 				}
-				this.log.warn('Parameteter ' + deviceParametersToGet[i] + ' read');
+				this.log.warn('Parameteter [' + deviceParametersToGet[i].id + '] read');
 				parNumber = i;
 				let DeviceParameterReturn = null;
 				let gotDeviceParameter = false;
