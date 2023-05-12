@@ -4253,6 +4253,13 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.DCM, finalValue); }
 					break;
+				case DeviceParameters.FSA.id:	// FSA - Add (Pair) Floorsensor
+					finalValue = await this.getGlobalisedValue(DeviceParameters.FSA, value);
+					if (finalValue === null) {	// did we get a globalised Value back?
+						finalValue = value;
+					}
+					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.FSA, finalValue); }
+					break;
 				case DeviceParameters.DOM.id:	// DOM - MLT test time open
 					finalValue = await this.getGlobalisedValue(DeviceParameters.DOM, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
@@ -5273,6 +5280,10 @@ class wamo extends utils.Adapter {
 					break;
 				case '71':
 					if (data['get71'] == 1) { this.log.warn('Leakage protection is deaktivated! To aktivate it, set object 71 back to 0.'); }
+					break;
+				case 'FSA':
+					if (data['getFSA'] == 1) { this.log.warn('Floorsensor pairing in progress (30s timeout)'); }
+					if (data['getFSA'] == 2) { this.log.warn('Floorsensor paired OK'); }
 					break;
 			}
 		} catch (err) {
