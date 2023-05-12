@@ -491,6 +491,7 @@ class wamo extends utils.Adapter {
 				this.subscribeStates(DeviceParameters.DBT.statePath + '.' + DeviceParameters.DBT.id);	// [DBT] MLT pressure drop time
 				this.subscribeStates(DeviceParameters.DCM.statePath + '.' + DeviceParameters.DCM.id);	// [DCM] MLT test time close
 				this.subscribeStates(DeviceParameters.RST.statePath + '.' + DeviceParameters.RST.id);	// [RST] System Restart
+				this.subscribeStates(DeviceParameters.DEX.statePath + '.' + DeviceParameters.DEX.id);	// [DEX] Micro-Leakage-Test start
 				this.subscribeStates(DeviceParameters.SRO.statePath + '.' + DeviceParameters.SRO.id);	// [SRO] Screen Rotation
 				this.subscribeStates(DeviceParameters.CSD.statePath + '.' + DeviceParameters.CSD.id);	// [CSD] Deactivate conductivity sensor
 				this.subscribeStates(DeviceParameters.TSD.statePath + '.' + DeviceParameters.TSD.id);	// [TSD] Deactivate temperature sensor
@@ -1292,6 +1293,28 @@ class wamo extends utils.Adapter {
 							}
 						} catch (err) {
 							this.log.error('ERROR setting [RST]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// DEX Micro-Leakage-Test start
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.DEX.statePath + '.' + DeviceParameters.DEX.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if (state.val == 1) {
+								this.log.warn('MLT (Micro Leakage Test) initiated by user!');
+								// send MLT command (1 as number) to device
+								await this.set_DevieParameter(DeviceParameters.DEX, state.val);
+								this.log.debug('Setting state DEX (MLT Start) back to 0!');
+								// set state back to 0
+								await this.setStateAsync(DeviceParameters.DEX.statePath + '.' + DeviceParameters.DEX.id, { val: 0, ack: true });
+
+								if (moreMessages) { this.log.info(DeviceParameters.DEX.id + ' changed to ' + String(state.val)); }
+							}
+							else { this.log.error(DeviceParameters.DEX.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [DEX]: ' + err.message);
 						}
 					}
 				}
@@ -3684,7 +3707,7 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.PSD, finalValue); }
 					break;
-				case DeviceParameters.ALA.id:	// ALA Alarm status
+				case DeviceParameters.ALA.id:	// ALA - Alarm status
 					finalValue = await this.getGlobalisedValue(DeviceParameters.ALA, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						switch (String(value)) {
@@ -3785,7 +3808,7 @@ class wamo extends utils.Adapter {
 						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.CEL, finalValue); }
 					}
 					break;
-				case DeviceParameters.BAR.id:	// BAR Water pressure
+				case DeviceParameters.BAR.id:	// BAR - Water pressure
 					if (sensor_pressure_present) {
 						value = parseFloat(String(value).replace(',', '.'));
 						finalValue = await this.getGlobalisedValue(DeviceParameters.BAR, value);
@@ -3816,7 +3839,7 @@ class wamo extends utils.Adapter {
 						}
 					}
 					break;
-				case DeviceParameters.BAT.id:	// BAT Batterie voltage
+				case DeviceParameters.BAT.id:	// BAT - Batterie voltage
 					value = parseFloat(String(value).replace(',', '.'));
 					finalValue = await this.getGlobalisedValue(DeviceParameters.BAT, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
@@ -3914,7 +3937,7 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.IDS, finalValue); }
 					break;
-				case DeviceParameters.VER.id:	// VER -Firmware Version
+				case DeviceParameters.VER.id:	// VER - Firmware Version
 					finalValue = await this.getGlobalisedValue(DeviceParameters.VER, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
@@ -3928,7 +3951,7 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WIP, finalValue); }
 					break;
-				case DeviceParameters.MAC.id:	// MAC -MAC address
+				case DeviceParameters.MAC.id:	// MAC - MAC address
 					finalValue = await this.getGlobalisedValue(DeviceParameters.MAC, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
