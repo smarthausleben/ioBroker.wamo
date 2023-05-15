@@ -7,13 +7,13 @@
 // The adapter-core module gives you access to the core ioBroker functions
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
-// const { info } = require('console');
+const { info } = require('console');
 const axios = require('axios').default;
 const http = require('http');
 const schedule = require('node-schedule');
-// const { join } = require('path');
-// const { nextTick } = require('process');
-// const { stringify } = require('querystring');
+const { join } = require('path');
+const { nextTick } = require('process');
+const { stringify } = require('querystring');
 const adapterName = require('./package.json').name.split('.').pop();
 
 // my own modules
@@ -34,7 +34,7 @@ const {
 	AdapterChannelsFS,
 	DeviceParametersFS
 } = require('./lib/device-parametersFS');
-// const { networkInterfaces } = require('os');
+const { networkInterfaces } = require('os');
 
 /* cron definitions for the varius cron timers.
 (cron timers are for statistik data collection) */
@@ -133,11 +133,6 @@ class wamo extends utils.Adapter {
 	 * Is called when databases are connected and adapter received configuration.
 	 */
 	async onReady() {
-		// neccessary to avoid unused var
-		if(_WaterTemperature === null){_WaterTemperature = 0;}
-		if(_WaterPressure === null){_WaterPressure = 0;}
-		if(_WaterConductivity === null){_WaterConductivity = 0;}
-		if(_WaterConductivity_EC25 === null){_WaterConductivity_EC25 = 0;}
 
 		// The adapters config (in the instance object everything under the attribute "native") is accessible via
 		// this.config:
@@ -3838,7 +3833,6 @@ class wamo extends utils.Adapter {
 							finalValue = parseFloat(value);
 							_WaterPressure = finalValue;
 						}
-						else{_WaterPressure = 0;}
 						if (valuesInfoMessages) { await this.moremessages(DeviceParameters.BAR, finalValue); }
 					}
 					break;
