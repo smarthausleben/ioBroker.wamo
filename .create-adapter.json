@@ -7,7 +7,6 @@
 	"features": [
 		"adapter"
 	],
-	"adminFeatures": [],
 	"type": "iot-systems",
 	"startMode": "daemon",
 	"connectionType": "local",
@@ -18,6 +17,10 @@
 	"tools": [
 		"ESLint",
 		"type checking"
+	],
+	"adminFeatures": [
+		"tab",
+		"custom"
 	],
 	"i18n": "words.js",
 	"releaseScript": "yes",
