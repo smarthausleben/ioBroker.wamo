@@ -214,9 +214,9 @@
         "extIcon": "https://raw.githubusercontent.com/smarthausleben/ioBroker.wamo/main/admin/wamo.png",
         "readme": "https://github.com/smarthausleben/ioBroker.wamo/blob/main/README.md",
         "loglevel": "info",
-        "restartAdapters": [
-            "vis"
-        ],
+		"restartAdapters": [
+			"vis"
+		],
         "mode": "daemon",
         "type": "iot-systems",
         "compact": true,
@@ -225,19 +225,24 @@
         "materialize": true,
         "adminUI": {
             "config": "json",
-            "tab": "materialize"
+			"tab": "materialize"
         },
         "dependencies": [
             {
                 "js-controller": ">=4.0.0"
             },
-            "vis"
+			"vis"
         ],
         "globalDependencies": [
             {
                 "admin": ">=5.1.28"
             }
-        ]
+        ],
+        "plugins": {
+            "sentry": {
+                "dsn": "https://...@.../..."
+            }
+        }
     },
     "native": {
         "device_ip": "0.0.0.0",
