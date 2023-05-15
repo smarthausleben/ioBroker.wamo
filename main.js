@@ -5332,7 +5332,7 @@ class wamo extends utils.Adapter {
 		let set_without_value = false; // Flag if this parameter has a set value
 
 		// do we have a value to set?
-		if(Value == null){set_without_value = true}
+		if(Value == null){set_without_value = true;}
 
 		// can we read this parameter from device?
 		if (Parameter.readCommand != null) {oldParameter = await this.get_DevieParameter(Parameter);}
