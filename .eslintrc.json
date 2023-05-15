@@ -6,9 +6,17 @@
 		"mocha": true
 	},
 	"extends": [
-		"eslint:recommended"
+		"eslint:recommended",
+		"plugin:react/recommended"
 	],
-	"plugins": [],
+	"plugins": [
+		"react"
+	],
+	"settings": {
+		"react": {
+			"version": "detect"
+		}
+	},
 	"rules": {
 		"indent": [
 			"error",
@@ -18,6 +26,13 @@
 			}
 		],
 		"no-console": "off",
+		"no-unused-vars": [
+			"error",
+			{
+				"ignoreRestSiblings": true,
+				"argsIgnorePattern": "^_"
+			}
+		],
 		"no-var": "error",
 		"no-trailing-spaces": "error",
 		"prefer-const": "error",
@@ -35,6 +50,9 @@
 		]
 	},
 	"parserOptions": {
-		"ecmaVersion": 2018
+		"ecmaVersion": 2020,
+		"ecmaFeatures": {
+			"jsx": true
+		}
 	}
 }
