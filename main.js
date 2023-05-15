@@ -265,6 +265,7 @@ class wamo extends utils.Adapter {
 				baseURL: `http://${this.config.device_ip}:${this.config.device_port}/safe-tec/`,
 				timeout: timeout_axios_request * 1000,
 				responseType: 'json',
+				// @ts-ignore
 				responseEncoding: 'utf8',
 				httpAgent: new http.Agent({
 					keepAlive: true
@@ -281,6 +282,7 @@ class wamo extends utils.Adapter {
 				baseURL: `http://${this.config.safefloor_1_ip}:${this.config.device_port}/floorsensor/`,
 				timeout: FloorSenso1_LoopTimeout * 1000,
 				responseType: 'json',
+				// @ts-ignore
 				responseEncoding: 'utf8',
 				httpAgent: new http.Agent({
 					keepAlive: true
@@ -294,6 +296,7 @@ class wamo extends utils.Adapter {
 				baseURL: `http://${this.config.safefloor_2_ip}:${this.config.device_port}/floorsensor/`,
 				timeout: FloorSenso2_LoopTimeout * 1000,
 				responseType: 'json',
+				// @ts-ignore
 				responseEncoding: 'utf8',
 				httpAgent: new http.Agent({
 					keepAlive: true
@@ -307,6 +310,7 @@ class wamo extends utils.Adapter {
 				baseURL: `http://${this.config.safefloor_3_ip}:${this.config.device_port}/floorsensor/`,
 				timeout: FloorSenso3_LoopTimeout * 1000,
 				responseType: 'json',
+				// @ts-ignore
 				responseEncoding: 'utf8',
 				httpAgent: new http.Agent({
 					keepAlive: true
@@ -320,6 +324,7 @@ class wamo extends utils.Adapter {
 				baseURL: `http://${this.config.safefloor_4_ip}:${this.config.device_port}/floorsensor/`,
 				timeout: FloorSenso4_LoopTimeout * 1000,
 				responseType: 'json',
+				// @ts-ignore
 				responseEncoding: 'utf8',
 				httpAgent: new http.Agent({
 					keepAlive: true
@@ -5338,7 +5343,7 @@ class wamo extends utils.Adapter {
 		let set_without_value = false; // Flag if this parameter has a set value
 
 		// do we have a value to set?
-		if(Value == null){set_without_value = true};
+		if(Value == null){set_without_value = true;}
 
 		// can we read this parameter from device?
 		if (Parameter.readCommand != null) {oldParameter = await this.get_DevieParameter(Parameter);}
