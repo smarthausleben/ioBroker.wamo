@@ -134,6 +134,12 @@ class wamo extends utils.Adapter {
 	 */
 	async onReady() {
 
+		// avoide unused var
+		if(_WaterTemperature === null){_WaterTemperature = 0;}
+		if(_WaterPressure === null){_WaterPressure = 0;}
+		if(_WaterConductivity === null){_WaterConductivity = 0;}
+		if(_WaterConductivity_EC25 === null){_WaterConductivity_EC25 = 0;}
+
 		// The adapters config (in the instance object everything under the attribute "native") is accessible via
 		// this.config:
 		moreMessages = this.config.moremessages;
@@ -5332,7 +5338,7 @@ class wamo extends utils.Adapter {
 		let set_without_value = false; // Flag if this parameter has a set value
 
 		// do we have a value to set?
-		if(Value == null){set_without_value = true}
+		if(Value == null){set_without_value = true};
 
 		// can we read this parameter from device?
 		if (Parameter.readCommand != null) {oldParameter = await this.get_DevieParameter(Parameter);}
