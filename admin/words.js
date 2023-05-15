@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 /*global systemDictionary:true */
 /*
 +===================== DO NOT MODIFY ======================+
