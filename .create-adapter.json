@@ -12,7 +12,7 @@
 	"startMode": "daemon",
 	"connectionType": "local",
 	"dataSource": "poll",
-	"connectionIndicator": "no",
+	"connectionIndicator": "yes",
 	"language": "JavaScript",
 	"adminReact": "no",
 	"tools": [
