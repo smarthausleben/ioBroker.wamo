@@ -5,7 +5,8 @@
 	"title": "wamo",
 	"expert": "no",
 	"features": [
-		"adapter"
+		"adapter",
+		"vis"
 	],
 	"type": "iot-systems",
 	"startMode": "daemon",
