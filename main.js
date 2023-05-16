@@ -478,6 +478,7 @@ class wamo extends utils.Adapter {
 			this.subscribeStates(DeviceParameters.SMF.statePath + '.' + DeviceParameters.SMF.id);	// [SMF] Self learning minimum flow
 			this.subscribeStates(DeviceParameters.FSA.statePath + '.' + DeviceParameters.FSA.id);	// [FSA] Add (Pair) Floorsensor
 			this.subscribeStates(DeviceParameters.WFC.statePath + '.' + DeviceParameters.WFC.id);	// [WFC] WiFi connect (SSID)
+			this.subscribeStates(DeviceParameters.WFK.statePath + '.' + DeviceParameters.WFK.id);	// [WFK] WiFi key
 			this.subscribeStates(adapterChannels.DevicePofiles.path + '.*'); // ALL profile states
 
 			// only adopt SERVICE and FACTORY events if enabled in adapter Options
@@ -792,6 +793,27 @@ class wamo extends utils.Adapter {
 						}
 					}
 					else { this.log.error(DeviceParameters.WFC.id + ' new value [' + String(state.val) + '] is out of range! New WiFi name is empty or to longe. Max SSID length is 32 characters!'); }
+				}
+				//============================================================================
+				// WFK WiFi key
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.WFK.statePath + '.' + DeviceParameters.WFK.id) && (state.ack == false)) {
+					if (state.val != null && String(state.val).length > 0 && String(state.val).length <= 32) {
+						try {
+							await this.set_DevieParameter(DeviceParameters.WFK, state.val);
+							this.log.info('User changed parameter ' + DeviceParameters.WFK.id + ' (WiFi key)');
+						} catch (err) {
+							this.log.error('ERROR setting [WFK]: ' + err.message);
+						}
+						// after transmitting of the WiFi key we have to clear the state object imediatly
+						try {
+							await this.set_DevieParameter(DeviceParameters.WFK, '');
+							this.log.info('WiFi key state object  ' + DeviceParameters.WFK.id + ' cleared');
+						} catch (err) {
+							this.log.error('ERROR setting [WFK]: ' + err.message);
+						}
+					}
+					else { this.log.error(DeviceParameters.WFK.id + ' new value [' + String(state.val) + '] is out of range! WiFi key is empty, to short or to longe. WIFI key 8-64 characters!'); }
 				}
 				//============================================================================
 				// TYP Safe-Tec type

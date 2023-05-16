@@ -82,6 +82,7 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) ADD: State `HWV` - **_Hardware version_**
 * (smarthausleben) ADD: State `DKI` - **_Safe-Tec device kind ID_**
 * (smarthausleben) ADD: State `FSA` - **_Add (Pair) Floorsensor_**
+* (smarthausleben) ADD: State `WFK` - **_WiFi key_** After entering the WiFi key into the WFK state the key will be send to device and afterwards state value will be cleared imediatly
 * ========================================================================
 * = The following objects need to be deleted first in order to get the new functionality
 * = Since objects will be checked and created only during startup of the adapter follow this procedure
