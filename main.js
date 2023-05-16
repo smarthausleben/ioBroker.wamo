@@ -477,6 +477,7 @@ class wamo extends utils.Adapter {
 			this.subscribeStates(DeviceParameters.PRF.statePath + '.' + DeviceParameters.PRF.id);	// [PRF] Selected profile
 			this.subscribeStates(DeviceParameters.SMF.statePath + '.' + DeviceParameters.SMF.id);	// [SMF] Self learning minimum flow
 			this.subscribeStates(DeviceParameters.FSA.statePath + '.' + DeviceParameters.FSA.id);	// [FSA] Add (Pair) Floorsensor
+			this.subscribeStates(DeviceParameters.WFC.statePath + '.' + DeviceParameters.WFC.id);	// [WFC] WiFi connect (SSID)
 			this.subscribeStates(adapterChannels.DevicePofiles.path + '.*'); // ALL profile states
 
 			// only adopt SERVICE and FACTORY events if enabled in adapter Options
@@ -777,6 +778,20 @@ class wamo extends utils.Adapter {
 							this.log.error('ERROR setting [TMZ]: ' + err.message);
 						}
 					}
+				}
+				//============================================================================
+				// WFC WiFi connect (SSID)
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.WFC.statePath + '.' + DeviceParameters.WFC.id) && (state.ack == false)) {
+					if (state.val != null && String(state.val).length > 0 && String(state.val).length <= 32) {
+						try {
+							await this.set_DevieParameter(DeviceParameters.WFC, state.val);
+							this.log.info('User changed parameter ' + DeviceParameters.WFC.id + ' to ' + String(state.val));
+						} catch (err) {
+							this.log.error('ERROR setting [WFC]: ' + err.message);
+						}
+					}
+					else { this.log.error(DeviceParameters.WFC.id + ' new value [' + String(state.val) + '] is out of range! New WiFi name is empty or to longe. Max SSID length is 32 characters!'); }
 				}
 				//============================================================================
 				// TYP Safe-Tec type
@@ -4026,7 +4041,7 @@ class wamo extends utils.Adapter {
 					}
 					if (valuesInfoMessages) { await this.moremessages(DeviceParameters.WFR, finalValue); }
 					break;
-				case DeviceParameters.WFC.id:	// WFC - WiFi SSID
+				case DeviceParameters.WFC.id:	// WFC - WiFi connect (SSID)
 					finalValue = await this.getGlobalisedValue(DeviceParameters.WFC, value);
 					if (finalValue === null) {	// did we get a globalised Value back?
 						finalValue = value;
