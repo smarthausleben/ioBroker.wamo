@@ -83,12 +83,9 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) ADD: State `DKI` - **_Safe-Tec device kind ID_**
 * (smarthausleben) ADD: State `FSA` - **_Add (Pair) Floorsensor_**
 * ========================================================================
-* = The following objects need to be deleted first in order to get the ===
-* = new functionality ====================================================
-* = Since objects will be checked and created only during startup of the =
-* = adapter follow this procedure ========================================
-* = (stop wamo adapter -> delete state object -> start wamo -> object ====
-* = will be created) =====================================================
+* = The following objects need to be deleted first in order to get the new functionality
+* = Since objects will be checked and created only during startup of the adapter follow this procedure
+* = (stop wamo adapter -> delete state object -> start wamo -> object will be created)
 * ========================================================================
 * (smarthausleben) CHG: State `ALD` - **_Alarm duration (signaling time)_** can now be changed by user
 * (smarthausleben) CHG: State `CLP` - **_Cluster Profile can_** now be changed by user
