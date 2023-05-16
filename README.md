@@ -44,6 +44,8 @@ If you find this adapter useful and you want to support this project, your kindn
 <!--
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
+
+* ======================================================================== (max broad of READMR.md page )
 -->
 
 ### **WORK IN PROGRESS**
@@ -80,11 +82,14 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) ADD: State `HWV` - **_Hardware version_**
 * (smarthausleben) ADD: State `DKI` - **_Safe-Tec device kind ID_**
 * (smarthausleben) ADD: State `FSA` - **_Add (Pair) Floorsensor_**
-* ==============================================================================================================
-* ========= The following objects need to be deleted first in order to get the new functionality ===============
-* ========= Since objects will be checked and created only during startup of the adapter follow this procedure =
-* ========= (stop wamo adapter -> delete state object -> start wamo -> object will be created) =================
-* ==============================================================================================================
+* ========================================================================
+* = The following objects need to be deleted first in order to get the ===
+* = new functionality ====================================================
+* = Since objects will be checked and created only during startup of the =
+* = adapter follow this procedure ========================================
+* = (stop wamo adapter -> delete state object -> start wamo -> object ====
+* = will be created) =====================================================
+* ========================================================================
 * (smarthausleben) CHG: State `ALD` - **_Alarm duration (signaling time)_** can now be changed by user
 * (smarthausleben) CHG: State `CLP` - **_Cluster Profile can_** now be changed by user
 * (smarthausleben) CHG: State `SLO` - **_Self learning offset_** can now be changed by user
@@ -95,7 +100,7 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) CHG: State `WFC` - **_WiFi connect (SSID)_** can now be changed by user
 * (smarthausleben) CHG: State `71` - **_Leakage protection deactivated_** - State moved from **_Settings_** to **_Device-Control_** (please delete Object **_71_** in object _Settings_ folder )
 * (smarthausleben) CHG: State `71` - **_Leakage protection deactivated_** - is now changable (warn message appears in log if Leakage protection is deaktivated) 
-* ==============================================================================================================
+* ========================================================================
 * (smarthausleben) ADD: Device Control State `UPG` set to true initiates **_Firmware upgrase_** (only if new firmware is available)
 * (smarthausleben) ADD: Device Control State `DEX` set to 1 initiates **_MLT (Micro Leake Test)_**
 * (smarthausleben) ADD: Warn message in log if a new firmware for SafeTech Connect device is available 
