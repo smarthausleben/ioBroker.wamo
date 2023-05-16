@@ -7,14 +7,16 @@
 // The adapter-core module gives you access to the core ioBroker functions
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
-const { info } = require('console');
-const axios = require('axios').default;
 const http = require('http');
+const axios = require('axios').default;
 const schedule = require('node-schedule');
-const { join } = require('path');
-const { nextTick } = require('process');
-const { stringify } = require('querystring');
 const adapterName = require('./package.json').name.split('.').pop();
+// const { info } = require('console');
+// const { default: axios } = require('axios');
+// const { join } = require('path');
+// const { nextTick } = require('process');
+// const { stringify } = require('querystring');
+// const { networkInterfaces } = require('os');
 
 // my own modules
 const {
@@ -34,7 +36,6 @@ const {
 	AdapterChannelsFS,
 	DeviceParametersFS
 } = require('./lib/device-parametersFS');
-const { networkInterfaces } = require('os');
 
 /* cron definitions for the varius cron timers.
 (cron timers are for statistik data collection) */
@@ -159,7 +160,6 @@ class wamo extends utils.Adapter {
 		this.log.debug('Main valve jam Protection: ' + String(this.config.regularmainvalvemovement));
 		this.log.debug('Cron settings main valve jam protection ' + String(this.config.regularemovementcron));
 
-
 		//=================================================================================================
 		// getting system language
 		//=================================================================================================
@@ -265,7 +265,6 @@ class wamo extends utils.Adapter {
 				baseURL: `http://${this.config.device_ip}:${this.config.device_port}/safe-tec/`,
 				timeout: timeout_axios_request * 1000,
 				responseType: 'json',
-				// @ts-ignore
 				responseEncoding: 'utf8',
 				httpAgent: new http.Agent({
 					keepAlive: true
@@ -282,7 +281,6 @@ class wamo extends utils.Adapter {
 				baseURL: `http://${this.config.safefloor_1_ip}:${this.config.device_port}/floorsensor/`,
 				timeout: FloorSenso1_LoopTimeout * 1000,
 				responseType: 'json',
-				// @ts-ignore
 				responseEncoding: 'utf8',
 				httpAgent: new http.Agent({
 					keepAlive: true
@@ -296,7 +294,6 @@ class wamo extends utils.Adapter {
 				baseURL: `http://${this.config.safefloor_2_ip}:${this.config.device_port}/floorsensor/`,
 				timeout: FloorSenso2_LoopTimeout * 1000,
 				responseType: 'json',
-				// @ts-ignore
 				responseEncoding: 'utf8',
 				httpAgent: new http.Agent({
 					keepAlive: true
@@ -310,7 +307,6 @@ class wamo extends utils.Adapter {
 				baseURL: `http://${this.config.safefloor_3_ip}:${this.config.device_port}/floorsensor/`,
 				timeout: FloorSenso3_LoopTimeout * 1000,
 				responseType: 'json',
-				// @ts-ignore
 				responseEncoding: 'utf8',
 				httpAgent: new http.Agent({
 					keepAlive: true
@@ -324,7 +320,6 @@ class wamo extends utils.Adapter {
 				baseURL: `http://${this.config.safefloor_4_ip}:${this.config.device_port}/floorsensor/`,
 				timeout: FloorSenso4_LoopTimeout * 1000,
 				responseType: 'json',
-				// @ts-ignore
 				responseEncoding: 'utf8',
 				httpAgent: new http.Agent({
 					keepAlive: true
@@ -515,6 +510,7 @@ class wamo extends utils.Adapter {
 				this.subscribeStates(DeviceParameters.SOF.statePath + '.' + DeviceParameters.SOF.id);	// [SOF] Self learning offset flow
 				this.subscribeStates(DeviceParameters.UPG.statePath + '.' + DeviceParameters.UPG.id);	// [UPG] Firmware upgrade
 				this.subscribeStates(DeviceParameters.P71.statePath + '.' + DeviceParameters.P71.id);	// [71] LS deactivated
+				this.subscribeStates(DeviceParameters.TMZ.statePath + '.' + DeviceParameters.TMZ.id);	// [TMZ] Time zone
 			}
 		}
 		if(this.syrSaveFloor1APIClient != null)
@@ -763,6 +759,22 @@ class wamo extends utils.Adapter {
 							else { this.log.error(DeviceParameters.TTM.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
 							this.log.error('ERROR setting [TTM]: ' + err.message);
+						}
+					}
+				}
+				//============================================================================
+				// TMZ Time zone
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.TMZ.statePath + '.' + DeviceParameters.TMZ.id) && (state.ack == false)) {
+					if (state.val != null) {
+						try {
+							if ((Number(state.val) >= Number(DeviceParameters.TMZ.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.TMZ.objectdefinition.common.max)) {
+								await this.set_DevieParameter(DeviceParameters.TMZ, state.val);
+								this.log.info('User changed parameter ' + DeviceParameters.TMZ.id + ' to ' + String(state.val));
+							}
+							else { this.log.error(DeviceParameters.TMZ.id + ' new value [' + String(state.val) + '] is out of range!'); }
+						} catch (err) {
+							this.log.error('ERROR setting [TMZ]: ' + err.message);
 						}
 					}
 				}

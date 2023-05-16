@@ -88,6 +88,7 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) CHG: State `SLP` - Self learning phase can now be changed by user
 * (smarthausleben) CHG: State `SMF` - Self learning minimum flow can now be changed by user
 * (smarthausleben) CHG: State `SOF` - Self learning offset flow can now be changed by user
+* (smarthausleben) CHG: State `TMZ` - Time zone can now be changed by user
 * (smarthausleben) ADD: Device Control State `UPG` set to true initiates **_Firmware upgrase_** (only if new firmware is available)
 * (smarthausleben) ADD: Device Control State `DEX` set to 1 initiates **_MLT (Micro Leake Test)_**
 * (smarthausleben) ADD: Warn message in log if a new firmware for SafeTech Connect device is available 
