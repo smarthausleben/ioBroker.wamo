@@ -1562,9 +1562,10 @@ class wamo extends utils.Adapter {
 								else {
 									let profAvailableState = parseInt(String(state.val));
 									// do we have a legal value like 0 or 1
-									if (profAvailableState > 1) {
-										profAvailableState = 1;
-										this.log.warn('Profile ' + stateChangeProfileNo + ' available value \'' + String(state.val) + '\' is not valid! Profile will be set to \'available\'! (1)');
+									// using limit of the first profile is OK since there are no diferences between profiles
+									if (profAvailableState > DeviceParameters.PA1.objectdefinition.common.max) {
+										profAvailableState = DeviceParameters.PA1.objectdefinition.common.max;
+										this.log.warn('Profile ' + stateChangeProfileNo + ' available value \'' + String(state.val) + '\' is not valid! Profile will be set to \'available\'! ('+ String(DeviceParameters.PA1.objectdefinition.common.max) + ')');
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
@@ -1640,9 +1641,10 @@ class wamo extends utils.Adapter {
 							case 'PB':	// Buzzer
 								try {
 									let profileBuzzer = parseFloat(String(state.val));
-									if (profileBuzzer > 1) {
-										profileBuzzer = 1;
-										this.log.warn('Profile ' + String(stateChangeProfileNo) + ' buzzer value \'' + String(state.val) + '\' is not valid! Buzzer will be set to \'ON\'! (1)');
+									// using limit of the first profile is OK since there are no diferences between profiles
+									if (profileBuzzer > DeviceParameters.PB1.objectdefinition.common.max) {
+										profileBuzzer = DeviceParameters.PB1.objectdefinition.common.max;
+										this.log.warn('Profile ' + String(stateChangeProfileNo) + ' buzzer value \'' + String(state.val) + '\' is not valid! Buzzer will be set to \'' + String(DeviceParameters.PB1.objectdefinition.common.max) + '\'! (1)');
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
@@ -1681,9 +1683,10 @@ class wamo extends utils.Adapter {
 							case 'PF':	// Max flow
 								try {
 									let profileMaxFlow = parseInt(String(state.val));
-									if (profileMaxFlow > 5000) {
-										profileMaxFlow = 5000;
-										this.log.warn('Profile ' + String(stateChangeProfileNo) + ' Maximal flow per hour of \'' + String(state.val) + '/h\' is is to high! Max flow will be set to maximum \'5000l/h\'!');
+									// using limit of the first profile is OK since there are no diferences between profiles
+									if (profileMaxFlow > DeviceParameters.PF1.objectdefinition.common.max) {
+										profileMaxFlow = DeviceParameters.PF1.objectdefinition.common.max;
+										this.log.warn('Profile ' + String(stateChangeProfileNo) + ' Maximal flow per hour of \'' + String(state.val) + '/h\' is is to high! Max flow will be set to maximum \''+ String(DeviceParameters.PF1.objectdefinition.common.max) + ' l/h\'!');
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
@@ -1722,9 +1725,10 @@ class wamo extends utils.Adapter {
 							case 'PM':	// Micro leak detection
 								try {
 									let profileMicroLeak = parseInt(String(state.val));
-									if (profileMicroLeak > 1) {
-										profileMicroLeak = 1;
-										this.log.warn('Profile ' + String(stateChangeProfileNo) + ' micro leak detection \'' + String(state.val) + '\' is not valid! Micro leak detection will be set to \'ON\'! (1)');
+									// using limit of the first profile is OK since there are no diferences between profiles
+									if (profileMicroLeak > DeviceParameters.PM1.objectdefinition.common.max) {
+										profileMicroLeak = DeviceParameters.PM1.objectdefinition.common.max;
+										this.log.warn('Profile ' + String(stateChangeProfileNo) + ' micro leak detection \'' + String(state.val) + '\' is not valid! Micro leak detection will be set to \'' + String(DeviceParameters.PM1.objectdefinition.common.max) + '\'! (1)');
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
@@ -1763,9 +1767,10 @@ class wamo extends utils.Adapter {
 							case 'PR':	// Time back to default profile
 								try {
 									let profileTimeBackStandardProfile = parseInt(String(state.val));
-									if (profileTimeBackStandardProfile > 720) {
-										profileTimeBackStandardProfile = 720;
-										this.log.warn('Profile ' + String(stateChangeProfileNo) + ' time back to default profile of \'' + String(state.val) + ' h\' is is to high! It will be set to the maximum of \'720h\' (30 days)!');
+									// using limit of the first profile is OK since there are no diferences between profiles
+									if (profileTimeBackStandardProfile > DeviceParameters.PR1.objectdefinition.common.max) {
+										profileTimeBackStandardProfile = DeviceParameters.PR1.objectdefinition.common.max;
+										this.log.warn('Profile ' + String(stateChangeProfileNo) + ' time back to default profile of \'' + String(state.val) + ' h\' is is to high! It will be set to the maximum of \'' + String(DeviceParameters.PR1.objectdefinition.common.max) + '\' (30 days)!');
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
@@ -1804,9 +1809,10 @@ class wamo extends utils.Adapter {
 							case 'PT':	// Time limit
 								try {
 									let profileLeakageTimeLimit = parseInt(String(state.val));
-									if (profileLeakageTimeLimit > 1500) {
-										profileLeakageTimeLimit = 1500;
-										this.log.warn('Profile ' + String(stateChangeProfileNo) + ' leakage time limit of \'' + String(state.val) + ' min\' is is to high! It will be set to the maximum of \'1500 min\' (25 h)!');
+									// using limit of the first profile is OK since there are no diferences between profiles
+									if (profileLeakageTimeLimit > DeviceParameters.PT1.objectdefinition.common.max) {
+										profileLeakageTimeLimit = DeviceParameters.PT1.objectdefinition.common.max;
+										this.log.warn('Profile ' + String(stateChangeProfileNo) + ' leakage time limit of \'' + String(state.val) + ' min\' is is to high! It will be set to the maximum of \'' + String(DeviceParameters.PT1.objectdefinition.common.max) + '\' (25 h)!');
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
@@ -1845,9 +1851,10 @@ class wamo extends utils.Adapter {
 							case 'PV':	// Volume limit
 								try {
 									let profileLeakageVolumeLimit = parseInt(String(state.val));
-									if (profileLeakageVolumeLimit > 1900) {
-										profileLeakageVolumeLimit = 1900;
-										this.log.warn('Profile ' + String(stateChangeProfileNo) + ' leakage volume limit of \'' + String(state.val) + ' l\' is is to high! It will be set to the maximum of \'1900 l\'!');
+									// using limit of the first profile is OK since there are no diferences between profiles
+									if (profileLeakageVolumeLimit > DeviceParameters.PV1.objectdefinition.common.max) {
+										profileLeakageVolumeLimit = DeviceParameters.PV1.objectdefinition.common.max;
+										this.log.warn('Profile ' + String(stateChangeProfileNo) + ' leakage volume limit of \'' + String(state.val) + ' l\' is is to high! It will be set to the maximum of \'' + String(DeviceParameters.PV1.objectdefinition.common.max) + ' l\'!');
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
@@ -1886,9 +1893,10 @@ class wamo extends utils.Adapter {
 							case 'PW':	// Leakage warning
 								try {
 									let profileLeakageWarning = parseInt(String(state.val));
-									if (profileLeakageWarning > 1) {
-										profileLeakageWarning = 1;
-										this.log.warn('Profile ' + String(stateChangeProfileNo) + ' leackage warning value \'' + String(state.val) + '\' is not valid! Leackage warning will be set to \'ON\'! (1)');
+									// using limit of the first profile is OK since there are no diferences between profiles
+									if (profileLeakageWarning > DeviceParameters.PW1.objectdefinition.common.max) {
+										profileLeakageWarning = DeviceParameters.PW1.objectdefinition.common.max;
+										this.log.warn('Profile ' + String(stateChangeProfileNo) + ' leackage warning value \'' + String(state.val) + '\' is not valid! Leackage warning will be set to \'' + String(DeviceParameters.PW1.objectdefinition.common.max) + '\'! (1)');
 									}
 									switch (stateChangeProfileNo) {
 										case 1:
