@@ -49,7 +49,8 @@ If you find this adapter useful and you want to support this project, your kindn
 -->
 
 ### **WORK IN PROGRESS**
-* (smarthausleben) FIX: Profile parameter PV1 ... PV8 maximum value set to 9000 **_(Issue #24)_** `PV1 ... PV8 need to be deleted first in order to be create correctly during adapter start`
+* (smarthausleben) FIX: Profile parameter PV1 ... PV8 maximum value set to 9000 **_(Issue #24)_** `State objects PV1 ... PV8 need to be deleted first in order to be create correctly during adapter start`
+* ========================================================================
 * (smarthausleben) ADD: [SafeFloor Device] New **SafeFloor Units** Tab in adapter settings to manage up to 4 **_SafeFloor Connect_** devices
 * (smarthausleben) ADD: New option **_"Enable executing test loop"_** in Tab **_"Advanced Options"_** to enable/disable cron based executed [Test Loop]
 * (smarthausleben) ADD: New option **_"Allow SERVICE and FACTORY state changes"_** in Tab **_"Advanced Options"_** to enable/disable changes of objects protected by the manufacturer
@@ -84,6 +85,9 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) ADD: State `DKI` - **_Safe-Tec device kind ID_**
 * (smarthausleben) ADD: State `FSA` - **_Add (Pair) Floorsensor_**
 * (smarthausleben) ADD: State `WFK` - **_WiFi key_** After entering the WiFi key into the WFK state the key will be send to device and afterwards state value will be cleared imediatly
+* (smarthausleben) ADD: Device Control State `UPG` set to true initiates **_Firmware upgrase_** (only if new firmware is available)
+* (smarthausleben) ADD: Device Control State `DEX` set to 1 initiates **_MLT (Micro Leake Test)_**
+* (smarthausleben) ADD: Warn message in log if a new firmware for SafeTech Connect device is available 
 * ========================================================================
 * = The following objects need to be deleted first in order to get the new functionality
 * = Since objects will be checked and created only during startup of the adapter follow this procedure
@@ -100,9 +104,6 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) CHG: State `71` - **_Leakage protection deactivated_** - State moved from **_Settings_** to **_Device-Control_** (please delete Object **_71_** in object _Settings_ folder )
 * (smarthausleben) CHG: State `71` - **_Leakage protection deactivated_** - is now changable (warn message appears in log if Leakage protection is deaktivated) 
 * ========================================================================
-* (smarthausleben) ADD: Device Control State `UPG` set to true initiates **_Firmware upgrase_** (only if new firmware is available)
-* (smarthausleben) ADD: Device Control State `DEX` set to 1 initiates **_MLT (Micro Leake Test)_**
-* (smarthausleben) ADD: Warn message in log if a new firmware for SafeTech Connect device is available 
 
 ### 0.3.0 (2023-04-04) - ***Jam Protection*** release
 * (smarthausleben) ADD: [Main valve jam protection] New State JPR for Jam protection running 
