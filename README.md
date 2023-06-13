@@ -15,7 +15,8 @@
 
 This adapter adds "wamo" leakage protection monitoring to your ioBroker installation.
 
-The adapter connects to your **SYR SafeTech Connect 2422** or **POLYGONVATRO** leakage protection device in order to read data from the device and create some statistic data like water consumption history. And since the **SafeFlore Connect Release** you can read out data from those devices.
+The adapter connects to your **SYR SafeTech Connect 2422** or **POLYGONVATRO** leakage protection device in order to read out data from the device, create some statistic data like water consumption history and control this device.
+And since the **SafeFlore Connect Release** you can also add such devices to the adapter and read out data from those devices.
 
 Further details about the **SYR SaveTech Connect 2422** device can be found on the [SYR detail webpage](https://www.syr.de/de/Produkte/CB9D9A72-BC51-40CE-840E-73401981A519/SafeTech-Connect). And further details about the **SafeFlore Connect** device can also be found on the related [SYR detail webpage](https://www.syr.de/de/Produkte/699373BB-C8BE-4992-9CFA-2CB15A5A6166/SafeFloor-Connect#FocusContent).
 
@@ -23,7 +24,7 @@ The POLYGONVATRO unit is, under the hood, a SYR SaveTech Connect 2422 unit but w
 
 ## IMPORTENT
 
-In the SafeFloor Connect release is, among other things, a new functionality for SafeFlore Connect devices implemented. Currently you can add up to 4 Devices.
+Within the `SafeFloor Connect release` was, among other things, a new functionality for SafeFlore Connect devices implemented. Currently you can add up to 4 Devices.
 
 for importent information about older versions please read the related capter in `Importent release related information` in the [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information).  
 
