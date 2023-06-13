@@ -264,14 +264,14 @@
                     "lg": 6,
                     "label": "show API response as info logging messages"
                 },
-                "hideallinfomessages": {
+                "hidetriggerinfomessages": {
                     "newLine": false,
                     "type": "checkbox",
                     "sm": 12,
                     "md": 6,
                     "lg": 6,
-                    "label": "Hide all INFO logging messages",
-                    "help": "If this option is activated, no info logging messages are shown"
+                    "label": "Hide all trigger logging messages",
+                    "help": "If this option is activated, no trigger logging messages are shown"
                 },
                 "divider2":{
                     "type": "divider"

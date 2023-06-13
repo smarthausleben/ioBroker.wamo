@@ -245,7 +245,7 @@
         "moremessages": false,
         "apiresponsemessages": false,
         "valueinfomessages": true,
-        "hideallinfomessages": false,
+        "hidetriggerinfomessages": false,
         "reconnectingdelaytime": 5,
         "requesttimeout": 5,
         "regularmainvalvemovement": false,
