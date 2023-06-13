@@ -15,19 +15,20 @@
 
 This adapter adds "wamo" leakage protection monitoring to your ioBroker installation.
 
-The adapter connects to your **SYR SafeTech Connect 2422** or **POLYGONVATRO** leakage protection device in order to read data from the device and create some statistic data like water consumption history.
+The adapter connects to your **SYR SafeTech Connect 2422** or **POLYGONVATRO** leakage protection device in order to read data from the device and create some statistic data like water consumption history. Also since the **SafeFlore Connect Release** you can read out data from those devices.
 
-Details about the SYR SaveTech Connect 2422 can be found on the [SYR detail webpage](https://www.syr.de/de/Produkte/CB9D9A72-BC51-40CE-840E-73401981A519/SafeTech-Connect).
+Further details about the **SYR SaveTech Connect 2422** device can be found on the [SYR detail webpage](https://www.syr.de/de/Produkte/CB9D9A72-BC51-40CE-840E-73401981A519/SafeTech-Connect).And further details about the **SafeFlore Connect** device can also be found on the related [SYR detail webpage](https://www.syr.de/de/Produkte/699373BB-C8BE-4992-9CFA-2CB15A5A6166/SafeFloor-Connect#FocusContent).
 
 The POLYGONVATRO unit is, under the hood, a SYR SaveTech Connect 2422 unit but without pressure-, temperature- and conductivity sensor. The POLYGONVATRO unit is currently not available. 
 
 ## IMPORTENT
 
-for importent information about older versions please read the related capter in `Importent release related information` in the [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information).
+In the SafeFloor Connect release is, among other things, a new functionality for SafeFlore Connect devices implemented. Currently you can add up to 4 Devices.
 
+for importent information about older versions please read the related capter in `Importent release related information` in the [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information).  
 
 ### Disclaimer / Warning
-If during the **_Jam Protection_** activity communication to the device gets lost or the WAMO adapter or ioBroker itself crashes or will be stopped, the main valve will stay in the last commanded position! This means if something gets wrong, the valve could be closed and needs to be opened by yourself using the related app or the button on the device itself.
+The data read functionality is not yet really useful implemented into the SafeFloor Connect. Currently the Floor Sensors are going immediately into sleep mode after they woke up and have send their information’s to the SYR cloud. Therefore there is no way to catch the device during this period yet. So in order to read out Floor Sensors with this ioBroker adapter you have to activate the Option “Keep online” in the adapter settings tab “SAFEFLOOR UNITS” and wake up the device by pushing the button inside the unit. But this means that the device is not going into sleep mode anymore and therefore the device battery’s will be drained really quick. At the moment the only viable solution is the use of an battery adapter. 
 
 ## Support this project
 If you find this adapter useful and you want to support this project, your kindness will be highly appreciated. You can easily support me [here.](https://www.paypal.com/paypalme/smarthausleben) Thanks 😊   
