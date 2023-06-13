@@ -1,3 +1,4 @@
+---
 name: Feature request
 about: Please add this feature
 title: ''
