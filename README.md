@@ -25,6 +25,7 @@ The POLYGONVATRO unit is, under the hood, a SYR SaveTech Connect 2422 unit but w
 ## IMPORTENT
 
 Within the `SafeFloor Connect release` was, among other things, a new functionality for SafeFlore Connect devices implemented. Currently you can add up to 4 Devices.
+To read out this sensor with the current the SafeFloor Sensor firmware (Version 2.21)  please read the Disclaimer / Warning section below verry carefully.
 
 for importent information about older versions please read the related capter in `Importent release related information` in the [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information).  
 
