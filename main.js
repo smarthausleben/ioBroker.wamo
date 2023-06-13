@@ -276,7 +276,7 @@ class wamo extends utils.Adapter {
 		// Initialize Axios Client for SafeFloor Units (this client will be used to communicate with the SafeFloor units)	===
 		//=====================================================================================================================
 		if (this.config.safefloor_1_ip != '0.0.0.0' && this.config.safefloor_1_ip != '') {
-			if(!this.config.hideallinfomessages){this.log.info('SafeFloor Connect Unit 1 IP-Address: ' + String(this.config.safefloor_1_ip) + ':' + String(this.config.device_port));}
+			this.log.info('SafeFloor Connect Unit 1 IP-Address: ' + String(this.config.safefloor_1_ip) + ':' + String(this.config.device_port));
 			this.syrSaveFloor1APIClient = axios.create({
 				baseURL: `http://${this.config.safefloor_1_ip}:${this.config.device_port}/floorsensor/`,
 				timeout: FloorSenso1_LoopTimeout * 1000,
@@ -289,7 +289,7 @@ class wamo extends utils.Adapter {
 			this.log.debug('SafeFloor Connect Unit 1 baseURL: ' + String(this.syrSaveFloor1APIClient.defaults.baseURL));
 		}
 		if (this.config.safefloor_2_ip != '0.0.0.0' && this.config.safefloor_2_ip != '') {
-			if(!this.config.hideallinfomessages){this.log.info('SafeFloor Connect Unit 2 IP-Address: ' + String(this.config.safefloor_2_ip) + ':' + String(this.config.device_port));}
+			this.log.info('SafeFloor Connect Unit 2 IP-Address: ' + String(this.config.safefloor_2_ip) + ':' + String(this.config.device_port));
 			this.syrSaveFloor2APIClient = axios.create({
 				baseURL: `http://${this.config.safefloor_2_ip}:${this.config.device_port}/floorsensor/`,
 				timeout: FloorSenso2_LoopTimeout * 1000,
@@ -302,7 +302,7 @@ class wamo extends utils.Adapter {
 			this.log.debug('SafeFloor Connect Unit 2 baseURL: ' + String(this.syrSaveFloor2APIClient.defaults.baseURL));
 		}
 		if (this.config.safefloor_3_ip != '0.0.0.0' && this.config.safefloor_3_ip != '') {
-			if(!this.config.hideallinfomessages){this.log.info('SafeFloor Connect Unit 3 IP-Address: ' + String(this.config.safefloor_3_ip) + ':' + String(this.config.device_port));}
+			this.log.info('SafeFloor Connect Unit 3 IP-Address: ' + String(this.config.safefloor_3_ip) + ':' + String(this.config.device_port));
 			this.syrSaveFloor3APIClient = axios.create({
 				baseURL: `http://${this.config.safefloor_3_ip}:${this.config.device_port}/floorsensor/`,
 				timeout: FloorSenso3_LoopTimeout * 1000,
@@ -315,7 +315,7 @@ class wamo extends utils.Adapter {
 			this.log.debug('SafeFloor Connect Unit 3 baseURL: ' + String(this.syrSaveFloor3APIClient.defaults.baseURL));
 		}
 		if (this.config.safefloor_4_ip != '0.0.0.0' && this.config.safefloor_4_ip != '') {
-			if(!this.config.hideallinfomessages){this.log.info('SafeFloor Connect Unit 4 IP-Address: ' + String(this.config.safefloor_4_ip) + ':' + String(this.config.device_port));}
+			this.log.info('SafeFloor Connect Unit 4 IP-Address: ' + String(this.config.safefloor_4_ip) + ':' + String(this.config.device_port));
 			this.syrSaveFloor4APIClient = axios.create({
 				baseURL: `http://${this.config.safefloor_4_ip}:${this.config.device_port}/floorsensor/`,
 				timeout: FloorSenso4_LoopTimeout * 1000,
@@ -335,7 +335,7 @@ class wamo extends utils.Adapter {
 				while (!await this.devicePing()) {
 					this.log.warn('waiting till device becomes available again ...');
 				}
-				if(!this.config.hideallinfomessages){this.log.info('Leakage protection device is present at: ' + String(this.config.device_ip) + ':' + String(this.config.device_port));}
+				this.log.info('Leakage protection device is present at: ' + String(this.config.device_ip) + ':' + String(this.config.device_port));
 			}
 			catch (err) {
 				this.log.error(err);
@@ -349,7 +349,7 @@ class wamo extends utils.Adapter {
 		if (this.syrApiClient != null) {
 			while (!gotSensorPreasence) {
 				try {
-					if(!this.config.hideallinfomessages){this.log.info('checking sensor presence ...');}
+					this.log.info('checking sensor presence ...');
 					this.log.debug('async onReady() at "while (!gotSensorPreasence)" -> Getting sensor presence');
 					//==================================================================
 					//= Getting data for 'DeviceParameters' in [const sensorPresence]  =
@@ -383,7 +383,7 @@ class wamo extends utils.Adapter {
 		if (this.syrApiClient != null) {
 			while (!gotDeviceData) {
 				try {
-					if(!this.config.hideallinfomessages){this.log.info('initial reading device data ...');}
+					this.log.info('initial reading device data ...');
 					this.log.debug('async onReady() at "while (!gotDeviceData)" -> Getting initial data');
 					//==================================================================
 					//= Getting all datas for 'DeviceParameters' in [const initStates] =
@@ -410,7 +410,7 @@ class wamo extends utils.Adapter {
 		if (this.syrApiClient != null) {
 			while (!gotDeviceProfileData) {
 				try {
-					if(!this.config.hideallinfomessages){this.log.info('initial reading profile data ...');}
+					this.log.info('initial reading profile data ...');
 					// Device Profiles Initialisation
 					this.log.debug('async onReady() - getDeviceProfilesData -> Getting Profiles data from device at ' + this.config.device_ip + ':' + this.config.device_port);
 					//===============================================
@@ -540,7 +540,7 @@ class wamo extends utils.Adapter {
 		// reference to Adapter
 		myAdapter = this;
 
-		if (moreMessages) { if(!this.config.hideallinfomessages){this.log.info('wamo adapter is running');} }
+		if (moreMessages) { this.log.info('wamo adapter is running');}
 	}
 
 	/**
