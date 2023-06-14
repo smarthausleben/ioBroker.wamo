@@ -4923,7 +4923,7 @@ class wamo extends utils.Adapter {
 			await this.set_SERVICE_Mode();
 			try {
 				// send clear alarm command to device
-				deviceResponse = await this.syrApiClient.get('set/ALA');
+				deviceResponse = await this.syrApiClient.get('clr/ALA');
 				if (deviceResponse.status === 200) {
 					NetworkDevices.LeakageDevice_responding = true;
 					this.setInstanceLED();
