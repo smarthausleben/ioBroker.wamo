@@ -1043,6 +1043,7 @@ class wamo extends utils.Adapter {
 								if(state.val){
 									this.log.info('Command: [CLRALA] Alarm clearing and valve reopening');
 									await this.clear_Alarm();
+									await this.setStateAsync(DeviceParameters.CLRALA.statePath + '.' + DeviceParameters.CLRALA.id, { val: false, ack: true });
 								}
 							}
 							catch (err) {
