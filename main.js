@@ -4929,7 +4929,8 @@ class wamo extends utils.Adapter {
 					this.setInstanceLED();
 					if (apiResponseInfoMessages) { this.log.info('[clear_Alarm] syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 					const clraResponse = JSON.stringify(deviceResponse.data['clrALA']);
-					this.log.debug('[clear_Alarm] device response = ' + String(clraResponse));
+					if(clraResponse == 'OK'){this.log.info('Currend alarm cleared')					}
+					else{this.log.info('Currend alarm NOT cleared! Device response = ' + String(clraResponse));}
 				}
 				else {
 					NetworkDevices.LeakageDevice_responding = true;
