@@ -1040,9 +1040,11 @@ class wamo extends utils.Adapter {
 				//============================================================================
 				else if ((id == statePrefix + DeviceParameters.CLRALA.statePath + '.' + DeviceParameters.CLRALA.id) && state.ack == false) {
 							try {
+								// is state value set to true?
 								if(state.val){
 									this.log.info('Command: [CLRALA] Alarm clearing and valve reopening');
 									await this.clear_Alarm();
+									// set the changed state [CLRALA] back to false
 									await this.setStateAsync(DeviceParameters.CLRALA.statePath + '.' + DeviceParameters.CLRALA.id, { val: false, ack: true });
 								}
 							}
@@ -4913,7 +4915,7 @@ class wamo extends utils.Adapter {
 
 	/**
 	 * this function sends a clear Alarm command to the device
-	 * @returns true 
+	 * @returns  nothing or throws an error
 	 */
 	async clear_Alarm() {
 		this.log.info('Clearing current alarm ...');
@@ -4929,7 +4931,7 @@ class wamo extends utils.Adapter {
 					this.setInstanceLED();
 					if (apiResponseInfoMessages) { this.log.info('[clear_Alarm] syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 					const clraResponse = JSON.stringify(deviceResponse.data['clrALA']);
-					if(clraResponse == '"OK"'){this.log.info('Currend alarm cleared')					}
+					if(clraResponse == '"OK"'){this.log.info('Currend alarm was cleared successfully')					}
 					else{this.log.info('Currend alarm NOT cleared! Device response = ' + String(clraResponse));}
 				}
 				else {
