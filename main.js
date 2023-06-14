@@ -515,6 +515,7 @@ class wamo extends utils.Adapter {
 				this.subscribeStates(DeviceParameters.UPG.statePath + '.' + DeviceParameters.UPG.id);	// [UPG] Firmware upgrade
 				this.subscribeStates(DeviceParameters.P71.statePath + '.' + DeviceParameters.P71.id);	// [71] LS deactivated
 				this.subscribeStates(DeviceParameters.TMZ.statePath + '.' + DeviceParameters.TMZ.id);	// [TMZ] Time zone
+				this.subscribeStates(DeviceParameters.CLRALA.statePath + '.' + DeviceParameters.CLRALA.id);	// [CLRALA] Clear current alarm
 			}
 		}
 		if(this.syrSaveFloor1APIClient != null)
@@ -1033,6 +1034,20 @@ class wamo extends utils.Adapter {
 							this.log.error(String(state.val) + ' is not valid for ' + String(DeviceParameters.SRO.id + ' Valid values: 1=open 2=closed'));
 							break;
 					}
+				}
+				//============================================================================
+				// CLRALA Clear current alarm
+				//============================================================================
+				else if ((id == statePrefix + DeviceParameters.CLRALA.statePath + '.' + DeviceParameters.CLRALA.id) && state.ack == false) {
+							try {
+								if(state.val){
+									this.log.info('Command: [CLRALA] Alarm clearing and valve reopening');
+									await this.clear_Alarm();
+								}
+							}
+							catch (err) {
+								this.log.warn('onStateChange(id, state) -> await this.clear_Alarm() ... ERROR: ' + err);
+							}
 				}
 				//============================================================================
 				// APT WiFi AP timeout changed
@@ -4892,6 +4907,44 @@ class wamo extends utils.Adapter {
 			NetworkDevices.LeakageDevice_responding = false;
 			this.setInstanceLED();
 			throw new Error(err.message);
+		}
+	}
+
+	/**
+	 * this function sends a clear Alarm command to the device
+	 * @returns true 
+	 */
+	async clear_Alarm() {
+		this.log.info('Clearing current alarm ...');
+
+		if (this.syrApiClient != null) {
+			let deviceResponse = null;
+			await this.set_SERVICE_Mode();
+			try {
+				// send clear alarm command to device
+				deviceResponse = await this.syrApiClient.get('set/ALA');
+				if (deviceResponse.status === 200) {
+					NetworkDevices.LeakageDevice_responding = true;
+					this.setInstanceLED();
+					if (apiResponseInfoMessages) { this.log.info('[clear_Alarm] syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
+					const clraResponse = JSON.stringify(deviceResponse.data['clrALA']);
+					this.log.debug('[clear_Alarm] device response = ' + String(clraResponse));
+				}
+				else {
+					NetworkDevices.LeakageDevice_responding = true;
+					this.setInstanceLED();
+					// no response from device
+					this.log.warn('Error clearing current alarm! No valid response from device. Response: ' + String(deviceResponse.status)) + ' ' + String(deviceResponse.statusText);
+				}
+			} catch (err) {
+				NetworkDevices.LeakageDevice_responding = false;
+				this.setInstanceLED();
+				this.log.error('Response: ' + err);
+			}
+			await this.clear_SERVICE_FACTORY_Mode();
+		}
+		else {
+			throw new Error('syrApiClient is not initialized!');
 		}
 	}
 

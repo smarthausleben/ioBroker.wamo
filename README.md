@@ -50,6 +50,7 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) ADD: New option **_"Hide all trigger info logging messages"_** in Tab **_"Advanced Options"_** to `hide all info logging messages at trigger events`
 * (smarthausleben) ADD: New option **_"Enable executing test loop"_** in Tab **_"Advanced Options"_** to enable/disable cron based executed [Test Loop]
 * (smarthausleben) ADD: New option **_"Allow SERVICE and FACTORY state changes"_** in Tab **_"Advanced Options"_** to enable/disable changes of objects protected by the manufacturer
+* (smarthausleben) ADD: State `CLRALA` - **_DeviceControl State_** to clear current alarm and reopen main valve
 * (smarthausleben) ADD: State `BFT` - **_Button filter threshold_**
 * (smarthausleben) ADD: State `BPT` - **_Button proximity threshold_**
 * (smarthausleben) ADD: State `CNF` - **_Conductivity factor_**
