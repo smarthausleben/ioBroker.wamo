@@ -2366,25 +2366,28 @@ class wamo extends utils.Adapter {
 	 * Cron action
 	 * [Floor Sensor 2]
 	 */
-	async alarm_cron_FloorSensor_Tick_2(){
+	async alarm_cron_FloorSensor_Tick_2() {
 		await this.delay(Math.random() * 1000 / 2);
-		if (this.syrSaveFloor2APIClient != null){this.alarm_cron_FloorSensors(this.syrSaveFloor2APIClient, this.config.safefloor_2_keep_online, 2);}}
+		if (this.syrSaveFloor2APIClient != null) { this.alarm_cron_FloorSensors(this.syrSaveFloor2APIClient, this.config.safefloor_2_keep_online, 2); }
+	}
 
 	/**
 	 * Cron action
 	 * [Floor Sensor 3]
 	 */
-	async alarm_cron_FloorSensor_Tick_3(){
+	async alarm_cron_FloorSensor_Tick_3() {
 		await this.delay(Math.random() * 1000 / 2);
-		if (this.syrSaveFloor3APIClient != null){this.alarm_cron_FloorSensors(this.syrSaveFloor3APIClient, this.config.safefloor_3_keep_online, 3);}}
+		if (this.syrSaveFloor3APIClient != null) { this.alarm_cron_FloorSensors(this.syrSaveFloor3APIClient, this.config.safefloor_3_keep_online, 3); }
+	}
 
 	/**
 	 * Cron action
 	 * [Floor Sensor 4]
 	 */
-	async alarm_cron_FloorSensor_Tick_4(){
+	async alarm_cron_FloorSensor_Tick_4() {
 		await this.delay(Math.random() * 1000 / 2);
-		if (this.syrSaveFloor4APIClient != null){this.alarm_cron_FloorSensors(this.syrSaveFloor4APIClient, this.config.safefloor_4_keep_online, 4);}}
+		if (this.syrSaveFloor4APIClient != null) { this.alarm_cron_FloorSensors(this.syrSaveFloor4APIClient, this.config.safefloor_4_keep_online, 4); }
+	}
 
 	/**
 	 * This function is for polling data from FloorSensors
@@ -3408,7 +3411,6 @@ class wamo extends utils.Adapter {
 			this.log.error('ERROR at async createRawStateObject(DeviceParameter, DeviceCannels): Parameter ID = ' + String(DeviceParameter.id) + ' ERROR: ' + err);
 		}
 	}
-
 
 	/**
 	 * This methode creates state objects
@@ -4791,7 +4793,6 @@ class wamo extends utils.Adapter {
 			return null;
 		}
 	}
-
 
 	/**
 	 * returns clear text alarm message according alarm code
