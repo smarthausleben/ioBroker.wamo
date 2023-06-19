@@ -84,7 +84,8 @@ If you find this adapter useful and you want to support this project, your kindn
 * (smarthausleben) ADD: State `WFK` - **_WiFi key_** After entering the WiFi key into the WFK state the key will be send to device and afterwards state value will be cleared imediatly
 * (smarthausleben) ADD: Device Control State `UPG` set to true initiates **_Firmware upgrase_** (only if new firmware is available)
 * (smarthausleben) ADD: Device Control State `DEX` set to 1 initiates **_MLT (Micro Leake Test)_**
-* (smarthausleben) ADD: Warn message in log if a new firmware for SafeTech Connect device is available 
+* (smarthausleben) ADD: Warn message in log if a new firmware for SafeTech Connect device is available
+* (smarthausleben) REM: Removed **_testing loop_** functionality
 * ========================================================================
 * = The following objects need to be deleted first in order to get the new functionality
 * = Since objects will be checked and created only during startup of the adapter follow this procedure

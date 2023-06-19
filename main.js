@@ -46,18 +46,10 @@ const cron_Day = '0 0 * * *';
 const corn_FloorSensor_short = '*/15 * * * * *'; // Every 15 Seconds
 const corn_FloorSensor_long = '*/2 * * * *'; // Every 2 minutes
 
-//const cron_TestinLoop = '*/2 * * * *'; // Every 2 minutes
-const cron_TestinLoop = '*/13 * * * * *'; // Every 13 seconds
-
 const FloorSenso1_LoopTimeout = 5;
 const FloorSenso2_LoopTimeout = 5;
 const FloorSenso3_LoopTimeout = 5;
 const FloorSenso4_LoopTimeout = 5;
-
-//=======================================================================================
-let executeTestingLoop; // Flag to indicate if Testing Loop should be executed
-const RunTestfunction = false;
-//=======================================================================================
 
 const Parameter_FACTORY_Mode = 'ADM/(2)f';
 const Parameter_SERVICE_Mode = 'ADM/(1)';
@@ -150,7 +142,6 @@ class wamo extends utils.Adapter {
 		valuesInfoMessages = this.config.valueinfomessages;
 		delay_reconnection = this.config.reconnectingdelaytime;
 		timeout_axios_request = this.config.requesttimeout;
-		executeTestingLoop = this.config.executetestloop;
 		allow_SERVICE_and_FACTORY_changes = this.config.allow_service_and_factory_changes;
 		this.log.debug('config Device IP: ' + String(this.config.device_ip));
 		this.log.debug('config Device Port: ' + String(this.config.device_port));
@@ -2078,10 +2069,6 @@ class wamo extends utils.Adapter {
 	 */
 	async timerStarts() {
 		try {
-			if(this.config.executetestloop)
-			{
-				schedule.scheduleJob(cron_TestinLoop, cron_poll_TestingLoop);
-			}
 			if(this.syrApiClient != null){
 				schedule.scheduleJob(cron_Day, cron_poll_day);
 				schedule.scheduleJob(cron_Week, cron_poll_week);
@@ -2327,23 +2314,6 @@ class wamo extends utils.Adapter {
 			return true;
 		} catch (err) {
 			throw new Error(err);
-		}
-	}
-
-	/**
-	 * Cron action
-	 * [Testing loop]
-	 *
-	 * This function is only for internal testing and will only
-	 * be executed if "executeTestingLoop" is set to true
-	 */
-	async alarm_corn_TestingLoop_Tick() {
-
-		// only execute if Flag is set to TRUE
-		if (!executeTestingLoop) { return; }
-		this.log.warn('[Testing Loop] Trigger');
-		for (const key in DeviceParametersFS) {
-			this.log.warn('DeviceParameterFS.id: ' + String(DeviceParametersFS[key].id) + ' is defined');
 		}
 	}
 
@@ -6440,18 +6410,6 @@ async function cron_poll_FloorSensor_3() {
 async function cron_poll_FloorSensor_4() {
 	try {
 		await myAdapter.alarm_cron_FloorSensor_Tick_4();
-	} catch (err) {
-		//throw new Error(err);
-	}
-}
-
-/**
- * Cron event handler
- * [Testing loop]
- */
-async function cron_poll_TestingLoop() {
-	try {
-		await myAdapter.alarm_corn_TestingLoop_Tick();
 	} catch (err) {
 		//throw new Error(err);
 	}
