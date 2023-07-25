@@ -1021,7 +1021,8 @@ class wamo extends utils.Adapter {
 				// CLRALA Clear current alarm
 				//============================================================================
 				else if ((id == statePrefix + DeviceParameters.CLRALA.statePath + '.' + DeviceParameters.CLRALA.id) && state.ack == false) {
-							try {
+					this.log.warn('[CLRALA] Alarm clearing event hit');
+					try {
 								// is state value set to true?
 								if(state.val){
 									this.log.info('Command: [CLRALA] Alarm clearing and valve reopening');
