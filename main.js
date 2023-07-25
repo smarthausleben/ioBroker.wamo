@@ -562,7 +562,7 @@ class wamo extends utils.Adapter {
 	 */
 	async onStateChange(id, state) {
 		try {
-			this.log.debug('async onStateChange(id, state) hit -> id: ' + String(id));
+			this.log.warn('async onStateChange(id, state) hit -> id: ' + String(id));
 			if (state) {
 				this.log.debug('async onStateChange(id, state) -> if (state) hit -> id: ' + String(id) + ' state.val: ' + String(state.val) + ' state.ack: ' + String(state.ack));
 				const statePrefix = this.name + '.' + String(this.instance) + '.';
