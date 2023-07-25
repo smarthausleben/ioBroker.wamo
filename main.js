@@ -562,7 +562,6 @@ class wamo extends utils.Adapter {
 	 */
 	async onStateChange(id, state) {
 		try {
-			this.log.warn('async onStateChange(id, state) hit -> id: ' + String(id));
 			if (state) {
 				this.log.debug('async onStateChange(id, state) -> if (state) hit -> id: ' + String(id) + ' state.val: ' + String(state.val) + ' state.ack: ' + String(state.ack));
 				const statePrefix = this.name + '.' + String(this.instance) + '.';
@@ -1021,7 +1020,7 @@ class wamo extends utils.Adapter {
 				// CLRALA Clear current alarm
 				//============================================================================
 				else if ((id == statePrefix + DeviceParameters.CLRALA.statePath + '.' + DeviceParameters.CLRALA.id) && state.ack == false) {
-					this.log.warn('[CLRALA] Alarm clearing event hit');
+					//this.log.warn('[CLRALA] Alarm clearing event hit');
 					try {
 								// is state value set to true?
 								if(state.val){
