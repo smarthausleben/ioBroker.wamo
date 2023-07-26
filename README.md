@@ -44,25 +44,8 @@ If you find this adapter useful and you want to support this project, your kindn
 -->
 
 ### **WORK IN PROGRESS**
-* (smarthausleben) FIX: Profile parameter PV1 ... PV8 maximum value set to 9000 **_(Issue #24)_** `State objects PV1 ... PV8 need to be deleted first in order to be create correctly during adapter start`
-* (smarthausleben) ADD: New option **_"Hide all trigger info logging messages"_** in Tab **_"Advanced Options"_** to `hide all info logging messages at trigger events`
-* (smarthausleben) ADD: New option **_"Allow SERVICE and FACTORY state changes"_** in Tab **_"Advanced Options"_** to enable/disable changes of objects protected by the manufacturer
-* (smarthausleben) ADD: A lot of new states `please read the release related information section` in the [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information).
-* = The following objects need to be deleted first in order to get the new functionality
-* = Since objects will be checked and created only during startup of the adapter follow this procedure
-* = (stop wamo adapter -> delete state object -> start wamo -> object will be created)
-* ========================================================================
-* (smarthausleben) CHG: State `ALD` - **_Alarm duration (signaling time)_** can now be changed by user
-* (smarthausleben) CHG: State `CLP` - **_Cluster Profile can_** now be changed by user
-* (smarthausleben) CHG: State `SLO` - **_Self learning offset_** can now be changed by user
-* (smarthausleben) CHG: State `SLP` - **_Self learning phase_** can now be changed by user
-* (smarthausleben) CHG: State `SMF` - **_Self learning minimum flow_** can now be changed by user
-* (smarthausleben) CHG: State `SOF` - **_Self learning offset flow_** can now be changed by user
-* (smarthausleben) CHG: State `TMZ` - **_Time zone_** can now be changed by user
-* (smarthausleben) CHG: State `WFC` - **_WiFi connect (SSID)_** can now be changed by user
-* (smarthausleben) CHG: State `71` - **_Leakage protection deactivated_** - State moved from **_Settings_** to **_Device-Control_** (please delete Object **_71_** in object _Settings_ folder )
-* (smarthausleben) CHG: State `71` - **_Leakage protection deactivated_** - is now changable (warn message appears in log if Leakage protection is deaktivated) 
-* ========================================================================
+* (smarthausleben) ADD:
+* Since there are important things to consider before you update, which can be squeezed into this section here, `please read the release related information section` in the [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information) carefully.
 
 ### 0.3.0 (2023-04-04) - ***Jam Protection*** release
 * (smarthausleben) ADD: [Main valve jam protection] New State JPR for Jam protection running 
