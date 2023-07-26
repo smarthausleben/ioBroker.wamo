@@ -1,5 +1,13 @@
 # Older changes
 
+## 0.2.10 (2022-09-19)
+* (smarthausleben) state types changed UNI, PSD, CSD, TSD, T2
+* (smarthausleben) states changable UNI, PSD, CSD, TSD, T2
+* (smarthausleben) added DeviceControls RST (restart device)
+* (smarthausleben) new channel DeviceControl
+* (smarthausleben) added unit for GHARDNESS (°dH)
+* (smarthausleben) new state GHARDFACTOR (calculation factor German water hardnes)
+
 ## 0.2.9 (2022-08-12)
 * (smarthausleben) states changable ATP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT
 * (smarthausleben) state types changed ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT
