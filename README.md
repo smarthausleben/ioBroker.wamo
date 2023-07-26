@@ -43,7 +43,7 @@ If you find this adapter useful and you want to support this project, your kindn
 * ======================================================================== (max broad of READMR.md page )
 -->
 
-### **WORK IN PROGRESS**
+### 0.4.0 (2023-07-26)
 * (smarthausleben) ADD:
 * Since there are important things to consider before you update, which can be squeezed into this section here, `please read the release related information section "0.4.0 (SafeFloor Connect pre release)"` in the [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information) carefully.
 
