@@ -1387,7 +1387,7 @@ class wamo extends utils.Adapter {
 				else if ((id == statePrefix + DeviceParameters.UPG.statePath + '.' + DeviceParameters.UPG.id) && (state.ack == false)) {
 					if (state.val != null) {
 						try {
-							const FW_available = await this.get_DevieParameter(DeviceParameters.SFV);
+							const FW_available = await this.get_DeviceParameter(DeviceParameters.SFV);
 							if (FW_available['getSFV'] == 1) {
 								if (state.val == true) {
 									this.log.warn('Firmware upgrade initiated by user!');
@@ -1502,7 +1502,7 @@ class wamo extends utils.Adapter {
 						this.log.error('You cant change to an unavailable profile! Please make profil ' + String(state.val) + ' available first.');
 						// Rerstore old active Profile back to State
 						// Read selected Profile from Device
-						const currentAktiveProfile = await this.get_DevieParameter(DeviceParameters.PRF);
+						const currentAktiveProfile = await this.get_DeviceParameter(DeviceParameters.PRF);
 						if (currentAktiveProfile != null) {
 							// Save aktive profile from Device in state
 							await this.set_DevieParameter(DeviceParameters.PRF, String(currentAktiveProfile['getPRF']));
@@ -3151,7 +3151,7 @@ class wamo extends utils.Adapter {
 				while (!gotDeviceParameter) {
 					// Read out parameter from device
 					try {
-						DeviceParameterReturn = await this.get_DevieParameter(deviceParametersToGet[i]);
+						DeviceParameterReturn = await this.get_DeviceParameter(deviceParametersToGet[i]);
 						gotDeviceParameter = true;
 						// Data received
 					}
@@ -3625,11 +3625,13 @@ class wamo extends utils.Adapter {
 			}
 
 			// save RAW State
-			try {
-				this.setStateAsync(adapterChannels.DeviceRawData.path + '.' + cur_ParameterID, { val: JSON.stringify(deviceValue), ack: true });
-			}
-			catch (err) {
-				this.log.warn('[async updateState(deviceParameterToUpdate, deviceValue)] ERROR saving RAW state. State ID=' + String(adapterChannels.DeviceRawData.path + '.' + cur_ParameterID) + ' Value=' + String(deviceValue)) + ' maybe object dose not exist. -> creating object ...';
+			if (deviceParameterToUpdate.saveRawData) {
+				try {
+					this.setStateAsync(adapterChannels.DeviceRawData.path + '.' + cur_ParameterID, { val: JSON.stringify(deviceValue), ack: true });
+				}
+				catch (err) {
+					this.log.warn('[async updateState(deviceParameterToUpdate, deviceValue)] ERROR saving RAW state. State ID=' + String(adapterChannels.DeviceRawData.path + '.' + cur_ParameterID) + ' Value=' + String(deviceValue)) + ' maybe object dose not exist. -> creating object ...';
+				}
 			}
 			//=========================
 
@@ -4893,7 +4895,19 @@ class wamo extends utils.Adapter {
 					this.setInstanceLED();
 					if (apiResponseInfoMessages) { this.log.info('[clear_Alarm] syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 					const clraResponse = JSON.stringify(deviceResponse.data['clrALA']);
-					if(clraResponse == '"OK"'){this.log.info('Currend alarm was cleared successfully')					}
+					if(clraResponse == '"OK"'){
+						this.log.info('Currend alarm was cleared successfully')
+						// read Alarm Status from Device and update state object
+						const alastate = await this.get_DeviceParameter(DeviceParameters.ALA);
+						if (alastate != null){
+							await this.updateState(DeviceParameters.ALA, alastate);
+						}
+						// read Valve Status from Device and update state object
+						const ventstate = await this.get_DeviceParameter(DeviceParameters.VLV);
+						if (ventstate != null){
+							await this.updateState(DeviceParameters.VLV, alastate);
+						}
+					}
 					else{this.log.info('Currend alarm NOT cleared! Device response = ' + String(clraResponse));}
 				}
 				else {
@@ -5285,7 +5299,7 @@ class wamo extends utils.Adapter {
 	 * @param {Object} Parameter - DeviceParameter Object
 	 * @returns Readed Value from Device (JSON Format) or ERROR
 	 */
-	async get_DevieParameter(Parameter) {
+	async get_DeviceParameter(Parameter) {
 		// Flag indicating if we had to switch into SERVICE or FACTORY mode
 		let readModeChanged = false;
 		let skipp = false;
@@ -5293,7 +5307,7 @@ class wamo extends utils.Adapter {
 
 		// is parameter readable?
 		if (Parameter.readCommand === null) {
-			this.log.warn('[async get_DevieParameter(Parameter)] Parameter ID ' + String(Parameter.id) + ' can\'t be read!');
+			this.log.warn('[async get_DeviceParameter(Parameter)] Parameter ID ' + String(Parameter.id) + ' can\'t be read!');
 			throw new Error('Parameter ID ' + String(Parameter.id) + ' can\'t be read!');
 		}
 
@@ -5303,7 +5317,7 @@ class wamo extends utils.Adapter {
 				await this.set_SERVICE_Mode();
 				readModeChanged = true;
 			} catch (err) {
-				this.log.error('get_DevieParameter -> set_SERVICE_Mode() ERROR: ' + err);
+				this.log.error('get_DeviceParameter -> set_SERVICE_Mode() ERROR: ' + err);
 			}
 		}
 		else if (Parameter.levelRead === 'FACTORY') {
@@ -5311,7 +5325,7 @@ class wamo extends utils.Adapter {
 				await this.set_FACTORY_Mode();
 				readModeChanged = true;
 			} catch (err) {
-				this.log.error('get_DevieParameter -> set_FACTORY_Mode() ERROR: ' + err);
+				this.log.error('get_DeviceParameter -> set_FACTORY_Mode() ERROR: ' + err);
 			}
 		}
 
@@ -5333,7 +5347,7 @@ class wamo extends utils.Adapter {
 						if (apiResponseInfoMessages) {this.log.info('syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 						if (readModeChanged) {
 							try { await this.clear_SERVICE_FACTORY_Mode(); }
-							catch (err) { this.log.error('async get_DevieParameter(Parameter) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err); }
+							catch (err) { this.log.error('async get_DeviceParameter(Parameter) -> await this.clear_SERVICE_FACTORY_Mode() - ERROR: ' + err); }
 						}
 						this.checkIfSpecialActionAfterParameterRead(Parameter, deviceResponse.data);
 						return deviceResponse.data;
@@ -5353,15 +5367,15 @@ class wamo extends utils.Adapter {
 				this.setInstanceLED();
 				if (err.response) {
 					// The request was made and the server responded with a status code
-					this.log.error('async get_DevieParameter(Parameter): Response Code: ' + String(err.message));
+					this.log.error('async get_DeviceParameter(Parameter): Response Code: ' + String(err.message));
 				} else if (err.request) {
 					// The request was made but no response was received
 					// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
 					// http.ClientRequest in node.js<div></div>
-					this.log.error('async get_DevieParameter(Parameter): Request got no response: ' + err.message);
+					this.log.error('async get_DeviceParameter(Parameter): Request got no response: ' + err.message);
 				} else {
 					// Something happened in setting up the request that triggered an Error
-					this.log.error('async get_DevieParameter(Parameter): Error: ' + err.message);
+					this.log.error('async get_DeviceParameter(Parameter): Error: ' + err.message);
 				}			//throw new Error(err.message);
 				throw new Error(err.message);
 			}
@@ -5424,7 +5438,7 @@ class wamo extends utils.Adapter {
 		if(Value == null){set_without_value = true;}
 
 		// can we read this parameter from device?
-		if (Parameter.readCommand != null) {oldParameter = await this.get_DevieParameter(Parameter);}
+		if (Parameter.readCommand != null) {oldParameter = await this.get_DeviceParameter(Parameter);}
 
 		// Flag indicating if we had to modifiy Admin Mode
 		let writeModeChanged = false;
