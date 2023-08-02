@@ -43,7 +43,7 @@ If you find this adapter useful and you want to support this project, your kindn
 * ======================================================================== (max broad of READMR.md page )
 -->
  ### **WORK IN PROGRESS**
- * Statusupdate ALA and VLV after alarm clearing `CLRALA` command
+ * Statusupdate `ALA` and `VLV` after alarm clearing alarm (`CLRALA` command)
 
 ### 0.4.0 (2023-07-26)
 * (smarthausleben) ADD:

@@ -4905,7 +4905,7 @@ class wamo extends utils.Adapter {
 						// read Valve Status from Device and update state object
 						const ventstate = await this.get_DeviceParameter(DeviceParameters.VLV);
 						if (ventstate != null){
-							await this.updateState(DeviceParameters.VLV, alastate);
+							await this.updateState(DeviceParameters.VLV, ventstate);
 						}
 					}
 					else{this.log.info('Currend alarm NOT cleared! Device response = ' + String(clraResponse));}
