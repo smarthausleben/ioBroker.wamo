@@ -46,8 +46,7 @@ If you find this adapter useful and you want to support this project, your kindn
  * Statusupdate `ALA` and `VLV` after alarm clearing (`CLRALA` command)
 
 ### 0.4.0 (2023-07-26)
-* (smarthausleben) ADD:
-* Since there are important things to consider before you update, which can be squeezed into this section here, `please read the release related information section "0.4.0 (SafeFloor Connect pre release)"` in the [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information) carefully.
+* (smarthausleben) ADD: Since there are important things to consider before you update, which can be squeezed into this section here, `please read the release related information section "0.4.0 (SafeFloor Connect pre release)"` in the [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information) carefully.
 
 ### 0.3.0 (2023-04-04) - ***Jam Protection*** release
 * (smarthausleben) ADD: [Main valve jam protection] New State JPR for Jam protection running 
