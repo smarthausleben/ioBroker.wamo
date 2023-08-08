@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "wamo",
-        "version": "0.4.0",
+        "version": "0.4.1",
         "news": {
+            "0.4.1": {
+                "en": "FIX: Statusupdate `ALA` and `VLV` after alarm clearing (`CLRALA` command)",
+                "de": "FIX: Statusupdate ALA und VLV nach Alarmauslösung (CLRALA Befehl)",
+                "ru": "FIX: Statusupdate ALA и VLV после очистки сигнала тревоги (команда CLRALA)",
+                "pt": "FIX: Statusupdate ALA e VLV após a compensação de alarme (comando CLRALA)",
+                "nl": "Statusupdate ALA en VLV na alarmopruiming",
+                "fr": "FIX: ALA de statut et VLV après l'alarme (commande CLRALA)",
+                "it": "FIX: Statusupdate ALA e VLV dopo la rimozione dell'allarme (controllo CLRALA)",
+                "es": "FIX: Statusupdate ALA y VLV después del despejado de alarma (clase LRALA)",
+                "pl": "FIX: Statusupdate ALA i VLV po ogłoszeniu alarmu (CLRALA Command)",
+                "uk": "FIX: Статусupdate ALA та VLV після очищення сигналів (керівник CLRALA)",
+                "zh-cn": "FIX:在警报交换(CLRALA指挥)之后,国际法协会和VLV的现况"
+            },
             "0.4.0": {
                 "en": "ADD:\nSince there are important things to consider before you update, which can be squeezed into this section here, `please read the release related information section \"0.4.0 (SafeFloor Connect pre release)\"` in the [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information) carefully.",
                 "de": "ADD:\nDa es wichtige Dinge gibt, die vor dem Update zu beachten sind, die hier in diesen Abschnitt gepresst werden können, lesen Sie bitte den Release-bezogenen Informationsabschnitt \"0.4.0 (SafeFloor Connect pre release\") in der [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release- related-information) sorgfältig.",

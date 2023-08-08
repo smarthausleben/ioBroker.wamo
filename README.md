@@ -43,7 +43,7 @@ If you find this adapter useful and you want to support this project, your kindn
 * ======================================================================== (max broad of READMR.md page )
 -->
 
-### **WORK IN PROGRESS**
+### 0.4.1 (2023-08-08)
 * (smarthausleben) FIX: Statusupdate `ALA` and `VLV` after alarm clearing (`CLRALA` command)
 
 ### 0.4.0 (2023-07-26)
@@ -67,9 +67,6 @@ If you find this adapter useful and you want to support this project, your kindn
 
 ### 0.2.12 (2022-09-20)
 * (smarthausleben) Release 0.2.12
-
-### 0.2.11 (2022-09-19)
-* (smarthausleben) Release 0.2.11
 
 ## License
 The MIT License (MIT)

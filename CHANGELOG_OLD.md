@@ -1,5 +1,8 @@
 # Older changes
 
+## 0.2.11 (2022-09-19)
+* (smarthausleben) Release 0.2.11
+
 ## 0.2.10 (2022-09-19)
 * (smarthausleben) state types changed UNI, PSD, CSD, TSD, T2
 * (smarthausleben) states changable UNI, PSD, CSD, TSD, T2
