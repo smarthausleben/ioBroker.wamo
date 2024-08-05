@@ -81,19 +81,6 @@
                 "zh-cn": "排放0.1.211",
                 "uk": "Випуск 0.2.11"
             },
-            "0.2.10": {
-                "en": "state types changed UNI, PSD, CSD, TSD, T2\nstates changable UNI, PSD, CSD, TSD, T2\nadded DeviceControls RST (restart device)\nnew channel DeviceControl\nadded unit for GHARDNESS (°dH)\nnew state GHARDFACTOR (calculation factor German water hardnes)",
-                "de": "zustandstypen geändert UNI, PSD, CSD, TSD, T2\nzustände changable UNI, PSD, CSD, TSD, T2\nhinzugefügt DeviceControls RST (Neustartgerät)\nneuer Kanal DeviceControl\nzusatzeinheit für GHARDNESS (°dH)\nneuer Zustand GHARDFACTOR (Berechnungsfaktor deutsche Wasserhärten)",
-                "ru": "типы штатов изменены UNI, PSD, CSD, TSD, T2\nсостояния changable UNI, PSD, CSD, TSD, T2\nдобавлено DeviceControls RST (рестартное устройство)\nновый канал DeviceControl\nдобавленная единица GHARDNESS (°dH)\nновое государство GHARDFACTOR (фактор расчета немецких водных твердостей)",
-                "pt": "tipos de estado mudou UNI, PSD, CSD, TSD, T2\nestados changable UNI, PSD, CSD, TSD, T2\nadicionado DeviceControls RST (dispositivo inicial)\nnovo canal DeviceControl\nunidade adicionada para GHARDNESS (°dH)\nnovo estado GHARDFACTOR (fator de cálculo hardnes de água alemã)",
-                "nl": "staatstypes veranderden UNI, PSD, CSD, TSD, T2\nuNI, PSD, CSD, TSD, T2\nvertaling:\nnieuw kanaal DeviceContro\nvertaling:\nnieuwe staat GHARDFACTOR (calculatie factor Duitse water hardnes)",
-                "fr": "types d'état changé UNI, PSD, CSD, TSD, T2\nétats changables UNI, PSD, CSD, TSD, T2\na ajouté DeviceControls RST (restart device)\nnouveau canal DeviceControl\nunité supplémentaire pour GHARDNESS (°dH)\nnouveau GHARDFACTOR (facteur de calcul des dures d'eau allemandes)",
-                "it": "tipi di stato modificati UNI, PSD, CSD, TSD, T2\nstati UNI, PSD, CSD, TSD, T2\naggiunto DeviceControls RST (dispositivo di riavvio)\nnuovo canale DeviceControl\nunità aggiuntiva per GHARDNESS (°dH)\nnuovo stato GHARDFACTOR (fattore di calcolo hardnes d'acqua tedesche)",
-                "es": "tipos de estado cambiaron UNI, PSD, CSD, TSD, T2\nestados changable UNI, PSD, CSD, TSD, T2\nañadido Controles de dispositivo RST (dispositivo de reinicio)\nnuevo canal Control de dispositivos\nunidad agregada para GHARDNESS (°dH)\nnuevo estado GHARDFACTOR (factor de cálculo de las durezas de agua alemanas)",
-                "pl": "zmienione typy państwowe zmieniły nazwę na UNI, PSD, CSD, TSD, T2S\nuNI, PSD, CSD, TSD, T2\ndodano także DeviceControls RST (restart device)\nnowy kanał DeviceControl\ngHARDNESS (ang.)\nnowy stan GHARDFACTOR (skrót rachunkowy) (ang.)",
-                "zh-cn": "国家类型变化:工发组织、可持续发展中心、可持续发展中心、T2\na. 美好的工发组织,PSD, CSD,TSD, T2\n新增的DeviceControls RST(restart装置)\n新的渠道\n增加GHARDNESS(°dH)的单位\na. 新的国家水井开发系统(德国水压厂)",
-                "uk": "змінені типи станів UNI, PSD, CSD, TSD, T2\nстани змінні UNI, PSD, CSD, TSD, T2\nдодано DeviceControls RST (перезапуск пристрою)\nновий канал DeviceControl\nдодана одиниця для GHARDNESS (°dH)\nновий стан GHARDFACTOR (коефіцієнт розрахунку німецької жорсткості води)"
-            },
             "0.2.9": {
                 "en": "states changable ATP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT\nstate types changed ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT\nadded states TMZ, TN, 71, ALD, CLP, BPB\nadded channel and states for self learning: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF\nchange splitted options into two tabs \nadded options to define timeout for axios request \nadded options for delay time between reconection try to device if connection got lost\nchange - exported Parameter declarations and parameter collections for timer into a seperate file 'lib/device-parameters.js'",
                 "de": "changable ATP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT\nzustandstypen geändert ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT\ntMZ, TN, 71, ALD, CLP, BPB\nzusätzlich Kanal und Zustände für Selbstlernen: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF\ngespaltene optionen in zwei tabs ändern\nzusätzliche optionen, um timeout für axios anfrage zu definieren\nzusätzliche optionen für verzögerung zeit zwischen rekonstruktion versuchen, gerät, wenn verbindung verloren\nändern - exportiert Parameter-Deklarationen und Parameter-Sammlungen für Timer in eine seperate Datei lib/device-Parameter. j)",
@@ -119,32 +106,6 @@
                 "pl": "uwalnianie kosmetyków",
                 "zh-cn": "释放联合材料",
                 "uk": "випуск косметики"
-            },
-            "0.2.7": {
-                "en": "added 2 additional options to define lof.info messages\nchange using single api client to communicate with the device\nsome code optimizations and cleanups",
-                "de": "zusätzlich 2 optionen zur definition von lof.info-nachrichten\nmit einem einzigen api-client ändern, um mit dem gerät zu kommunizieren\neinige codeoptimierungen und -reinigungen",
-                "ru": "добавлено 2 дополнительных опции для определения сообщений lof.info\nизменить с помощью одного api клиента, чтобы общаться с устройством\nнекоторые оптимизации кода и очистки",
-                "pt": "adicionado 2 opções adicionais para definir mensagens lof.info\nmudar usando um único cliente api para se comunicar com o dispositivo\nalgumas otimizações de código e limpezas",
-                "nl": "voegde twee extra opties toe om lof info berichten te definiëren\nverandering met één api cliënt om te communiceren met het apparaat\nwat code optimaties en opruiming",
-                "fr": "2 options supplémentaires pour définir des messages lof.info\nchanger en utilisant un seul client api pour communiquer avec l'appareil\nquelques optimisations de code et nettoyages",
-                "it": "aggiunto 2 opzioni aggiuntive per definire i messaggi lof.info\ncambiare utilizzando un singolo client api per comunicare con il dispositivo\nalcune ottimizzazioni di codice e pulizia",
-                "es": "añadido 2 opciones adicionales para definir mensajes de lof.info\ncambiar usando un solo cliente api para comunicarse con el dispositivo\nalgunas optimizaciones de código y limpiezas",
-                "pl": "dodano dwie dodatkowe opcje definiowania wiadomości\nzmiana pojedynczego klienta by komunikować się z urządzeniem\nniektóre z optymalizacji kodu i czyszczeń",
-                "zh-cn": "增加另外两个选择,以界定定位信息。\n使用单一皮埃尔客户与装置联系的改变\n某些守则的优化和清洁",
-                "uk": "додано 2 додаткові параметри для визначення повідомлень lof.info\nзмінити за допомогою одного клієнта API для зв’язку з пристроєм\nдеякі оптимізації та очищення коду"
-            },
-            "0.2.6": {
-                "en": "added 2 additional options to define lof.info messages\nchange using single api client to communicate with the device\nsome code optimizations and cleanups",
-                "de": "zusätzlich 2 optionen zur definition von lof.info-nachrichten\nmit einem einzigen api-client ändern, um mit dem gerät zu kommunizieren\neinige codeoptimierungen und -reinigungen",
-                "ru": "добавлено 2 дополнительных опции для определения сообщений lof.info\nизменить с помощью одного api клиента, чтобы общаться с устройством\nнекоторые оптимизации кода и очистки",
-                "pt": "adicionado 2 opções adicionais para definir mensagens lof.info\nmudar usando um único cliente api para se comunicar com o dispositivo\nalgumas otimizações de código e limpezas",
-                "nl": "voegde twee extra opties toe om lof info berichten te definiëren\nverandering met één api cliënt om te communiceren met het apparaat\nwat code optimaties en opruiming",
-                "fr": "2 options supplémentaires pour définir des messages lof.info\nchanger en utilisant un seul client api pour communiquer avec l'appareil\nquelques optimisations de code et nettoyages",
-                "it": "aggiunto 2 opzioni aggiuntive per definire i messaggi lof.info\ncambiare utilizzando un singolo client api per comunicare con il dispositivo\nalcune ottimizzazioni di codice e pulizia",
-                "es": "añadido 2 opciones adicionales para definir mensajes de lof.info\ncambiar usando un solo cliente api para comunicarse con el dispositivo\nalgunas optimizaciones de código y limpiezas",
-                "pl": "dodano dwie dodatkowe opcje definiowania wiadomości\nzmiana pojedynczego klienta by komunikować się z urządzeniem\nniektóre z optymalizacji kodu i czyszczeń",
-                "zh-cn": "增加另外两个选择,以界定定位信息。\n使用单一皮埃尔客户与装置联系的改变\n某些守则的优化和清洁",
-                "uk": "додано 2 додаткові параметри для визначення повідомлень lof.info\nзмінити за допомогою одного клієнта API для зв’язку з пристроєм\nдеякі оптимізації та очищення коду"
             },
             "0.2.5": {
                 "en": "Readme file clean up",
@@ -232,9 +193,12 @@
             "leakage protection",
             "leakage monitor"
         ],
-        "license": "MIT",
+        "tier": 3,
+        "licenseInformation": {
+          "license": "MIT",
+          "type": "free"
+        },
         "platform": "Javascript/Node.js",
-        "main": "main.js",
         "icon": "wamo.png",
         "enabled": true,
         "extIcon": "https://raw.githubusercontent.com/smarthausleben/ioBroker.wamo/main/admin/wamo.png",
@@ -245,13 +209,12 @@
         "compact": true,
         "connectionType": "local",
         "dataSource": "poll",
-        "materialize": true,
         "adminUI": {
             "config": "json"
         },
         "dependencies": [
             {
-                "js-controller": ">=4.0.0"
+                "js-controller": ">=5.0.19"
             }
         ],
         "globalDependencies": [
