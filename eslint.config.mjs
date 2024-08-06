@@ -32,11 +32,12 @@ export default [{
         },
 
         ecmaVersion: 2020,
-        sourceType: "commonjs",
+        //sourceType: "commonjs",
 
         parserOptions: {
+            sourceType: "modul",
             ecmaFeatures: {
-                jsx: false,
+                jsx: true,
             },
         },
     },
