@@ -18,7 +18,7 @@ const gitignorePath = path.resolve(__dirname, ".gitignore");
 export default [{
     ignores: [
         "**/.eslintrc.js",
-        ".admin/words.js"
+        "**/admin/words.js"
     ],
 }, includeIgnoreFile(gitignorePath), ...compat.extends("eslint:recommended", "plugin:react/recommended"), {
     plugins: {
