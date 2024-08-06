@@ -64,8 +64,6 @@ export default [{
             avoidEscape: true,
             allowTemplateLiterals: true,
         }],
-
-        'prettier/prettier': ['error', { singleQuote: true }],
         
         semi: ["error", "always"],
     },
