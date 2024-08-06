@@ -6444,6 +6444,7 @@ if (require.main !== module) {
 	module.exports = (options) => new wamo(options);
 } else {
 	// otherwise start the instance directly
+	// ====================================
 	new wamo();
 }
 
