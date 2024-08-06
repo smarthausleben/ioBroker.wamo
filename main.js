@@ -347,7 +347,7 @@ class wamo extends utils.Adapter {
 					//==================================================================
 					//= Getting data for 'DeviceParameters' in [const sensorPresence]  =
 					//==================================================================
-					if (moreMessages) {this.log.info('reading device parameters defined in object [sensorPresence]');} 
+					if (moreMessages) {this.log.info('reading device parameters defined in object [sensorPresence]');}
 					await this.getData(sensorPresence);
 					gotSensorPreasence = true;
 					await this.delay(3000); // we need to wait some seconds to make sure sensor objects are created
@@ -372,7 +372,7 @@ class wamo extends utils.Adapter {
 					//==================================================================
 					//= Getting all datas for 'DeviceParameters' in [const initStates] =
 					//==================================================================
-					if (moreMessages) {this.log.info('reading device parameters defined in object [initStates]');} 
+					if (moreMessages) {this.log.info('reading device parameters defined in object [initStates]');}
 					await this.getData(initStates);
 					gotDeviceData = true;
 				}
@@ -415,7 +415,7 @@ class wamo extends utils.Adapter {
 		try {
 			await this.timerStarts();
 		} catch (err) {
-			this.log.error('Timer start error ... exit');
+			this.log.error('Timer start error ... exit '  + err);
 			return;
 		}
 		/*
@@ -542,15 +542,16 @@ class wamo extends utils.Adapter {
 
 		try {
 			// clear all intervals
-			if(alarm_Intervall_ID != null){try { clearInterval(alarm_Intervall_ID); } catch (err) { this.log.error('ERRRO clerring [Alarm Timer] interval');}}
-			if(short_Intervall_ID != null){try { clearInterval(short_Intervall_ID); } catch (err) { this.log.error('ERRRO clerring [Short Timer] interval');}}
-			if(long_Intervall_ID != null){try { clearInterval(long_Intervall_ID); } catch (err) { this.log.error('ERRRO clerring [Long Timer] interval');}}
-			if(very_long_Intervall_ID != null){try { clearInterval(very_long_Intervall_ID); } catch (err) { this.log.error('ERRRO clerring [Very Long Timer] interval');}}
+			if(alarm_Intervall_ID != null){try { clearInterval(alarm_Intervall_ID); } catch (err) { this.log.error('ERRRO clerring [Alarm Timer] interval ' + err);}}
+			if(short_Intervall_ID != null){try { clearInterval(short_Intervall_ID); } catch (err) { this.log.error('ERRRO clerring [Short Timer] interval ' + err);}}
+			if(long_Intervall_ID != null){try { clearInterval(long_Intervall_ID); } catch (err) { this.log.error('ERRRO clerring [Long Timer] interval ' + err);}}
+			if(very_long_Intervall_ID != null){try { clearInterval(very_long_Intervall_ID); } catch (err) { this.log.error('ERRRO clerring [Very Long Timer] interval ' + err);}}
 
-			if(delay_Timer_ID != null){try { clearTimeout(delay_Timer_ID); } catch (err) { this.log.error('ERRRO clerring [Delay Timeout] interval');}}
+			if(delay_Timer_ID != null){try { clearTimeout(delay_Timer_ID); } catch (err) { this.log.error('ERRRO clerring [Delay Timeout] interval ' + err);}}
 
 			callback();
 		} catch (e) {
+			this.log.error(e);
 			callback();
 		}
 	}
@@ -1022,17 +1023,17 @@ class wamo extends utils.Adapter {
 				else if ((id == statePrefix + DeviceParameters.CLRALA.statePath + '.' + DeviceParameters.CLRALA.id) && state.ack == false) {
 					//this.log.warn('[CLRALA] Alarm clearing event hit');
 					try {
-								// is state value set to true?
-								if(state.val){
-									this.log.info('Command: [CLRALA] Alarm clearing and valve reopening');
-									await this.clear_Alarm();
-									// set the changed state [CLRALA] back to false
-									await this.setStateAsync(DeviceParameters.CLRALA.statePath + '.' + DeviceParameters.CLRALA.id, { val: false, ack: true });
-								}
-							}
-							catch (err) {
-								this.log.warn('onStateChange(id, state) -> await this.clear_Alarm() ... ERROR: ' + err);
-							}
+						// is state value set to true?
+						if (state.val) {
+							this.log.info('Command: [CLRALA] Alarm clearing and valve reopening');
+							await this.clear_Alarm();
+							// set the changed state [CLRALA] back to false
+							await this.setStateAsync(DeviceParameters.CLRALA.statePath + '.' + DeviceParameters.CLRALA.id, { val: false, ack: true });
+						}
+					}
+					catch (err) {
+						this.log.warn('onStateChange(id, state) -> await this.clear_Alarm() ... ERROR: ' + err);
+					}
 				}
 				//============================================================================
 				// APT WiFi AP timeout changed
