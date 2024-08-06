@@ -36,7 +36,7 @@ export default [{
 
         parserOptions: {
             ecmaFeatures: {
-                jsx: false,
+                jsx: true,
             },
         },
     },
