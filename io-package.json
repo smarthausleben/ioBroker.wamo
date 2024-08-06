@@ -195,8 +195,8 @@
         ],
         "tier": 3,
         "licenseInformation": {
-          "license": "MIT",
-          "type": "free"
+            "license": "MIT",
+            "type": "free"
         },
         "platform": "Javascript/Node.js",
         "icon": "wamo.png",
