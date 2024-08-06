@@ -1043,7 +1043,7 @@ class wamo extends utils.Adapter {
 						try {
 							if ((Number(state.val) >= Number(DeviceParameters.APT.objectdefinition.common.min)) && Number(state.val) <= Number(DeviceParameters.APT.objectdefinition.common.max)) {
 								await this.set_DevieParameter(DeviceParameters.APT, state.val);
-								if (moreMessages) { this.log.info(DeviceParameters.APT.id + ' changed to ' + String(state.val)); } 
+								if (moreMessages) { this.log.info(DeviceParameters.APT.id + ' changed to ' + String(state.val));}
 							}
 							else { this.log.error(DeviceParameters.APT.id + ' new value [' + String(state.val) + '] is out of range!'); }
 						} catch (err) {
@@ -2110,7 +2110,7 @@ class wamo extends utils.Adapter {
 					// Tieout to clear?
 					if (delay_Timer_ID != null) {
 						try { this.clearTimeout(delay_Timer_ID); }
-						catch (err) { this.log.error('Error clear Timeout'); }
+						catch (err) { this.log.error('Error clear Timeout ' + err); }
 					}
 					this.log.error('await this.delay(3000)] ERROR: ' + err);
 				}
@@ -2124,7 +2124,7 @@ class wamo extends utils.Adapter {
 					// Tieout to clear?
 					if (delay_Timer_ID != null) {
 						try { this.clearTimeout(delay_Timer_ID); }
-						catch (err) { this.log.error('Error clear Timeout'); }
+						catch (err) { this.log.error('Error clear Timeout | ERROR: ' + err); }
 					}
 					this.log.error('await this.delay(3000)] ERROR: ' + err);
 				}
@@ -2138,7 +2138,7 @@ class wamo extends utils.Adapter {
 					// Tieout to clear?
 					if (delay_Timer_ID != null) {
 						try { this.clearTimeout(delay_Timer_ID); }
-						catch (err) { this.log.error('Error clear Timeout'); }
+						catch (err) { this.log.error('Error clear Timeout | ERROR: ' + err); }
 					}
 					this.log.error('await this.delay(3000)] ERROR: ' + err);
 				}
@@ -3557,14 +3557,14 @@ class wamo extends utils.Adapter {
 						this.log.debug('[' + parameterIDs[parameterIDs.length - 1] + '] : ' + String(JSON.stringify(result)));
 					}
 					catch (err) {
-						this.log.error('getDeviceProfilesData -> Error from get_DevieProfileParameter Profile Number:' + String(ProfileNumber) + ' ParameterID:' + String(parameterIDs[parameterIDs.length - 1]));
+						this.log.error('getDeviceProfilesData -> Error from get_DevieProfileParameter Profile Number:' + String(ProfileNumber) + ' ParameterID:' + String(parameterIDs[parameterIDs.length - 1] + ' | ERROR: ' + err));
 					}
 					try {
 						await this.UpdateProfileState(ProfileNumber, stateID, result);
 						this.log.debug('Profil ' + ProfileNumber + ' Parameter ' + parameterIDs[parameterIDs.length - 1]);
 					}
 					catch (err) {
-						this.log.error('getDeviceProfilesData -> Error from UpdateProfileState -> Profile Number:' + String(ProfileNumber) + ' stateID:' + String(stateID) + ' ParameterID:' + String(parameterIDs[parameterIDs.length - 1]));
+						this.log.error('getDeviceProfilesData -> Error from UpdateProfileState -> Profile Number:' + String(ProfileNumber) + ' stateID:' + String(stateID) + ' ParameterID:' + String(parameterIDs[parameterIDs.length - 1] + ' | ERROR: ' + err));
 					}
 				}
 			}
@@ -3631,7 +3631,7 @@ class wamo extends utils.Adapter {
 					this.setStateAsync(adapterChannels.DeviceRawData.path + '.' + cur_ParameterID, { val: JSON.stringify(deviceValue), ack: true });
 				}
 				catch (err) {
-					this.log.warn('[async updateState(deviceParameterToUpdate, deviceValue)] ERROR saving RAW state. State ID=' + String(adapterChannels.DeviceRawData.path + '.' + cur_ParameterID) + ' Value=' + String(deviceValue)) + ' maybe object dose not exist. -> creating object ...';
+					this.log.warn('[async updateState(deviceParameterToUpdate, deviceValue)] ERROR saving RAW state. State ID=' + String(adapterChannels.DeviceRawData.path + '.' + cur_ParameterID) + ' Value=' + String(deviceValue)) + ' maybe object dose not exist. -> creating object ... | ERROR: ' + err;
 				}
 			}
 			//=========================
@@ -4897,7 +4897,7 @@ class wamo extends utils.Adapter {
 					if (apiResponseInfoMessages) { this.log.info('[clear_Alarm] syrApiClient response: ' + JSON.stringify(deviceResponse.data)); }
 					const clraResponse = JSON.stringify(deviceResponse.data['clrALA']);
 					if(clraResponse == '"OK"'){
-						this.log.info('Currend alarm was cleared successfully')
+						this.log.info('Currend alarm was cleared successfully');
 						// read Alarm Status from Device and update state object
 						const alastate = await this.get_DeviceParameter(DeviceParameters.ALA);
 						if (alastate != null){
@@ -6269,6 +6269,7 @@ async function alarm_poll() {
 	try {
 		await myAdapter.alarm_TimerTick();
 	} catch (err) {
+		console.log(err);
 		//throw new Error(err);
 	}
 }
@@ -6281,6 +6282,7 @@ async function short_poll() {
 	try {
 		await myAdapter.short_TimerTick();
 	} catch (err) {
+		console.log(err);
 		//throw new Error(err);
 	}
 }
@@ -6293,6 +6295,7 @@ async function long_poll() {
 	try {
 		await myAdapter.long_TimerTick();
 	} catch (err) {
+		console.log(err);
 		//throw new Error(err);
 	}
 }
@@ -6305,6 +6308,7 @@ async function very_long_poll() {
 	try {
 		await myAdapter.very_long_TimerTick();
 	} catch (err) {
+		console.log(err);
 		//throw new Error(err);
 	}
 }
@@ -6317,6 +6321,7 @@ async function cron_poll_day() {
 	try {
 		await myAdapter.alarm_cron_day_Tick();
 	} catch (err) {
+		console.log(err);
 		//throw new Error(err);
 	}
 
@@ -6330,6 +6335,7 @@ async function cron_poll_week() {
 	try {
 		await myAdapter.alarm_cron_week_Tick();
 	} catch (err) {
+		console.log(err);
 		//throw new Error(err);
 	}
 
@@ -6343,6 +6349,7 @@ async function cron_poll_month() {
 	try {
 		await myAdapter.alarm_cron_month_Tick();
 	} catch (err) {
+		console.log(err);
 		//throw new Error(err);
 	}
 
@@ -6356,6 +6363,7 @@ async function cron_poll_year() {
 	try {
 		await myAdapter.alarm_cron_year_Tick();
 	} catch (err) {
+		console.log(err);
 		//throw new Error(err);
 	}
 
@@ -6369,6 +6377,7 @@ async function cron_poll_jam_protection() {
 	try {
 		await myAdapter.alarm_corn_jam_protection_Tick();
 	} catch (err) {
+		console.log(err);
 		//throw new Error(err);
 	}
 }
@@ -6381,6 +6390,7 @@ async function cron_poll_FloorSensor_1() {
 	try {
 		await myAdapter.alarm_cron_FloorSensor_Tick_1();
 	} catch (err) {
+		console.log(err);
 		//throw new Error(err);
 	}
 }
@@ -6393,6 +6403,7 @@ async function cron_poll_FloorSensor_2() {
 	try {
 		await myAdapter.alarm_cron_FloorSensor_Tick_2();
 	} catch (err) {
+		console.log(err);
 		//throw new Error(err);
 	}
 }
@@ -6405,6 +6416,7 @@ async function cron_poll_FloorSensor_3() {
 	try {
 		await myAdapter.alarm_cron_FloorSensor_Tick_3();
 	} catch (err) {
+		console.log(err);
 		//throw new Error(err);
 	}
 }
@@ -6417,6 +6429,7 @@ async function cron_poll_FloorSensor_4() {
 	try {
 		await myAdapter.alarm_cron_FloorSensor_Tick_4();
 	} catch (err) {
+		console.log(err);
 		//throw new Error(err);
 	}
 }
