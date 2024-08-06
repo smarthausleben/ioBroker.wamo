@@ -65,6 +65,8 @@ export default [{
             allowTemplateLiterals: true,
         }],
 
+        'prettier/prettier': ['error', { singleQuote: true }],
+        
         semi: ["error", "always"],
     },
 }];
