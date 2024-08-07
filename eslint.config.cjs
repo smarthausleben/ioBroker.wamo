@@ -33,6 +33,7 @@ module.exports = [
       "no-console": "off",
       "no-var": "error",
       "prefer-const": "error",
+      quotes: [2, "single", { avoidEscape: true }],
     },
   },
 ];
