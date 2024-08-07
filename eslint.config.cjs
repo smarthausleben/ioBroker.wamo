@@ -12,11 +12,11 @@ const compat = new FlatCompat({
 module.exports = [
     {
         ignores: [
-          '.dev-server/**',
-          '**/admin/words.js'
+          ".dev-server/**",
+          "**/admin/words.js"
         ],
     },
-    ...compat.extends('eslint:recommended', 'plugin:prettier/recommended'),
+    ...compat.extends("eslint:recommended", "plugin:prettier/recommended"),
     {
         languageOptions: {
             globals: {
@@ -25,7 +25,7 @@ module.exports = [
             },
 
             ecmaVersion: 2022,
-            sourceType: 'commonjs',
+            sourceType: "commonjs",
 
             parserOptions: {
                 ecmaFeatures: {
@@ -35,9 +35,9 @@ module.exports = [
         },
 
         rules: {
-            'no-console': 'off',
-            'no-var': 'error',
-            'prefer-const': 'error',
+            "no-console": "off",
+            "no-var": "error",
+            "prefer-const": "error",
         },
     },
 ];
