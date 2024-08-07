@@ -9,5 +9,6 @@
 		}
 	],
 	"eslint.codeActionsOnSave.rules": null,
-	"eslint.execArgv": null
+	"eslint.execArgv": null,
+	"prettier.singleQuote": true
 }
