@@ -1,7 +1,7 @@
-const globals = require("globals");
-const js = require("@eslint/js");
+const globals = require('globals');
+const js = require('@eslint/js');
 
-const { FlatCompat } = require("@eslint/eslintrc");
+const { FlatCompat } = require('@eslint/eslintrc');
 
 const compat = new FlatCompat({
   baseDirectory: __dirname,
@@ -10,8 +10,8 @@ const compat = new FlatCompat({
 });
 
 module.exports = [
-  { ignores: [".dev-server/**", "**/admin/words.js"] },
-  ...compat.extends("eslint:recommended", "plugin:prettier/recommended"),
+  { ignores: ['.dev-server/**', '**/admin/words.js'] },
+  ...compat.extends('eslint:recommended', 'plugin:prettier/recommended'),
   {
     languageOptions: {
       globals: {
@@ -20,7 +20,7 @@ module.exports = [
       },
 
       ecmaVersion: 2022,
-      sourceType: "commonjs",
+      sourceType: 'commonjs',
 
       parserOptions: {
         ecmaFeatures: {
@@ -30,10 +30,10 @@ module.exports = [
     },
 
     rules: {
-      "no-console": "off",
-      "no-var": "error",
-      "prefer-const": "error",
-      quotes: [2, "single", { avoidEscape: true }],
+      'no-console': 'off',
+      'no-var': 'error',
+      'prefer-const': 'error',
+      quotes: [2, 'single', { avoidEscape: true }],
     },
   },
 ];
