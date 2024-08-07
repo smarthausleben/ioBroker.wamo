@@ -10,9 +10,7 @@ const compat = new FlatCompat({
 });
 
 module.exports = [
-  {
-    ignores: [".dev-server/**", "**/admin/words.js"],
-  },
+  { ignores: [".dev-server/**", "**/admin/words.js"] },
   ...compat.extends("eslint:recommended", "plugin:prettier/recommended"),
   {
     languageOptions: {
