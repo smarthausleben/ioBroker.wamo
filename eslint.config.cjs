@@ -1,7 +1,7 @@
-const globals = require('globals');
-const js = require('@eslint/js');
+const globals = require("globals");
+const js = require("@eslint/js");
 
-const { FlatCompat } = require('@eslint/eslintrc');
+const { FlatCompat } = require("@eslint/eslintrc");
 
 const compat = new FlatCompat({
     baseDirectory: __dirname,

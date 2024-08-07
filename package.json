@@ -10,11 +10,15 @@
     "Leakage protection",
     "Water conditions monitor",
     "Polygonvatro",
-    "SYR Safetech Connect 2442"
+    "SYR Safetech Connect 2442",
+    "ioBroker"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/smarthausleben/ioBroker.wamo.git"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.1.6",
