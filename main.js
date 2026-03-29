@@ -7,16 +7,16 @@
 // The adapter-core module gives you access to the core ioBroker functions
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
-const http = require('http');
+const http = require('node:http');
 const axios = require('axios').default;
 const schedule = require('node-schedule');
 const adapterName = require('./package.json').name.split('.').pop();
-// const { info } = require('console');
+// const { info } = require('node:console');
 // const { default: axios } = require('axios');
-// const { join } = require('path');
-// const { nextTick } = require('process');
-// const { stringify } = require('querystring');
-// const { networkInterfaces } = require('os');
+// const { join } = require('node:path');
+// const { nextTick } = require('node:process');
+// const { stringify } = require('node:querystring');
+// const { networkInterfaces } = require('node:os');
 
 // my own modules
 const {
