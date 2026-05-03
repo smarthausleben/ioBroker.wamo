@@ -70,6 +70,8 @@ If you find this adapter useful and you want to support this project, your kindn
 ### 0.2.12 (2022-09-20)
 * (smarthausleben) Release 0.2.12
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 The MIT License (MIT)
 
