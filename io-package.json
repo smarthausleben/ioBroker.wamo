@@ -1,238 +1,238 @@
 {
-    "common": {
-        "name": "wamo",
-        "version": "0.4.1",
-        "news": {
-            "0.4.1": {
-                "en": "FIX: Statusupdate `ALA` and `VLV` after alarm clearing (`CLRALA` command)",
-                "de": "FIX: Statusupdate ALA und VLV nach Alarmauslösung (CLRALA Befehl)",
-                "ru": "FIX: Statusupdate ALA и VLV после очистки сигнала тревоги (команда CLRALA)",
-                "pt": "FIX: Statusupdate ALA e VLV após a compensação de alarme (comando CLRALA)",
-                "nl": "Statusupdate ALA en VLV na alarmopruiming",
-                "fr": "FIX: ALA de statut et VLV après l'alarme (commande CLRALA)",
-                "it": "FIX: Statusupdate ALA e VLV dopo la rimozione dell'allarme (controllo CLRALA)",
-                "es": "FIX: Statusupdate ALA y VLV después del despejado de alarma (clase LRALA)",
-                "pl": "FIX: Statusupdate ALA i VLV po ogłoszeniu alarmu (CLRALA Command)",
-                "uk": "FIX: Статусupdate ALA та VLV після очищення сигналів (керівник CLRALA)",
-                "zh-cn": "FIX:在警报交换(CLRALA指挥)之后,国际法协会和VLV的现况"
-            },
-            "0.4.0": {
-                "en": "ADD:\nSince there are important things to consider before you update, which can be squeezed into this section here, `please read the release related information section \"0.4.0 (SafeFloor Connect pre release)\"` in the [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information) carefully.",
-                "de": "ADD:\nDa es wichtige Dinge gibt, die vor dem Update zu beachten sind, die hier in diesen Abschnitt gepresst werden können, lesen Sie bitte den Release-bezogenen Informationsabschnitt \"0.4.0 (SafeFloor Connect pre release\") in der [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release- related-information) sorgfältig.",
-                "ru": "ДОБАВИТЬ:\nПоскольку есть важные вещи, которые следует учитывать перед обновлением, которые могут быть сжаты в этот раздел здесь, `пожалуйста, прочитайте раздел информации о выпуске \"0.4.0 (SafeFloor Connect pre release\")` в [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information) тщательно.",
-                "pt": "ADD:\nUma vez que há coisas importantes a considerar antes de atualizar, que podem ser espremidas nesta seção aqui, 'por favor, leia a seção de informações relacionadas à versão \"0.4.0 (SafeFloor Connect pré- release\") na [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information) cuidadosamente.",
-                "nl": "ADD:\nAangezien er belangrijke dingen zijn om te overwegen voordat je bijpraten, wat in deze sectie kan worden geknoeid, lees alsjeblieft de vrijlating van informatie '04.0 (SafeFloor Connect voorlop) in de zorgvulatie.",
-                "fr": "AJOUT :\nComme il y a des choses importantes à considérer avant de mettre à jour, qui peuvent être pressées dans cette section ici, `veuillez lire la section d'information relative à la publication \"0.4.0 (SafeFloor Connect pre release\")` dans le [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information).",
-                "it": "ADD:\nDal momento che ci sono cose importanti da considerare prima di aggiornare, che possono essere spremute in questa sezione qui, ` si prega di leggere la sezione informativa relativa al rilascio \"0.4.0 (SafeFloor Connect pre release\") ` nel [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information) con attenzione.",
-                "es": "ADD:\nDado que hay cosas importantes que considerar antes de actualizar, que pueden ser exprimidos en esta sección aquí, `por favor lea la sección de información relacionada con la liberación \"0.4.0 (SafeFloor Connect pre release\")` en el [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information) cuidadosamente.",
-                "pl": "ADD:\nOd tego czasu istnieją ważne rzeczy do rozważenia przed aktualizacją, która może być skonfiskowana w tej sekcji, 'pełnianie odczytu pokrewnego działu informacji '0.4.0 (SafeFloor Connect pre release)' w bazie 'Wiki(https:/github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release') starannie.",
-                "uk": "АД:\nЗ тих пір, як є важливі речі, щоб розглянути, перш ніж оновити, які можна стискати в цей розділ тут, `please читати випуск пов'язаної з розділом інформації \"0.4.0 (SafeFloor Connect pre release\")` в [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information) ретельно.",
-                "zh-cn": "ADD:\n由于有必要考虑在你提交最新资料之前加以考虑,本节可将有关信息节“0.4.0(安全先遣队)”改为[Wiki](http://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-有关的信息)。."
-            },
-            "0.3.0": {
-                "en": "ADD: [Main valve jam protection] New State JPR for Jam protection running \nADD: [Main valve jam protection] New State JPA for Jam protection aktivated\nADD: [Main valve jam protection] New State JPT for Jam protection timing (CRON)\nADD: [Main valve jam protection] New **Task Tab** in adapter settings to manage a scheduled regular movement of the main valve in order to prevent a stuck valve\nFIX: [interfaceBusy] flag was not reset after AXIOS interface handler error **_(Issue #21)_**\nADD: [WatchDog] function for interfaceBusy flag. Flag will be reset after defined amount of requests **_(Issue #21)_**",
-                "de": "ADD: [Hauptventilsperrenschutz] New State JPR für Jam Schutz laufen\nADD: [Hauptventilsperrenschutz] New State JPA für Jam Schutz aktiviert\nADD: [Hauptventilsperrenschutz] Neuer Staat JPT für Jam Schutzzeit (CRON)\nADD: [Hauptventilsperrenschutz] Neue *Task Tab* in Adaptereinstellungen, um eine geplante regelmäßige Bewegung des Hauptventils zu verwalten, um ein gestecktes Ventil zu verhindern\nFIX: [interfaceBusy]-Flag wurde nach AXIOS-Schnittstellen-Handlerfehler *(_Issue #21*_) nicht zurückgesetzt\nADD: [WatchDog] Funktion für interfaceBusy Flag. Die Flagge wird nach der definierten Anzahl der Anfragen zurückgesetzt *(_Issue #21*_)",
-                "ru": "ДОБАВЬТЕ: [Главная защита клапана] Новое государство JPR для бежать защиты джем\nДОБАВЬТЕ: [Главная защита клапана] Новое государство JPA для защиты джемов aktivated\nДОБАВЬТЕ: [Главная защита клапана] Новая государственная JPT для сроков защиты от джемов (CRON)\nДОБАВЬТЕ: [Главная защита клапана] Новый *Task Tab* в настройках адаптера для управления плановым регулярным движением основного клапана для предотвращения застрявшего клапана\nFIX: [interfaceBusy] флаг не был сброшен после ошибки интерфейса AXIOS *(_Issue #21*_)\nADD: [WatchDog] функция для интерфейсаBusy флаг. Флаг будет сброшен после определенного количества запросов *(_Issue #21*_)",
-                "pt": "ADD: [Proteção do engarrafamento da válvula principal] Nova JPR do Estado para a proteção contra Jam em execução\nADD: [Proteção do engarrafamento da válvula principal] Novo Estado JPA para proteção Jam aktivated\nADD: [Proteção do engarrafamento da válvula principal] Novo Estado JPT para tempo de proteção Jam (CRON)\nADD: [Proteção do engarrafamento da válvula principal] Novo *Task Tab* em configurações do adaptador para gerenciar um movimento regular programado da válvula principal, a fim de evitar uma válvula presa\nFIX: [interfaceBusy] bandeira não foi redefinida após o erro do manipulador de interface AXIOS *(_Issue #21*_)\nADD: [WatchDog] função para interfaceBusy bandeira. A bandeira será redefinida após a quantidade definida de solicitações *(_Issue #21*_)",
-                "nl": "ADD: New State JPR voor Jam bescherming\nADD: Nieuwe staat JPA voor Jam bescherming\nADD: Nieuwe staat JPT voor Jam beschermingstijd (CRON)\nADD: New Tab in adapter settings om een regelmatige beweging van de hoofdklep te beheren om een vaste klep te voorkomen\nDe vlag was niet reset na AXIOS interface begeleiderfout\nActie voor interfaceBusy vlag. Vlag zal worden gereset na definieerde hoeveelheid verzoeken",
-                "fr": "AJOUT : [Protection principale de la confiture de valve] New State JPR for Jam protection running\nAJOUT : [Protection principale de la confiture de valve] New State JPA for Jam protection aktivated\nAJOUT : [Protection principale de la confiture de valve] New State JPT for Jam protection timing (CRON)\nAJOUT : [Protection principale de la confiture de valve] Nouveau *Task Tab* dans les réglages d'adaptateur pour gérer un mouvement régulier régulier de la valve principale afin d'éviter une vanne coincée\nFIX: [interfaceBusy] flag was not reset after AXIOS interface handler error *(_Issue #21*_)\nADD: [WatchDog] fonction pour l'interfaceDrapeau d'achat. Le drapeau sera réinitialisé après la quantité définie de requêtes *(_Issue #21*_)",
-                "it": "ADD: [Protezione della marmellata della valvola principale] New State JPR per la protezione dei Jam in esecuzione\nADD: [Protezione della marmellata della valvola principale] Nuovo Stato JPA per protezione Jam aktivated\nADD: [Protezione della marmellata della valvola principale] Nuovo JPT di stato per i tempi di protezione dei Jam (CRON)\nADD: [Protezione della marmellata della valvola principale] Nuovo *Task Tab* nelle impostazioni dell'adattatore per gestire un movimento regolare programmato della valvola principale al fine di evitare una valvola bloccata\nFIX: [interfaceBusy] la bandiera non è stata ripristinata dopo l'errore del gestore dell'interfaccia AXIOS *(_Issue #21*_)\nADD: [WatchDog] funzione per l'interfacciaBusy bandiera. La bandiera sarà ripristinata dopo la quantità definita di richieste *(_Issue #21*_)",
-                "es": "ADD: New State JPR for Jam protection running\nADD: New State JPA for Jam protection aktivated\nADD: New State JPT for Jam protection timing (CRON)\nADD: Nuevo *Task Tab* en la configuración del adaptador para gestionar un movimiento regular programado de la válvula principal con el fin de prevenir una válvula atorada\nFIX: [interfaceBusy] flag no se restableció después de error de controlador de interfaz AXIOS *(_Issue #21*_)\nADD: [WatchDog] función para interfaceBandera de publicidad. La bandera se restablecerá después de la cantidad definida de solicitudes *(_Issue #21*_)",
-                "pl": "ADD: (ang.). New State JPR\nADD: (ang.). New State JPA for Jam (ang.)\nADD: (ang.). New State JPT for Jam protection (ang.)\nADD: (ang.). New *Task Tab* w ustawieniach adaptacyjnych do zarządzania regularnym ruchem zaworu głównego w celu zapobiegania zaworowi\nFIX: InterfaceBusy (ang. InterfaceBusy) flaga nie została ponownie ustawiona po tym, jak interfejs AXIOS obserwuje błąd *(_Issue #21*_)\nADD: WatchDog (ang.). . Flaga będzie resetowana po zdefiniowaniu ilości żądań *(_Issue #21*_)",
-                "uk": "ADD: [Охорона затискного клапана] Новий державний JPR для захисту варення\nADD: [Охорона затискного клапана] Нова державна ПА для захисту від варення\nADD: [Охорона затискного клапана] Новий державний JPT для варення захисту (CRON)\nADD: [Охорона затискного клапана] Новий *ask Tab* в налаштуваннях адаптера для керування регулярним регулярним переміщенням основного клапана для запобігання застрягового клапана \nFIX: [interfaceBusy] прапор не був скидання після помилки інтерфейсу AXIOS *(_Isue #21*_)\nADD: [WatchDog] функція для інтерфейсуBusy прапор. Прапор буде скидати після визначеної кількості запитів *(_Issue #21*_)",
-                "zh-cn": "ADD:[Mainvalve jam protection] 新国家保护协会\nADD:[Mainvalve jam protection] 新国家保护联盟\nADD:[Mainvalve jam protection] 新国家JPT for Jam protection Time (CRON)\nADD:[Mainvalve jam protection] * 新塔克·塔布*在适应环境中管理主要阀门的预定定期流动,以防止出现障碍。\n九、FIX:AXOS接口手勒错误*(Isue #21*)之后,没有重新确定[内部的]旗帜。\nADD:[观察Dog]接口布基纳法索旗。 待定请求数*(_Issue #21*_)之后,将重新出现滞留时间。"
-            },
-            "0.2.13": {
-                "en": "add: new property \"createoOnStartup\" in DeviceParameter\nadd: new property \"saveRawData\" in DeviceParameter\nchange: creating all state objects during startup to avoid calling \"setObjectNotExistsAsync\" later on\nadd: Profile parameter raw states\nchange: default value for \"factor_german_water_hardnes\" changed to 0.0296041666666667\nFIX update german water hardnes factor object (GHARDFACTOR) during startup",
-                "de": "hinzufügen: neue Eigenschaft createo OnStartup im DeviceParameter\nhinzufügen: neue Eigenschaft saveRawData in DeviceParameter\nändern: Erstellen aller State-Objekte während des Starts, um den Anruf zu vermeiden ObjectNotExistsAsync später auf\nhinzufügen: Profilparameter Rohzustände\nändern: standardwert für factor_german_water_hardnes geändert auf 0.0296041666666667\nFIX Update deutsches Wasser Hardnes Faktor Objekt (GHARDFACTOR) während des Starts",
-                "ru": "добавить: новое создание недвижимости OnStartup в DeviceParameter\nдобавить: новое свойство saveRawData в DeviceParameter\nизменение: создание всех государственных объектов во время запуска, чтобы избежать вызова ОбъектNotExistsAsync позже\nadd: Параметры профиля сырье\nизменение: значение по умолчанию для factor_german_water_hardnes изменено на 0.02960416666667\nFIX обновление немецкой воды Hardnes фактор объекта (GHARDFACTOR) во время запуска",
-                "pt": "add: nova propriedade createo OnStartup no parâmetro dispositivo\nadd: new property saveRawData in DeviceParameter\nalterar: criar todos os objetos do estado durante a inicialização para evitar chamar o conjunto ObjectNotExistsAsync mais tarde em\nadd: Parâmetro de perfil estados crus\nchange: default value for factor_german_water_hardnes mudou para 0,02960416666667\nFIX atualização german água endurece fator objeto (GHARDFACTOR) durante a inicialização",
-                "nl": "vertaling: OnStartup in DeviceParameter\nvertaling:\nverandering: alle staatsvoorwerpen creëren tijdens de start om niet te bellen Vertaling:\nvertaling:\nquality over quantity (qoq) releases vertaling:\nQuality over Quantity (QoQ) Releases Vertaling:",
-                "fr": "ajouter: nouvelle propriété createo OnStartup dans DeviceParameter\najouter: nouvelle propriété saveRawData dans DeviceParameter\nchangement: créer tous les objets de l'état pendant le démarrage pour éviter l'appel ObjectNotExistsAsync plus tard sur\najouter: Paramètres de profil états bruts\nchangement: valeur par défaut pour factor_german_water_hardnes changée en 0.0296041666666667\nFIX update german water hardnes factor object (GHARDFACTOR) during startup",
-                "it": "aggiungi: new property createo OnStartup in DeviceParameter\naggiungere: nuova proprietà saveRawData in DeviceParameter\ncambiamento: creare tutti gli oggetti di stato durante l'avvio per evitare di chiamare set ObjectNotExistsAsync in seguito\naggiungere: Parametro del profilo stati grezzi\ncambiamento: valore predefinito per factor_german_water_hardnes modificato a 0.02960416666667\nFIX aggiornamento duri d'acqua tedesca fattore oggetto (GHARDFACTOR) durante l'avvio",
-                "es": "añadir: nueva propiedad createo OnStartup in DeviceParameter\nañadir: nuevo ahorro de propiedadRawData en el parámetro de dispositivo\ncambio: crear todos los objetos del estado durante la puesta en marcha para evitar llamar al set ObjectNotExistsAsync later on\nadd: Perfil parameter raw states\ncambio: valor predeterminado para factor_german_water_hardnes cambiado a 0.02960416666667\nActualización de FIX objeto de factor de agua german (GHARDFACTOR) durante la puesta en marcha",
-                "pl": "dodanie nowej własności Strona internetowa DeviceParameter\ndostęp: Nowa własność oszczędzona\nzmiana: tworzenie wszystkich obiektów państwowych w celu uniknięcia nazywania zbioru. Object NotExistsAsync później\ndodanie: Profile parametry stanów raw\nzmiana domyślna dla czynnika_german_hardnes zmieniła się na 0,0296041666666666666767\nFIX update factor water (GHARDFACTOR) (ang.)",
-                "uk": "додати: нове майно ПристроїПараметр\nдодати: новий рентабельнийRawData в DeviceParameter\nзміна: створення всіх державних об'єктів при запуску, щоб уникнути викликів Об'єктNotExistsAsync пізніше на\nдодати: параметр профілю сирих станів\nзмінено значення за замовчуванням для фактор_german_water_hardnes 0.029604166666666667\nFIX оновлення німецького об'єкта фактора твердих вод (GHARDFACTOR) під час запуску",
-                "zh-cn": "增加:新财产创造 Device Para参数的发射\n增加:在Device Para墓地拯救RawData的新财产\n改变:在开始期间建立所有国家物体,避免呼吁建立 嗣后\n增 编\n变化:因素的违约价值:german_water_hardnes改为0.029604166667\n九. 启动期间更新水硬系数目标"
-            },
-            "0.2.12": {
-                "en": "Release 0.2.12",
-                "de": "Release 0.2.12",
-                "ru": "Релиз 0.2.12",
-                "pt": "Lançamento: 0,2.12",
-                "nl": "Los 0.2.12",
-                "fr": "Release 0.2.12",
-                "it": "Rilasciare 0.2.12",
-                "es": "Liberación 0,2.12",
-                "pl": "Wydanie 0.2.12",
-                "zh-cn": "导 言",
-                "uk": "Випуск 0.2.12"
-            },
-            "0.2.11": {
-                "en": "Release 0.2.11",
-                "de": "Release 0.2.11",
-                "ru": "Релиз 0.2.11",
-                "pt": "Lançamento 0.2.11",
-                "nl": "Los 0.2.11",
-                "fr": "Sortie 0.2.11",
-                "it": "Rilasciare 0.2.11",
-                "es": "Liberación 0.2.11",
-                "pl": "0.2.11",
-                "zh-cn": "排放0.1.211",
-                "uk": "Випуск 0.2.11"
-            },
-            "0.2.9": {
-                "en": "states changable ATP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT\nstate types changed ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT\nadded states TMZ, TN, 71, ALD, CLP, BPB\nadded channel and states for self learning: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF\nchange splitted options into two tabs \nadded options to define timeout for axios request \nadded options for delay time between reconection try to device if connection got lost\nchange - exported Parameter declarations and parameter collections for timer into a seperate file 'lib/device-parameters.js'",
-                "de": "changable ATP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT\nzustandstypen geändert ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT\ntMZ, TN, 71, ALD, CLP, BPB\nzusätzlich Kanal und Zustände für Selbstlernen: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF\ngespaltene optionen in zwei tabs ändern\nzusätzliche optionen, um timeout für axios anfrage zu definieren\nzusätzliche optionen für verzögerung zeit zwischen rekonstruktion versuchen, gerät, wenn verbindung verloren\nändern - exportiert Parameter-Deklarationen und Parameter-Sammlungen für Timer in eine seperate Datei lib/device-Parameter. j)",
-                "ru": "государства changable ATP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT\nтипы штатов изменены ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT\nдобавлены состояния TMZ, TN, 71, ALD, CLP, BPB\nдобавлены каналы и состояния для самостоятельного обучения: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF\nизменить разделенные опции на две вкладки\nдобавлены опции для определения timeout для запроса axios\nдобавлены опции для задержки между reconection попробуйте устройство, если соединение потеряно\nизменить - экспортируемые параметры декларации и коллекции параметров для таймера в сеператый файл lib/device-parameters. Джс",
-                "pt": "estados ATP changable, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT\ntipos de estado mudou ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT\nestados adicionados TMZ, TN, 71, ALD, CLP, BPB\ncanal adicionado e estados para auto-aprendizagem: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF\nalterar opções divididas em duas abas\nopções adicionadas para definir timeout para solicitação de axios\nopções adicionais para o tempo de atraso entre a reconecção tentar dispositivo se a conexão se perdeu\nchange - exportado Declarações de parâmetros e coleções de parâmetros para timer em um arquivo seperate lib/device-parameters. Js",
-                "nl": "aTP, BTB, BSA, BUZ, DRP, IDS, LNG, LWTB, BTB, BSA, BUZ, BUZ, DMA, DMA, DRP, DRP, DRP, DRP, IDS, LNG\nde staatstypes veranderden ATP, BSA, BUZ, DRP, DWL, IDS, LWT\ntMZ, TN, 71, ALD, CLP, BPB\nvertaling:\nverdeelde opties in twee tabs\nvoegde opties om de time-out te definiëren voor axios verzoek\nvoegde opties toe voor vertragingstijd tussen verzoening, als de verbinding verbroken werd\nverandering - exporteerde Parameter verklaringen en parameter collecties voor timer in een seperaat bestand lib/device-parameters. Js",
-                "fr": "aTP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT\naTP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT\nétats ajoutés TMZ, TN, 71, ALD, CLP, BPB\ncanal ajouté et états pour l'autoapprentissage: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF\nchanger les options divisées en deux onglets\noptions supplémentaires pour définir le timeout pour la demande axios\noptions supplémentaires pour le délai entre la reconection essayer de périphérique si la connexion se perd\nchange - les déclarations de paramètres exportées et les collections de paramètre pour timer dans un fichier seperate lib/device-parameters. js",
-                "it": "stati ATP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT\ntipi di stato cambiato ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT\nstati aggiunti TMZ, TN, 71, ALD, CLP, BPB\ncanale aggiunto e stati per l'autoapprendimento: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF\ncambiare le opzioni divise in due schede\nopzioni aggiuntive per definire timeout per richiesta assios\nopzioni aggiuntive per il tempo di ritardo tra la correzione cercare di dispositivo se la connessione è andata persa\ncambiamento - esportato le dichiarazioni dei parametri e le collezioni dei parametri per il timer in un seperate file lib/device-parametri. j",
-                "es": "aTP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT\ntipos de estado cambiaron ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT\nestados añadidos TMZ, TN, 71, ALD, CLP, BPB\ncanal añadido y estados para el auto aprendizaje: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF\ncambiar opciones divididas en dos pestañas\nopciones adicionales para definir el tiempo de espera para la solicitud de axios\nopciones adicionales para el tiempo de demora entre la reconección tratar de dispositivo si la conexión se perdió\ncambio - exportado Declaraciones de parámetros y colecciones de parámetro para timer en un archivo seperate lib/device-parameters. js",
-                "pl": "bTB, BSA, BUZ, DMA, DRP, IDS, LWT, LWT\nzmieniły one ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LWT\ndodano stany TMZ, TN, 71, ALD, CLP, BPB\ndodano kanały i stany do uczenia się siebie: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF\nzmienić opcje na dwie tabele\ndodano możliwość zdefiniowania czasu na prośbę axiosa\ndodała opcje opóźnienia pomiędzy pogodzeniem a urządzeniem, jeśli połączenia się straciły\nzmiana – wyeksportowana deklaracja Parameter i kolekcja parametrów dla czasownika w plik lib/device. js",
-                "zh-cn": "aTP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT\naTP, BSA, BUZ, DMA, DRP, DWL, IDS,LNG, LWT\n加入国:TMZ,TN,71, ALD, CLP,BPB\n学习的更多渠道和国家:SLP、SLO、SOF、MF、SLE、SLV、SLT、SLF\n改为两个表格的改变\n界定焦虑要求时间的更多选择\n如果连线失去,则重新部署到装置之间的拖延时间的更多选择\n变化——出口的参数声明和准时收藏的参数 j",
-                "uk": "стани змінні ATP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT\nзмінено типи станів ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT\nдодані стани TMZ, TN, 71, ALD, CLP, BPB\nдодано канал і стани для самонавчання: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF\nзмінити параметри, розділені на дві вкладки\nдодано параметри для визначення часу очікування для запиту axios\nдодано параметри для часу затримки між повторним підключенням до пристрою, якщо з’єднання втрачено\nзміна - експортовано оголошення параметрів і колекції параметрів для таймера в окремий файл 'lib/device-parameters.js'"
-            }
-        },
-        "titleLang": {
-            "en": "wamo",
-            "de": "wamo",
-            "ru": "wamo",
-            "pt": "Detecção de vazamento",
-            "nl": "wamo",
-            "fr": "wamo",
-            "it": "PerditaDect",
-            "es": "Detección de fugas",
-            "pl": "wamo",
-            "zh-cn": "泄漏检测",
-            "uk": "wamo"
-        },
-        "desc": {
-            "en": "wamo",
-            "de": "wamo",
-            "ru": "утечка",
-            "pt": "vazamento",
-            "nl": "lekdetectie",
-            "fr": "détection de fuite",
-            "it": "leakedect",
-            "es": "fugadecto",
-            "pl": "wyciek wycieku",
-            "zh-cn": "泄漏检测",
-            "uk": "wamo"
-        },
-        "authors": [
-            "smarthausleben <info@smarthausleben.de>"
-        ],
-        "keywords": [
-            "leakage protection",
-            "leakage monitor"
-        ],
-        "tier": 3,
-        "licenseInformation": {
-            "license": "MIT",
-            "type": "free"
-        },
-        "platform": "Javascript/Node.js",
-        "icon": "wamo.png",
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/smarthausleben/ioBroker.wamo/main/admin/wamo.png",
-        "readme": "https://github.com/smarthausleben/ioBroker.wamo/blob/main/README.md",
-        "loglevel": "info",
-        "mode": "daemon",
-        "type": "iot-systems",
-        "compact": true,
-        "connectionType": "local",
-        "dataSource": "poll",
-        "adminUI": {
-            "config": "json"
-        },
-        "dependencies": [
-            {
-                "js-controller": ">=5.0.19"
-            }
-        ],
-        "globalDependencies": [
-            {
-                "admin": ">=5.1.28"
-            }
-        ]
+  "common": {
+    "name": "wamo",
+    "version": "0.4.1",
+    "news": {
+      "0.4.1": {
+        "en": "FIX: Statusupdate `ALA` and `VLV` after alarm clearing (`CLRALA` command)",
+        "de": "FIX: Statusupdate ALA und VLV nach Alarmauslösung (CLRALA Befehl)",
+        "ru": "FIX: Statusupdate ALA и VLV после очистки сигнала тревоги (команда CLRALA)",
+        "pt": "FIX: Statusupdate ALA e VLV após a compensação de alarme (comando CLRALA)",
+        "nl": "Statusupdate ALA en VLV na alarmopruiming",
+        "fr": "FIX: ALA de statut et VLV après l'alarme (commande CLRALA)",
+        "it": "FIX: Statusupdate ALA e VLV dopo la rimozione dell'allarme (controllo CLRALA)",
+        "es": "FIX: Statusupdate ALA y VLV después del despejado de alarma (clase LRALA)",
+        "pl": "FIX: Statusupdate ALA i VLV po ogłoszeniu alarmu (CLRALA Command)",
+        "uk": "FIX: Статусupdate ALA та VLV після очищення сигналів (керівник CLRALA)",
+        "zh-cn": "FIX:在警报交换(CLRALA指挥)之后,国际法协会和VLV的现况"
+      },
+      "0.4.0": {
+        "en": "ADD:\nSince there are important things to consider before you update, which can be squeezed into this section here, `please read the release related information section \"0.4.0 (SafeFloor Connect pre release)\"` in the [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information) carefully.",
+        "de": "ADD:\nDa es wichtige Dinge gibt, die vor dem Update zu beachten sind, die hier in diesen Abschnitt gepresst werden können, lesen Sie bitte den Release-bezogenen Informationsabschnitt \"0.4.0 (SafeFloor Connect pre release\") in der [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release- related-information) sorgfältig.",
+        "ru": "ДОБАВИТЬ:\nПоскольку есть важные вещи, которые следует учитывать перед обновлением, которые могут быть сжаты в этот раздел здесь, `пожалуйста, прочитайте раздел информации о выпуске \"0.4.0 (SafeFloor Connect pre release\")` в [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information) тщательно.",
+        "pt": "ADD:\nUma vez que há coisas importantes a considerar antes de atualizar, que podem ser espremidas nesta seção aqui, 'por favor, leia a seção de informações relacionadas à versão \"0.4.0 (SafeFloor Connect pré- release\") na [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information) cuidadosamente.",
+        "nl": "ADD:\nAangezien er belangrijke dingen zijn om te overwegen voordat je bijpraten, wat in deze sectie kan worden geknoeid, lees alsjeblieft de vrijlating van informatie '04.0 (SafeFloor Connect voorlop) in de zorgvulatie.",
+        "fr": "AJOUT :\nComme il y a des choses importantes à considérer avant de mettre à jour, qui peuvent être pressées dans cette section ici, `veuillez lire la section d'information relative à la publication \"0.4.0 (SafeFloor Connect pre release\")` dans le [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information).",
+        "it": "ADD:\nDal momento che ci sono cose importanti da considerare prima di aggiornare, che possono essere spremute in questa sezione qui, ` si prega di leggere la sezione informativa relativa al rilascio \"0.4.0 (SafeFloor Connect pre release\") ` nel [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information) con attenzione.",
+        "es": "ADD:\nDado que hay cosas importantes que considerar antes de actualizar, que pueden ser exprimidos en esta sección aquí, `por favor lea la sección de información relacionada con la liberación \"0.4.0 (SafeFloor Connect pre release\")` en el [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information) cuidadosamente.",
+        "pl": "ADD:\nOd tego czasu istnieją ważne rzeczy do rozważenia przed aktualizacją, która może być skonfiskowana w tej sekcji, 'pełnianie odczytu pokrewnego działu informacji '0.4.0 (SafeFloor Connect pre release)' w bazie 'Wiki(https:/github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release') starannie.",
+        "uk": "АД:\nЗ тих пір, як є важливі речі, щоб розглянути, перш ніж оновити, які можна стискати в цей розділ тут, `please читати випуск пов'язаної з розділом інформації \"0.4.0 (SafeFloor Connect pre release\")` в [Wiki](https://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-related-information) ретельно.",
+        "zh-cn": "ADD:\n由于有必要考虑在你提交最新资料之前加以考虑,本节可将有关信息节“0.4.0(安全先遣队)”改为[Wiki](http://github.com/smarthausleben/ioBroker.wamo/wiki/Importent-release-有关的信息)。."
+      },
+      "0.3.0": {
+        "en": "ADD: [Main valve jam protection] New State JPR for Jam protection running \nADD: [Main valve jam protection] New State JPA for Jam protection aktivated\nADD: [Main valve jam protection] New State JPT for Jam protection timing (CRON)\nADD: [Main valve jam protection] New **Task Tab** in adapter settings to manage a scheduled regular movement of the main valve in order to prevent a stuck valve\nFIX: [interfaceBusy] flag was not reset after AXIOS interface handler error **_(Issue #21)_**\nADD: [WatchDog] function for interfaceBusy flag. Flag will be reset after defined amount of requests **_(Issue #21)_**",
+        "de": "ADD: [Hauptventilsperrenschutz] New State JPR für Jam Schutz laufen\nADD: [Hauptventilsperrenschutz] New State JPA für Jam Schutz aktiviert\nADD: [Hauptventilsperrenschutz] Neuer Staat JPT für Jam Schutzzeit (CRON)\nADD: [Hauptventilsperrenschutz] Neue *Task Tab* in Adaptereinstellungen, um eine geplante regelmäßige Bewegung des Hauptventils zu verwalten, um ein gestecktes Ventil zu verhindern\nFIX: [interfaceBusy]-Flag wurde nach AXIOS-Schnittstellen-Handlerfehler *(_Issue #21*_) nicht zurückgesetzt\nADD: [WatchDog] Funktion für interfaceBusy Flag. Die Flagge wird nach der definierten Anzahl der Anfragen zurückgesetzt *(_Issue #21*_)",
+        "ru": "ДОБАВЬТЕ: [Главная защита клапана] Новое государство JPR для бежать защиты джем\nДОБАВЬТЕ: [Главная защита клапана] Новое государство JPA для защиты джемов aktivated\nДОБАВЬТЕ: [Главная защита клапана] Новая государственная JPT для сроков защиты от джемов (CRON)\nДОБАВЬТЕ: [Главная защита клапана] Новый *Task Tab* в настройках адаптера для управления плановым регулярным движением основного клапана для предотвращения застрявшего клапана\nFIX: [interfaceBusy] флаг не был сброшен после ошибки интерфейса AXIOS *(_Issue #21*_)\nADD: [WatchDog] функция для интерфейсаBusy флаг. Флаг будет сброшен после определенного количества запросов *(_Issue #21*_)",
+        "pt": "ADD: [Proteção do engarrafamento da válvula principal] Nova JPR do Estado para a proteção contra Jam em execução\nADD: [Proteção do engarrafamento da válvula principal] Novo Estado JPA para proteção Jam aktivated\nADD: [Proteção do engarrafamento da válvula principal] Novo Estado JPT para tempo de proteção Jam (CRON)\nADD: [Proteção do engarrafamento da válvula principal] Novo *Task Tab* em configurações do adaptador para gerenciar um movimento regular programado da válvula principal, a fim de evitar uma válvula presa\nFIX: [interfaceBusy] bandeira não foi redefinida após o erro do manipulador de interface AXIOS *(_Issue #21*_)\nADD: [WatchDog] função para interfaceBusy bandeira. A bandeira será redefinida após a quantidade definida de solicitações *(_Issue #21*_)",
+        "nl": "ADD: New State JPR voor Jam bescherming\nADD: Nieuwe staat JPA voor Jam bescherming\nADD: Nieuwe staat JPT voor Jam beschermingstijd (CRON)\nADD: New Tab in adapter settings om een regelmatige beweging van de hoofdklep te beheren om een vaste klep te voorkomen\nDe vlag was niet reset na AXIOS interface begeleiderfout\nActie voor interfaceBusy vlag. Vlag zal worden gereset na definieerde hoeveelheid verzoeken",
+        "fr": "AJOUT : [Protection principale de la confiture de valve] New State JPR for Jam protection running\nAJOUT : [Protection principale de la confiture de valve] New State JPA for Jam protection aktivated\nAJOUT : [Protection principale de la confiture de valve] New State JPT for Jam protection timing (CRON)\nAJOUT : [Protection principale de la confiture de valve] Nouveau *Task Tab* dans les réglages d'adaptateur pour gérer un mouvement régulier régulier de la valve principale afin d'éviter une vanne coincée\nFIX: [interfaceBusy] flag was not reset after AXIOS interface handler error *(_Issue #21*_)\nADD: [WatchDog] fonction pour l'interfaceDrapeau d'achat. Le drapeau sera réinitialisé après la quantité définie de requêtes *(_Issue #21*_)",
+        "it": "ADD: [Protezione della marmellata della valvola principale] New State JPR per la protezione dei Jam in esecuzione\nADD: [Protezione della marmellata della valvola principale] Nuovo Stato JPA per protezione Jam aktivated\nADD: [Protezione della marmellata della valvola principale] Nuovo JPT di stato per i tempi di protezione dei Jam (CRON)\nADD: [Protezione della marmellata della valvola principale] Nuovo *Task Tab* nelle impostazioni dell'adattatore per gestire un movimento regolare programmato della valvola principale al fine di evitare una valvola bloccata\nFIX: [interfaceBusy] la bandiera non è stata ripristinata dopo l'errore del gestore dell'interfaccia AXIOS *(_Issue #21*_)\nADD: [WatchDog] funzione per l'interfacciaBusy bandiera. La bandiera sarà ripristinata dopo la quantità definita di richieste *(_Issue #21*_)",
+        "es": "ADD: New State JPR for Jam protection running\nADD: New State JPA for Jam protection aktivated\nADD: New State JPT for Jam protection timing (CRON)\nADD: Nuevo *Task Tab* en la configuración del adaptador para gestionar un movimiento regular programado de la válvula principal con el fin de prevenir una válvula atorada\nFIX: [interfaceBusy] flag no se restableció después de error de controlador de interfaz AXIOS *(_Issue #21*_)\nADD: [WatchDog] función para interfaceBandera de publicidad. La bandera se restablecerá después de la cantidad definida de solicitudes *(_Issue #21*_)",
+        "pl": "ADD: (ang.). New State JPR\nADD: (ang.). New State JPA for Jam (ang.)\nADD: (ang.). New State JPT for Jam protection (ang.)\nADD: (ang.). New *Task Tab* w ustawieniach adaptacyjnych do zarządzania regularnym ruchem zaworu głównego w celu zapobiegania zaworowi\nFIX: InterfaceBusy (ang. InterfaceBusy) flaga nie została ponownie ustawiona po tym, jak interfejs AXIOS obserwuje błąd *(_Issue #21*_)\nADD: WatchDog (ang.). . Flaga będzie resetowana po zdefiniowaniu ilości żądań *(_Issue #21*_)",
+        "uk": "ADD: [Охорона затискного клапана] Новий державний JPR для захисту варення\nADD: [Охорона затискного клапана] Нова державна ПА для захисту від варення\nADD: [Охорона затискного клапана] Новий державний JPT для варення захисту (CRON)\nADD: [Охорона затискного клапана] Новий *ask Tab* в налаштуваннях адаптера для керування регулярним регулярним переміщенням основного клапана для запобігання застрягового клапана \nFIX: [interfaceBusy] прапор не був скидання після помилки інтерфейсу AXIOS *(_Isue #21*_)\nADD: [WatchDog] функція для інтерфейсуBusy прапор. Прапор буде скидати після визначеної кількості запитів *(_Issue #21*_)",
+        "zh-cn": "ADD:[Mainvalve jam protection] 新国家保护协会\nADD:[Mainvalve jam protection] 新国家保护联盟\nADD:[Mainvalve jam protection] 新国家JPT for Jam protection Time (CRON)\nADD:[Mainvalve jam protection] * 新塔克·塔布*在适应环境中管理主要阀门的预定定期流动,以防止出现障碍。\n九、FIX:AXOS接口手勒错误*(Isue #21*)之后,没有重新确定[内部的]旗帜。\nADD:[观察Dog]接口布基纳法索旗。 待定请求数*(_Issue #21*_)之后,将重新出现滞留时间。"
+      },
+      "0.2.13": {
+        "en": "add: new property \"createoOnStartup\" in DeviceParameter\nadd: new property \"saveRawData\" in DeviceParameter\nchange: creating all state objects during startup to avoid calling \"setObjectNotExistsAsync\" later on\nadd: Profile parameter raw states\nchange: default value for \"factor_german_water_hardnes\" changed to 0.0296041666666667\nFIX update german water hardnes factor object (GHARDFACTOR) during startup",
+        "de": "hinzufügen: neue Eigenschaft createo OnStartup im DeviceParameter\nhinzufügen: neue Eigenschaft saveRawData in DeviceParameter\nändern: Erstellen aller State-Objekte während des Starts, um den Anruf zu vermeiden ObjectNotExistsAsync später auf\nhinzufügen: Profilparameter Rohzustände\nändern: standardwert für factor_german_water_hardnes geändert auf 0.0296041666666667\nFIX Update deutsches Wasser Hardnes Faktor Objekt (GHARDFACTOR) während des Starts",
+        "ru": "добавить: новое создание недвижимости OnStartup в DeviceParameter\nдобавить: новое свойство saveRawData в DeviceParameter\nизменение: создание всех государственных объектов во время запуска, чтобы избежать вызова ОбъектNotExistsAsync позже\nadd: Параметры профиля сырье\nизменение: значение по умолчанию для factor_german_water_hardnes изменено на 0.02960416666667\nFIX обновление немецкой воды Hardnes фактор объекта (GHARDFACTOR) во время запуска",
+        "pt": "add: nova propriedade createo OnStartup no parâmetro dispositivo\nadd: new property saveRawData in DeviceParameter\nalterar: criar todos os objetos do estado durante a inicialização para evitar chamar o conjunto ObjectNotExistsAsync mais tarde em\nadd: Parâmetro de perfil estados crus\nchange: default value for factor_german_water_hardnes mudou para 0,02960416666667\nFIX atualização german água endurece fator objeto (GHARDFACTOR) durante a inicialização",
+        "nl": "vertaling: OnStartup in DeviceParameter\nvertaling:\nverandering: alle staatsvoorwerpen creëren tijdens de start om niet te bellen Vertaling:\nvertaling:\nquality over quantity (qoq) releases vertaling:\nQuality over Quantity (QoQ) Releases Vertaling:",
+        "fr": "ajouter: nouvelle propriété createo OnStartup dans DeviceParameter\najouter: nouvelle propriété saveRawData dans DeviceParameter\nchangement: créer tous les objets de l'état pendant le démarrage pour éviter l'appel ObjectNotExistsAsync plus tard sur\najouter: Paramètres de profil états bruts\nchangement: valeur par défaut pour factor_german_water_hardnes changée en 0.0296041666666667\nFIX update german water hardnes factor object (GHARDFACTOR) during startup",
+        "it": "aggiungi: new property createo OnStartup in DeviceParameter\naggiungere: nuova proprietà saveRawData in DeviceParameter\ncambiamento: creare tutti gli oggetti di stato durante l'avvio per evitare di chiamare set ObjectNotExistsAsync in seguito\naggiungere: Parametro del profilo stati grezzi\ncambiamento: valore predefinito per factor_german_water_hardnes modificato a 0.02960416666667\nFIX aggiornamento duri d'acqua tedesca fattore oggetto (GHARDFACTOR) durante l'avvio",
+        "es": "añadir: nueva propiedad createo OnStartup in DeviceParameter\nañadir: nuevo ahorro de propiedadRawData en el parámetro de dispositivo\ncambio: crear todos los objetos del estado durante la puesta en marcha para evitar llamar al set ObjectNotExistsAsync later on\nadd: Perfil parameter raw states\ncambio: valor predeterminado para factor_german_water_hardnes cambiado a 0.02960416666667\nActualización de FIX objeto de factor de agua german (GHARDFACTOR) durante la puesta en marcha",
+        "pl": "dodanie nowej własności Strona internetowa DeviceParameter\ndostęp: Nowa własność oszczędzona\nzmiana: tworzenie wszystkich obiektów państwowych w celu uniknięcia nazywania zbioru. Object NotExistsAsync później\ndodanie: Profile parametry stanów raw\nzmiana domyślna dla czynnika_german_hardnes zmieniła się na 0,0296041666666666666767\nFIX update factor water (GHARDFACTOR) (ang.)",
+        "uk": "додати: нове майно ПристроїПараметр\nдодати: новий рентабельнийRawData в DeviceParameter\nзміна: створення всіх державних об'єктів при запуску, щоб уникнути викликів Об'єктNotExistsAsync пізніше на\nдодати: параметр профілю сирих станів\nзмінено значення за замовчуванням для фактор_german_water_hardnes 0.029604166666666667\nFIX оновлення німецького об'єкта фактора твердих вод (GHARDFACTOR) під час запуску",
+        "zh-cn": "增加:新财产创造 Device Para参数的发射\n增加:在Device Para墓地拯救RawData的新财产\n改变:在开始期间建立所有国家物体,避免呼吁建立 嗣后\n增 编\n变化:因素的违约价值:german_water_hardnes改为0.029604166667\n九. 启动期间更新水硬系数目标"
+      },
+      "0.2.12": {
+        "en": "Release 0.2.12",
+        "de": "Release 0.2.12",
+        "ru": "Релиз 0.2.12",
+        "pt": "Lançamento: 0,2.12",
+        "nl": "Los 0.2.12",
+        "fr": "Release 0.2.12",
+        "it": "Rilasciare 0.2.12",
+        "es": "Liberación 0,2.12",
+        "pl": "Wydanie 0.2.12",
+        "zh-cn": "导 言",
+        "uk": "Випуск 0.2.12"
+      },
+      "0.2.11": {
+        "en": "Release 0.2.11",
+        "de": "Release 0.2.11",
+        "ru": "Релиз 0.2.11",
+        "pt": "Lançamento 0.2.11",
+        "nl": "Los 0.2.11",
+        "fr": "Sortie 0.2.11",
+        "it": "Rilasciare 0.2.11",
+        "es": "Liberación 0.2.11",
+        "pl": "0.2.11",
+        "zh-cn": "排放0.1.211",
+        "uk": "Випуск 0.2.11"
+      },
+      "0.2.9": {
+        "en": "states changable ATP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT\nstate types changed ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT\nadded states TMZ, TN, 71, ALD, CLP, BPB\nadded channel and states for self learning: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF\nchange splitted options into two tabs \nadded options to define timeout for axios request \nadded options for delay time between reconection try to device if connection got lost\nchange - exported Parameter declarations and parameter collections for timer into a seperate file 'lib/device-parameters.js'",
+        "de": "changable ATP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT\nzustandstypen geändert ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT\ntMZ, TN, 71, ALD, CLP, BPB\nzusätzlich Kanal und Zustände für Selbstlernen: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF\ngespaltene optionen in zwei tabs ändern\nzusätzliche optionen, um timeout für axios anfrage zu definieren\nzusätzliche optionen für verzögerung zeit zwischen rekonstruktion versuchen, gerät, wenn verbindung verloren\nändern - exportiert Parameter-Deklarationen und Parameter-Sammlungen für Timer in eine seperate Datei lib/device-Parameter. j)",
+        "ru": "государства changable ATP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT\nтипы штатов изменены ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT\nдобавлены состояния TMZ, TN, 71, ALD, CLP, BPB\nдобавлены каналы и состояния для самостоятельного обучения: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF\nизменить разделенные опции на две вкладки\nдобавлены опции для определения timeout для запроса axios\nдобавлены опции для задержки между reconection попробуйте устройство, если соединение потеряно\nизменить - экспортируемые параметры декларации и коллекции параметров для таймера в сеператый файл lib/device-parameters. Джс",
+        "pt": "estados ATP changable, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT\ntipos de estado mudou ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT\nestados adicionados TMZ, TN, 71, ALD, CLP, BPB\ncanal adicionado e estados para auto-aprendizagem: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF\nalterar opções divididas em duas abas\nopções adicionadas para definir timeout para solicitação de axios\nopções adicionais para o tempo de atraso entre a reconecção tentar dispositivo se a conexão se perdeu\nchange - exportado Declarações de parâmetros e coleções de parâmetros para timer em um arquivo seperate lib/device-parameters. Js",
+        "nl": "aTP, BTB, BSA, BUZ, DRP, IDS, LNG, LWTB, BTB, BSA, BUZ, BUZ, DMA, DMA, DRP, DRP, DRP, DRP, IDS, LNG\nde staatstypes veranderden ATP, BSA, BUZ, DRP, DWL, IDS, LWT\ntMZ, TN, 71, ALD, CLP, BPB\nvertaling:\nverdeelde opties in twee tabs\nvoegde opties om de time-out te definiëren voor axios verzoek\nvoegde opties toe voor vertragingstijd tussen verzoening, als de verbinding verbroken werd\nverandering - exporteerde Parameter verklaringen en parameter collecties voor timer in een seperaat bestand lib/device-parameters. Js",
+        "fr": "aTP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT\naTP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT\nétats ajoutés TMZ, TN, 71, ALD, CLP, BPB\ncanal ajouté et états pour l'autoapprentissage: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF\nchanger les options divisées en deux onglets\noptions supplémentaires pour définir le timeout pour la demande axios\noptions supplémentaires pour le délai entre la reconection essayer de périphérique si la connexion se perd\nchange - les déclarations de paramètres exportées et les collections de paramètre pour timer dans un fichier seperate lib/device-parameters. js",
+        "it": "stati ATP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT\ntipi di stato cambiato ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT\nstati aggiunti TMZ, TN, 71, ALD, CLP, BPB\ncanale aggiunto e stati per l'autoapprendimento: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF\ncambiare le opzioni divise in due schede\nopzioni aggiuntive per definire timeout per richiesta assios\nopzioni aggiuntive per il tempo di ritardo tra la correzione cercare di dispositivo se la connessione è andata persa\ncambiamento - esportato le dichiarazioni dei parametri e le collezioni dei parametri per il timer in un seperate file lib/device-parametri. j",
+        "es": "aTP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT\ntipos de estado cambiaron ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT\nestados añadidos TMZ, TN, 71, ALD, CLP, BPB\ncanal añadido y estados para el auto aprendizaje: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF\ncambiar opciones divididas en dos pestañas\nopciones adicionales para definir el tiempo de espera para la solicitud de axios\nopciones adicionales para el tiempo de demora entre la reconección tratar de dispositivo si la conexión se perdió\ncambio - exportado Declaraciones de parámetros y colecciones de parámetro para timer en un archivo seperate lib/device-parameters. js",
+        "pl": "bTB, BSA, BUZ, DMA, DRP, IDS, LWT, LWT\nzmieniły one ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LWT\ndodano stany TMZ, TN, 71, ALD, CLP, BPB\ndodano kanały i stany do uczenia się siebie: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF\nzmienić opcje na dwie tabele\ndodano możliwość zdefiniowania czasu na prośbę axiosa\ndodała opcje opóźnienia pomiędzy pogodzeniem a urządzeniem, jeśli połączenia się straciły\nzmiana – wyeksportowana deklaracja Parameter i kolekcja parametrów dla czasownika w plik lib/device. js",
+        "zh-cn": "aTP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT\naTP, BSA, BUZ, DMA, DRP, DWL, IDS,LNG, LWT\n加入国:TMZ,TN,71, ALD, CLP,BPB\n学习的更多渠道和国家:SLP、SLO、SOF、MF、SLE、SLV、SLT、SLF\n改为两个表格的改变\n界定焦虑要求时间的更多选择\n如果连线失去,则重新部署到装置之间的拖延时间的更多选择\n变化——出口的参数声明和准时收藏的参数 j",
+        "uk": "стани змінні ATP, BTB, BSA, BUZ, DMA, DRP, IDS, LNG, LWT\nзмінено типи станів ATP, BSA, BUZ, DMA, DRP, DWL, IDS, LNG, LWT\nдодані стани TMZ, TN, 71, ALD, CLP, BPB\nдодано канал і стани для самонавчання: SLP, SLO, SOF, SMF, SLE, SLV, SLT, SLF\nзмінити параметри, розділені на дві вкладки\nдодано параметри для визначення часу очікування для запиту axios\nдодано параметри для часу затримки між повторним підключенням до пристрою, якщо з’єднання втрачено\nзміна - експортовано оголошення параметрів і колекції параметрів для таймера в окремий файл 'lib/device-parameters.js'"
+      }
     },
-    "native": {
-        "device_ip": "0.0.0.0",
-        "device_port": 5333,
-        "factor_german_water_hardnes": 0.0296041666666667,
-        "device_alarm_poll_interval": 30,
-        "device_short_poll_interval": 60,
-        "device_long_poll_interval": 120,
-        "device_very_long_poll_interval": 300,
-        "moremessages": false,
-        "apiresponsemessages": false,
-        "valueinfomessages": true,
-        "hidetriggerinfomessages": false,
-        "reconnectingdelaytime": 5,
-        "requesttimeout": 5,
-        "regularmainvalvemovement": false,
-        "regularemovementcron": "0 3 * * *",
-        "safefloor_1_ip": "0.0.0.0",
-        "safefloor_1_serial": "",
-        "safefloor_2_ip": "0.0.0.0",
-        "safefloor_2_serial": "",
-        "safefloor_3_ip": "0.0.0.0",
-        "safefloor_3_serial": "",
-        "safefloor_4_ip": "0.0.0.0",
-        "safefloor_4_serial": "",
-        "allow_service_and_factory_changes": false,
-        "safefloor_1_keep_online": false,
-        "safefloor_2_keep_online": false,
-        "safefloor_3_keep_online": false,
-        "safefloor_4_keep_online": false
+    "titleLang": {
+      "en": "wamo",
+      "de": "wamo",
+      "ru": "wamo",
+      "pt": "Detecção de vazamento",
+      "nl": "wamo",
+      "fr": "wamo",
+      "it": "PerditaDect",
+      "es": "Detección de fugas",
+      "pl": "wamo",
+      "zh-cn": "泄漏检测",
+      "uk": "wamo"
     },
-    "objects": [],
-    "instanceObjects": [
-        {
-            "_id": "info",
-            "type": "channel",
-            "common": {
-                "name": {
-                    "en": "Information",
-                    "de": "Information",
-                    "ru": "Информация",
-                    "pt": "Em formação",
-                    "nl": "Informatie",
-                    "fr": "Information",
-                    "it": "Informazione",
-                    "es": "Información",
-                    "pl": "Informacja",
-                    "zh-cn": "信息"
-                }
-            },
-            "native": {}
-        },
-        {
-            "_id": "info.connection",
-            "type": "state",
-            "common": {
-                "role": "indicator.connected",
-                "name": {
-                    "en": "If communication with circuit works",
-                    "de": "Wenn die Kommunikation mit dem Gerät funktioniert",
-                    "ru": "Если связь с схемой работает",
-                    "pt": "Se a comunicação com o circuito funciona",
-                    "nl": "Als communicatie met circuit werkt",
-                    "fr": "Si la communication avec les circuits fonctionne",
-                    "it": "Se la comunicazione con i circuiti funziona",
-                    "es": "Si la comunicación con los circuitos funciona",
-                    "pl": "Jeśli komunikacja się z obwodem",
-                    "uk": "Якщо комунікація з контурними роботами",
-                    "zh-cn": "如果与渠道的通信工程"
-                },
-                "type": "boolean",
-                "read": true,
-                "write": false,
-                "def": false
-            },
-            "native": {}
-        }
+    "desc": {
+      "en": "wamo",
+      "de": "wamo",
+      "ru": "утечка",
+      "pt": "vazamento",
+      "nl": "lekdetectie",
+      "fr": "détection de fuite",
+      "it": "leakedect",
+      "es": "fugadecto",
+      "pl": "wyciek wycieku",
+      "zh-cn": "泄漏检测",
+      "uk": "wamo"
+    },
+    "authors": [
+      "smarthausleben <info@smarthausleben.de>"
+    ],
+    "keywords": [
+      "leakage protection",
+      "leakage monitor"
+    ],
+    "tier": 3,
+    "licenseInformation": {
+      "license": "MIT",
+      "type": "free"
+    },
+    "platform": "Javascript/Node.js",
+    "icon": "wamo.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/smarthausleben/ioBroker.wamo/main/admin/wamo.png",
+    "readme": "https://github.com/smarthausleben/ioBroker.wamo/blob/main/README.md",
+    "loglevel": "info",
+    "mode": "daemon",
+    "type": "iot-systems",
+    "compact": true,
+    "connectionType": "local",
+    "dataSource": "poll",
+    "adminUI": {
+      "config": "json"
+    },
+    "dependencies": [
+      {
+        "js-controller": ">=6.0.11"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=5.1.28"
+      }
     ]
+  },
+  "native": {
+    "device_ip": "0.0.0.0",
+    "device_port": 5333,
+    "factor_german_water_hardnes": 0.0296041666666667,
+    "device_alarm_poll_interval": 30,
+    "device_short_poll_interval": 60,
+    "device_long_poll_interval": 120,
+    "device_very_long_poll_interval": 300,
+    "moremessages": false,
+    "apiresponsemessages": false,
+    "valueinfomessages": true,
+    "hidetriggerinfomessages": false,
+    "reconnectingdelaytime": 5,
+    "requesttimeout": 5,
+    "regularmainvalvemovement": false,
+    "regularemovementcron": "0 3 * * *",
+    "safefloor_1_ip": "0.0.0.0",
+    "safefloor_1_serial": "",
+    "safefloor_2_ip": "0.0.0.0",
+    "safefloor_2_serial": "",
+    "safefloor_3_ip": "0.0.0.0",
+    "safefloor_3_serial": "",
+    "safefloor_4_ip": "0.0.0.0",
+    "safefloor_4_serial": "",
+    "allow_service_and_factory_changes": false,
+    "safefloor_1_keep_online": false,
+    "safefloor_2_keep_online": false,
+    "safefloor_3_keep_online": false,
+    "safefloor_4_keep_online": false
+  },
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": {
+          "en": "Information",
+          "de": "Information",
+          "ru": "Информация",
+          "pt": "Em formação",
+          "nl": "Informatie",
+          "fr": "Information",
+          "it": "Informazione",
+          "es": "Información",
+          "pl": "Informacja",
+          "zh-cn": "信息"
+        }
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "role": "indicator.connected",
+        "name": {
+          "en": "If communication with circuit works",
+          "de": "Wenn die Kommunikation mit dem Gerät funktioniert",
+          "ru": "Если связь с схемой работает",
+          "pt": "Se a comunicação com o circuito funciona",
+          "nl": "Als communicatie met circuit werkt",
+          "fr": "Si la communication avec les circuits fonctionne",
+          "it": "Se la comunicazione con i circuiti funziona",
+          "es": "Si la comunicación con los circuitos funciona",
+          "pl": "Jeśli komunikacja się z obwodem",
+          "uk": "Якщо комунікація з контурними роботами",
+          "zh-cn": "如果与渠道的通信工程"
+        },
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    }
+  ]
 }
