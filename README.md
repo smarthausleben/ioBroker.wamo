@@ -43,6 +43,7 @@ If you find this adapter useful and you want to support this project, your kindn
 * ======================================================================== (max broad of READMR.md page )
 -->
 ### **WORK IN PROGRESS**
+- (iobroker-bot) Adapter requires node.js >= 22 now.
 * (smarthausleben) UPDATE: dependencies (Node 18)
 
 ### 0.4.1 (2023-08-08)
